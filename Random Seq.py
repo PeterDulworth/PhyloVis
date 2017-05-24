@@ -15,6 +15,8 @@ def seq(len, num):
     """
     file = open("phylip.txt", "w")
     bases = ["A", "T", "C", "G"]
+    file.write(str(num) + "\n")
+    file.write(str(len) + "\n")
     for i in range(num):
         file.write("seq" + str(i) + " ")
         for j in range(len):
@@ -22,3 +24,4 @@ def seq(len, num):
         file.write("\n")
     file.close()
 
+# seq(1000000, 10)

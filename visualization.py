@@ -1,4 +1,6 @@
 import math
+import random
+
 
 def read_phylip(filename):
     """
@@ -31,7 +33,6 @@ def read_phylip(filename):
 
     # Return sequence length and mapping of taxa to sequences
     return m, tsmap
-
 
 def splittr(filename, window_size, step_size, destination_directory):
     """
@@ -88,4 +89,4 @@ def splittr(filename, window_size, step_size, destination_directory):
     # Return sequence length and mapping of taxa to sequences
     return None
 
-splittr("raxmlinput.txt", 3, 2, "none")
+splittr("phylip.txt", 1000, 2000, "none")
