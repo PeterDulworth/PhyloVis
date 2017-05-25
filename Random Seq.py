@@ -56,3 +56,4 @@ def fasta(len, num):
     file.close()
 
 # fasta(100000, 10)
+
