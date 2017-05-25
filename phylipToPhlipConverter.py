@@ -10,7 +10,7 @@ def phylip2phylip(input_file, output_file):
         number_of_sequences = sequence_info[0]
         length_of_sequences = sequence_info[1]
 
-
+        #lul
         f_out.write(number_of_sequences + "\n")
         f_out.write(length_of_sequences + "\n")
         # print number_of_sequences, length_of_sequences
