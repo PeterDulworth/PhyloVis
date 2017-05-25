@@ -18,6 +18,9 @@ def splittr(filename, window_size, step_size, destination_directory):
     Smaller "window" files showing sections of the genome in PHYLIP format
     """
 
+    if not os.path.exists(destination_directory):
+        os.makedirs(destination_directory)
+
     # Create a list for the output files
     output_files = []
 
@@ -37,17 +40,13 @@ def splittr(filename, window_size, step_size, destination_directory):
             BENEDICTRs_CONST += 1
 
         # Create a file for each window and add it to the list
-        for i in range(BENEDICTRs_CONST):
-            output_files.append(open("window" + str(i + 1) + ".phylip", "w"))
-
-        ###
-        # Above for loop can be combined with one below
-        ###
-
         # Write the number and length of the sequences to each file
         for i in range(BENEDICTRs_CONST):
+            output_files.append(open(destination_directory + "/window" + str(i + 1) + ".phylip", "w"))
+
+        for i in range(BENEDICTRs_CONST):
             output_files[i].write(str(number_of_sequences) + "\n")
-            output_files[i].write(str(BENEDICTRs_CONST) + "\n")
+            output_files[i].write(str(window_size) + "\n")
 
         # initialize l
         l = 0
@@ -66,10 +65,11 @@ def splittr(filename, window_size, step_size, destination_directory):
                 window = ""
                 for k in range(window_size):
                     window += sequence[l+k]
+                print window
 
                 output_files[j].write(window + "\n")
 
         for i in range(len(output_files)):
             output_files[i].close()
 
-splittr("phylip.txt", 1000, 100000, "phylip-windows")
+splittr("raxmlinput.txt", 3, 1, "windows")
