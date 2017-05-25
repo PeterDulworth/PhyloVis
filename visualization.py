@@ -1,14 +1,10 @@
-<<<<<<< HEAD
 import math
 import random
 import os
-=======
+
 """
 Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences
 """
->>>>>>> 42745491e7de2520e16a4b23e79021df870165d6
-
-import os.path
 
 def splittr(filename, window_size, step_size, destination_directory):
     """
@@ -75,13 +71,4 @@ def splittr(filename, window_size, step_size, destination_directory):
         for i in range(len(output_files)):
             output_files[i].close()
 
-    return None
-
-<<<<<<< HEAD
 splittr("phylip.txt", 1000, 100000, "phylip-windows")
-=======
-splittr("phylip.txt", 10000, 200000, "none")
-
-
-
->>>>>>> 42745491e7de2520e16a4b23e79021df870165d6
