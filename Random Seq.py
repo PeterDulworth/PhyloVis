@@ -25,7 +25,7 @@ def phylip(len, num):
         file.write("\n")
     file.close()
 
-# phylip(100000000, 10)
+# phylip(1000000, 10)
 
 # FASTA Format
 def fasta(len, num):
