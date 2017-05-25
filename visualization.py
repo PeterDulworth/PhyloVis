@@ -49,6 +49,7 @@ def splittr(filename, window_size, step_size, destination_directory):
             output_files[i].write(str(number_of_sequences) + "\n")
             output_files[i].write(str(BENEDICTRs_CONST) + "\n")
 
+        # initialize l
         l = 0
 
         # Subsequent lines contain taxon and sequence separated by a space
