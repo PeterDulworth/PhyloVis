@@ -24,4 +24,9 @@ def seq(len, num):
         file.write("\n")
     file.close()
 
+<<<<<<< HEAD
 seq(100000000, 10)
+=======
+seq(100000000, 1)
+
+>>>>>>> 42745491e7de2520e16a4b23e79021df870165d6
