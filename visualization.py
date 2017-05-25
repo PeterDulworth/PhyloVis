@@ -43,10 +43,13 @@ def splittr(filename, window_size, step_size, destination_directory):
         # Write the number and length of the sequences to each file
         for i in range(BENEDICTRs_CONST):
             output_files.append(open(destination_directory + "/window" + str(i + 1) + ".phylip", "w"))
+            output_files[i].close()
 
         for i in range(BENEDICTRs_CONST):
-            output_files[i].write(str(number_of_sequences) + "\n")
-            output_files[i].write(str(window_size) + "\n")
+            file = open(output_files[i].name,"a")
+            file.write(str(number_of_sequences) + "\n")
+            file.write(str(window_size) + "\n")
+            file.close()
 
         # initialize l
         l = 0
@@ -61,15 +64,15 @@ def splittr(filename, window_size, step_size, destination_directory):
 
             for j in range(BENEDICTRs_CONST):
                 l = j * step_size
-                output_files[j].write(taxon + " ")
+                file = open(output_files[j].name, "a")
+                file.write(taxon + " ")
                 window = ""
                 for k in range(window_size):
                     window += sequence[l+k]
-                print window
 
-                output_files[j].write(window + "\n")
 
-        for i in range(len(output_files)):
-            output_files[i].close()
+                file.write(window + "\n")
+                file.close()
 
-splittr("raxmlinput.txt", 3, 1, "windows")
+
+splittr("phylip.txt", 1000, 1000, "windows")
