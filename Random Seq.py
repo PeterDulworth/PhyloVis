@@ -24,4 +24,4 @@ def seq(len, num):
         file.write("\n")
     file.close()
 
-seq(100000000, 10)
+seq(1000000, 10)
