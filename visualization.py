@@ -1,6 +1,7 @@
 import math
 import random
 import os
+import PyQt4
 
 """
 Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences

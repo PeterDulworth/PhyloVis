@@ -1,9 +1,13 @@
 import numpy as np
 
+import matplotlib
+matplotlib.use('TKAgg')
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.path as path
 import matplotlib.animation as animation
+
 
 fig, ax = plt.subplots()
 
