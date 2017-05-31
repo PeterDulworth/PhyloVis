@@ -1,0 +1,153 @@
+
+
+Using BFGS method to optimize GTR rate parameters, to disable this specify "--no-bfgs" 
+
+
+
+This is RAxML version 8.2.10 released by Alexandros Stamatakis on March 2017.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Kassian Kobert    (HITS)
+David Dao         (KIT and HITS)
+Sarah Lutteropp   (KIT and HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+Charlie Taylor    (UF)
+
+
+Alignment has 10 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 0.00%
+
+RAxML rapid bootstrapping and subsequent ML search
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+
+Executing 2 rapid bootstrap inferences and thereafter a thorough ML search 
+
+All free model parameters will be estimated by RAxML
+GAMMA model of rate heterogeneity, ML estimate of alpha-parameter
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 10
+Name: No Name Provided
+DataType: DNA
+Substitution Matrix: GTR
+
+
+
+
+RAxML was called as follows:
+
+raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s windows\window1.phylip -n 1 
+
+
+
+Time for BS model parameter optimization 0.001920
+Bootstrap[0]: Time 0.038264 seconds, bootstrap likelihood -115.908809, best rearrangement setting 13
+Bootstrap[1]: Time 0.022876 seconds, bootstrap likelihood -113.965855, best rearrangement setting 13
+
+
+Overall Time for 2 Rapid Bootstraps 0.073012 seconds
+Average Time per Rapid Bootstrap 0.036506 seconds
+
+Starting ML Search ...
+
+
+WARNING the alpha parameter with a value of 12.600598 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+
+WARNING the alpha parameter with a value of 27.949528 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+
+WARNING the alpha parameter with a value of 63.469129 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+Fast ML optimization finished
+
+Fast ML search Time: 0.031217 seconds
+
+
+WARNING the alpha parameter with a value of 10.217029 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+
+WARNING the alpha parameter with a value of 21.100312 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+Slow ML Search 0 Likelihood: -121.788057
+Slow ML optimization finished
+
+Slow ML search Time: 0.021515 seconds
+
+WARNING the alpha parameter with a value of 11.643527 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+
+WARNING the alpha parameter with a value of 24.197669 estimated by RAxML for partition number 0 with the name "No Name Provided"
+is larger than 10.000000. You should do a model test and confirm that you actually need to incorporate a model of rate heterogeneity!
+You can run inferences with a plain substitution model (without rate heterogeneity) by specifyng the CAT model and the "-V" option!
+
+Thorough ML search Time: 0.023067 seconds
+
+Final ML Optimization Likelihood: -121.873285
+
+Model Information:
+
+Model Parameters of Partition 0, Name: No Name Provided, Type of Data: DNA
+alpha: 24.197669
+Tree-Length: 25.556854
+rate A <-> C: 1.304580
+rate A <-> G: 1.413084
+rate A <-> T: 4.230733
+rate C <-> G: 0.000100
+rate C <-> T: 0.751136
+rate G <-> T: 1.000000
+
+freq pi(A): 0.280000
+freq pi(C): 0.280000
+freq pi(G): 0.170000
+freq pi(T): 0.270000
+
+
+ML search took 0.085410 secs or 0.000024 hours
+
+Combined Bootstrap and ML search took 0.159283 secs or 0.000044 hours
+
+Drawing Bootstrap Support Values on best-scoring ML tree ...
+
+
+
+Found 1 tree in File /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.1
+
+
+
+Found 1 tree in File /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.1
+
+Program execution info written to /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_info.1
+All 2 bootstrapped trees written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bootstrap.1
+
+Best-scoring ML tree written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.1
+
+Best-scoring ML tree with support values written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bipartitions.1
+
+Best-scoring ML tree with support values as branch labels written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bipartitionsBranchLabels.1
+
+Overall execution time for full ML analysis: 0.171760 secs or 0.000048 hours or 0.000002 days
+
