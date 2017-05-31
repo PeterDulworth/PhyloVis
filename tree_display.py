@@ -6,4 +6,4 @@ def displayr(newick_file):
     tree.rooted = True
     Phylo.draw(tree)
 
-displayr("newick.txt")
+displayr("RAxML_bestTree.2")

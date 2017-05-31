@@ -1,0 +1,118 @@
+
+
+Using BFGS method to optimize GTR rate parameters, to disable this specify "--no-bfgs" 
+
+
+
+This is RAxML version 8.2.10 released by Alexandros Stamatakis on March 2017.
+
+With greatly appreciated code contributions by:
+Andre Aberer      (HITS)
+Simon Berger      (HITS)
+Alexey Kozlov     (HITS)
+Kassian Kobert    (HITS)
+David Dao         (KIT and HITS)
+Sarah Lutteropp   (KIT and HITS)
+Nick Pattengale   (Sandia)
+Wayne Pfeiffer    (SDSC)
+Akifumi S. Tanabe (NRIFS)
+Charlie Taylor    (UF)
+
+
+Alignment has 10 distinct alignment patterns
+
+Proportion of gaps and completely undetermined characters in this alignment: 0.00%
+
+RAxML rapid bootstrapping and subsequent ML search
+
+Using 1 distinct models/data partitions with joint branch length optimization
+
+
+
+Executing 2 rapid bootstrap inferences and thereafter a thorough ML search 
+
+All free model parameters will be estimated by RAxML
+GAMMA model of rate heterogeneity, ML estimate of alpha-parameter
+
+GAMMA Model parameters will be estimated up to an accuracy of 0.1000000000 Log Likelihood units
+
+Partition: 0
+Alignment Patterns: 10
+Name: No Name Provided
+DataType: DNA
+Substitution Matrix: GTR
+
+
+
+
+RAxML was called as follows:
+
+raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s windows\window8.phylip -n 9 
+
+
+
+Time for BS model parameter optimization 0.002695
+Bootstrap[0]: Time 0.094615 seconds, bootstrap likelihood -112.622067, best rearrangement setting 13
+Bootstrap[1]: Time 0.035360 seconds, bootstrap likelihood -117.797158, best rearrangement setting 13
+
+
+Overall Time for 2 Rapid Bootstraps 0.135550 seconds
+Average Time per Rapid Bootstrap 0.067775 seconds
+
+Starting ML Search ...
+
+Fast ML optimization finished
+
+Fast ML search Time: 0.090484 seconds
+
+Slow ML Search 0 Likelihood: -127.658798
+Slow ML optimization finished
+
+Slow ML search Time: 0.058742 seconds
+Thorough ML search Time: 0.044933 seconds
+
+Final ML Optimization Likelihood: -126.605361
+
+Model Information:
+
+Model Parameters of Partition 0, Name: No Name Provided, Type of Data: DNA
+alpha: 0.744938
+Tree-Length: 78.022471
+rate A <-> C: 0.000100
+rate A <-> G: 2557.469155
+rate A <-> T: 2094.895484
+rate C <-> G: 188.838274
+rate C <-> T: 540.061797
+rate G <-> T: 1.000000
+
+freq pi(A): 0.210000
+freq pi(C): 0.310000
+freq pi(G): 0.200000
+freq pi(T): 0.280000
+
+
+ML search took 0.203128 secs or 0.000056 hours
+
+Combined Bootstrap and ML search took 0.339582 secs or 0.000094 hours
+
+Drawing Bootstrap Support Values on best-scoring ML tree ...
+
+
+
+Found 1 tree in File /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.9
+
+
+
+Found 1 tree in File /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.9
+
+Program execution info written to /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_info.9
+All 2 bootstrapped trees written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bootstrap.9
+
+Best-scoring ML tree written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bestTree.9
+
+Best-scoring ML tree with support values written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bipartitions.9
+
+Best-scoring ML tree with support values as branch labels written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bipartitionsBranchLabels.9
+
+Overall execution time for full ML analysis: 0.345800 secs or 0.000096 hours or 0.000004 days
+
