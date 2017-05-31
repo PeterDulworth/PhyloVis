@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 import sys
 import gui_layout as gui
 import time
+# import visualizationPrototype as vp
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
@@ -74,6 +75,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
             return
 
         self.runProgressBar()
+        # vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"), vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
