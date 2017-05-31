@@ -51,25 +51,25 @@ raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s windows\window9.phylip -n 10
 
 
 
-Time for BS model parameter optimization 0.001703
-Bootstrap[0]: Time 0.097997 seconds, bootstrap likelihood -116.932420, best rearrangement setting 13
-Bootstrap[1]: Time 0.036499 seconds, bootstrap likelihood -121.989604, best rearrangement setting 13
+Time for BS model parameter optimization 0.001603
+Bootstrap[0]: Time 0.033995 seconds, bootstrap likelihood -116.932420, best rearrangement setting 13
+Bootstrap[1]: Time 0.053557 seconds, bootstrap likelihood -121.989604, best rearrangement setting 13
 
 
-Overall Time for 2 Rapid Bootstraps 0.143503 seconds
-Average Time per Rapid Bootstrap 0.071751 seconds
+Overall Time for 2 Rapid Bootstraps 0.103696 seconds
+Average Time per Rapid Bootstrap 0.051848 seconds
 
 Starting ML Search ...
 
 Fast ML optimization finished
 
-Fast ML search Time: 0.044236 seconds
+Fast ML search Time: 0.055391 seconds
 
 Slow ML Search 0 Likelihood: -127.495609
 Slow ML optimization finished
 
-Slow ML search Time: 0.075738 seconds
-Thorough ML search Time: 0.022110 seconds
+Slow ML search Time: 0.078339 seconds
+Thorough ML search Time: 0.023170 seconds
 
 Final ML Optimization Likelihood: -128.116351
 
@@ -91,9 +91,9 @@ freq pi(G): 0.200000
 freq pi(T): 0.290000
 
 
-ML search took 0.152593 secs or 0.000042 hours
+ML search took 0.165554 secs or 0.000046 hours
 
-Combined Bootstrap and ML search took 0.296808 secs or 0.000082 hours
+Combined Bootstrap and ML search took 0.270015 secs or 0.000075 hours
 
 Drawing Bootstrap Support Values on best-scoring ML tree ...
 
@@ -114,5 +114,5 @@ Best-scoring ML tree with support values written to: /cygdrive/c/Users/travi/Doc
 
 Best-scoring ML tree with support values as branch labels written to: /cygdrive/c/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/RAxML_bipartitionsBranchLabels.10
 
-Overall execution time for full ML analysis: 0.304324 secs or 0.000085 hours or 0.000004 days
+Overall execution time for full ML analysis: 0.275955 secs or 0.000077 hours or 0.000003 days
 
