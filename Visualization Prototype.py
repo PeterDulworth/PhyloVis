@@ -1,7 +1,10 @@
 import os
 import subprocess
 from ete3 import Tree, TreeStyle
-
+import math
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from PIL import Image
 
 """
 Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences
@@ -151,7 +154,137 @@ def tree_display(input_directory, destination_directory):
             t.render("Tree"+os.path.splitext(filename)[1]+".png", tree_style=ts)
             os.rename(output_name, os.path.join(destination_directory, output_name))
 
-tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees")
+    return destination_directory
 
 
+def num_windows(directory):
+    """
+    Counts the number of windows created
+    for use in x-axis of the scatter plot.
+
+    Input:
+    directory -- folder containing window files
+
+    Returns:
+    A count of the number of window files.
+    """
+    num = 0
+
+    for filename in os.listdir(directory):
+        if filename.endswith('.phylip'):
+            num += 1
+
+    return num
+
+
+def ml(num, directory):
+    """
+    Reads info file to find Final ML Optimization
+    Likelihood for use in y-axis of the scatter plot.
+
+    Input:
+    num       -- count outputted by num_windows
+    directory -- RAxML folder containing info files
+
+    Returns:
+    The Likelihood number.
+    """
+    likelihood = []
+
+    while len(likelihood) <= num:
+        for filename in os.listdir(directory):
+            if os.path.splitext(filename)[0] == "RAxML_info":
+                with open(os.path.join(directory, filename), 'r') as raxmlFile:
+                    info = raxmlFile.readlines()
+                    for line in info:
+                        words = line.split()
+                        for i in range(len(words)):
+                            if words[i] == 'Final':
+                                likelihood.append(float(words[i + 4]))
+
+    return likelihood
+
+
+def scatter(num, likelihood):
+    """
+    Creates a scatter plot for use in the
+    visualization tool.
+
+    Input:
+    num        -- count outputted by num_windows
+    likelihood -- number outputted by ml
+
+    Returns:
+    A scatter plot with num as the x-axis and
+    likelihood as the y-axis.
+    """
+    area = math.pi * (5)**2
+
+    for i in range(1, num + 1):
+        x = i
+        y = float(likelihood[i]) / 100
+
+        # changes color for different ranges
+        if y <= 0.25:
+            color = colors.hex2color('#0000FF')
+        elif y > 0.25 and y <= 0.50:
+            color = colors.hex2color('#00CC00')
+        elif y > 0.50 and y <= 0.75:
+            color = colors.hex2color('#FFFF00')
+        elif y > 0.75 and y <= 1:
+            color = colors.hex2color('#FF0000')
+
+        plt.scatter(x, y, s = area, c = color, alpha = 1)
+
+    plt.savefig("Plot.png")
+    return "Plot.png"
+
+
+def image_combination(input_directory, plot):
+  """
+  Combines images from the inout directory horizontally and adds a plot vertically
+  Inputs:
+  input_directory --- name of directory containing tree images
+  plot --- the plot to be included at the top of the image
+  """
+
+  bottom_images = []
+
+  # Iterate over each folder in the given directory
+  for filename in os.listdir(input_directory):
+
+    input_file = os.path.join(input_directory, filename)
+
+    # If file is a Tree image
+    if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
+
+      bottom_images.append(input_file)
+
+  # Open the bottom images
+  bottom_images = map(Image.open, bottom_images)
+  top_image = Image.open(plot)
+
+  widths, heights = zip(*(i.size for i in bottom_images))
+
+  #Total width is either the total of the bottom widths or the width of the top
+  total_width = max(sum(widths),top_image.size[0])
+  #Total height is sum of the top image and max of the bottom
+  total_height = max(heights)+top_image.size[1]
+
+  new_im = Image.new('RGB', (total_width, total_height))
+
+  new_im.paste(top_image, (0,0))
+
+  x_offset = 0
+  y_offset = top_image.size[1]
+
+  #Combine bottom images horizontally with no vertical offset
+  for im in bottom_images:
+    new_im.paste(im, (x_offset,y_offset))
+    x_offset += im.size[0]
+
+  new_im.save('Final.jpg')
+
+
+image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
