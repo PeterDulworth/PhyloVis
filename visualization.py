@@ -75,4 +75,4 @@ def splittr(filename, window_size, step_size, destination_directory):
                 file.close()
 
 
-splittr("phylip.txt", 1000, 1000, "windows")
+splittr("phylip.txt", 10, 10, "windows")
