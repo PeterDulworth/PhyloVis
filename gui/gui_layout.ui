@@ -44,15 +44,18 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="input_file_entry">
+           <widget class="QLineEdit" name="inputFileEntry">
             <property name="minimumSize">
              <size>
               <width>0</width>
               <height>21</height>
              </size>
             </property>
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
             <property name="focusPolicy">
-             <enum>Qt::TabFocus</enum>
+             <enum>Qt::WheelFocus</enum>
             </property>
             <property name="alignment">
              <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -64,14 +67,14 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QLabel" name="window_size_label">
+           <widget class="QLabel" name="windowSizeLabel">
             <property name="text">
              <string>Window Size:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="window_size_entry">
+           <widget class="QLineEdit" name="windowSizeEntry">
             <property name="minimumSize">
              <size>
               <width>40</width>
@@ -85,19 +88,19 @@
              </size>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::TabFocus</enum>
+             <enum>Qt::WheelFocus</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="window_offset_label">
+           <widget class="QLabel" name="windowOffsetLabel">
             <property name="text">
              <string>Window Offset:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="window_offset_entry">
+           <widget class="QLineEdit" name="windowOffsetEntry">
             <property name="minimumSize">
              <size>
               <width>40</width>
@@ -111,12 +114,12 @@
              </size>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::TabFocus</enum>
+             <enum>Qt::WheelFocus</enum>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_2">
+           <spacer name="windowSpacer">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -155,7 +158,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="output_dir_entry">
+           <widget class="QLineEdit" name="outputDirEntry">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -163,7 +166,7 @@
              </size>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::TabFocus</enum>
+             <enum>Qt::WheelFocus</enum>
             </property>
            </widget>
           </item>
