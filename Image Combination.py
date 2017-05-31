@@ -29,6 +29,10 @@ def image_combination(input_directory, plot):
 
   #Total width is either the total of the bottom widths or the width of the top
   total_width = max(sum(widths),top_image.size[0])
+
+  ratio = top_image.size[1]/top_image.size[0]
+  top_image = top_image.resize(total_width,total_width*ratio)
+
   #Total height is sum of the top image and max of the bottom
   total_height = max(heights)+top_image.size[1]
 

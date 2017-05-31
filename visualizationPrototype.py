@@ -99,10 +99,10 @@ def RAxML_windows(window_directory):
     # Iterate over each folder in the given directory
     for filename in os.listdir(window_directory):
 
-        count += 1
-
         # If file is a phylip file run RAxML on it
         if filename.endswith(".phylip"):
+
+            count += 1
 
             input_file = os.path.join(window_directory, filename)
 
@@ -267,9 +267,13 @@ def image_combination(input_directory, plot):
   widths, heights = zip(*(i.size for i in bottom_images))
 
   #Total width is either the total of the bottom widths or the width of the top
-  total_width = max(sum(widths),top_image.size[0])
-  #Total height is sum of the top image and max of the bottom
-  total_height = max(heights)+top_image.size[1]
+  total_width = max(sum(widths), top_image.size[0])
+
+  ratio = float(top_image.size[1]) / top_image.size[0]
+  top_image = top_image.resize((total_width, int(total_width * ratio)))
+
+  # Total height is sum of the top image and max of the bottom
+  total_height = max(heights) + top_image.size[1]
 
   new_im = Image.new('RGB', (total_width, total_height))
 
@@ -287,7 +291,7 @@ def image_combination(input_directory, plot):
   os.startfile("C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/Final.jpg")
 
 
-# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
 # input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
 # output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
