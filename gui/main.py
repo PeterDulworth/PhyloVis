@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
 import sys
 import gui_layout as gui
-import os
+import time
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
@@ -19,6 +19,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
 
         # run
         self.runBtn.clicked.connect(self.run)
+        self.progressBar.reset()
 
     ################################# Handlers #################################
 
@@ -34,16 +35,45 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
         # set name of file to text entry
         self.outputDirEntry.setText(name)
 
-    def run(self):
-        input_file_name = self.inputFileEntry.text()
-        output_dir_name = self.outputDirEntry.text()
-        window_size = self.windowSizeEntry.text()
-        window_offset = self.windowOffsetEntry.text()
+    def runProgressBar(self):
+        self.completed = 0
+        self.progressBar.reset()
 
-        print 'Input File Name:', input_file_name
-        print 'Output Directory Name:', output_dir_name
-        print 'Window Size:', window_size
-        print 'Window Offset:', window_offset
+        while True:
+            time.sleep(0.05)
+            value = self.progressBar.value() + 1
+            self.progressBar.setValue(value)
+            QtGui.qApp.processEvents()
+            if value >= 101:
+                break
+
+    def run(self):
+        try:
+            input_file_name = str(self.inputFileEntry.text())
+            print 'Input File Name:', input_file_name
+        except ValueError:
+            QtGui.QMessageBox.warning(self, "Invalid Input", "Input filename needs to be a string.", "Ok")
+            return
+        try:
+            output_dir_name = str(self.outputDirEntry.text())
+            print 'Output Directory Name:', output_dir_name
+        except ValueError:
+            QtGui.QMessageBox.warning(self, "Invalid Input", "Output directory needs to be a string.", "Ok")
+            return
+        try:
+            window_size = int(self.windowSizeEntry.text())
+            print 'Window Size:', window_size
+        except ValueError:
+            QtGui.QMessageBox.warning(self, "Invalid Input", "Window size needs to be an integer.", "Ok")
+            return
+        try:
+            window_offset = int(self.windowOffsetEntry.text())
+            print 'Window Offset:', window_offset
+        except ValueError:
+            QtGui.QMessageBox.warning(self, "Invalid Input", "Window offset needs to be an integer.", "Ok")
+            return
+
+        self.runProgressBar()
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
