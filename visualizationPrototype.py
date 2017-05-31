@@ -284,7 +284,13 @@ def image_combination(input_directory, plot):
     x_offset += im.size[0]
 
   new_im.save('Final.jpg')
+  os.startfile("C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/Final.jpg")
 
 
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
+# input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
+# output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
+# window_size = 10
+# window_offset = 10
+# image_combination(tree_display(RAxML_windows(splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),scatter(num_windows(output_dir_name), ml(num_windows(output_dir_name), 'RAx_Files')))

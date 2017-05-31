@@ -45,7 +45,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
             value = self.progressBar.value() + 1
             self.progressBar.setValue(value)
             QtGui.qApp.processEvents()
-            if value >= 100001:
+            if value >= 101:
                 break
 
     def run(self):
