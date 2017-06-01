@@ -87,5 +87,5 @@ def scatter(num, likelihood):
 
     plt.savefig("Plot.png")
 
-print num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')
-scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files'))
+# print num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')
+# scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files'))
