@@ -5,7 +5,7 @@ import visualizationPrototype as vp
 from PyQt4 import QtGui
 
 
-class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
+class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
