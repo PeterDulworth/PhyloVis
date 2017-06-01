@@ -9,7 +9,8 @@ import matplotlib.colors as colors
 from PIL import Image
 
 """
-Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences
+Functions for creating a visualization tool for the summary and analysis 
+of phylogenetic trees.
 """
 
 def splittr(filename, window_size, step_size, destination_directory):
@@ -81,6 +82,7 @@ def splittr(filename, window_size, step_size, destination_directory):
                 file.close()
 
     return destination_directory
+
 
 def RAxML_windows(window_directory):
     """
@@ -296,6 +298,7 @@ def image_combination(input_directory, plot):
 
     # MAC OPEN FILE
     # os.system("open /Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
+
 
 # Run command
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
