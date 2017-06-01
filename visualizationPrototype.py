@@ -11,7 +11,8 @@ import shutil
 from sys import platform
 
 """
-Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences
+Functions for creating a visualization tool for the summary and analysis 
+of phylogenetic trees.
 """
 
 def splittr(filename, window_size, step_size, destination_directory):
@@ -53,7 +54,7 @@ def splittr(filename, window_size, step_size, destination_directory):
         # Create a file for each window and add it to the list
         # Write the number and length of the sequences to each file
         for i in range(BENEDICTRs_CONST):
-            output_files.append(open(destination_directory + "/window" + str(i + 1) + ".phylip", "w"))
+            output_files.append(open(destination_directory + "/window" + str(i) + ".phylip", "w"))
             output_files[i].close()
 
         for i in range(BENEDICTRs_CONST):
@@ -87,6 +88,7 @@ def splittr(filename, window_size, step_size, destination_directory):
 
     return destination_directory
 
+
 def RAxML_windows(window_directory):
     """
     Runs RAxML on the directory containing the windows
@@ -104,8 +106,6 @@ def RAxML_windows(window_directory):
 
     os.makedirs(destination_directory)
 
-    # Initialize a count to 0 to be used for file naming
-    count = 0
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(window_directory):
@@ -113,31 +113,31 @@ def RAxML_windows(window_directory):
         # If file is a phylip file run RAxML on it
         if filename.endswith(".phylip"):
 
-            count += 1
+            file_number = filename.replace("window","")
 
             input_file = os.path.join(window_directory, filename)
 
             # Run RAxML
-            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, count), shell=True)
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
             # Wait until command line is finished running
             p.wait()
 
 
             if platform == "win32":
                 # Move RAxML output files into their own destination folder Windows
-                os.rename("RAxML_bestTree." + str(count), "RAx_Files\RAxML_bestTree." + str(count))
-                os.rename("RAxML_bipartitions." + str(count), "RAx_Files\RAxML_bipartitions." + str(count))
-                os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files\RAxML_bipartitionsBranchLabels." + str(count))
-                os.rename("RAxML_bootstrap." + str(count), "RAx_Files\RAxML_bootstrap." + str(count))
-                os.rename("RAxML_info." + str(count), "RAx_Files\RAxML_info." + str(count))
+                os.rename("RAxML_bestTree." + file_number, "RAx_Files\RAxML_bestTree." + file_number)
+                os.rename("RAxML_bipartitions." + file_number, "RAx_Files\RAxML_bipartitions." + file_number)
+                os.rename("RAxML_bipartitionsBranchLabels." + file_number, "RAx_Files\RAxML_bipartitionsBranchLabels." + file_number)
+                os.rename("RAxML_bootstrap." + file_number, "RAx_Files\RAxML_bootstrap." + file_number)
+                os.rename("RAxML_info." + file_number, "RAx_Files\RAxML_info." + file_number)
 
             elif platform == "darwin":
                 # Move RAxML output files into their own destination folder Mac
-                os.rename("RAxML_bestTree." + str(count), "RAx_Files/RAxML_bestTree." + str(count))
-                os.rename("RAxML_bipartitions." + str(count), "RAx_Files/RAxML_bipartitions." + str(count))
-                os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files/RAxML_bipartitionsBranchLabels." + str(count))
-                os.rename("RAxML_bootstrap." + str(count), "RAx_Files/RAxML_bootstrap." + str(count))
-                os.rename("RAxML_info." + str(count), "RAx_Files/RAxML_info." + str(count))
+                os.rename("RAxML_bestTree." + file_number, "RAx_Files/RAxML_bestTree." + file_number)
+                os.rename("RAxML_bipartitions." + file_number, "RAx_Files/RAxML_bipartitions." + file_number)
+                os.rename("RAxML_bipartitionsBranchLabels." + file_number, "RAx_Files/RAxML_bipartitionsBranchLabels." + file_number)
+                os.rename("RAxML_bootstrap." + file_number, "RAx_Files/RAxML_bootstrap." + file_number)
+                os.rename("RAxML_info." + file_number, "RAx_Files/RAxML_info." + file_number)
 
     return destination_directory
 
@@ -156,26 +156,23 @@ def tree_display(input_directory, destination_directory):
 
     os.makedirs(destination_directory)
 
-    count = 0
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
 
         input_file = os.path.join(input_directory, filename)
 
-        count += 1
-
         # If file is the file with the newick string create an image for it
-        if os.path.splitext(filename)[0] == "RAxML_bestTree":
+        if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bestTree":
 
-            output_name = "Tree" + os.path.splitext(filename)[1] + ".png"
+            output_name = "Tree" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
 
             t = Tree(input_file)
             ts = TreeStyle()
             ts.rotation = 90
             ts.show_branch_length = False
             ts.show_branch_support = False
-            t.render("Tree"+os.path.splitext(filename)[1]+".png", tree_style=ts)
+            t.render(output_name, tree_style=ts)
             os.rename(output_name, os.path.join(destination_directory, output_name))
 
     return destination_directory
@@ -217,7 +214,7 @@ def ml(num, directory):
 
     while len(likelihood) <= num:
         for filename in os.listdir(directory):
-            if os.path.splitext(filename)[0] == "RAxML_info":
+            if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_info":
                 with open(os.path.join(directory, filename), 'r') as raxmlFile:
                     info = raxmlFile.readlines()
                     for line in info:
@@ -281,8 +278,10 @@ def image_combination(input_directory, plot):
 
         # If file is a Tree image
         if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
-
-          bottom_images.append(input_file)
+            # Get the tree number
+            list_idx  = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".",""))
+            # Place the tree in the correct position in the list
+            bottom_images.insert(list_idx,input_file)
 
     # Open the bottom images
     bottom_images = map(Image.open, bottom_images)
@@ -291,7 +290,7 @@ def image_combination(input_directory, plot):
     widths, heights = zip(*(i.size for i in bottom_images))
 
     #Total width is either the total of the bottom widths or the width of the top
-    total_width = max(sum(widths), top_image.size[0])
+    total_width = sum(widths)
 
     # Scale top image properly
     ratio = float(top_image.size[1]) / top_image.size[0]
@@ -322,9 +321,13 @@ def image_combination(input_directory, plot):
         # MAC OPEN FILE
         os.system("open Final.jpg")
 
+
 # Run command
 # image_combination(tree_display(RAxML_windows(splittr("test.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+
+
 
 # input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
 # output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
