@@ -2,7 +2,9 @@ import os
 import subprocess
 from ete3 import Tree, TreeStyle
 import math
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Qt4Agg')
+from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 from PIL import Image
 
@@ -80,7 +82,6 @@ def splittr(filename, window_size, step_size, destination_directory):
 
     return destination_directory
 
-
 def RAxML_windows(window_directory):
     """
     Runs RAxML on the "windows" folder
@@ -107,16 +108,16 @@ def RAxML_windows(window_directory):
             input_file = os.path.join(window_directory, filename)
 
             # Run RAxML
-            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, count))
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, count), shell=True)
             # Wait until command line is finished running
             p.wait()
 
             # Move RAxML output files into their own destination folder
-            os.rename("RAxML_bestTree." + str(count), "RAx_Files\RAxML_bestTree." + str(count))
-            os.rename("RAxML_bipartitions." + str(count), "RAx_Files\RAxML_bipartitions." + str(count))
-            os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files\RAxML_bipartitionsBranchLabels." + str(count))
-            os.rename("RAxML_bootstrap." + str(count), "RAx_Files\RAxML_bootstrap." + str(count))
-            os.rename("RAxML_info." + str(count), "RAx_Files\RAxML_info." + str(count))
+            os.rename("RAxML_bestTree." + str(count), "RAx_Files/RAxML_bestTree." + str(count))
+            os.rename("RAxML_bipartitions." + str(count), "RAx_Files/RAxML_bipartitions." + str(count))
+            os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files/RAxML_bipartitionsBranchLabels." + str(count))
+            os.rename("RAxML_bootstrap." + str(count), "RAx_Files/RAxML_bootstrap." + str(count))
+            os.rename("RAxML_info." + str(count), "RAx_Files/RAxML_info." + str(count))
 
     return destination_directory
 
@@ -239,7 +240,6 @@ def scatter(num, likelihood):
     plt.savefig("Plot.png")
     return "Plot.png"
 
-
 def image_combination(input_directory, plot):
   """
   Combines images from the inout directory horizontally and adds a plot vertically
@@ -288,10 +288,14 @@ def image_combination(input_directory, plot):
     x_offset += im.size[0]
 
   new_im.save('Final.jpg')
-  os.startfile("C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/Final.jpg")
 
+  # WINDOWS OPEN FILE
+  # os.startfile("/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
 
-image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+  # MAC OPEN FILE
+  os.system("open /Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
+
+# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
 # input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
 # output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
