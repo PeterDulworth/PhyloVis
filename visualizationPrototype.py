@@ -7,6 +7,8 @@ matplotlib.use('Qt4Agg')
 from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 from PIL import Image
+import shutil
+from sys import platform
 
 """
 Function for splitting PHYLIP files into smaller files based on sliding windows across the sequences
@@ -24,8 +26,11 @@ def splittr(filename, window_size, step_size, destination_directory):
     Smaller "window" files showing sections of the genome in PHYLIP format
     """
 
-    if not os.path.exists(destination_directory):
-        os.makedirs(destination_directory)
+    # Delete the folder and remake it
+    if os.path.exists(destination_directory):
+        shutil.rmtree(destination_directory)
+
+    os.makedirs(destination_directory)
 
     # Create a list for the output files
     output_files = []
@@ -84,15 +89,20 @@ def splittr(filename, window_size, step_size, destination_directory):
 
 def RAxML_windows(window_directory):
     """
-    Runs RAxML on the "windows" folder
+    Runs RAxML on the directory containing the windows
     Inputs:
     window_directory --- name of directory that holds window files
+    Output:
+    destination_directory --- the save location of the RAxML files
     """
 
     destination_directory = "RAx_Files"
 
-    if not os.path.exists(destination_directory):
-        os.makedirs(destination_directory)
+    # Delete the folder and remake it
+    if os.path.exists(destination_directory):
+        shutil.rmtree(destination_directory)
+
+    os.makedirs(destination_directory)
 
     # Initialize a count to 0 to be used for file naming
     count = 0
@@ -112,12 +122,22 @@ def RAxML_windows(window_directory):
             # Wait until command line is finished running
             p.wait()
 
-            # Move RAxML output files into their own destination folder
-            os.rename("RAxML_bestTree." + str(count), "RAx_Files/RAxML_bestTree." + str(count))
-            os.rename("RAxML_bipartitions." + str(count), "RAx_Files/RAxML_bipartitions." + str(count))
-            os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files/RAxML_bipartitionsBranchLabels." + str(count))
-            os.rename("RAxML_bootstrap." + str(count), "RAx_Files/RAxML_bootstrap." + str(count))
-            os.rename("RAxML_info." + str(count), "RAx_Files/RAxML_info." + str(count))
+
+            if platform == "win32":
+                # Move RAxML output files into their own destination folder Windows
+                os.rename("RAxML_bestTree." + str(count), "RAx_Files\RAxML_bestTree." + str(count))
+                os.rename("RAxML_bipartitions." + str(count), "RAx_Files\RAxML_bipartitions." + str(count))
+                os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files\RAxML_bipartitionsBranchLabels." + str(count))
+                os.rename("RAxML_bootstrap." + str(count), "RAx_Files\RAxML_bootstrap." + str(count))
+                os.rename("RAxML_info." + str(count), "RAx_Files\RAxML_info." + str(count))
+
+            elif platform == "darwin":
+                # Move RAxML output files into their own destination folder Mac
+                os.rename("RAxML_bestTree." + str(count), "RAx_Files/RAxML_bestTree." + str(count))
+                os.rename("RAxML_bipartitions." + str(count), "RAx_Files/RAxML_bipartitions." + str(count))
+                os.rename("RAxML_bipartitionsBranchLabels." + str(count), "RAx_Files/RAxML_bipartitionsBranchLabels." + str(count))
+                os.rename("RAxML_bootstrap." + str(count), "RAx_Files/RAxML_bootstrap." + str(count))
+                os.rename("RAxML_info." + str(count), "RAx_Files/RAxML_info." + str(count))
 
     return destination_directory
 
@@ -130,10 +150,13 @@ def tree_display(input_directory, destination_directory):
     output_directory --- name of folder to save tree images to
     """
 
-    count = 0
+    # Delete the folder and remake it
+    if os.path.exists(destination_directory):
+        shutil.rmtree(destination_directory)
 
-    if not os.path.exists(destination_directory):
-        os.makedirs(destination_directory)
+    os.makedirs(destination_directory)
+
+    count = 0
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
@@ -242,63 +265,66 @@ def scatter(num, likelihood):
 
 
 def image_combination(input_directory, plot):
-  """
-  Combines images from the inout directory horizontally and adds a plot vertically
-  Inputs:
-  input_directory --- name of directory containing tree images
-  plot --- the plot to be included at the top of the image
-  """
+    """
+    Combines images from the inout directory horizontally and adds a plot vertically
+    Inputs:
+    input_directory --- name of directory containing tree images
+    plot --- the plot to be included at the top of the image
+    """
 
-  bottom_images = []
+    bottom_images = []
 
-  # Iterate over each folder in the given directory
-  for filename in os.listdir(input_directory):
+    # Iterate over each folder in the given directory
+    for filename in os.listdir(input_directory):
 
-    input_file = os.path.join(input_directory, filename)
+        input_file = os.path.join(input_directory, filename)
 
-    # If file is a Tree image
-    if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
+        # If file is a Tree image
+        if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
 
-      bottom_images.append(input_file)
+          bottom_images.append(input_file)
 
-  # Open the bottom images
-  bottom_images = map(Image.open, bottom_images)
-  top_image = Image.open(plot)
+    # Open the bottom images
+    bottom_images = map(Image.open, bottom_images)
+    top_image = Image.open(plot)
 
-  widths, heights = zip(*(i.size for i in bottom_images))
+    widths, heights = zip(*(i.size for i in bottom_images))
 
-  #Total width is either the total of the bottom widths or the width of the top
-  total_width = max(sum(widths), top_image.size[0])
+    #Total width is either the total of the bottom widths or the width of the top
+    total_width = max(sum(widths), top_image.size[0])
 
-  # Scale top image properly
-  ratio = float(top_image.size[1]) / top_image.size[0]
-  top_image = top_image.resize((total_width, int(total_width * ratio)))
+    # Scale top image properly
+    ratio = float(top_image.size[1]) / top_image.size[0]
+    top_image = top_image.resize((total_width, int(total_width * ratio)))
 
-  # Total height is sum of the top image and max of the bottom
-  total_height = max(heights) + top_image.size[1]
+    # Total height is sum of the top image and max of the bottom
+    total_height = max(heights) + top_image.size[1]
 
-  new_im = Image.new('RGB', (total_width, total_height))
+    new_im = Image.new('RGB', (total_width, total_height))
 
-  new_im.paste(top_image, (0,0))
+    new_im.paste(top_image, (0,0))
 
-  x_offset = 0
-  y_offset = top_image.size[1]
+    x_offset = 0
+    y_offset = top_image.size[1]
 
-  #Combine bottom images horizontally with no vertical offset
-  for im in bottom_images:
-    new_im.paste(im, (x_offset,y_offset))
-    x_offset += im.size[0]
+    #Combine bottom images horizontally with no vertical offset
+    for im in bottom_images:
+        new_im.paste(im, (x_offset,y_offset))
+        x_offset += im.size[0]
 
-  new_im.save('Final.jpg')
+    new_im.save('Final.jpg')
 
-    # WINDOWS OPEN FILE
-    # os.startfile("/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
+    if platform == "win32":
+        # WINDOWS OPEN FILE
+        os.startfile("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\Final.jpg")
 
-    # MAC OPEN FILE
-    # os.system("open /Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
+    elif platform == "darwin":
+        # MAC OPEN FILE
+        os.system("open /Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
 
 # Run command
-# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+# image_combination(tree_display(RAxML_windows(splittr("test.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
 # input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
 # output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"

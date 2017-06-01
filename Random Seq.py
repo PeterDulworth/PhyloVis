@@ -2,7 +2,7 @@
 import random
 
 # PHYLIP Format
-def phylip(len, num):
+def phylip(len, num, output_name):
     """
     Creates random DNA 
     sequence in PHYLIP format.
@@ -15,7 +15,7 @@ def phylip(len, num):
     Random DNA sequences in a file.
     """
     bases = ["A", "T", "C", "G"]
-    file = open("phylip.txt", "w")
+    file = open(output_name, "w")
     file.write(str(num) + "\n")
     file.write(str(len) + "\n")
     for i in range(num):
@@ -25,7 +25,9 @@ def phylip(len, num):
         file.write("\n")
     file.close()
 
-# phylip(1000000, 10)
+# phylip(1000000, 10, "phylip.txt")
+# phylip(25, 5, "test.txt")
+
 
 # FASTA Format
 def fasta(len, num):
