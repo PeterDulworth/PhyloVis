@@ -58,29 +58,50 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # window_offset = 10
         # vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
 
+        # Error handling for input file
         try:
             input_file_name = str(self.inputFileEntry.text())
+            input_file_extension = os.path.splitext(input_file_name)[1]
+            print input_file_extension
+
+            if input_file_name == "":
+                raise ValueError, (1, "Please choose a file")
+            elif input_file_extension != '.txt' and input_file_extension != '.phylip' and input_file_extension != '.fasta':
+                raise ValueError, (2, "Invalid File Type\nPlease enter either a .txt, .fasta, or .phylip file")
             print 'Input File Name:', input_file_name
-        except ValueError:
-            QtGui.QMessageBox.warning(self, "Invalid Input", "Input filename needs to be a string.", "Ok")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
+
+        # Error handling for output directory
         try:
             output_dir_name = str(self.outputDirEntry.text())
+
+            if output_dir_name == "":
+                raise ValueError, (1, "Please choose a directory")
             print 'Output Directory Name:', output_dir_name
-        except ValueError:
-            QtGui.QMessageBox.warning(self, "Invalid Input", "Output directory needs to be a string.", "Ok")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
+
+        # Error handling for window size
         try:
             window_size = int(self.windowSizeEntry.text())
+            if window_size <= 0:
+                raise ValueError, "Positive integers only"
             print 'Window Size:', window_size
         except ValueError:
-            QtGui.QMessageBox.warning(self, "Invalid Input", "Window size needs to be an integer.", "Ok")
+            QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
             return
+
+        # Error handling for window offset
         try:
             window_offset = int(self.windowOffsetEntry.text())
+            if window_offset <= 0:
+                raise ValueError, "Positive integers only"
             print 'Window Offset:', window_offset
         except ValueError:
-            QtGui.QMessageBox.warning(self, "Invalid Input", "Window offset needs to be an integer.", "Ok")
+            QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
         # with open(input_file_name) as f:
