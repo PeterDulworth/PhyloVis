@@ -325,7 +325,7 @@ def image_combination(input_directory, plot):
 # Run command
 # image_combination(tree_display(RAxML_windows(splittr("test.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
-image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
 
 
