@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 """
@@ -17,8 +18,11 @@ def splittr(filename, window_size, step_size, destination_directory):
     Smaller "window" files showing sections of the genome in PHYLIP format
     """
 
-    if not os.path.exists(destination_directory):
-        os.makedirs(destination_directory)
+    # Delete the folder and remake it
+    if os.path.exists(destination_directory):
+        shutil.rmtree(destination_directory)
+
+    os.makedirs(destination_directory)
 
     # Create a list for the output files
     output_files = []
@@ -73,5 +77,8 @@ def splittr(filename, window_size, step_size, destination_directory):
                 file.write(window + "\n")
                 file.close()
 
+    return destination_directory
 
-splittr("phylip.txt", 10, 10, "windows")
+
+# splittr("phylip.txt", 10, 10, "windows")
+splittr("test.txt", 5, 5, "windows")
