@@ -1,11 +1,11 @@
-from PyQt4 import QtGui
-import sys
+import sys, os
 import gui_layout as gui
 import time
 import visualizationPrototype as vp
+from PyQt4 import QtGui
 
 
-class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
+class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
@@ -23,6 +23,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
         self.progressBar.reset()
 
     ################################# Handlers #################################
+
+    def setProgressBarVal(self, val):
+        self.progressBar.setValue(val)
 
     def input_file_open(self):
         # get name of file
@@ -49,6 +52,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
                 break
 
     def run(self):
+        # input_file_name = "/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/phylip.txt"
+        # output_dir_name = "/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/windows"
+        # window_size = 10
+        # window_offset = 10
+        # vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
+
         try:
             input_file_name = str(self.inputFileEntry.text())
             print 'Input File Name:', input_file_name
@@ -74,9 +83,22 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogenicVisualization):
             QtGui.QMessageBox.warning(self, "Invalid Input", "Window offset needs to be an integer.", "Ok")
             return
 
+        # with open(input_file_name) as f:
+        #     self.numberOfSequences = int(f.readline())
+        # f.close()
+
+
         self.runProgressBar()
         output_dir_name = output_dir_name.replace("\\", "/")
-        vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"), vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
+        vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)),"Trees"),vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
+
+        # while True:
+        #     time.sleep(0.05)
+        #     self.progressBar.setValue(int(vp.count * (100.0 / self.numberOfSequences)))
+        #     QtGui.qApp.processEvents()
+            # if vp.count >= self.numberOfSequences:
+            #     break
+
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication

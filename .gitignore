@@ -4,4 +4,6 @@ windows
 phylip.txt
 RAx_Files
 Trees
-windows
+*.pyc
+*.jpg
+*.png
