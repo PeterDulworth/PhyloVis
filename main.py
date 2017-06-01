@@ -111,7 +111,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.runProgressBar()
         output_dir_name = output_dir_name.replace("\\", "/")
-        vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)),"Trees"),vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
+
+        windows_dirs = vp.splittr(input_file_name, window_size, window_offset, output_dir_name)
+        RAx_dirs = vp.RAxML_windows(windows_dirs)
+        Tree_dir = vp.tree_display(RAx_dirs)
+        num = vp.num_windows(windows_dirs[0])
+        likelihood = vp.ml(num, RAx_dirs[0])
+        plot = vp.scatter(num, likelihood, output_dir_name)
+        vp.image_combination(Tree_dir, plot, output_dir_name)
 
         # while True:
         #     time.sleep(0.05)

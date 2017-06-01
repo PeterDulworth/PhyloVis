@@ -88,25 +88,29 @@ def splittr(filename, window_size, step_size, destination_directory):
                 file.write(window + "\n")
                 file.close()
 
-    return output_folder
+    return output_folder, destination_directory
 
 
-def RAxML_windows(window_directory):
+def RAxML_windows(directories):
     """
     Runs RAxML on the directory containing the windows
     Inputs:
-    window_directory --- name of directory that holds window files
+    directories --- a tuple containing the window directory and the destination directory
     Output:
-    destination_directory --- the save location of the RAxML files
+    output_directory --- the save location of the RAxML files
+    destination directory --- the folder containing the output directory
     """
 
-    destination_directory = "RAx_Files"
+    window_directory = directories[0]
+    destination_directory = directories[1]
+
+    output_directory = os.path.join(destination_directory,"RAx_Files")
 
     # Delete the folder and remake it
-    if os.path.exists(destination_directory):
-        shutil.rmtree(destination_directory)
+    if os.path.exists(output_directory):
+        shutil.rmtree(output_directory)
 
-    os.makedirs(destination_directory)
+    os.makedirs(output_directory)
 
 
     # Iterate over each folder in the given directory
@@ -127,36 +131,43 @@ def RAxML_windows(window_directory):
 
             if platform == "win32":
                 # Move RAxML output files into their own destination folder Windows
-                os.rename("RAxML_bestTree." + file_number, "RAx_Files\RAxML_bestTree." + file_number)
-                os.rename("RAxML_bipartitions." + file_number, "RAx_Files\RAxML_bipartitions." + file_number)
-                os.rename("RAxML_bipartitionsBranchLabels." + file_number, "RAx_Files\RAxML_bipartitionsBranchLabels." + file_number)
-                os.rename("RAxML_bootstrap." + file_number, "RAx_Files\RAxML_bootstrap." + file_number)
-                os.rename("RAxML_info." + file_number, "RAx_Files\RAxML_info." + file_number)
+                os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
+                os.rename("RAxML_bipartitions." + file_number, output_directory + "\RAxML_bipartitions." + file_number)
+                os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
+                os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
+                os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
 
             elif platform == "darwin":
                 # Move RAxML output files into their own destination folder Mac
-                os.rename("RAxML_bestTree." + file_number, "RAx_Files/RAxML_bestTree." + file_number)
-                os.rename("RAxML_bipartitions." + file_number, "RAx_Files/RAxML_bipartitions." + file_number)
-                os.rename("RAxML_bipartitionsBranchLabels." + file_number, "RAx_Files/RAxML_bipartitionsBranchLabels." + file_number)
-                os.rename("RAxML_bootstrap." + file_number, "RAx_Files/RAxML_bootstrap." + file_number)
-                os.rename("RAxML_info." + file_number, "RAx_Files/RAxML_info." + file_number)
+                os.rename("RAxML_bestTree." + file_number, output_directory + "/RAxML_bestTree." + file_number)
+                os.rename("RAxML_bipartitions." + file_number, output_directory + "/RAxML_bipartitions." + file_number)
+                os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
+                os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
+                os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
 
-    return destination_directory
+    return output_directory, destination_directory
 
 
-def tree_display(input_directory, destination_directory):
+def tree_display(directories):
     """
     Creates phylogenetic tree image files for each newick string file outputted by RAxML
     Inputs:
     input_directory --- name of folder containing RAxML files
-    output_directory --- name of folder to save tree images to
+    destination_directory --- name of folder to save tree folder to
+    Output:
+    output_directory --- name of folder containing tree images
     """
 
-    # Delete the folder and remake it
-    if os.path.exists(destination_directory):
-        shutil.rmtree(destination_directory)
+    input_directory = directories[0]
+    destination_directory = directories[1]
 
-    os.makedirs(destination_directory)
+    output_directory = os.path.join(destination_directory, "Trees")
+
+    # Delete the folder and remake it
+    if os.path.exists(output_directory):
+        shutil.rmtree(output_directory)
+
+    os.makedirs(output_directory)
 
 
     # Iterate over each folder in the given directory
@@ -175,9 +186,9 @@ def tree_display(input_directory, destination_directory):
             ts.show_branch_length = False
             ts.show_branch_support = False
             t.render(output_name, tree_style=ts)
-            os.rename(output_name, os.path.join(destination_directory, output_name))
+            os.rename(output_name, os.path.join(output_directory, output_name))
 
-    return destination_directory
+    return output_directory
 
 
 def num_windows(directory):
@@ -193,7 +204,7 @@ def num_windows(directory):
     """
     num = 0
 
-    for filename in os.listdir(os.path.join(directory,"windows")):
+    for filename in os.listdir(directory):
         if filename.endswith('.phylip'):
             num += 1
 
@@ -228,7 +239,7 @@ def ml(num, directory):
     return likelihood
 
 
-def scatter(num, likelihood):
+def scatter(num, likelihood, destination_directory):
     """
     Creates a scatter plot for use in the
     visualization tool.
@@ -236,6 +247,7 @@ def scatter(num, likelihood):
     Input:
     num        -- count outputted by num_windows
     likelihood -- number outputted by ml
+    destination_directory --- folder to save scatter plot to
 
     Returns:
     A scatter plot with num as the x-axis and
@@ -259,11 +271,12 @@ def scatter(num, likelihood):
 
         plt.scatter(x, y, s = area, c = color, alpha = 1)
 
-    plt.savefig("Plot.png")
-    return "Plot.png"
+    plot = os.path.join(destination_directory,"Plot.png")
+    plt.savefig(plot)
+    return plot
 
 
-def image_combination(input_directory, plot):
+def image_combination(input_directory, plot, destination_directory):
     """
     Combines images from the inout directory horizontally and adds a plot vertically
     Inputs:
@@ -313,15 +326,16 @@ def image_combination(input_directory, plot):
         new_im.paste(im, (x_offset,y_offset))
         x_offset += im.size[0]
 
-    new_im.save('Final.jpg')
+    final_image = os.path.join(destination_directory,'Final.jpg')
+    new_im.save(final_image)
 
     if platform == "win32":
         # WINDOWS OPEN FILE
-        os.startfile("Final.jpg")
+        os.startfile(final_image)
 
     elif platform == "darwin":
         # MAC OPEN FILE
-        os.system("open Final.jpg")
+        os.system("open " + final_image)
 
 
 # Run command
@@ -329,7 +343,21 @@ def image_combination(input_directory, plot):
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 
-
+# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents"))), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
+# print splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents")
+# input_file = "phylip.txt"
+# window_size = 5
+# window_offset = 5
+# destination = "C:\\Users\\travi\\Documents"
+#
+#
+# windows_dirs = splittr(input_file, window_size, window_offset, destination)
+# RAx_dirs = RAxML_windows(windows_dirs)
+# Tree_dir = tree_display(RAx_dirs)
+# num = num_windows(windows_dirs[0])
+# likelihood = ml(num, RAx_dirs[0])
+# plot = scatter(num, likelihood, destination)
+# image_combination(Tree_dir,plot, destination)
 
 # input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
 # output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
