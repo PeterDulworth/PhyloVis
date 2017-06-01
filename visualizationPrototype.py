@@ -22,16 +22,18 @@ def splittr(filename, window_size, step_size, destination_directory):
     filename --- name of the PHYLIP file to be used
     window_size --- the number of nucleotides to include in each window
     step_size --- the number of nucleotides between the beginning of each window
-    destination_directory --- the desired folder for the window files to be stored
+    destination_directory --- the desired folder for the window folder to be stored in
     Output:
     Smaller "window" files showing sections of the genome in PHYLIP format
     """
 
-    # Delete the folder and remake it
-    if os.path.exists(destination_directory):
-        shutil.rmtree(destination_directory)
+    output_folder = os.path.join(destination_directory,"windows")
 
-    os.makedirs(destination_directory)
+    # Delete the folder and remake it
+    if os.path.exists(output_folder):
+        shutil.rmtree(output_folder)
+
+    os.makedirs(output_folder)
 
     # Create a list for the output files
     output_files = []
@@ -54,7 +56,7 @@ def splittr(filename, window_size, step_size, destination_directory):
         # Create a file for each window and add it to the list
         # Write the number and length of the sequences to each file
         for i in range(BENEDICTRs_CONST):
-            output_files.append(open(destination_directory + "/window" + str(i) + ".phylip", "w"))
+            output_files.append(open(output_folder + "/window" + str(i) + ".phylip", "w"))
             output_files[i].close()
 
         for i in range(BENEDICTRs_CONST):
@@ -86,7 +88,7 @@ def splittr(filename, window_size, step_size, destination_directory):
                 file.write(window + "\n")
                 file.close()
 
-    return destination_directory
+    return output_folder
 
 
 def RAxML_windows(window_directory):
@@ -191,7 +193,7 @@ def num_windows(directory):
     """
     num = 0
 
-    for filename in os.listdir(directory):
+    for filename in os.listdir(os.path.join(directory,"windows")):
         if filename.endswith('.phylip'):
             num += 1
 
@@ -222,7 +224,7 @@ def ml(num, directory):
                         for i in range(len(words)):
                             if words[i] == 'Final':
                                 likelihood.append(float(words[i + 4]))
-
+    print "Likelihood", likelihood
     return likelihood
 
 
