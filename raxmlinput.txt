@@ -1,6 +1,0 @@
-4
-7
-sequence1 ACTGACG
-sequence2 CTGACTG
-sequence3 TGACTGA
-sequence4 GACTGAC
