@@ -316,11 +316,11 @@ def image_combination(input_directory, plot):
 
     if platform == "win32":
         # WINDOWS OPEN FILE
-        os.startfile("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\Final.jpg")
+        os.startfile("Final.jpg")
 
     elif platform == "darwin":
         # MAC OPEN FILE
-        os.system("open /Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/Final.jpg")
+        os.system("open Final.jpg")
 
 # Run command
 # image_combination(tree_display(RAxML_windows(splittr("test.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
