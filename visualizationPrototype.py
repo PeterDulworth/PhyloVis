@@ -91,7 +91,7 @@ def splittr(filename, window_size, step_size, destination_directory):
     return output_folder, destination_directory
 
 
-def RAxML_windows(directories):
+def raxml_windows(directories):
     """
     Runs RAxML on the directory containing the windows
     Inputs:
@@ -120,11 +120,12 @@ def RAxML_windows(directories):
         if filename.endswith(".phylip"):
 
             file_number = filename.replace("window","")
+            file_number = file_number.replace(".phylip", "")
 
             input_file = os.path.join(window_directory, filename)
 
             # Run RAxML
-            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 10 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
             # Wait until command line is finished running
             p.wait()
 
@@ -176,10 +177,10 @@ def tree_display(directories):
         input_file = os.path.join(input_directory, filename)
 
         # If file is the file with the best tree newick string create an image for it
-        if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bestTree":
+        if os.path.splitext(filename)[0] == "RAxML_bestTree":
 
             # Create tree image
-            output_name = "Tree" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
+            output_name = "Tree" + os.path.splitext(filename)[1] + ".png"
 
             t = Tree(input_file)
             ts = TreeStyle()
@@ -193,7 +194,7 @@ def tree_display(directories):
         if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bipartitions":
 
             # Create tree image with bootstrapping
-            output_name = "TreeBootstraps" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
+            output_name = "TreeBootstraps" + os.path.splitext(filename)[1] + ".png"
 
             t = Tree(input_file)
             ts = TreeStyle()
@@ -250,7 +251,7 @@ def ml(num, directory):
                         for i in range(len(words)):
                             if words[i] == 'Final':
                                 likelihood.append(float(words[i + 4]))
-    print "Likelihood", likelihood
+
     return likelihood
 
 
@@ -310,14 +311,14 @@ def image_combination(input_directory, plot, destination_directory):
         # If file is a Tree image
         if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
             # Get the tree number
-            list_idx  = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".",""))
+            list_idx  = int(os.path.splitext(os.path.splitext(filename)[0])[1].replace(".",""))
             # Place the tree in the correct position in the list
             tree_images.insert(list_idx,input_file)
 
         # File is a tree imagee with bootstrapping
         else:
             # Get the tree number
-            list_idx = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".", ""))
+            list_idx = int(os.path.splitext(os.path.splitext(filename)[0])[1].replace(".",""))
             # Place the tree in the correct position in the list
             tree_bootstrap_images.insert(list_idx, input_file)
 
@@ -379,7 +380,7 @@ def image_combination(input_directory, plot, destination_directory):
     elif platform == "darwin":
         # MAC OPEN FILE
         os.system("open " + final_image)
-    os.system("open " + final_bootstrap_image)
+        os.system("open " + final_bootstrap_image)
 
 
 # Run command
@@ -389,22 +390,16 @@ def image_combination(input_directory, plot, destination_directory):
 
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents"))), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 # print splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents")
+
 # input_file = "phylip.txt"
-# window_size = 5
-# window_offset = 5
+# window_size = 15
+# window_offset = 15
 # destination = "C:\\Users\\travi\\Documents"
-#
-#
+
 # windows_dirs = splittr(input_file, window_size, window_offset, destination)
-# RAx_dirs = RAxML_windows(windows_dirs)
+# RAx_dirs = raxml_windows(windows_dirs)
 # Tree_dir = tree_display(RAx_dirs)
 # num = num_windows(windows_dirs[0])
 # likelihood = ml(num, RAx_dirs[0])
 # plot = scatter(num, likelihood, destination)
 # image_combination(Tree_dir,plot, destination)
-
-# input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
-# output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
-# window_size = 10
-# window_offset = 10
-# image_combination(tree_display(RAxML_windows(splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),scatter(num_windows(output_dir_name), ml(num_windows(output_dir_name), 'RAx_Files')))
