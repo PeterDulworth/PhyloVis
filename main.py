@@ -2,8 +2,11 @@ import sys, os
 import gui_layout as gui
 import time
 import visualizationPrototype as vp
+from PIL import Image
 from PyQt4 import QtGui
 
+size = Image.open("Final.jpg").size
+print size
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -18,11 +21,25 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # if output dir button is clicked run function -- file_open
         self.outputDirBtn.clicked.connect(self.output_dir_open)
 
+        # set start page to the input page
+        self.stackedWidget.setCurrentIndex(0)
+
         # run
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
+        self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
+        # self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
     ################################# Handlers #################################
+
+    def changeWindow(self):
+        """
+            switch windows
+        """
+        if self.stackedWidget.currentIndex() == 0:
+            self.stackedWidget.setCurrentIndex(1)
+        else:
+            self.stackedWidget.setCurrentIndex(0)
 
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
@@ -52,11 +69,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 break
 
     def run(self):
-        # input_file_name = "/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/phylip.txt"
-        # output_dir_name = "/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/windows"
-        # window_size = 10
-        # window_offset = 10
-        # vp.image_combination(vp.tree_display(vp.RAxML_windows(vp.splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),vp.scatter(vp.num_windows(output_dir_name), vp.ml(vp.num_windows(output_dir_name), 'RAx_Files')))
 
         # Error handling for input file
         try:
@@ -104,11 +116,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-        # with open(input_file_name) as f:
-        #     self.numberOfSequences = int(f.readline())
-        # f.close()
-
-
         self.runProgressBar()
         output_dir_name = output_dir_name.replace("\\", "/")
 
@@ -119,13 +126,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         likelihood = vp.ml(num, RAx_dirs[0])
         plot = vp.scatter(num, likelihood, output_dir_name)
         vp.image_combination(Tree_dir, plot, output_dir_name)
-
-        # while True:
-        #     time.sleep(0.05)
-        #     self.progressBar.setValue(int(vp.count * (100.0 / self.numberOfSequences)))
-        #     QtGui.qApp.processEvents()
-            # if vp.count >= self.numberOfSequences:
-            #     break
+        self.changeWindow()
 
 
 def main():
