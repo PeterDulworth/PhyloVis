@@ -91,7 +91,7 @@ def splittr(filename, window_size, step_size, destination_directory):
     return output_folder, destination_directory
 
 
-def RAxML_windows(directories):
+def raxml_windows(directories):
     """
     Runs RAxML on the directory containing the windows
     Inputs:
@@ -120,6 +120,7 @@ def RAxML_windows(directories):
         if filename.endswith(".phylip"):
 
             file_number = filename.replace("window","")
+            file_number = file_number.replace(".phylip", "")
 
             input_file = os.path.join(window_directory, filename)
 
@@ -175,16 +176,31 @@ def tree_display(directories):
 
         input_file = os.path.join(input_directory, filename)
 
-        # If file is the file with the newick string create an image for it
-        if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bestTree":
+        # If file is the file with the best tree newick string create an image for it
+        if os.path.splitext(filename)[0] == "RAxML_bestTree":
 
-            output_name = "Tree" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
+            # Create tree image
+            output_name = "Tree" + os.path.splitext(filename)[1] + ".png"
 
             t = Tree(input_file)
             ts = TreeStyle()
             ts.rotation = 90
             ts.show_branch_length = False
             ts.show_branch_support = False
+            t.render(output_name, tree_style=ts)
+            os.rename(output_name, os.path.join(output_directory, output_name))
+
+        # If file is the file with the best tree newick string create an image for it
+        if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bipartitions":
+
+            # Create tree image with bootstrapping
+            output_name = "TreeBootstraps" + os.path.splitext(filename)[1] + ".png"
+
+            t = Tree(input_file)
+            ts = TreeStyle()
+            ts.rotation = 90
+            ts.show_branch_length = False
+            ts.show_branch_support = True
             t.render(output_name, tree_style=ts)
             os.rename(output_name, os.path.join(output_directory, output_name))
 
@@ -235,7 +251,7 @@ def ml(num, directory):
                         for i in range(len(words)):
                             if words[i] == 'Final':
                                 likelihood.append(float(words[i + 4]))
-    print "Likelihood", likelihood
+
     return likelihood
 
 
@@ -284,7 +300,8 @@ def image_combination(input_directory, plot, destination_directory):
     plot --- the plot to be included at the top of the image
     """
 
-    bottom_images = []
+    tree_images = []
+    tree_bootstrap_images = []
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
@@ -294,15 +311,24 @@ def image_combination(input_directory, plot, destination_directory):
         # If file is a Tree image
         if os.path.splitext(os.path.splitext(filename)[0])[0] == "Tree":
             # Get the tree number
-            list_idx  = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".",""))
+            list_idx  = int(os.path.splitext(os.path.splitext(filename)[0])[1].replace(".",""))
             # Place the tree in the correct position in the list
-            bottom_images.insert(list_idx,input_file)
+            tree_images.insert(list_idx,input_file)
+
+        # File is a tree imagee with bootstrapping
+        else:
+            # Get the tree number
+            list_idx = int(os.path.splitext(os.path.splitext(filename)[0])[1].replace(".",""))
+            # Place the tree in the correct position in the list
+            tree_bootstrap_images.insert(list_idx, input_file)
+
 
     # Open the bottom images
-    bottom_images = map(Image.open, bottom_images)
+    tree_images = map(Image.open, tree_images)
+    tree_bootstrap_images = map(Image.open, tree_bootstrap_images)
     top_image = Image.open(plot)
 
-    widths, heights = zip(*(i.size for i in bottom_images))
+    widths, heights = zip(*(i.size for i in tree_images))
 
     #Total width is either the total of the bottom widths or the width of the top
     total_width = sum(widths)
@@ -314,6 +340,7 @@ def image_combination(input_directory, plot, destination_directory):
     # Total height is sum of the top image and max of the bottom
     total_height = max(heights) + top_image.size[1]
 
+    # Create combined image of plot and trees
     new_im = Image.new('RGB', (total_width, total_height))
 
     new_im.paste(top_image, (0,0))
@@ -322,20 +349,38 @@ def image_combination(input_directory, plot, destination_directory):
     y_offset = top_image.size[1]
 
     #Combine bottom images horizontally with no vertical offset
-    for im in bottom_images:
+    for im in tree_images:
         new_im.paste(im, (x_offset,y_offset))
         x_offset += im.size[0]
 
     final_image = os.path.join(destination_directory,'Final.jpg')
     new_im.save(final_image)
 
-    if platform == "win32":
-        # WINDOWS OPEN FILE
-        os.startfile(final_image)
+    # Create combined image of plot and bootstrapped trees
+    new_im = Image.new('RGB', (total_width, total_height))
 
-    elif platform == "darwin":
-        # MAC OPEN FILE
-        os.system("open " + final_image)
+    new_im.paste(top_image, (0, 0))
+
+    x_offset = 0
+    y_offset = top_image.size[1]
+
+    # Combine bottom images horizontally with no vertical offset
+    for im in tree_bootstrap_images:
+        new_im.paste(im, (x_offset, y_offset))
+        x_offset += im.size[0]
+
+    final_bootstrap_image = os.path.join(destination_directory, 'FinalBootstraps.jpg')
+    new_im.save(final_bootstrap_image)
+
+    # if platform == "win32":
+    #     # WINDOWS OPEN FILE
+    #     os.startfile(final_image)
+    #     os.startfile(final_bootstrap_image)
+    #
+    # elif platform == "darwin":
+    #     # MAC OPEN FILE
+    #     os.system("open " + final_image)
+    #     os.system("open " + final_bootstrap_image)
 
 
 # Run command
@@ -345,22 +390,16 @@ def image_combination(input_directory, plot, destination_directory):
 
 # image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents"))), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
 # print splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents")
+
 # input_file = "phylip.txt"
-# window_size = 5
-# window_offset = 5
+# window_size = 15
+# window_offset = 15
 # destination = "C:\\Users\\travi\\Documents"
-#
-#
+
 # windows_dirs = splittr(input_file, window_size, window_offset, destination)
-# RAx_dirs = RAxML_windows(windows_dirs)
+# RAx_dirs = raxml_windows(windows_dirs)
 # Tree_dir = tree_display(RAx_dirs)
 # num = num_windows(windows_dirs[0])
 # likelihood = ml(num, RAx_dirs[0])
 # plot = scatter(num, likelihood, destination)
 # image_combination(Tree_dir,plot, destination)
-
-# input_file_name = "C:/Users/travi/Documents/Evolutionary-Diversity-Visualization-Python/phylip.txt"
-# output_dir_name = r"C:\Users\travi\Documents\Evolutionary-Diversity-Visualization-Python\windows"
-# window_size = 10
-# window_offset = 10
-# image_combination(tree_display(RAxML_windows(splittr(input_file_name, window_size, window_offset, output_dir_name)), "Trees"),scatter(num_windows(output_dir_name), ml(num_windows(output_dir_name), 'RAx_Files')))

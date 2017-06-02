@@ -119,8 +119,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runProgressBar()
         output_dir_name = output_dir_name.replace("\\", "/")
 
-        windows_dirs = vp.splittr(input_file_name, window_size, window_offset, output_dir_name)
-        RAx_dirs = vp.RAxML_windows(windows_dirs)
+        windows_dirs = vp.splittr(input_file_name
+                                  , window_size, window_offset, output_dir_name)
+        RAx_dirs = vp.raxml_windows(windows_dirs)
         Tree_dir = vp.tree_display(RAx_dirs)
         num = vp.num_windows(windows_dirs[0])
         likelihood = vp.ml(num, RAx_dirs[0])
