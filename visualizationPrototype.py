@@ -124,7 +124,7 @@ def RAxML_windows(directories):
             input_file = os.path.join(window_directory, filename)
 
             # Run RAxML
-            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 50 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
             # Wait until command line is finished running
             p.wait()
 
@@ -175,9 +175,10 @@ def tree_display(directories):
 
         input_file = os.path.join(input_directory, filename)
 
-        # If file is the file with the newick string create an image for it
+        # If file is the file with the best tree newick string create an image for it
         if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bestTree":
 
+            # Create tree image
             output_name = "Tree" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
 
             t = Tree(input_file)
@@ -185,6 +186,20 @@ def tree_display(directories):
             ts.rotation = 90
             ts.show_branch_length = False
             ts.show_branch_support = False
+            t.render(output_name, tree_style=ts)
+            os.rename(output_name, os.path.join(output_directory, output_name))
+
+        # If file is the file with the best tree newick string create an image for it
+        if os.path.splitext(os.path.splitext(filename)[0])[0] == "RAxML_bipartitions":
+
+            # Create tree image with bootstrapping
+            output_name = "TreeBootstraps" + os.path.splitext(os.path.splitext(filename)[0])[1] + ".png"
+
+            t = Tree(input_file)
+            ts = TreeStyle()
+            ts.rotation = 90
+            ts.show_branch_length = False
+            ts.show_branch_support = True
             t.render(output_name, tree_style=ts)
             os.rename(output_name, os.path.join(output_directory, output_name))
 
@@ -284,7 +299,8 @@ def image_combination(input_directory, plot, destination_directory):
     plot --- the plot to be included at the top of the image
     """
 
-    bottom_images = []
+    tree_images = []
+    tree_bootstrap_images = []
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
@@ -296,13 +312,22 @@ def image_combination(input_directory, plot, destination_directory):
             # Get the tree number
             list_idx  = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".",""))
             # Place the tree in the correct position in the list
-            bottom_images.insert(list_idx,input_file)
+            tree_images.insert(list_idx,input_file)
+
+        # File is a tree imagee with bootstrapping
+        else:
+            # Get the tree number
+            list_idx = int((os.path.splitext(os.path.splitext(filename)[0])[1]).replace(".", ""))
+            # Place the tree in the correct position in the list
+            tree_bootstrap_images.insert(list_idx, input_file)
+
 
     # Open the bottom images
-    bottom_images = map(Image.open, bottom_images)
+    tree_images = map(Image.open, tree_images)
+    tree_bootstrap_images = map(Image.open, tree_bootstrap_images)
     top_image = Image.open(plot)
 
-    widths, heights = zip(*(i.size for i in bottom_images))
+    widths, heights = zip(*(i.size for i in tree_images))
 
     #Total width is either the total of the bottom widths or the width of the top
     total_width = sum(widths)
@@ -314,6 +339,7 @@ def image_combination(input_directory, plot, destination_directory):
     # Total height is sum of the top image and max of the bottom
     total_height = max(heights) + top_image.size[1]
 
+    # Create combined image of plot and trees
     new_im = Image.new('RGB', (total_width, total_height))
 
     new_im.paste(top_image, (0,0))
@@ -322,20 +348,38 @@ def image_combination(input_directory, plot, destination_directory):
     y_offset = top_image.size[1]
 
     #Combine bottom images horizontally with no vertical offset
-    for im in bottom_images:
+    for im in tree_images:
         new_im.paste(im, (x_offset,y_offset))
         x_offset += im.size[0]
 
     final_image = os.path.join(destination_directory,'Final.jpg')
     new_im.save(final_image)
 
+    # Create combined image of plot and bootstrapped trees
+    new_im = Image.new('RGB', (total_width, total_height))
+
+    new_im.paste(top_image, (0, 0))
+
+    x_offset = 0
+    y_offset = top_image.size[1]
+
+    # Combine bottom images horizontally with no vertical offset
+    for im in tree_bootstrap_images:
+        new_im.paste(im, (x_offset, y_offset))
+        x_offset += im.size[0]
+
+    final_bootstrap_image = os.path.join(destination_directory, 'FinalBootstraps.jpg')
+    new_im.save(final_bootstrap_image)
+
     if platform == "win32":
         # WINDOWS OPEN FILE
         os.startfile(final_image)
+        os.startfile(final_bootstrap_image)
 
     elif platform == "darwin":
         # MAC OPEN FILE
         os.system("open " + final_image)
+    os.system("open " + final_bootstrap_image)
 
 
 # Run command
