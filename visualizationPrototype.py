@@ -372,15 +372,15 @@ def image_combination(input_directory, plot, destination_directory):
     final_bootstrap_image = os.path.join(destination_directory, 'FinalBootstraps.jpg')
     new_im.save(final_bootstrap_image)
 
-    if platform == "win32":
-        # WINDOWS OPEN FILE
-        os.startfile(final_image)
-        os.startfile(final_bootstrap_image)
-
-    elif platform == "darwin":
-        # MAC OPEN FILE
-        os.system("open " + final_image)
-        os.system("open " + final_bootstrap_image)
+    # if platform == "win32":
+    #     # WINDOWS OPEN FILE
+    #     os.startfile(final_image)
+    #     os.startfile(final_bootstrap_image)
+    #
+    # elif platform == "darwin":
+    #     # MAC OPEN FILE
+    #     os.system("open " + final_image)
+    #     os.system("open " + final_bootstrap_image)
 
 
 # Run command
