@@ -139,6 +139,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
         self.changeWindow()
+        self.resize(800,1000)
+
 
 
 def main():

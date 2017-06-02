@@ -25,7 +25,7 @@ except AttributeError:
 class Ui_PhylogeneticVisualization(object):
     def setupUi(self, PhylogeneticVisualization):
         PhylogeneticVisualization.setObjectName(_fromUtf8("PhylogeneticVisualization"))
-        PhylogeneticVisualization.resize(581, 432)
+        PhylogeneticVisualization.resize(433, 201)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -198,7 +198,7 @@ class Ui_PhylogeneticVisualization(object):
         self.gridLayout.addLayout(self.inputMainHorizontalLayout, 0, 0, 1, 1)
         PhylogeneticVisualization.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(PhylogeneticVisualization)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 581, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 433, 22))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -206,7 +206,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(PhylogeneticVisualization)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.outputTabs.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(PhylogeneticVisualization)
 
