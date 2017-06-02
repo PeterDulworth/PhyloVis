@@ -5,10 +5,12 @@ import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui
 
-size = Image.open("Final.jpg").size
-print size
+standardSize = Image.open("Final.jpg").size
+bootstrapSize = Image.open("FinalBootstraps.jpg").size
+print standardSize, bootstrapSize
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
+
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
@@ -27,8 +29,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # run
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
-        self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
-        # self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
     ################################# Handlers #################################
 
@@ -116,9 +116,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-        self.runProgressBar()
-        output_dir_name = output_dir_name.replace("\\", "/")
 
+        # self.runProgressBar()
+
+        output_dir_name = output_dir_name.replace("\\", "/")
         windows_dirs = vp.splittr(input_file_name
                                   , window_size, window_offset, output_dir_name)
         RAx_dirs = vp.raxml_windows(windows_dirs)
@@ -127,6 +128,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         likelihood = vp.ml(num, RAx_dirs[0])
         plot = vp.scatter(num, likelihood, output_dir_name)
         vp.image_combination(Tree_dir, plot, output_dir_name)
+        self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
+        self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
         self.changeWindow()
 
 

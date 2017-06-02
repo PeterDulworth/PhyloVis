@@ -32,7 +32,7 @@
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="inputPage">
          <widget class="QWidget" name="layoutWidget">
@@ -214,6 +214,12 @@
          </widget>
         </widget>
         <widget class="QWidget" name="outputPage">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <widget class="QTabWidget" name="outputTabs">
           <property name="geometry">
            <rect>
@@ -227,6 +233,12 @@
            <number>0</number>
           </property>
           <widget class="QWidget" name="standard">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <attribute name="title">
             <string>Standard</string>
            </attribute>
@@ -294,6 +306,12 @@
                </item>
                <item>
                 <widget class="QLabel" name="standardImage">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string/>
                  </property>
