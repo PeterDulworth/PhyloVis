@@ -7,7 +7,7 @@ from PyQt4 import QtGui
 
 standardSize = Image.open("Final.jpg").size
 bootstrapSize = Image.open("FinalBootstraps.jpg").size
-print standardSize, bootstrapSize
+
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
@@ -117,7 +117,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
 
-        # self.runProgressBar()
+        self.runProgressBar()
 
         output_dir_name = output_dir_name.replace("\\", "/")
         windows_dirs = vp.splittr(input_file_name
