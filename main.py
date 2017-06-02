@@ -4,6 +4,9 @@ import time
 import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui
+from PyQt4 import Qt
+from PyQt4 import QtCore
+import PyQt4
 
 standardSize = Image.open("Final.jpg").size
 bootstrapSize = Image.open("FinalBootstraps.jpg").size
@@ -128,8 +131,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         likelihood = vp.ml(num, RAx_dirs[0])
         plot = vp.scatter(num, likelihood, output_dir_name)
         vp.image_combination(Tree_dir, plot, output_dir_name)
-        # self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
+
+        self.standardImage.setScaledContents(True)
+        self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
+
+        self.bootstrapImage.setScaledContents(True)
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
+
         self.changeWindow()
 
 
