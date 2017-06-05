@@ -26,18 +26,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         ############################# Link Events ##############################
 
-        #
+        #**************************** Menu Bar Events ****************************#
+
+        # when you select a mode first deselct all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
         self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
         self.actionNot_Rax_A.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_A))
         self.actionNot_Rax_B.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_B))
         self.actionNot_Rax_C.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_C))
 
+        # change the input mode based on which mode is selected in the menu bar
         self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
         self.actionNot_Rax_A.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
         self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
-
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
@@ -74,6 +76,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
+
+    def saveAs(self):
+        name = QtGui.QFileDialog.getSaveFileName()
+        print name
 
     def input_file_open(self):
         # get name of file
