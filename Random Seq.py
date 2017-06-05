@@ -31,7 +31,7 @@ def phylip(len, num, output_name):
 
 
 # FASTA Format
-def fasta(len, num):
+def fasta(len, num, output_name):
     """
         Creates random DNA 
         sequence in FASTA format.
@@ -46,7 +46,7 @@ def fasta(len, num):
         Random DNA sequences in a file.
         """
     bases = ["A", "T", "C", "G"]
-    file = open("fasta.txt", "w")
+    file = open(output_name, "w")
     file.write(str(num) + "\n")
     file.write(str(len) + "\n")
     for i in range(num):
@@ -58,5 +58,5 @@ def fasta(len, num):
         file.write("\n")
     file.close()
 
-# fasta(100000, 10)
+# fasta(100000, 10, "fasta.txt")
 
