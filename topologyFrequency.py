@@ -98,3 +98,6 @@ def top_topologies(num, directories):
 
     return top
 
+# dir = ('C:\Users\chaba\GitProjects\PhyloVis', '')
+# top_topologies(5, dir)
+
