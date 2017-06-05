@@ -97,3 +97,4 @@ def top_topologies(num, directories):
     plt.show()
 
     return top
+
