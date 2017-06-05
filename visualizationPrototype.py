@@ -152,8 +152,7 @@ def tree_display(directories):
     """
     Creates phylogenetic tree image files for each newick string file outputted by RAxML
     Inputs:
-    input_directory --- name of folder containing RAxML files
-    destination_directory --- name of folder to save tree folder to
+    directories --- a tuple containing the RAxML Files directory and the destination directory
     Output:
     output_directory --- name of folder containing tree images
     """
