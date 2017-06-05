@@ -219,7 +219,7 @@ class Ui_PhylogeneticVisualization(object):
         self.runBtn.setText(_translate("PhylogeneticVisualization", "Run", None))
         self.outputTabs.setTabText(self.outputTabs.indexOf(self.standard), _translate("PhylogeneticVisualization", "Standard", None))
         self.outputTabs.setTabText(self.outputTabs.indexOf(self.bootstrap), _translate("PhylogeneticVisualization", "Boostrap", None))
-        self.pushButton_2.setText(_translate("PhylogeneticVisualization", "PushButton", None))
+        self.pushButton_2.setText(_translate("PhylogeneticVisualization", "Bet", None))
         self.outputTabs.setTabText(self.outputTabs.indexOf(self.summary), _translate("PhylogeneticVisualization", "Summary", None))
         self.menuFile.setTitle(_translate("PhylogeneticVisualization", "File", None))
 
