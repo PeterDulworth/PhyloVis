@@ -97,3 +97,6 @@ def top_topologies(num, directories):
     plt.show()
 
     return top
+
+dir = ('C:\Users\chaba\GitProjects\PhyloVis', '')
+top_topologies(5, dir)
