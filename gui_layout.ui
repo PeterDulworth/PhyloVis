@@ -44,7 +44,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="inputPage">
          <layout class="QHBoxLayout" name="horizontalLayout">
@@ -219,6 +219,47 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="inputPageNotRaxA">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>notRaxA</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="inputPageNotRaxB">
+         <widget class="QLabel" name="label_2">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>70</y>
+            <width>56</width>
+            <height>13</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>notRaxB</string>
+          </property>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="inputPageNotRaxC">
+         <widget class="QLabel" name="label_3">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>70</y>
+            <width>56</width>
+            <height>13</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>notRaxC</string>
+          </property>
+         </widget>
+        </widget>
         <widget class="QWidget" name="outputPage">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -236,7 +277,7 @@
              </sizepolicy>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="standard">
              <property name="sizePolicy">
@@ -373,9 +414,104 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <addaction name="actionJPG"/>
+     <addaction name="actionPDF"/>
+     <addaction name="actionTXT"/>
+    </widget>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="menuExport"/>
+   </widget>
+   <widget class="QMenu" name="menuMode">
+    <property name="title">
+     <string>Mode</string>
+    </property>
+    <addaction name="actionRax"/>
+    <addaction name="actionNot_Rax_A"/>
+    <addaction name="actionNot_Rax_B"/>
+    <addaction name="actionNot_Rax_C"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuMode"/>
   </widget>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Export</string>
+   </property>
+   <property name="shortcut">
+    <string>Backspace</string>
+   </property>
+  </action>
+  <action name="actionRax">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rax</string>
+   </property>
+  </action>
+  <action name="actionNot_Rax_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Not Rax A</string>
+   </property>
+  </action>
+  <action name="actionNot_Rax_B">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Not Rax B</string>
+   </property>
+  </action>
+  <action name="actionNot_Rax_C">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Not Rax C</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionJPG">
+   <property name="text">
+    <string>JPG</string>
+   </property>
+  </action>
+  <action name="actionPDF">
+   <property name="text">
+    <string>PDF</string>
+   </property>
+  </action>
+  <action name="actionTXT">
+   <property name="text">
+    <string>TXT</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -18,7 +18,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
 
+        # moves menu bar into application -- mac only windows sux
+        self.menubar.setNativeMenuBar(False)
+
+        # windows dictionary
+        self.windows = {'actionRax': 0, 'actionNot_Rax_A': 1, 'actionNot_Rax_B': 2, 'actionNot_Rax_C': 3}
+
         ############################# Link Events ##############################
+
+        #
+        self.modes = self.menuMode.actions()
+        self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
+        self.actionNot_Rax_A.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_A))
+        self.actionNot_Rax_B.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_B))
+        self.actionNot_Rax_C.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_C))
+
+        self.actionRax.triggered.connect(lambda: self.setWindow('actionRax'))
+        self.actionNot_Rax_A.triggered.connect(lambda: self.setWindow('actionNot_Rax_A'))
+        self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('actionNot_Rax_B'))
+        self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('actionNot_Rax_C'))
+
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
@@ -43,6 +62,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.stackedWidget.setCurrentIndex(1)
         else:
             self.stackedWidget.setCurrentIndex(0)
+
+    def setWindow(self, window):
+        self.stackedWidget.setCurrentIndex(self.windows[window])
+
+    def ensureSingleModeSelected(self, mode_selected):
+        for mode in self.modes:
+            if mode != mode_selected:
+                mode.setChecked(False)
+
+        mode_selected.setChecked(True)
+
 
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
@@ -120,7 +150,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
 
-        self.runProgressBar()
+        # self.runProgressBar()
 
         output_dir_name = output_dir_name.replace("\\", "/")
         windows_dirs = vp.splittr(input_file_name
@@ -139,7 +169,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
         self.changeWindow()
-        self.resize(800,1000)
+        self.resize(standardSize[0],standardSize[1])
 
 
 
