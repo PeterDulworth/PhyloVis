@@ -129,7 +129,6 @@ def raxml_windows(directories):
             # Wait until command line is finished running
             p.wait()
 
-
             if platform == "win32":
                 # Move RAxML output files into their own destination folder Windows
                 os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
@@ -169,7 +168,6 @@ def tree_display(directories):
         shutil.rmtree(output_directory)
 
     os.makedirs(output_directory)
-
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
@@ -322,7 +320,6 @@ def image_combination(input_directory, plot, destination_directory):
             # Place the tree in the correct position in the list
             tree_bootstrap_images.insert(list_idx, input_file)
 
-
     # Open the bottom images
     tree_images = map(Image.open, tree_images)
     tree_bootstrap_images = map(Image.open, tree_bootstrap_images)
@@ -372,6 +369,7 @@ def image_combination(input_directory, plot, destination_directory):
     final_bootstrap_image = os.path.join(destination_directory, 'FinalBootstraps.jpg')
     new_im.save(final_bootstrap_image)
 
+    # Automatically open image files
     # if platform == "win32":
     #     # WINDOWS OPEN FILE
     #     os.startfile(final_image)
@@ -383,13 +381,7 @@ def image_combination(input_directory, plot, destination_directory):
     #     os.system("open " + final_bootstrap_image)
 
 
-# Run command
-# image_combination(tree_display(RAxML_windows(splittr("test.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
-# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 10, 10, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
-# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "windows")), "Trees"), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
-
-# image_combination(tree_display(RAxML_windows(splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents"))), scatter(num_windows('windows'), ml(num_windows('windows'), 'RAx_Files')))
-# print splittr("phylip.txt", 5, 5, "C:\\Users\\travi\\Documents")
+# Run commands below
 
 # input_file = "phylip.txt"
 # window_size = 15
