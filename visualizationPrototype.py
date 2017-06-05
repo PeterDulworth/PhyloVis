@@ -129,6 +129,20 @@ def raxml_windows(directories):
             # Wait until command line is finished running
             p.wait()
 
+            # Regular expression for floats
+            float_pattern = "([+-]?\\d*\\.\\d+)(?![-+0-9\\.])"
+
+            # Create a separate file with the topology of the best tree
+            with open("RAxML_bestTree." + file_number) as f:
+                # Read newick string from file
+                topology = f.readline()
+
+                # Delete float branch lengths and ":" from newick string
+                topology = ((re.sub(float_pattern, '', topology)).replace(":", "")).replace("\n", "")
+                file = open("Topology_bestTree." + file_number, "w")
+                file.write(topology)
+                file.close()
+
             if platform == "win32":
                 # Move RAxML output files into their own destination folder Windows
                 os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
@@ -136,6 +150,7 @@ def raxml_windows(directories):
                 os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
                 os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
                 os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
+                os.rename("topology_bestTree." + file_number, output_directory + "\Topology_bestTree." + file_number)
 
             elif platform == "darwin":
                 # Move RAxML output files into their own destination folder Mac
@@ -144,6 +159,7 @@ def raxml_windows(directories):
                 os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
                 os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
                 os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
+                os.rename("topology_bestTree." + file_number, output_directory + "/topology_bestTree." + file_number)
 
     return output_directory, destination_directory
 
@@ -152,8 +168,7 @@ def tree_display(directories):
     """
     Creates phylogenetic tree image files for each newick string file outputted by RAxML
     Inputs:
-    input_directory --- name of folder containing RAxML files
-    destination_directory --- name of folder to save tree folder to
+    directories --- a tuple containing the RAxML Files directory and the destination directory
     Output:
     output_directory --- name of folder containing tree images
     """
