@@ -22,7 +22,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menubar.setNativeMenuBar(False)
 
         # windows dictionary
-        self.windows = {'actionRax': 0, 'actionNot_Rax_A': 1, 'actionNot_Rax_B': 2, 'actionNot_Rax_C': 3}
+        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3, 'outputPage': 4}
 
         ############################# Link Events ##############################
 
@@ -33,10 +33,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionNot_Rax_B.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_B))
         self.actionNot_Rax_C.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_C))
 
-        self.actionRax.triggered.connect(lambda: self.setWindow('actionRax'))
-        self.actionNot_Rax_A.triggered.connect(lambda: self.setWindow('actionNot_Rax_A'))
-        self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('actionNot_Rax_B'))
-        self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('actionNot_Rax_C'))
+        self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
+        self.actionNot_Rax_A.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
+        self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
+        self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
 
         # if input file button is clicked run function -- file_open
@@ -54,14 +54,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     ################################# Handlers #################################
 
-    def changeWindow(self):
+    def displayResults(self):
         """
             switch windows
         """
-        if self.stackedWidget.currentIndex() == 0:
-            self.stackedWidget.setCurrentIndex(1)
-        else:
-            self.stackedWidget.setCurrentIndex(0)
+        self.setWindow('outputPage')
+        self.outputTabs.setCurrentIndex(0)
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -168,8 +166,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapImage.setScaledContents(True)
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
-        self.changeWindow()
-        self.resize(standardSize[0],standardSize[1])
+        self.displayResults()
+        self.resize(int(standardSize[0]),int(standardSize[1]))
 
 
 
