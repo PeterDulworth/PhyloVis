@@ -39,7 +39,8 @@ def topology_count(directories):
 
     return topologies
 
-directories = ("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\RAx_Files","")
-print topology_count(directories)
+# Run example
+# directories = ("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\RAx_Files","")
+# print topology_count(directories)
 
 
