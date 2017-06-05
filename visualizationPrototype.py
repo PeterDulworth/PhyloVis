@@ -9,6 +9,7 @@ import matplotlib.colors as colors
 from PIL import Image
 import shutil
 from sys import platform
+import re
 
 """
 Functions for creating a visualization tool for the summary and analysis 
