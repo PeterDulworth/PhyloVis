@@ -10,7 +10,6 @@ import PyQt4
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
-
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
@@ -19,11 +18,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menubar.setNativeMenuBar(False)
 
         # windows dictionary
-        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3, 'outputPage': 4}
+        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3,
+                        'outputPage': 4}
 
         ############################# Link Events ##############################
 
-        #**************************** Menu Bar Events ****************************#
+        # **************************** Menu Bar Events ****************************#
 
         # when you select a mode first deselct all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
@@ -53,6 +53,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
 
+        self.menuExport.setEnabled(False)
+
     ################################# Handlers #################################
 
     def displayResults(self):
@@ -71,7 +73,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 mode.setChecked(False)
 
         mode_selected.setChecked(True)
-
 
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
@@ -152,12 +153,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-
         # self.runProgressBar()
 
         output_dir_name = output_dir_name.replace("\\", "/")
-        windows_dirs = vp.splittr(input_file_name
-                                  , window_size, window_offset, output_dir_name)
+        windows_dirs = vp.splittr(input_file_name, window_size, window_offset, output_dir_name)
         RAx_dirs = vp.raxml_windows(windows_dirs)
         Tree_dir = vp.tree_display(RAx_dirs)
         num = vp.num_windows(windows_dirs[0])
@@ -176,16 +175,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
         self.displayResults()
-        self.resize(int(standardSize[0]),int(standardSize[1]))
-
+        self.menuExport.setEnabled(True)
+        self.resize(int(standardSize[0]), int(standardSize[1]))
 
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    form = PhyloVisApp()                # We set the form to be our PhyloVisApp (design)
-    form.show()                         # Show the form
-    app.exec_()                         # and execute the app
+    form = PhyloVisApp()  # We set the form to be our PhyloVisApp (design)
+    form.show()  # Show the form
+    app.exec_()  # and execute the app
 
 
-if __name__ == '__main__':              # if we're running file directly and not importing it
-    main()                              # run the main function
+if __name__ == '__main__':  # if we're running file directly and not importing it
+    main()  # run the main function
