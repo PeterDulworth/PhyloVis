@@ -4,10 +4,7 @@ import time
 import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui
-from PyQt4 import Qt
-from PyQt4 import QtCore
-import PyQt4
-
+from shutil import copyfile, copy
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -18,7 +15,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menubar.setNativeMenuBar(False)
 
         # gui icon
-        # self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
 
         # windows dictionary
         self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3,
@@ -41,7 +38,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
-        self.actionSaveAs.triggered.connect(self.saveAs)
+        self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
+        self.actionBootstrapJPG.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
+        self.actionTextFile.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
+
+        self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
+        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAx_Files'))
+        self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -55,7 +58,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
 
-        self.menuExport.setEnabled(False)
+        # disable export menu initially
+        # self.menuExport.setEnabled(False)
 
     ################################# Handlers #################################
 
@@ -79,9 +83,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
 
-    def saveAs(self):
-        name = QtGui.QFileDialog.getSaveFileName()
-        print name
+    def exportFile(self, fileName):
+        extension = os.path.splitext(fileName)[1]
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Export ' + extension[1:]) + extension
+        copyfile(fileName, name)
+
+    def exportDirectory(self, dirName):
+        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory')
+        print dirName, name
+        copy(dirName, name)
+
+
+    # def exportTxt(self):
+    #     name = QtGui.QFileDialog.getSaveFileName(self, 'Save Text File')
+    #     name += '.txt'
+    #     file = open(name, 'w')
+    #     text = 'asdf'
+    #     file.write(text)
+    #     file.close()
+
+
 
     def input_file_open(self):
         # get name of file
@@ -150,7 +171,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
         # self.runProgressBar()
-
 
         windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
         RAx_dirs = vp.raxml_windows(windows_dirs)

@@ -384,14 +384,17 @@
     </property>
     <widget class="QMenu" name="menuExport">
      <property name="title">
-      <string>Export</string>
+      <string>Export...</string>
      </property>
-     <addaction name="actionJPG"/>
-     <addaction name="actionPDF"/>
-     <addaction name="actionTXT"/>
+     <addaction name="actionStandardJPG"/>
+     <addaction name="actionBootstrapJPG"/>
+     <addaction name="actionTextFile"/>
+     <addaction name="separator"/>
+     <addaction name="actionWindowsDirectory"/>
+     <addaction name="actionRAXDirectory"/>
+     <addaction name="actionTreesDirectory"/>
     </widget>
     <addaction name="actionOpen"/>
-    <addaction name="actionSaveAs"/>
     <addaction name="menuExport"/>
    </widget>
    <widget class="QMenu" name="menuMode">
@@ -412,14 +415,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="action">
-   <property name="text">
-    <string>Export</string>
-   </property>
-   <property name="shortcut">
-    <string>Backspace</string>
    </property>
   </action>
   <action name="actionRax">
@@ -457,27 +452,34 @@
     <string>Not Rax C</string>
    </property>
   </action>
-  <action name="actionSaveAs">
+  <action name="actionStandardJPG">
    <property name="text">
-    <string>Save As</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Standard JPG</string>
    </property>
   </action>
-  <action name="actionJPG">
+  <action name="actionBootstrapJPG">
    <property name="text">
-    <string>JPG</string>
+    <string>Bootstrap JPG </string>
    </property>
   </action>
-  <action name="actionPDF">
+  <action name="actionTextFile">
    <property name="text">
-    <string>PDF</string>
+    <string>Text File</string>
    </property>
   </action>
-  <action name="actionTXT">
+  <action name="actionWindowsDirectory">
    <property name="text">
-    <string>TXT</string>
+    <string>Windows Directory</string>
+   </property>
+  </action>
+  <action name="actionRAXDirectory">
+   <property name="text">
+    <string>RAX Directory</string>
+   </property>
+  </action>
+  <action name="actionTreesDirectory">
+   <property name="text">
+    <string>Trees Directory</string>
    </property>
   </action>
  </widget>
