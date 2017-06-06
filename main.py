@@ -10,7 +10,6 @@ import PyQt4
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
-
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
@@ -18,25 +17,33 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
 
+        # gui icon
+        # self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
+
         # windows dictionary
-        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3, 'outputPage': 4}
+        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3,
+                        'outputPage': 4}
 
         ############################# Link Events ##############################
 
-        #**************************** Menu Bar Events ****************************#
+        # **************************** Menu Bar Events ****************************#
 
         # when you select a mode first deselct all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
         self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.actionNot_Rax_A.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_A))
-        self.actionNot_Rax_B.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_B))
-        self.actionNot_Rax_C.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNot_Rax_C))
+        self.actionNotRaxA.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
+        self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
+        self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
         # change the input mode based on which mode is selected in the menu bar
         self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
-        self.actionNot_Rax_A.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
-        self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
-        self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
+        self.actionNotRaxA.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
+        self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
+        self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
+
+        self.actionSaveAs.triggered.connect(self.saveAs)
+
+        # **************************** Rax Input Page Events ****************************#
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
@@ -50,6 +57,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # run
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
+
+        self.menuExport.setEnabled(False)
 
     ################################# Handlers #################################
 
@@ -69,7 +78,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 mode.setChecked(False)
 
         mode_selected.setChecked(True)
-
 
     def setProgressBarVal(self, val):
         self.progressBar.setValue(val)
@@ -150,22 +158,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-
         # self.runProgressBar()
 
-        output_dir_name = output_dir_name.replace("\\", "/")
+
         windows_dirs = vp.splittr(input_file_name
-                                  , window_size, window_offset, output_dir_name)
+                                  , window_size, window_offset)
         RAx_dirs = vp.raxml_windows(windows_dirs)
         Tree_dir = vp.tree_display(RAx_dirs)
-        num = vp.num_windows(windows_dirs[0])
-        likelihood = vp.ml(num, RAx_dirs[0])
-        plot = vp.scatter(num, likelihood, output_dir_name)
-        vp.image_combination(Tree_dir, plot, output_dir_name)
+        num = vp.num_windows(windows_dirs)
+        likelihood = vp.ml(num, RAx_dirs)
+        plot = vp.scatter(num, likelihood)
+        vp.image_combination(Tree_dir, plot)
 
         # open images in gui
         standardSize = Image.open("Final.jpg").size
-        bootstrapSize = Image.open("FinalBootstraps.jpg").size
 
         self.standardImage.setScaledContents(True)
         self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
@@ -174,16 +180,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
 
         self.displayResults()
-        self.resize(int(standardSize[0]),int(standardSize[1]))
-
+        self.menuExport.setEnabled(True)
+        self.resize(int(standardSize[0]), int(standardSize[1]))
 
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    form = PhyloVisApp()                # We set the form to be our PhyloVisApp (design)
-    form.show()                         # Show the form
-    app.exec_()                         # and execute the app
+    form = PhyloVisApp()  # We set the form to be our PhyloVisApp (design)
+    form.show()  # Show the form
+    app.exec_()  # and execute the app
 
 
-if __name__ == '__main__':              # if we're running file directly and not importing it
-    main()                              # run the main function
+if __name__ == '__main__':  # if we're running file directly and not importing it
+    main()  # run the main function
