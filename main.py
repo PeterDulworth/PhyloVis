@@ -48,9 +48,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
 
-        # if output dir button is clicked run function -- file_open
-        self.outputDirBtn.clicked.connect(self.output_dir_open)
-
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
 
@@ -92,12 +89,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # set name of file to text entry
         self.inputFileEntry.setText(name)
 
-    def output_dir_open(self):
-        # get name of file
-        name = QtGui.QFileDialog.getExistingDirectory()
-        # set name of file to text entry
-        self.outputDirEntry.setText(name)
-
     def runProgressBar(self):
         self.completed = 0
         self.progressBar.reset()
@@ -127,16 +118,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
 
-        # Error handling for output directory
-        try:
-            output_dir_name = str(self.outputDirEntry.text())
-
-            if output_dir_name == "":
-                raise ValueError, (1, "Please choose a directory")
-            print 'Output Directory Name:', output_dir_name
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
+        # # Error handling for output directory
+        # try:
+        #     output_dir_name = str(self.outputDirEntry.text())
+        #
+        #     if output_dir_name == "":
+        #         raise ValueError, (1, "Please choose a directory")
+        #     print 'Output Directory Name:', output_dir_name
+        # except ValueError, (ErrorNumber, ErrorMessage):
+        #     QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+        #     return
 
         # Error handling for window size
         try:
@@ -161,8 +152,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.runProgressBar()
 
 
-        windows_dirs = vp.splittr(input_file_name
-                                  , window_size, window_offset)
+        windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
         RAx_dirs = vp.raxml_windows(windows_dirs)
         Tree_dir = vp.tree_display(RAx_dirs)
         num = vp.num_windows(windows_dirs)
