@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import os
 
+colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
+              'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
+
 def topology_scatter(top_topologies, destination_directory):
     """
     Creates a scatter plot showing the topology as the
@@ -17,48 +20,37 @@ def topology_scatter(top_topologies, destination_directory):
     A scatter plot with topologies as the x-axis and
     windows as the y-axis.
     """
-    # initialize set and mapping
-    seq = set()
-    color_map = {}
+    # initialize set, count, xlist, and ylist
+    i = 0
+    seq = []
+    x = []
+    y = []
 
     # area of plotted circles
     area = math.pi * (5)**2
-
-    colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
-              'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
 
     # sizes plot appropriately
     plt.xticks(np.arange(0, len(top_topologies) + 1, 1.0))
     plt.yticks(np.arange(0, max(top_topologies.values()) + 1, 1.0))
 
-    # for i in range(len(top_topologies)):
-    #     # x-axis is window number
-    #     x = i
-    #
-    #     # sorts window numbers for legend
-    #     seq.add(i)
-    #     seqs = sorted(seq)
-    #     print seqs
-    i = 0
-    x = []
-    y = []
     for top in top_topologies:
+        # x-axis is window number
+        x.append(i)
+
         # y-axis is number of times a topology occurs
         y.append(top_topologies[top])
 
-        # map colors to topologies
-        color_map[top] = colors[i]
-        x.append(i)
+        # sorts window numbers for legend
+        seq.append(i)
+
+        # increments i for windows
         i += 1
 
-    print x
-    print y
     # makes plot
-    plt.scatter(x=x, y=y, s=area, color=colors[:len(x)], alpha=1, linewidths=0.1)
-
+    plt.scatter(x=x, y=y, s=area, c=colors[:15], alpha=1, linewidths=0.1)
 
     # legend
-    plt.legend([0,1,2,3,4], loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
+    plt.legend(seq, loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
 
     # labels axes
     plt.xlabel('Windows', fontsize=10)
@@ -77,4 +69,4 @@ topology_scatter({'(seq4,((seq1,seq3),seq2),seq0);': 15,
                   '((seq1,seq2),(seq3,seq4),seq0);': 5,
                   '(seq4,(seq1,(seq2,seq3)),seq0);': 4,
                   '(seq1,((seq2,seq4),seq3),seq0);': 2},
-                 '/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python')
+                 'C:\Users\chaba\GitProjects\PhyloVis')
