@@ -221,10 +221,17 @@
         </widget>
         <widget class="QWidget" name="inputPageNotRaxA">
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
              <string>notRaxA</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLCDNumber" name="lcdNumber">
+            <property name="intValue" stdset="0">
+             <number>420</number>
             </property>
            </widget>
           </item>

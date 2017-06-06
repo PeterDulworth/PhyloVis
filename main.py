@@ -41,6 +41,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionNot_Rax_B.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNot_Rax_C.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
+        # **************************** Menu Bar Events ****************************#
+
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
 
