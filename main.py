@@ -8,9 +8,6 @@ from PyQt4 import Qt
 from PyQt4 import QtCore
 import PyQt4
 
-standardSize = Image.open("Final.jpg").size
-bootstrapSize = Image.open("FinalBootstraps.jpg").size
-
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
@@ -165,6 +162,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         likelihood = vp.ml(num, RAx_dirs[0])
         plot = vp.scatter(num, likelihood, output_dir_name)
         vp.image_combination(Tree_dir, plot, output_dir_name)
+
+        # open images in gui
+        standardSize = Image.open("Final.jpg").size
+        bootstrapSize = Image.open("FinalBootstraps.jpg").size
 
         self.standardImage.setScaledContents(True)
         self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
