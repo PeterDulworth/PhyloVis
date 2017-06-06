@@ -27,30 +27,38 @@ def topology_scatter(top_topologies, destination_directory):
     colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
               'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
 
-    for i in range(len(top_topologies)):
-        # x-axis is window number
-        x = i
+    # sizes plot appropriately
+    plt.xticks(np.arange(0, len(top_topologies) + 1, 1.0))
+    plt.yticks(np.arange(0, max(top_topologies.values()) + 1, 1.0))
 
-        # sorts window numbers for legend
-        seq.add(i)
-        seqs = sorted(seq)
+    # for i in range(len(top_topologies)):
+    #     # x-axis is window number
+    #     x = i
+    #
+    #     # sorts window numbers for legend
+    #     seq.add(i)
+    #     seqs = sorted(seq)
+    #     print seqs
+    i = 0
+    x = []
+    y = []
+    for top in top_topologies:
+        # y-axis is number of times a topology occurs
+        y.append(top_topologies[top])
 
-        # sizes plot appropriately
-        plt.xticks(np.arange(0, len(top_topologies) + 1, 1.0))
-        plt.yticks(np.arange(0, max(top_topologies.values()) + 1, 1.0))
+        # map colors to topologies
+        color_map[top] = colors[i]
+        x.append(i)
+        i += 1
 
-        for top in top_topologies:
-            # y-axis is number of times a topology occurs
-            y = top_topologies[top]
+    print x
+    print y
+    # makes plot
+    plt.scatter(x=x, y=y, s=area, color=colors[:len(x)], alpha=1, linewidths=0.1)
 
-            # map colors to topologies
-            color_map[top] = colors[i]
-
-        # makes plot
-        plt.scatter(x=x, y=y[i], s=area, c=color_map[top], alpha=1, linewidths=0.1)
 
     # legend
-    plt.legend(seqs, loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
+    plt.legend([0,1,2,3,4], loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
 
     # labels axes
     plt.xlabel('Windows', fontsize=10)
@@ -69,4 +77,4 @@ topology_scatter({'(seq4,((seq1,seq3),seq2),seq0);': 15,
                   '((seq1,seq2),(seq3,seq4),seq0);': 5,
                   '(seq4,(seq1,(seq2,seq3)),seq0);': 4,
                   '(seq1,((seq2,seq4),seq3),seq0);': 2},
-                 'C:\Users\chaba\GitProjects\PhyloVis')
+                 '/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python')
