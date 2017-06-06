@@ -1,8 +1,15 @@
 """ Functions for creating circle chart depicting topology frequencies."""
 
+import random
+import math
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import os
+
+# list of colors for plots
+colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
+              'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
+
 
 def topology_count(directories):
     """
@@ -34,7 +41,8 @@ def topology_count(directories):
 
     return topologies
 
-def top_topologies(num, directories):
+
+def topology_donut(num, directories):
     """
     Creates a donut chart showing the breakdown of the top 'num'
     topologies.
@@ -50,9 +58,6 @@ def top_topologies(num, directories):
     # initialize lists for plot inputs
     sizes = []
     labels = []
-    colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue',
-              'orange', 'deeppink', 'purple', 'darkturquoise', 'greenyellow', 'gold',
-              'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
 
     # initialize list of top 'num' topologies
     top = []
@@ -98,8 +103,8 @@ def top_topologies(num, directories):
 
     return top
 
-# dir = ('C:\Users\chaba\GitProjects\PhyloVis', '')
-# top_topologies(5, dir)
+#dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
+#print topology_count(dir)
 
 def windows_to_topologies(destination_directory):
     """
@@ -110,7 +115,7 @@ def windows_to_topologies(destination_directory):
     window_topologies --- a dictionary mapping windows to newick strings
     """
 
-    windows_topologies = {}
+    window_topologies = {}
 
     rax_dir = os.path.join(destination_directory, "RAx_Files")
 
@@ -128,13 +133,36 @@ def windows_to_topologies(destination_directory):
 
                 # Map the number of each window to the corresponding newick string
                 window_num = (os.path.splitext(filename)[1]).replace(".","")
-                windows_topologies[window_num] = topology
+                window_topologies[window_num] = topology
 
-    return windows_topologies
+    return window_topologies
 
 # Sample run command
 # print windows_to_topologies("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python")
+#print windows_to_topologies('C:\Users\chaba\GitProjects\PhyloVis')
 
+def top_topologies(top, topologies):
+    """
+    Maps the top 'num' topologies to the number of
+    times they occur.
 
+    Inputs:
+    top        -- list of top 'num' topology counts
+    topologies -- mapping of topologies to the number
+    of times they occur.
 
+    Returns:
+    A mapping top_topologies.
+    """
+    # initialize mapping
+    top_topologies = {}
 
+    # separate most frequent topologies
+    for i in range(len(top)):
+        for topology in topologies:
+            if top[i] == topologies[topology]:
+                top_topologies[topology] = top[i]
+
+    return top_topologies
+
+#print top_topologies([1, 1, 1, 1, 1], topology_count(dir))
