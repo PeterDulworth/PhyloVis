@@ -8,7 +8,7 @@ import os
 colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
               'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
 
-def topology_scatter(top_topologies, destination_directory):
+def topology_scatter(wins_to_tops, topologies, destination_directory):
     """
     Creates a scatter plot showing the topology as the
     y-axis and the window as the x-axis
@@ -20,9 +20,7 @@ def topology_scatter(top_topologies, destination_directory):
     A scatter plot with topologies as the x-axis and
     windows as the y-axis.
     """
-    # initialize set, count, xlist, and ylist
-    i = 0
-    seq = []
+    # initialize x and y
     x = []
     y = []
 
@@ -30,31 +28,32 @@ def topology_scatter(top_topologies, destination_directory):
     area = math.pi * (5)**2
 
     # sizes plot appropriately
-    plt.xticks(np.arange(0, len(top_topologies) + 1, 1.0))
-    plt.yticks(np.arange(0, max(top_topologies.values()) + 1, 1.0))
+    plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    plt.yticks(np.arange(0, len(wins_to_tops.values()) + 1, 1.0))
 
-    for top in top_topologies:
-        # x-axis is window number
-        x.append(i)
+    # x-axis is window number
+    xkeys = wins_to_tops.keys()
 
-        # y-axis is number of times a topology occurs
-        y.append(top_topologies[top])
+    for i in range(len(xkeys)):
+        x.append(int(xkeys[i]))
 
-        # sorts window numbers for legend
-        seq.append(i)
+    for i in range(len(topologies)):
+        for top in wins_to_tops:
+            if topologies[i] == wins_to_tops[top]:
+                # y-axis is number of times a topology occurs
+                y.append(i)
 
-        # increments i for windows
-        i += 1
+    t = y
 
     # makes plot
-    plt.scatter(x=x, y=y, s=area, c=colors[:15], alpha=1, linewidths=0.1)
-
+    plt.scatter(x=x, y=y, s=area, label=topologies, c=t, alpha=1, linewidths=0.1)
+    print x, y
     # legend
-    plt.legend(seq, loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
+    plt.legend(y, loc='lower left', scatterpoints=1, ncol=2, columnspacing=0.1)
 
     # labels axes
     plt.xlabel('Windows', fontsize=10)
-    plt.ylabel('# of Occurrences', fontsize=10)
+    plt.ylabel('Newick Strings', fontsize=10)
 
     plt.show()
     # saves plot image
@@ -64,9 +63,15 @@ def topology_scatter(top_topologies, destination_directory):
     return plot
 
 
-topology_scatter({'(seq4,((seq1,seq3),seq2),seq0);': 15,
-                  '(seq1,(seq4,(seq3,seq2)),seq0);': 7,
-                  '((seq1,seq2),(seq3,seq4),seq0);': 5,
-                  '(seq4,(seq1,(seq2,seq3)),seq0);': 4,
-                  '(seq1,((seq2,seq4),seq3),seq0);': 2},
+topology_scatter({'1': '(seq4,((seq1,seq3),seq2),seq0);',
+                   '0': '(seq4,(seq1,(seq2,seq3)),seq0);',
+                   '3': '(seq1,(seq4,(seq3,seq2)),seq0);',
+                   '2': '(seq1,((seq2,seq4),seq3),seq0);',
+                   '4': '((seq1,seq2),(seq3,seq4),seq0);'},
+                  ['(seq4,((seq1,seq3),seq2),seq0);',
+                   '(seq1,(seq4,(seq3,seq2)),seq0);',
+                   '((seq1,seq2),(seq3,seq4),seq0);',
+                   '(seq4,(seq1,(seq2,seq3)),seq0);',
+                   '(seq1,((seq2,seq4),seq3),seq0);',
+                   'Other'],
                  'C:\Users\chaba\GitProjects\PhyloVis')

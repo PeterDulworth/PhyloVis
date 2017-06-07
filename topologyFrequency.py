@@ -103,7 +103,7 @@ def topology_donut(num, directories):
 
     return top
 
-#dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
+dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
 #print topology_count(dir)
 
 def windows_to_topologies(destination_directory):
@@ -166,3 +166,50 @@ def top_topologies(top, topologies):
     return top_topologies
 
 #print top_topologies([1, 1, 1, 1, 1], topology_count(dir))
+
+def windows_to_newick(top_topologies):
+    """
+    Creates a dictionary of window numbers to the topology of that window if
+    the newick string contained in the window is a top topology otherwise the
+    window number is mapped to "other"
+    Inputs
+    topologies --- a list containing the top topologies of the phylogenetic trees
+    Output
+    wins_to_tops --- a dictionary as described above
+    """
+
+    ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
+    topologies = top_topologies.keys()
+
+    wins_to_tops = {}
+
+    # Iterate over each folder in the given directory
+    for filename in os.listdir("Rax_Files"):
+
+        # If file is the file with the topology of the best tree newick string
+        if os.path.splitext(filename)[0] == "Topology_bestTree":
+
+            filename = os.path.join("Rax_Files", filename)
+
+            # Open file and read newick string
+            with open(filename) as f:
+                # Read newick string from file
+                newick = f.readline()
+
+            window_number = (os.path.splitext(filename)[1]).replace(".","")
+
+            # Only map windows to newick strings that are in the top topologies
+            if newick in topologies:
+
+                wins_to_tops[window_number] = newick
+
+            else:
+
+                wins_to_tops[window_number] = "Other"
+    topologies.append("Other")
+
+    return wins_to_tops, topologies
+
+
+# Example run
+print windows_to_newick(top_topologies(topology_donut(5, dir), topology_count(dir)))
