@@ -1,10 +1,12 @@
+import sip
+sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
 import time
 import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui
-from shutil import copyfile, copy
+from shutil import copyfile, copytree
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -59,7 +61,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.progressBar.reset()
 
         # disable export menu initially
-        # self.menuExport.setEnabled(False)
+        self.menuExport.setEnabled(False)
 
     ################################# Handlers #################################
 
@@ -89,9 +91,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         copyfile(fileName, name)
 
     def exportDirectory(self, dirName):
-        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory')
+        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
         print dirName, name
-        copy(dirName, name)
+        copytree(dirName, name)
 
 
     # def exportTxt(self):
