@@ -1,5 +1,5 @@
 import sip
-sip.setapi('QString', 2) 
+sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
 import time
@@ -61,7 +61,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.progressBar.reset()
 
         # disable export menu initially
-        # self.menuExport.setEnabled(False)
+        self.menuExport.setEnabled(False)
 
     ################################# Handlers #################################
 
