@@ -14,23 +14,22 @@ colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 
               'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
 
 
-def topology_count(directories):
+def topology_counter():
     """
-    Creates phylogenetic tree image files for each newick string file outputted by RAxML
-    Inputs:
-    directories --- a tuple containing the RAxML Files directory and the destination directory
+    Counts the number of times that each topology appears as outputted by RAxML
     Output:
     topologies --- a dictionary mapping topologies to the number of times they appear
     """
 
-    input_directory = directories[0]
+    # Get the topology files from the "RAx_Files" folder
+    input_directory = "RAx_Files"
 
-    topologies = defaultdict(int)
+    topology_count = defaultdict(int)
 
     # Iterate over each folder in the given directory
     for filename in os.listdir(input_directory):
 
-        # If file is the file with the best tree newick string create an image for it
+        # If file is the file with the best tree newick string
         if os.path.splitext(filename)[0] == "Topology_bestTree":
 
             input_file = os.path.join(input_directory,filename)
@@ -40,12 +39,13 @@ def topology_count(directories):
                 # Read newick string from file
                 topology = f.readline()
 
-                topologies[topology] += 1
+                # Add to the count for that newick string
+                topology_count[topology] += 1
 
-    return topologies
+    return topology_count
 
 
-def topology_donut(num, directories):
+def topology_donut(num):
     """
     Creates a donut chart showing the breakdown of the top 'num'
     topologies.
@@ -66,7 +66,7 @@ def topology_donut(num, directories):
     top = []
 
     # get topology counts
-    topologies = topology_count(directories)
+    topologies = topology_counter()
 
     # add counts to frequency list
     freqs = []
@@ -102,47 +102,43 @@ def topology_donut(num, directories):
 
     # set axes equal
     plt.axis('equal')
-    plt.show()
+    plt.savefig("topologyDonut.png")
 
     return top
 
-# dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
-# print topology_donut(5, dir)
+print topology_donut(5)
 
-def windows_to_topologies(destination_directory):
-    """
-    Maps the name of each window to the newick string representing the topology of the RAxML best tree
-    Inputs:
-    destination_directory --- the folder containing all other outputted folders
-    Output:
-    window_topologies --- a dictionary mapping windows to newick strings
-    """
-
-    window_topologies = {}
-
-    rax_dir = os.path.join(destination_directory, "RAx_Files")
-
-    # Iterate over each folder in the given directory
-    for filename in os.listdir(rax_dir):
-
-        # If file is the file with the best tree newick string create an image for it
-        if os.path.splitext(filename)[0] == "Topology_bestTree":
-            input_file = os.path.join(rax_dir, filename)
-
-            with open(input_file) as f:
-                # Read newick string from file
-                topology = f.readline()
-                f.close()
-
-                # Map the number of each window to the corresponding newick string
-                window_num = (os.path.splitext(filename)[1]).replace(".","")
-                window_topologies[window_num] = topology
-
-    return window_topologies
+# def windows_to_topologies():
+#     """
+#     Maps the name of each window to the newick string representing the topology of the RAxML best tree
+#     Output:
+#     window_topologies --- a dictionary mapping windows to newick strings
+#     """
+#
+#     window_topologies = {}
+#
+#     rax_dir = ("RAx_Files")
+#
+#     # Iterate over each folder in the given directory
+#     for filename in os.listdir(rax_dir):
+#
+#         # If file is the file with the best tree newick string create an image for it
+#         if os.path.splitext(filename)[0] == "Topology_bestTree":
+#             input_file = os.path.join(rax_dir, filename)
+#
+#             with open(input_file) as f:
+#                 # Read newick string from file
+#                 topology = f.readline()
+#                 f.close()
+#
+#                 # Map the number of each window to the corresponding newick string
+#                 window_num = (os.path.splitext(filename)[1]).replace(".","")
+#                 window_topologies[window_num] = topology
+#
+#     return window_topologies
 
 # Sample run command
-# print windows_to_topologies("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python")
-#print windows_to_topologies('C:\Users\chaba\GitProjects\PhyloVis')
+# print windows_to_topologies()
 
 def top_topologies(top, topologies):
     """
@@ -155,8 +151,10 @@ def top_topologies(top, topologies):
     of times they occur.
 
     Returns:
-    A mapping top_topologies.
+    top_topologies --- a mapping of the top num topologies 
+    to the number of times they occur
     """
+
     # initialize mapping
     top_topologies = {}
 
@@ -174,7 +172,7 @@ def windows_to_newick(top_topologies):
     """
     Creates a dictionary of window numbers to the topology of that window if
     the newick string contained in the window is a top topology otherwise the
-    window number is mapped to "other"
+    window number is mapped to "Other"
     Inputs
     topologies --- a list containing the top topologies of the phylogenetic trees
     Output
@@ -216,7 +214,7 @@ def windows_to_newick(top_topologies):
 # Example run
 # print windows_to_newick(top_topologies(topology_donut(5, dir), topology_count(dir)))
 
-def topology_scatter(wins_to_tops, topologies, destination_directory):
+def topology_scatter(wins_to_tops, topologies):
     """
     Creates a scatter plot showing the topology as the
     y-axis and the window as the x-axis
@@ -224,7 +222,6 @@ def topology_scatter(wins_to_tops, topologies, destination_directory):
     Input:
     wins_to_tops          -- window to topology mapping outputted by windows_to_newick()
     topologies            -- top topology list outputted by windows_to_newick()
-    destination_directory -- folder to save outputted image in
 
     Returns:
     A scatter plot with topologies as the x-axis and
@@ -278,13 +275,18 @@ def topology_scatter(wins_to_tops, topologies, destination_directory):
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
 
-    plt.show()
-
-    # saves plot image
-    plot = os.path.join(destination_directory,"topologyPlot.png")
+    # Save plot image
+    plot = "topologyPlot.png"
     plt.savefig(plot)
 
-    return plot
+    return tops_to_colors
+
+# Example run
+# topology_scatter({0: '(a, (b, c));', 1: '((a, b), c);',
+#                   2: '(a, (b, c));', 3: 'Other'},
+#                  ['(a, (b, c));', '((a, c), b);',
+#                   '((a, b), c);', 'Other'],
+#                  'C:\Users\chaba\GitProjects\PhyloVis')
 
 def topology_colorizer(color_scheme):
     """
@@ -298,34 +300,58 @@ def topology_colorizer(color_scheme):
     count = 0
     # Iterate over each newick string in color_scheme
     for newick in color_scheme:
-        # Create a unique output file for each topology image
-        output_file = "Topology" + str(count) + ".png"
 
-        # Create the tree object and assign it to the appropriate color
-        tree = Phylo.read(StringIO(newick), "newick")
-        tree.rooted = True
-        tree.root.color = color_scheme[newick]
+        if newick != "Other":
+            # Create a unique output file for each topology image
+            output_file = "Topology" + str(count) + ".png"
 
-        # Create the figure
-        fig = plt.figure()
-        axes = fig.add_subplot(1, 1, 1)
+            # Create the tree object and assign it to the appropriate color
+            tree = Phylo.read(StringIO(newick), "newick")
+            tree.rooted = True
+            tree.root.color = color_scheme[newick]
 
-        # Create the tree image
-        Phylo.draw(tree, output_file, axes=axes, do_show=False)
+            # Create the figure
+            fig = plt.figure()
+            axes = fig.add_subplot(1, 1, 1)
 
-        # Rotate the image and save it
-        im = Image.open(output_file)
-        im.rotate(-90).save(output_file)
+            # Create the tree image
+            Phylo.draw(tree, output_file, axes=axes, do_show=False)
 
-        count += 1
+            # Rotate the image and save it
+            im = Image.open(output_file)
+            im.rotate(-90).save(output_file)
+
+            count += 1
 
     return
 
-# topology_scatter({0: '(a, (b, c));', 1: '((a, b), c);',
-#                   2: '(a, (b, c));', 3: 'Other'},
-#                  ['(a, (b, c));', '((a, c), b);',
-#                   '((a, b), c);', 'Other'],
-#                  'C:\Users\chaba\GitProjects\PhyloVis')
+# Example run
+# color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
+# topology_colorizer(color_scheme)
+
+
+# Trying to run all of these together
+
+topologies_to_count = topology_counter()
+
+list_of_top_topology_frequencies = topology_donut(num)
+
+# windows_to_all_topologies = windows_to_topologies()
+
+num_of_topologies_to_frequencies = top_topologies(topology_frequency, topologies)
+
+windows_to_top_topologies = windows_to_newick(top_topologies)
+
+# Create scatter plot of the topologies and generate the color scheme
+color_scheme = topology_scatter(wins_to_tops, topologies)
+
+# Create the colored topology images
+topology_colorizer(color_scheme)
+
+
+
+
+
 
 # topology_scatter({1: '(seq4,((seq1,seq3),seq2),seq0);',
 #                    0: '(seq4,(seq1,(seq2,seq3)),seq0);',
@@ -340,3 +366,4 @@ def topology_colorizer(color_scheme):
 #                    '(seq1,((seq2,seq4),seq3),seq0);',
 #                    'Other'],
 #                  'C:\Users\chaba\GitProjects\PhyloVis')
+
