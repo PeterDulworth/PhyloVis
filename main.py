@@ -63,6 +63,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
+        self.actionOpen.triggered.connect(self.input_file_open)
 
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
@@ -77,10 +78,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     ################################# Handlers #################################
 
     def displayResults(self):
-        """
-            dynamically display output windows
-        """
-
         # self.setWindow('outputPage')
         # self.outputTabs.setCurrentIndex(0)
 
@@ -95,9 +92,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
-
-
-
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -143,6 +137,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def run(self):
 
+        self.displayResults()
+
         # Error handling for input file
         try:
             input_file_name = str(self.inputFileEntry.text())
@@ -166,17 +162,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
             return
-
-        # # Error handling for output directory
-        # try:
-        #     output_dir_name = str(self.outputDirEntry.text())
-        #
-        #     if output_dir_name == "":
-        #         raise ValueError, (1, "Please choose a directory")
-        #     print 'Output Directory Name:', output_dir_name
-        # except ValueError, (ErrorNumber, ErrorMessage):
-        #     QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-        #     return
 
         # Error handling for window size
         try:
