@@ -1,10 +1,10 @@
 """ Functions for creating circle chart depicting topology frequencies."""
-
-import random
+import os
 import math
+import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
-import os
+
 
 # list of colors for plots
 colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
@@ -103,8 +103,8 @@ def topology_donut(num, directories):
 
     return top
 
-#dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
-#print topology_count(dir)
+# dir = ('C:\Users\chaba\GitProjects\PhyloVis\RAx_Files', '')
+# print topology_donut(5, dir)
 
 def windows_to_topologies(destination_directory):
     """
@@ -166,3 +166,139 @@ def top_topologies(top, topologies):
     return top_topologies
 
 #print top_topologies([1, 1, 1, 1, 1], topology_count(dir))
+
+def windows_to_newick(top_topologies):
+    """
+    Creates a dictionary of window numbers to the topology of that window if
+    the newick string contained in the window is a top topology otherwise the
+    window number is mapped to "other"
+    Inputs
+    topologies --- a list containing the top topologies of the phylogenetic trees
+    Output
+    wins_to_tops --- a dictionary as described above
+    """
+
+    ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
+    topologies = top_topologies.keys()
+
+    wins_to_tops = {}
+
+    # Iterate over each folder in the given directory
+    for filename in os.listdir("Rax_Files"):
+
+        # If file is the file with the topology of the best tree newick string
+        if os.path.splitext(filename)[0] == "Topology_bestTree":
+
+            filename = os.path.join("Rax_Files", filename)
+
+            # Open file and read newick string
+            with open(filename) as f:
+                # Read newick string from file
+                newick = f.readline()
+
+            window_number = int((os.path.splitext(filename)[1]).replace(".",""))
+
+            # Only map windows to newick strings that are in the top topologies
+            if newick in topologies:
+
+                wins_to_tops[window_number] = newick
+
+            else:
+
+                wins_to_tops[window_number] = "Other"
+    topologies.append("Other")
+
+    return wins_to_tops, topologies
+
+# Example run
+# print windows_to_newick(top_topologies(topology_donut(5, dir), topology_count(dir)))
+
+def topology_scatter(wins_to_tops, topologies, destination_directory):
+    """
+    Creates a scatter plot showing the topology as the
+    y-axis and the window as the x-axis
+
+    Input:
+    wins_to_tops          -- window to topology mapping outputted by windows_to_newick()
+    topologies            -- top topology list outputted by windows_to_newick()
+    destination_directory -- folder to save outputted image in
+
+    Returns:
+    A scatter plot with topologies as the x-axis and
+    windows as the y-axis.
+    """
+    # initialize lists and dictionaries
+    y = []
+    scatter_colors = []
+    tops_to_colors = {}
+
+    # area of plotted circles
+    area = math.pi * (5)**2
+
+    # sizes plot appropriately
+    plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    plt.yticks(np.arange(0, len(wins_to_tops.values()) + 1, 1.0))
+
+    # x-axis is window numbers
+    x = wins_to_tops.keys()
+
+    # y-axis is topology number
+    for i in range(len(wins_to_tops)):
+        for j in range(len(topologies)):
+            if topologies[j] == wins_to_tops[i]:
+                y.append(j)
+
+    x = np.array(x)
+    y = np.array(y)
+
+    # create list of colors of same length as y
+    top_colors = colors[:len(y)]
+
+    # map colors to topologies so they are the same in the plot
+    for win in wins_to_tops:
+        if wins_to_tops[win] in tops_to_colors.keys():
+            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
+        else:
+            tops_to_colors[wins_to_tops[win]] = top_colors[0]
+            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
+            top_colors.pop(0)
+
+    # create legend
+    for (i, cla) in enumerate(set(wins_to_tops.values())):
+        xc = [p for (j, p) in enumerate(x) if wins_to_tops.values()[j] == cla]
+        yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
+        cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
+        plt.scatter(xc, yc, s=area, c=cols, label=cla)
+    plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
+
+    # labels axes
+    plt.xlabel('Windows', fontsize=10)
+    plt.ylabel('Top Newick Strings', fontsize=10)
+
+    plt.show()
+
+    # saves plot image
+    plot = os.path.join(destination_directory,"topologyPlot.png")
+    plt.savefig(plot)
+
+    return plot
+
+# topology_scatter({0: '(a, (b, c));', 1: '((a, b), c);',
+#                   2: '(a, (b, c));', 3: 'Other'},
+#                  ['(a, (b, c));', '((a, c), b);',
+#                   '((a, b), c);', 'Other'],
+#                  'C:\Users\chaba\GitProjects\PhyloVis')
+
+# topology_scatter({1: '(seq4,((seq1,seq3),seq2),seq0);',
+#                    0: '(seq4,(seq1,(seq2,seq3)),seq0);',
+#                    3: '(seq1,(seq4,(seq3,seq2)),seq0);',
+#                    2: '(seq1,((seq2,seq4),seq3),seq0);',
+#                    4: '(seq4,(seq1,(seq2,seq3)),seq0);',
+#                    5: 'Other'},
+#                  ['(seq4,((seq1,seq3),seq2),seq0);',
+#                    '(seq1,(seq4,(seq3,seq2)),seq0);',
+#                    '((seq1,seq2),(seq3,seq4),seq0);',
+#                    '(seq4,(seq1,(seq2,seq3)),seq0);',
+#                    '(seq1,((seq2,seq4),seq3),seq0);',
+#                    'Other'],
+#                  'C:\Users\chaba\GitProjects\PhyloVis')
