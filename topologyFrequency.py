@@ -4,6 +4,9 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
+from Bio import Phylo
+from cStringIO import StringIO
+from PIL import Image
 
 
 # list of colors for plots
@@ -282,6 +285,41 @@ def topology_scatter(wins_to_tops, topologies, destination_directory):
     plt.savefig(plot)
 
     return plot
+
+def topology_colorizer(color_scheme):
+    """
+    Create colored tree topology images based on a color scheme where
+    the color of a tree is determined by the frequency that it occurs
+    Inputs:
+    color scheme --- a dictionary mapping newick strings to colors
+    """
+
+    # Create a count for the number of the topologies
+    count = 0
+    # Iterate over each newick string in color_scheme
+    for newick in color_scheme:
+        # Create a unique output file for each topology image
+        output_file = "Topology" + str(count) + ".png"
+
+        # Create the tree object and assign it to the appropriate color
+        tree = Phylo.read(StringIO(newick), "newick")
+        tree.rooted = True
+        tree.root.color = color_scheme[newick]
+
+        # Create the figure
+        fig = plt.figure()
+        axes = fig.add_subplot(1, 1, 1)
+
+        # Create the tree image
+        Phylo.draw(tree, output_file, axes=axes, do_show=False)
+
+        # Rotate the image and save it
+        im = Image.open(output_file)
+        im.rotate(-90).save(output_file)
+
+        count += 1
+
+    return
 
 # topology_scatter({0: '(a, (b, c));', 1: '((a, b), c);',
 #                   2: '(a, (b, c));', 3: 'Other'},
