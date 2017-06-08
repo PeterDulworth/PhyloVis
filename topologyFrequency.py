@@ -83,12 +83,10 @@ def top_freqs(num, topologies):
 
     # gets topologies less than 'num' most frequent
     if sum(freqs) != 0:
-        labels.append('Other Topologies')
+        labels.append('Other Topologies '+str(len(freqs)))
         sizes.append(sum(freqs) / float(total) * 100)
 
     return top, labels, sizes
-
-tls = top_freqs(5, topology_counter())
 
 def topology_donut(num, top, labels, sizes):
     """
@@ -146,7 +144,7 @@ def top_topologies(num, topologies):
 
     # gets and sorts tuples of (topology, frequency)
     tops = topologies.items()
-    tops = sorted(tops, key=lambda tup: tup[1])
+    tops = sorted(tops, key=lambda tup: tup[1], reverse=True)
 
     # maps top 'num' topologies to frequencies
     for i in range(num):
@@ -288,6 +286,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # Save plot image
     plot = "topologyPlot.png"
     plt.savefig(plot)
+    plt.clf()
 
 # Example run
 # topology_scatter(windows_to_newick(top_topologies(5, topology_counter()))[0], tscolors[1], tscolors[2])
@@ -340,38 +339,20 @@ def topology_colorizer(color_scheme):
 num = 3
 
 # Function calls for plotting inputs:
-topologies_to_count = topology_counter()
+topologies_to_counts = topology_counter()
 
-top_frequencies = top_freqs(num, topologies_to_count)[0]
-print top_frequencies
-donut = topology_donut(num, top_frequencies,
-                       top_freqs(num, topologies_to_count)[1],
-                       top_freqs(num, topologies_to_count)[2])
-top_frequencies, labels, sizes = top_freqs(num, topologies_to_counts)
+list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
-topologies_to_frequencies = top_topologies(top_frequencies, topologies_to_counts)
+top_topologies_to_counts = top_topologies(num, topologies_to_counts)
 
-windows_to_top_topologies, tops_list = windows_to_newick(topologies_to_frequencies)
+windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
 
-topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, tops_list)
-topologies_to_frequencies = top_topologies(num, topologies_to_count)
+topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
 # Functions for creating plots
-topology_donut(num, top_frequencies, labels, sizes)
-windows_to_top_topologies = windows_to_newick(topologies_to_frequencies)[0]
-tops_list = windows_to_newick(topologies_to_frequencies)[1]
-
 topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-scatter_colors = topology_colors(windows_to_top_topologies, tops_list)[1]
-ylist = topology_colors(windows_to_top_topologies, tops_list)[2]
-
-scatter = topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-
-# Generate the color scheme
-color_scheme = topology_colors(windows_to_top_topologies, tops_list)[0]
-
+topology_donut(num, list_of_top_counts, labels, sizes)
 topology_colorizer(topologies_to_colors)
-
 
 
 
