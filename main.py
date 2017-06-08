@@ -9,12 +9,6 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
-
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
@@ -61,9 +55,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
-
-        # QtCore.QObject.connect(self.actionAllTrees, QtCore.SIGNAL(_fromUtf8("triggered()")),self.checkboxAllTrees.toggle)
-
 
         # **************************** Rax Input Page Events ****************************#
 
