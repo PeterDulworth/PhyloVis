@@ -61,7 +61,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.progressBar.reset()
 
         # disable export menu initially
-        self.menuExport.setEnabled(False)
+        # self.menuExport.setEnabled(False)
 
     ################################# Handlers #################################
 
