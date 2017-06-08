@@ -5,8 +5,9 @@ import gui_layout as gui
 import time
 import visualizationPrototype as vp
 from PIL import Image
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -14,7 +15,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setupUi(self)
 
         # moves menu bar into application -- mac only windows sux
-        self.menubar.setNativeMenuBar(False)
+        # self.menubar.setNativeMenuBar(False)
 
         # gui icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
@@ -27,7 +28,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** Menu Bar Events ****************************#
 
-        # when you select a mode first deselct all other modes to ensure only a single mode is ever selected
+        # when you select a mode first deselect all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
         self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
         self.actionNotRaxA.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
@@ -40,13 +41,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
+        # export files
         self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
         self.actionBootstrapJPG.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
         self.actionTextFile.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
 
+        # export directories
         self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
         self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAx_Files'))
         self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
+
+        self.allTreesWindow = allTreesWindow.AllTreesWindow()
+        self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
+        self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
+        self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -67,13 +75,27 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def displayResults(self):
         """
-            switch windows
+            dynamically display output windows
         """
-        self.setWindow('outputPage')
-        self.outputTabs.setCurrentIndex(0)
+
+        # self.setWindow('outputPage')
+        # self.outputTabs.setCurrentIndex(0)
+
+        if self.checkboxAllTrees.isChecked():
+            self.allTreesWindow.show()
+
+        if self.checkboxCircleGraph.isChecked():
+            self.circleGraphWindow.show()
+
+        if self.checkboxDonutPlot.isChecked():
+            self.donutPlotWindow.show()
+
+        if self.checkboxScatterPlot.isChecked():
+            self.scatterPlotWindow.show()
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
+        self.resize(0, 0)
 
     def ensureSingleModeSelected(self, mode_selected):
         for mode in self.modes:
@@ -94,17 +116,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
         print dirName, name
         copytree(dirName, name)
-
-
-    # def exportTxt(self):
-    #     name = QtGui.QFileDialog.getSaveFileName(self, 'Save Text File')
-    #     name += '.txt'
-    #     file = open(name, 'w')
-    #     text = 'asdf'
-    #     file.write(text)
-    #     file.close()
-
-
 
     def input_file_open(self):
         # get name of file
@@ -193,15 +204,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.displayResults()
         self.menuExport.setEnabled(True)
-        self.resize(int(standardSize[0]), int(standardSize[1]))
-
-
-def main():
-    app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    form = PhyloVisApp()  # We set the form to be our PhyloVisApp (design)
-    form.show()  # Show the form
-    app.exec_()  # and execute the app
-
+        # self.resize(int(standardSize[0]), int(standardSize[1]))
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
-    main()  # run the main function
+    app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+
+    # initialize main input window
+    form = PhyloVisApp()  # We set the form to be our PhyloVisApp (design)
+    form.show()  # Show the form
+
+    sys.exit(app.exec_())  # and execute the app
