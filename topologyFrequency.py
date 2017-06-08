@@ -10,9 +10,8 @@ from PIL import Image
 
 
 # list of colors for plots
-colors = ['red', 'blue', 'yellow', 'limegreen', 'mediumorchid', 'lightskyblue', 'orange', 'deeppink', 'purple',
-              'darkturquoise', 'greenyellow', 'gold', 'dodgerblue', 'coral', 'green', 'pink', 'blueviolet']
-
+colors = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
+          '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
 def topology_counter():
     """
@@ -44,20 +43,19 @@ def topology_counter():
 
     return topology_count
 
-
-def topology_donut(num):
+def top_freqs(num, topologies):
     """
-    Creates a donut chart showing the breakdown of the top 'num'
-    topologies.
+    Makes three lists containing the top 'num' topology
+    frequencies and the labels and sizes for the
+    donut plot inputs.
 
-    Inputs:
-    num -- the number of topologies to be shown
+    Input:
+    num        -- number of topologies to be viewed
+    topologies -- topologies mapping outputted by
+    topology_counter()
 
     Returns:
-    A donut chart with the number of times a topology occurs and
-    'Other Topologies' for topologies that occur less than the
-    most frequent 'num' topologies as the labels, and a list tops
-    of the top 'num' scores.
+    Three lists top, labels, and sizes
     """
     # initialize lists for plot inputs
     sizes = []
@@ -65,9 +63,6 @@ def topology_donut(num):
 
     # initialize list of top 'num' topologies
     top = []
-
-    # get topology counts
-    topologies = topology_counter()
 
     # add counts to frequency list
     freqs = []
@@ -84,13 +79,35 @@ def topology_donut(num):
         freqs.remove(count)
         # label and size parameters
         labels.append(str(count))
-        sizes.append((float(count)/ total) * 100)
+        sizes.append((float(count) / total) * 100)
 
     # gets topologies less than 'num' most frequent
     if sum(freqs) != 0:
         labels.append('Other Topologies')
         sizes.append(sum(freqs) / float(total) * 100)
 
+    return top, labels, sizes
+
+tls = top_freqs(5, topology_counter())
+
+def topology_donut(num, top, labels, sizes):
+    """
+    Creates a donut chart showing the breakdown of the top 'num'
+    topologies.
+
+    Inputs:
+    num    -- the number of topologies to be shown
+    top    -- a list of the top frequencies outputted by
+              top_freqs()[0]
+    labels -- a list of labels outputted by top_freqs()[1]
+    sizes  -- a list of sizes outputted by top_freqs()[2]
+
+    Returns:
+    A donut chart with the number of times a topology occurs and
+    'Other Topologies' for topologies that occur less than the
+    most frequent 'num' topologies as the labels, and a list tops
+    of the top 'num' scores.
+    """
     # plots pie chart
     plt.pie(sizes, explode=None, labels=labels,
             colors=colors, autopct=None, shadow=False)
@@ -105,9 +122,7 @@ def topology_donut(num):
     plt.axis('equal')
     plt.savefig("topologyDonut.png")
 
-    return top
-
-print topology_donut(5)
+# topology_donut(5, tls[0], tls[1], tls[2])
 
 # def windows_to_topologies():
 #     """
@@ -147,13 +162,13 @@ def top_topologies(top, topologies):
     times they occur.
 
     Inputs:
-    top        -- list of top 'num' topology counts
-    topologies -- mapping of topologies to the number
-    of times they occur.
+    top        -- list of top topology frequencies
+                  outputted by top_freqs()[0]
+    topologies -- mapping outputted by topology_counter()
 
     Returns:
-    top_topologies --- a mapping of the top num topologies
-    to the number of times they occur
+    top_topologies --- a mapping of the top 'num' topologies
+    to the number of times they occur.
     """
 
     # initialize mapping
@@ -167,16 +182,18 @@ def top_topologies(top, topologies):
 
     return top_topologies
 
-#print top_topologies([1, 1, 1, 1, 1], topology_count(dir))
+# print top_topologies(tls[0], topology_counter())
 
 def windows_to_newick(top_topologies):
     """
     Creates a dictionary of window numbers to the topology of that window if
     the newick string contained in the window is a top topology; otherwise the
     window number is mapped to "Other".
-    Inputs
-    topologies --- a list containing the top topologies of the phylogenetic trees
-    Output
+
+    Input:
+    top_topologies -- a mapping outputted by top_topologies()
+
+    Returns:
     wins_to_tops --- a dictionary as described above
     """
 
@@ -213,26 +230,63 @@ def windows_to_newick(top_topologies):
     return wins_to_tops, topologies
 
 # Example run
-# print windows_to_newick(top_topologies(topology_donut(5, dir), topology_count(dir)))
+# print windows_to_newick(top_topologies(tls[0], topology_counter()))
 
-def topology_scatter(wins_to_tops, topologies):
+def topology_colors(wins_to_tops, topologies):
     """
-    Creates a scatter plot showing the topology as the
-    y-axis and the window as the x-axis
+    Maps topologies to colors and makes two lists
+    containing the colors for the scatter plot and
+    the y-axis values.
 
     Input:
-    wins_to_tops          -- window to topology mapping outputted by windows_to_newick()
-    topologies            -- top topology list outputted by windows_to_newick()
+    wins_to_tops -- mapping outputted by windows_to_newick()[0]
+    topologies   -- mapping outputted by topology_counter()
+
+    Returns:
+    A mapping tops_to_colors and two lists scatter_colors and
+    ylist.
+    """
+    # initialize dictionaries and ylist
+    scatter_colors = []
+    tops_to_colors = {}
+    ylist = []
+
+    # y-axis is topology number
+    for i in range(len(wins_to_tops)):
+        for j in range(len(topologies.keys())):
+            if topologies.keys()[j] == wins_to_tops[i]:
+                ylist.append(j)
+
+    # create list of colors of same length as number of windows
+    top_colors = colors[:len(ylist)]
+
+    # map colors to topologies so they are the same in the plot
+    for win in wins_to_tops:
+        if wins_to_tops[win] in tops_to_colors.keys():
+            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
+        else:
+            tops_to_colors[wins_to_tops[win]] = top_colors[0]
+            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
+            top_colors.pop(0)
+
+    return tops_to_colors, scatter_colors, ylist
+
+tscolors = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())
+
+def topology_scatter(wins_to_tops, scatter_colors, ylist):
+    """
+    Creates a scatter plot showing the topology as the
+    y-axis and the window as the x-axis.
+
+    Input:
+    wins_to_tops   -- window to topology mapping outputted by windows_to_newick()[0]
+    scatter_colors -- list of colors outputted by topology_colors()[1]
+    ylist          -- list of y-axis values outputted by topology_colors()[2]
 
     Returns:
     A scatter plot with topologies as the x-axis and
     windows as the y-axis.
     """
-    # initialize lists and dictionaries
-    y = []
-    scatter_colors = []
-    tops_to_colors = {}
-
     # area of plotted circles
     area = math.pi * (5)**2
 
@@ -243,26 +297,8 @@ def topology_scatter(wins_to_tops, topologies):
     # x-axis is window numbers
     x = wins_to_tops.keys()
 
-    # y-axis is topology number
-    for i in range(len(wins_to_tops)):
-        for j in range(len(topologies)):
-            if topologies[j] == wins_to_tops[i]:
-                y.append(j)
-
     x = np.array(x)
-    y = np.array(y)
-
-    # create list of colors of same length as y
-    top_colors = colors[:len(y)]
-
-    # map colors to topologies so they are the same in the plot
-    for win in wins_to_tops:
-        if wins_to_tops[win] in tops_to_colors.keys():
-            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
-        else:
-            tops_to_colors[wins_to_tops[win]] = top_colors[0]
-            scatter_colors.append(tops_to_colors[wins_to_tops[win]])
-            top_colors.pop(0)
+    y = np.array(ylist)
 
     # create legend
     for (i, cla) in enumerate(set(wins_to_tops.values())):
@@ -280,19 +316,14 @@ def topology_scatter(wins_to_tops, topologies):
     plot = "topologyPlot.png"
     plt.savefig(plot)
 
-    return tops_to_colors
-
 # Example run
-# topology_scatter({0: '(a, (b, c));', 1: '((a, b), c);',
-#                   2: '(a, (b, c));', 3: 'Other'},
-#                  ['(a, (b, c));', '((a, c), b);',
-#                   '((a, b), c);', 'Other'],
-#                  'C:\Users\chaba\GitProjects\PhyloVis')
+# topology_scatter(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], tscolors[1], tscolors[2])
 
 def topology_colorizer(color_scheme):
     """
     Create colored tree topology images based on a color scheme where
-    the color of a tree is determined by the frequency that it occurs
+    the color of a tree is determined by the frequency that it occurs.
+
     Inputs:
     color scheme --- a dictionary mapping newick strings to colors
     """
@@ -324,30 +355,31 @@ def topology_colorizer(color_scheme):
 
             count += 1
 
-    return
 
 # Example run
-# color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
+color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
+color_scheme2 = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())[0]
+topology_colorizer(color_scheme2)
+
+
+# # Trying to run all of these together
+# top_frequencies = top_freqs(num, topologies)[0]
+#
+# topologies_to_count = topology_counter()
+#
+# donut = topology_donut(num, top_frequencies, top_freqs(num, topologies)[1], top_freqs(num, topologies)[2])
+#
+# # windows_to_all_topologies = windows_to_topologies()
+#
+# topologies_to_frequencies = top_topologies(top_frequencies, topologies)
+#
+# windows_to_top_topologies = windows_to_newick(topologies_to_frequencies)
+#
+# # Create scatter plot of the topologies and generate the color scheme
+# color_scheme = topology_scatter(wins_to_tops, topologies)
+#
+# # Create the colored topology images
 # topology_colorizer(color_scheme)
-
-
-# Trying to run all of these together
-
-topologies_to_count = topology_counter()
-
-list_of_top_topology_frequencies = topology_donut(num)
-
-# windows_to_all_topologies = windows_to_topologies()
-
-num_of_topologies_to_frequencies = top_topologies(topology_frequency, topologies)
-
-windows_to_top_topologies = windows_to_newick(top_topologies)
-
-# Create scatter plot of the topologies and generate the color scheme
-color_scheme = topology_scatter(wins_to_tops, topologies)
-
-# Create the colored topology images
-topology_colorizer(color_scheme)
 
 
 
