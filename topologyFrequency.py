@@ -121,6 +121,7 @@ def topology_donut(num, top, labels, sizes):
     # set axes equal
     plt.axis('equal')
     plt.savefig("topologyDonut.png")
+    plt.clf()
 
 # topology_donut(5, tls[0], tls[1], tls[2])
 
