@@ -56,7 +56,8 @@ def topology_donut(num):
     Returns:
     A donut chart with the number of times a topology occurs and
     'Other Topologies' for topologies that occur less than the
-    most frequent 'num' topologies as the labels.
+    most frequent 'num' topologies as the labels, and a list tops
+    of the top 'num' scores.
     """
     # initialize lists for plot inputs
     sizes = []
@@ -151,7 +152,7 @@ def top_topologies(top, topologies):
     of times they occur.
 
     Returns:
-    top_topologies --- a mapping of the top num topologies 
+    top_topologies --- a mapping of the top num topologies
     to the number of times they occur
     """
 
@@ -171,8 +172,8 @@ def top_topologies(top, topologies):
 def windows_to_newick(top_topologies):
     """
     Creates a dictionary of window numbers to the topology of that window if
-    the newick string contained in the window is a top topology otherwise the
-    window number is mapped to "Other"
+    the newick string contained in the window is a top topology; otherwise the
+    window number is mapped to "Other".
     Inputs
     topologies --- a list containing the top topologies of the phylogenetic trees
     Output
