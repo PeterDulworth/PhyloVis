@@ -102,11 +102,19 @@ def raxml_windows(window_directory):
 
     output_directory = "RAx_Files"
 
+    topology_output_directory = "Topologies"
+
     # Delete the folder and remake it
     if os.path.exists(output_directory):
         shutil.rmtree(output_directory)
 
     os.makedirs(output_directory)
+
+    # Delete the folder and remake it
+    if os.path.exists(topology_output_directory):
+        shutil.rmtree(topology_output_directory)
+
+    os.makedirs(topology_output_directory)
 
 
     # Iterate over each folder in the given directory
@@ -146,7 +154,7 @@ def raxml_windows(window_directory):
                 os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
                 os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
                 os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
-                os.rename("topology_bestTree." + file_number, output_directory + "\Topology_bestTree." + file_number)
+                os.rename("topology_bestTree." + file_number, topology_output_directory + "\Topology_bestTree." + file_number)
 
             elif platform == "darwin":
                 # Move RAxML output files into their own destination folder - Mac
@@ -155,7 +163,7 @@ def raxml_windows(window_directory):
                 os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
                 os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
                 os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
-                os.rename("topology_bestTree." + file_number, output_directory + "/topology_bestTree." + file_number)
+                os.rename("topology_bestTree." + file_number, topology_output_directory + "/topology_bestTree." + file_number)
 
     return output_directory
 
@@ -390,9 +398,9 @@ def image_combination(input_directory, plot):
 
 # Run commands below
 
-input_file = "phylip.txt"
-window_size = 15
-window_offset = 15
+# input_file = "phylip.txt"
+# window_size = 15
+# window_offset = 15
 
 # windows_dirs = splittr(input_file, window_size, window_offset)
 # RAx_dirs = raxml_windows(windows_dirs)
