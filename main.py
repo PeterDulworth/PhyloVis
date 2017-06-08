@@ -58,6 +58,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** Rax Input Page Events ****************************#
 
+        # ensure window is at minimum size when opened
         self.resize(0,0)
 
         # if input file button is clicked run function -- file_open
