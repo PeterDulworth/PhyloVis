@@ -20,8 +20,8 @@ def topology_counter():
     topologies --- a dictionary mapping topologies to the number of times they appear
     """
 
-    # Get the topology files from the "RAx_Files" folder
-    input_directory = "RAx_Files"
+    # Get the topology files from the "Topologies" folder
+    input_directory = "Topologies"
 
     topology_count = defaultdict(int)
 
@@ -203,12 +203,12 @@ def windows_to_newick(top_topologies):
     wins_to_tops = {}
 
     # Iterate over each folder in the given directory
-    for filename in os.listdir("Rax_Files"):
+    for filename in os.listdir("Topologies"):
 
         # If file is the file with the topology of the best tree newick string
         if os.path.splitext(filename)[0] == "Topology_bestTree":
 
-            filename = os.path.join("Rax_Files", filename)
+            filename = os.path.join("Topologies", filename)
 
             # Open file and read newick string
             with open(filename) as f:
@@ -357,29 +357,29 @@ def topology_colorizer(color_scheme):
 
 
 # Example run
-color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
-color_scheme2 = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())[0]
-topology_colorizer(color_scheme2)
+# color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
+# color_scheme2 = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())[0]
+# topology_colorizer(color_scheme2)
 
 
-# # Trying to run all of these together
-# top_frequencies = top_freqs(num, topologies)[0]
-#
-# topologies_to_count = topology_counter()
-#
-# donut = topology_donut(num, top_frequencies, top_freqs(num, topologies)[1], top_freqs(num, topologies)[2])
-#
-# # windows_to_all_topologies = windows_to_topologies()
-#
-# topologies_to_frequencies = top_topologies(top_frequencies, topologies)
-#
-# windows_to_top_topologies = windows_to_newick(topologies_to_frequencies)
-#
-# # Create scatter plot of the topologies and generate the color scheme
-# color_scheme = topology_scatter(wins_to_tops, topologies)
-#
-# # Create the colored topology images
-# topology_colorizer(color_scheme)
+# Trying to run all of these together
+top_frequencies = top_freqs(num, topologies)[0]
+
+topologies_to_count = topology_counter()
+
+donut = topology_donut(num, top_frequencies, top_freqs(num, topologies)[1], top_freqs(num, topologies)[2])
+
+# windows_to_all_topologies = windows_to_topologies()
+
+topologies_to_frequencies = top_topologies(top_frequencies, topologies)
+
+windows_to_top_topologies = windows_to_newick(topologies_to_frequencies)
+
+# Create scatter plot of the topologies and generate the color scheme
+color_scheme = topology_scatter(wins_to_tops, topologies)
+
+# Create the colored topology images
+topology_colorizer(color_scheme)
 
 
 
