@@ -88,7 +88,7 @@ def top_freqs(num, topologies):
 
     return top, labels, sizes
 
-tls = top_freqs(5, topology_counter())
+# tls = top_freqs(5, topology_counter())
 
 def topology_donut(num, top, labels, sizes):
     """
@@ -123,35 +123,6 @@ def topology_donut(num, top, labels, sizes):
     plt.savefig("topologyDonut.png")
 
 # topology_donut(5, tls[0], tls[1], tls[2])
-
-# def windows_to_topologies():
-#     """
-#     Maps the name of each window to the newick string representing the topology of the RAxML best tree
-#     Output:
-#     window_topologies --- a dictionary mapping windows to newick strings
-#     """
-#
-#     window_topologies = {}
-#
-#     rax_dir = ("RAx_Files")
-#
-#     # Iterate over each folder in the given directory
-#     for filename in os.listdir(rax_dir):
-#
-#         # If file is the file with the best tree newick string create an image for it
-#         if os.path.splitext(filename)[0] == "Topology_bestTree":
-#             input_file = os.path.join(rax_dir, filename)
-#
-#             with open(input_file) as f:
-#                 # Read newick string from file
-#                 topology = f.readline()
-#                 f.close()
-#
-#                 # Map the number of each window to the corresponding newick string
-#                 window_num = (os.path.splitext(filename)[1]).replace(".","")
-#                 window_topologies[window_num] = topology
-#
-#     return window_topologies
 
 # Sample run command
 # print windows_to_topologies()
@@ -198,7 +169,7 @@ def windows_to_newick(top_topologies):
     """
 
     ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
-    topologies = top_topologies.keys()
+    tops_list = top_topologies.keys()
 
     wins_to_tops = {}
 
@@ -218,21 +189,21 @@ def windows_to_newick(top_topologies):
             window_number = int((os.path.splitext(filename)[1]).replace(".",""))
 
             # Only map windows to newick strings that are in the top topologies
-            if newick in topologies:
+            if newick in tops_list:
 
                 wins_to_tops[window_number] = newick
 
             else:
 
                 wins_to_tops[window_number] = "Other"
-    topologies.append("Other")
+    tops_list.append("Other")
 
-    return wins_to_tops, topologies
+    return wins_to_tops, tops_list
 
 # Example run
 # print windows_to_newick(top_topologies(tls[0], topology_counter()))
 
-def topology_colors(wins_to_tops, topologies):
+def topology_colors(wins_to_tops, tops_list):
     """
     Maps topologies to colors and makes two lists
     containing the colors for the scatter plot and
@@ -240,7 +211,7 @@ def topology_colors(wins_to_tops, topologies):
 
     Input:
     wins_to_tops -- mapping outputted by windows_to_newick()[0]
-    topologies   -- mapping outputted by topology_counter()
+    tops_list    -- list outputted by windows_to_newick()[1]
 
     Returns:
     A mapping tops_to_colors and two lists scatter_colors and
@@ -253,8 +224,8 @@ def topology_colors(wins_to_tops, topologies):
 
     # y-axis is topology number
     for i in range(len(wins_to_tops)):
-        for j in range(len(topologies.keys())):
-            if topologies.keys()[j] == wins_to_tops[i]:
+        for j in range(len(tops_list)):
+            if tops_list[j] == wins_to_tops[i]:
                 ylist.append(j)
 
     # create list of colors of same length as number of windows
@@ -271,7 +242,8 @@ def topology_colors(wins_to_tops, topologies):
 
     return tops_to_colors, scatter_colors, ylist
 
-tscolors = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())
+# tscolors = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0],
+#                            windows_to_newick(top_topologies(tls[0],topology_counter()))[1])
 
 def topology_scatter(wins_to_tops, scatter_colors, ylist):
     """
@@ -355,48 +327,64 @@ def topology_colorizer(color_scheme):
 
             count += 1
 
-
 # Example run
 # color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
 # color_scheme2 = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())[0]
 # topology_colorizer(color_scheme2)
 
 
-# Trying to run all of these together
-top_frequencies = top_freqs(num, topologies)[0]
+### Trying to run all of these together
 
-topologies_to_count = topology_counter()
+# User inputs:
+num = 5
 
-donut = topology_donut(num, top_frequencies, top_freqs(num, topologies)[1], top_freqs(num, topologies)[2])
+# Function calls for plotting inputs:
+topologies_to_counts = topology_counter()
 
-# windows_to_all_topologies = windows_to_topologies()
+top_frequencies, labels, sizes = top_freqs(num, topologies_to_counts)
 
-topologies_to_frequencies = top_topologies(top_frequencies, topologies)
+topologies_to_frequencies = top_topologies(top_frequencies, topologies_to_counts)
 
-windows_to_top_topologies = windows_to_newick(topologies_to_frequencies)
+windows_to_top_topologies, tops_list = windows_to_newick(topologies_to_frequencies)
 
-# Create scatter plot of the topologies and generate the color scheme
-color_scheme = topology_scatter(wins_to_tops, topologies)
+topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, tops_list)
 
-# Create the colored topology images
-topology_colorizer(color_scheme)
+# Functions for creating plots
+topology_donut(num, top_frequencies, labels, sizes)
+
+topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+
+topology_colorizer(topologies_to_colors)
 
 
 
 
 
-
-# topology_scatter({1: '(seq4,((seq1,seq3),seq2),seq0);',
-#                    0: '(seq4,(seq1,(seq2,seq3)),seq0);',
-#                    3: '(seq1,(seq4,(seq3,seq2)),seq0);',
-#                    2: '(seq1,((seq2,seq4),seq3),seq0);',
-#                    4: '(seq4,(seq1,(seq2,seq3)),seq0);',
-#                    5: 'Other'},
-#                  ['(seq4,((seq1,seq3),seq2),seq0);',
-#                    '(seq1,(seq4,(seq3,seq2)),seq0);',
-#                    '((seq1,seq2),(seq3,seq4),seq0);',
-#                    '(seq4,(seq1,(seq2,seq3)),seq0);',
-#                    '(seq1,((seq2,seq4),seq3),seq0);',
-#                    'Other'],
-#                  'C:\Users\chaba\GitProjects\PhyloVis')
-
+# def windows_to_topologies():
+#     """
+#     Maps the name of each window to the newick string representing the topology of the RAxML best tree
+#     Output:
+#     window_topologies --- a dictionary mapping windows to newick strings
+#     """
+#
+#     window_topologies = {}
+#
+#     rax_dir = ("RAx_Files")
+#
+#     # Iterate over each folder in the given directory
+#     for filename in os.listdir(rax_dir):
+#
+#         # If file is the file with the best tree newick string create an image for it
+#         if os.path.splitext(filename)[0] == "Topology_bestTree":
+#             input_file = os.path.join(rax_dir, filename)
+#
+#             with open(input_file) as f:
+#                 # Read newick string from file
+#                 topology = f.readline()
+#                 f.close()
+#
+#                 # Map the number of each window to the corresponding newick string
+#                 window_num = (os.path.splitext(filename)[1]).replace(".","")
+#                 window_topologies[window_num] = topology
+#
+#     return window_topologies
