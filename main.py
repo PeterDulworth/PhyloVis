@@ -8,6 +8,8 @@ from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
+import topologyFrequency as tf
+import matplotlib.pyplot as plt
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -51,6 +53,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAx_Files'))
         self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
 
+        # set up other windows
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
@@ -137,8 +140,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def run(self):
 
-        self.displayResults()
-
         # Error handling for input file
         try:
             input_file_name = str(self.inputFileEntry.text())
@@ -192,6 +193,33 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         likelihood = vp.ml(num, RAx_dirs)
         plot = vp.scatter(num, likelihood)
         vp.image_combination(Tree_dir, plot)
+
+        #####################################################################
+
+
+
+        # User inputs:
+        num = topTopologies
+
+        # Function calls for plotting inputs:
+        topologies_to_counts = tf.topology_counter()
+
+        list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
+
+        top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
+
+        windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts)
+
+        topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
+        plt.clf()
+        # Functions for creating plots
+        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+        plt.clf()
+        tf.topology_donut(num, list_of_top_counts, labels, sizes)
+        plt.clf()
+        tf.topology_colorizer(topologies_to_colors)
+
+        #####################################################################
 
         # open images in gui
         standardSize = Image.open("Final.jpg").size

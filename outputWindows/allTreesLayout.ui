@@ -15,9 +15,9 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="allTreesImage">
      <property name="text">
-      <string>ALL TREES WINDOW</string>
+      <string/>
      </property>
     </widget>
    </item>

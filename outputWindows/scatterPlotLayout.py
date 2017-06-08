@@ -28,16 +28,16 @@ class Ui_Form(object):
         Form.resize(400, 300)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtGui.QLabel(Form)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.horizontalLayout.addWidget(self.label)
+        self.scatterPlotImage = QtGui.QLabel(Form)
+        self.scatterPlotImage.setText(_fromUtf8(""))
+        self.scatterPlotImage.setObjectName(_fromUtf8("scatterPlotImage"))
+        self.horizontalLayout.addWidget(self.scatterPlotImage)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label.setText(_translate("Form", "SCATTER PLOT", None))
 
 
 if __name__ == "__main__":
