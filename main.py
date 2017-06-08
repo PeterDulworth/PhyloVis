@@ -15,7 +15,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setupUi(self)
 
         # moves menu bar into application -- mac only windows sux
-        # self.menubar.setNativeMenuBar(False)
+        self.menubar.setNativeMenuBar(False)
 
         # gui icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
@@ -58,6 +58,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** Rax Input Page Events ****************************#
 
+        self.resize(0,0)
+
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
 
@@ -92,6 +94,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
+
+
+
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -150,6 +155,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             print 'Input File Name:', input_file_name
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        # Error handling for number of top topologies
+        try:
+            topTopologies = int(self.numberOfTopTopologiesEntry.text())
+            if topTopologies <= 0 or topTopologies > 15:
+                raise ValueError, "Please enter an integer between 0 and 15."
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
             return
 
         # # Error handling for output directory

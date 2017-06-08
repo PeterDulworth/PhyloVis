@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>180</height>
+    <width>529</width>
+    <height>245</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>433</width>
-    <height>180</height>
+    <width>459</width>
+    <height>217</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -84,127 +84,270 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_8">
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
               <item>
-               <widget class="QLabel" name="windowSizeLabel">
-                <property name="text">
-                 <string>Window Size:</string>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_16">
+                  <item>
+                   <widget class="QCheckBox" name="checkboxAllTrees">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>All Trees</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_7">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_19">
+                  <item>
+                   <widget class="QCheckBox" name="checkboxScatterPlot">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Scatter Plot</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_8">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_18">
+                  <item>
+                   <widget class="QCheckBox" name="checkboxDonutPlot">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Donut Plot</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_10">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_17">
+                  <item>
+                   <widget class="QCheckBox" name="checkboxCircleGraph">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Circle Graph</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_9">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
               </item>
               <item>
-               <widget class="QLineEdit" name="windowSizeEntry">
-                <property name="minimumSize">
-                 <size>
-                  <width>40</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="focusPolicy">
-                 <enum>Qt::WheelFocus</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="windowOffsetLabel">
-                <property name="text">
-                 <string>Window Offset:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="windowOffsetEntry">
-                <property name="minimumSize">
-                 <size>
-                  <width>40</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>80</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="focusPolicy">
-                 <enum>Qt::WheelFocus</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="windowSpacer">
+               <widget class="Line" name="line">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QCheckBox" name="checkboxAllTrees">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>All Trees</string>
+                 <enum>Qt::Vertical</enum>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkboxScatterPlot">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Scatter Plot</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkboxDonutPlot">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Donut Plot</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkboxCircleGraph">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>21</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Circle Graph</string>
-                </property>
-               </widget>
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_14">
+                  <item>
+                   <spacer name="horizontalSpacer_6">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="windowSizeLabel">
+                    <property name="text">
+                     <string>Window Size:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="windowSizeEntry">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::WheelFocus</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_15">
+                  <item>
+                   <spacer name="windowSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="windowOffsetLabel">
+                    <property name="text">
+                     <string>Window Offset:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="windowOffsetEntry">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="focusPolicy">
+                     <enum>Qt::WheelFocus</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <spacer name="horizontalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="numberOfTopTopologiesLabel">
+                    <property name="text">
+                     <string>Number of Top Topologies:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="numberOfTopTopologiesEntry">
+                    <property name="minimumSize">
+                     <size>
+                      <width>40</width>
+                      <height>21</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -430,7 +573,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>433</width>
+     <width>529</width>
      <height>22</height>
     </rect>
    </property>
@@ -581,6 +724,18 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>inputFileEntry</tabstop>
+  <tabstop>windowSizeEntry</tabstop>
+  <tabstop>windowOffsetEntry</tabstop>
+  <tabstop>numberOfTopTopologiesEntry</tabstop>
+  <tabstop>checkboxAllTrees</tabstop>
+  <tabstop>checkboxScatterPlot</tabstop>
+  <tabstop>checkboxDonutPlot</tabstop>
+  <tabstop>checkboxCircleGraph</tabstop>
+  <tabstop>outputTabs</tabstop>
+  <tabstop>pushButton_2</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
