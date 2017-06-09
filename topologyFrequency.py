@@ -88,44 +88,6 @@ def top_freqs(num, topologies):
 
     return top, labels, sizes
 
-def topology_donut(num, top, labels, sizes):
-    """
-    Creates a donut chart showing the breakdown of the top 'num'
-    topologies.
-
-    Inputs:
-    num    -- the number of topologies to be shown
-    top    -- a list of the top frequencies outputted by
-              top_freqs()[0]
-    labels -- a list of labels outputted by top_freqs()[1]
-    sizes  -- a list of sizes outputted by top_freqs()[2]
-
-    Returns:
-    A donut chart with the number of times a topology occurs and
-    'Other Topologies' for topologies that occur less than the
-    most frequent 'num' topologies as the labels, and a list tops
-    of the top 'num' scores.
-    """
-    # plots pie chart
-    plt.pie(sizes, explode=None, labels=labels,
-            colors=colors, autopct=None, shadow=False)
-
-    # impose circle over pie chart to make a donut chart
-    circle = plt.Circle((0, 0), 0.65, color='black', fc='white',
-                        linewidth=1.25)
-    fig = plt.gcf()
-    fig.gca().add_artist(circle)
-
-    # set axes equal
-    plt.axis('equal')
-    plt.savefig("topologyDonut.png")
-    plt.clf()
-
-# topology_donut(5, tls[0], tls[1], tls[2])
-
-# Sample run command
-# print windows_to_topologies()
-
 def top_topologies(num, topologies):
     """
     Maps the top 'num' topologies to the number of
@@ -244,6 +206,44 @@ def topology_colors(wins_to_tops, tops_list):
 # tscolors = topology_colors(windows_to_newick(top_topologies(5, topology_counter()))[0],
 #                            windows_to_newick(top_topologies(5,topology_counter()))[1])
 
+def topology_donut(num, top, labels, sizes, tops_to_colors):
+    """
+    Creates a donut chart showing the breakdown of the top 'num'
+    topologies.
+
+    Inputs:
+    num    -- the number of topologies to be shown
+    top    -- a list of the top frequencies outputted by
+              top_freqs()[0]
+    labels -- a list of labels outputted by top_freqs()[1]
+    sizes  -- a list of sizes outputted by top_freqs()[2]
+
+    Returns:
+    A donut chart with the number of times a topology occurs and
+    'Other Topologies' for topologies that occur less than the
+    most frequent 'num' topologies as the labels, and a list tops
+    of the top 'num' scores.
+    """
+    # plots pie chart
+    plt.pie(sizes, explode=None, labels=labels,
+            colors=tops_to_colors.values(), autopct=None, shadow=False)
+
+    # impose circle over pie chart to make a donut chart
+    circle = plt.Circle((0, 0), 0.65, color='black', fc='white',
+                        linewidth=1.25)
+    fig = plt.gcf()
+    fig.gca().add_artist(circle)
+
+    # set axes equal
+    plt.axis('equal')
+    plt.savefig("topologyDonut.png")
+    plt.clf()
+
+# topology_donut(5, tls[0], tls[1], tls[2])
+
+# Sample run command
+# print windows_to_topologies()
+
 def topology_scatter(wins_to_tops, scatter_colors, ylist):
     """
     Creates a scatter plot showing the topology as the
@@ -351,7 +351,7 @@ topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_top
 
 # Functions for creating plots
 topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-topology_donut(num, list_of_top_counts, labels, sizes)
+topology_donut(num, list_of_top_counts, labels, sizes, topologies_to_colors)
 topology_colorizer(topologies_to_colors)
 
 
