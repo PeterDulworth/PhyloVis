@@ -392,7 +392,9 @@ topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
 topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
 topology_colorizer(topologies_to_colors)
 
-
+print topologies_to_colors
+print "Scatter", scatter_colors
+print "Donut", donut_colors
 
 
 # def windows_to_topologies():
