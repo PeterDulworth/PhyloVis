@@ -17,7 +17,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setupUi(self)
 
         # moves menu bar into application -- mac only windows sux
-        self.menubar.setNativeMenuBar(False)
+        # self.menubar.setNativeMenuBar(False)
 
         # gui icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
@@ -144,13 +144,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             input_file_name = str(self.inputFileEntry.text())
             input_file_extension = os.path.splitext(input_file_name)[1]
-            print input_file_extension
 
             if input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
             elif input_file_extension != '.txt' and input_file_extension != '.phylip' and input_file_extension != '.fasta':
-                raise ValueError, (2, "Invalid File Type\nPlease enter either a .txt, .fasta, or .phylip file")
-            print 'Input File Name:', input_file_name
+                raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -169,7 +167,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             window_size = int(self.windowSizeEntry.text())
             if window_size <= 0:
                 raise ValueError, "Positive integers only"
-            print 'Window Size:', window_size
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
             return
@@ -179,20 +176,23 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             window_offset = int(self.windowOffsetEntry.text())
             if window_offset <= 0:
                 raise ValueError, "Positive integers only"
-            print 'Window Offset:', window_offset
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
         # self.runProgressBar()
 
-        windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
-        RAx_dirs = vp.raxml_windows(windows_dirs)
-        Tree_dir = vp.tree_display(RAx_dirs)
-        num = vp.num_windows(windows_dirs)
-        likelihood = vp.ml(num, RAx_dirs)
-        plot = vp.scatter(num, likelihood)
-        vp.image_combination(Tree_dir, plot)
+        try:
+            windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
+            RAx_dirs = vp.raxml_windows(windows_dirs)
+            Tree_dir = vp.tree_display(RAx_dirs)
+            num = vp.num_windows(windows_dirs)
+            likelihood = vp.ml(num, RAx_dirs)
+            plot = vp.scatter(num, likelihood)
+            vp.image_combination(Tree_dir, plot)
+        except IndexError:
+            QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
+            return
 
         #####################################################################
 

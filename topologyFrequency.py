@@ -206,7 +206,39 @@ def topology_colors(wins_to_tops, tops_list):
 # tscolors = topology_colors(windows_to_newick(top_topologies(5, topology_counter()))[0],
 #                            windows_to_newick(top_topologies(5,topology_counter()))[1])
 
-def topology_donut(num, top, labels, sizes, tops_to_colors):
+def donut_colors(top_topologies, tops_to_colors):
+    """
+    Makes a color list formatted for use in the donut chart
+    so that it matches the scatter plot.
+
+    Input:
+    top_topologies -- mapping outputted by top_topologies()
+    tops_to_colors -- mapping outputted by tops_to_colors()
+
+    Returns:
+    A list donut_colors.
+    """
+    # initialize color list
+    cols = []
+
+    for top1 in top_topologies:
+        for top2 in tops_to_colors:
+            # add color to list if topologies are the same
+            if top1 == top2:
+                cols.append(tops_to_colors[top2])
+
+    # reverse color list for counterclockwise plotting
+    donut_colors = list(reversed(cols))
+
+    # add color mapped to 'Other' to end of list
+    for color in tops_to_colors.values():
+        if color not in donut_colors:
+            donut_colors.append(color)
+
+    return donut_colors
+
+
+def topology_donut(num, top, labels, sizes, donut_colors):
     """
     Creates a donut chart showing the breakdown of the top 'num'
     topologies.
@@ -217,6 +249,8 @@ def topology_donut(num, top, labels, sizes, tops_to_colors):
               top_freqs()[0]
     labels -- a list of labels outputted by top_freqs()[1]
     sizes  -- a list of sizes outputted by top_freqs()[2]
+    donut_colors -- a list of colors outputted by
+                    donut_colors()
 
     Returns:
     A donut chart with the number of times a topology occurs and
@@ -226,7 +260,7 @@ def topology_donut(num, top, labels, sizes, tops_to_colors):
     """
     # plots pie chart
     plt.pie(sizes, explode=None, labels=labels,
-            colors=tops_to_colors.values(), autopct=None, shadow=False)
+        colors=donut_colors, autopct=None, shadow=False)
 
     # impose circle over pie chart to make a donut chart
     circle = plt.Circle((0, 0), 0.65, color='black', fc='white',
@@ -236,6 +270,8 @@ def topology_donut(num, top, labels, sizes, tops_to_colors):
 
     # set axes equal
     plt.axis('equal')
+
+    # save plot
     plt.savefig("topologyDonut.png")
     plt.clf()
 
@@ -282,8 +318,8 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
-
-    # Save plot image
+    plt.show()
+    # Save plot
     plot = "topologyPlot.png"
     plt.savefig(plot)
     plt.clf()
@@ -349,9 +385,11 @@ windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologie
 
 topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
+donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
+
 # Functions for creating plots
 topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-topology_donut(num, list_of_top_counts, labels, sizes, topologies_to_colors)
+topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
 topology_colorizer(topologies_to_colors)
 
 
