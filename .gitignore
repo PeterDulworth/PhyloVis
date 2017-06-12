@@ -6,5 +6,6 @@ RAx_Files
 Trees
 *.pyc
 *.jpg
+!Luay.jpg
 *.png
 Topologies

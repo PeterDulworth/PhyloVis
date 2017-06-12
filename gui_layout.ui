@@ -89,6 +89,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="raxBtn">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="text">
                <string>RAX BITCH</string>
               </property>
@@ -96,6 +99,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="notRax1Btn">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="text">
                <string>NOT RAX BICH 1</string>
               </property>
@@ -103,6 +109,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="notRax2Btn">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="text">
                <string>NOT RAX BITCH 2</string>
               </property>
@@ -110,8 +119,11 @@
             </item>
             <item>
              <widget class="QPushButton" name="notRax3Btn">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="text">
-               <string>NOT RAX BISH 2</string>
+               <string>NOT RAX CITY BISH 3</string>
               </property>
              </widget>
             </item>
