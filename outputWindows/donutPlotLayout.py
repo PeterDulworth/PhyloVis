@@ -28,16 +28,16 @@ class Ui_Form(object):
         Form.resize(400, 300)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtGui.QLabel(Form)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.horizontalLayout.addWidget(self.label)
+        self.donutPlotImage = QtGui.QLabel(Form)
+        self.donutPlotImage.setText(_fromUtf8(""))
+        self.donutPlotImage.setObjectName(_fromUtf8("donutPlotImage"))
+        self.horizontalLayout.addWidget(self.donutPlotImage)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label.setText(_translate("Form", "DONUT PLOT", None))
 
 
 if __name__ == "__main__":

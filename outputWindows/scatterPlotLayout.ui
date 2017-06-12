@@ -15,9 +15,9 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="scatterPlotImage">
      <property name="text">
-      <string>SCATTER PLOT</string>
+      <string/>
      </property>
     </widget>
    </item>

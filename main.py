@@ -8,6 +8,8 @@ from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
+import topologyFrequency as tf
+import matplotlib.pyplot as plt
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -15,7 +17,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setupUi(self)
 
         # moves menu bar into application -- mac only windows sux
-        self.menubar.setNativeMenuBar(False)
+        # self.menubar.setNativeMenuBar(False)
 
         # gui icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
@@ -51,6 +53,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAx_Files'))
         self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
 
+        # set up other windows
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
@@ -63,6 +66,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
+        self.actionOpen.triggered.connect(self.input_file_open)
 
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
@@ -77,10 +81,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     ################################# Handlers #################################
 
     def displayResults(self):
-        """
-            dynamically display output windows
-        """
-
         # self.setWindow('outputPage')
         # self.outputTabs.setCurrentIndex(0)
 
@@ -95,9 +95,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
-
-
-
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -147,13 +144,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             input_file_name = str(self.inputFileEntry.text())
             input_file_extension = os.path.splitext(input_file_name)[1]
-            print input_file_extension
 
             if input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
             elif input_file_extension != '.txt' and input_file_extension != '.phylip' and input_file_extension != '.fasta':
-                raise ValueError, (2, "Invalid File Type\nPlease enter either a .txt, .fasta, or .phylip file")
-            print 'Input File Name:', input_file_name
+                raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -167,23 +162,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
             return
 
-        # # Error handling for output directory
-        # try:
-        #     output_dir_name = str(self.outputDirEntry.text())
-        #
-        #     if output_dir_name == "":
-        #         raise ValueError, (1, "Please choose a directory")
-        #     print 'Output Directory Name:', output_dir_name
-        # except ValueError, (ErrorNumber, ErrorMessage):
-        #     QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-        #     return
-
         # Error handling for window size
         try:
             window_size = int(self.windowSizeEntry.text())
             if window_size <= 0:
                 raise ValueError, "Positive integers only"
-            print 'Window Size:', window_size
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
             return
@@ -193,20 +176,50 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             window_offset = int(self.windowOffsetEntry.text())
             if window_offset <= 0:
                 raise ValueError, "Positive integers only"
-            print 'Window Offset:', window_offset
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
         # self.runProgressBar()
 
-        windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
-        RAx_dirs = vp.raxml_windows(windows_dirs)
-        Tree_dir = vp.tree_display(RAx_dirs)
-        num = vp.num_windows(windows_dirs)
-        likelihood = vp.ml(num, RAx_dirs)
-        plot = vp.scatter(num, likelihood)
-        vp.image_combination(Tree_dir, plot)
+        try:
+            windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
+            RAx_dirs = vp.raxml_windows(windows_dirs)
+            Tree_dir = vp.tree_display(RAx_dirs)
+            num = vp.num_windows(windows_dirs)
+            likelihood = vp.ml(num, RAx_dirs)
+            plot = vp.scatter(num, likelihood)
+            vp.image_combination(Tree_dir, plot)
+        except IndexError:
+            QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
+            return
+
+        #####################################################################
+
+
+
+        # User inputs:
+        num = topTopologies
+
+        # Function calls for plotting inputs:
+        topologies_to_counts = tf.topology_counter()
+
+        list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
+
+        top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
+
+        windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts)
+
+        topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
+        plt.clf()
+        # Functions for creating plots
+        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+        plt.clf()
+        tf.topology_donut(num, list_of_top_counts, labels, sizes)
+        plt.clf()
+        tf.topology_colorizer(topologies_to_colors)
+
+        #####################################################################
 
         # open images in gui
         standardSize = Image.open("Final.jpg").size

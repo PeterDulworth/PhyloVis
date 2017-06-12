@@ -28,16 +28,16 @@ class Ui_Form(object):
         Form.resize(400, 300)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtGui.QLabel(Form)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.horizontalLayout.addWidget(self.label)
+        self.allTreesImage = QtGui.QLabel(Form)
+        self.allTreesImage.setText(_fromUtf8(""))
+        self.allTreesImage.setObjectName(_fromUtf8("allTreesImage"))
+        self.horizontalLayout.addWidget(self.allTreesImage)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.label.setText(_translate("Form", "ALL TREES WINDOW", None))
 
 
 if __name__ == "__main__":

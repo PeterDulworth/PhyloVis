@@ -15,9 +15,9 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="circleGraphImage">
      <property name="text">
-      <string>CIRCLE GRAPH</string>
+      <string/>
      </property>
     </widget>
    </item>

@@ -163,7 +163,7 @@ def raxml_windows(window_directory):
                 os.rename("RAxML_bipartitionsBranchLabels." + file_number, output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
                 os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
                 os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
-                os.rename("topology_bestTree." + file_number, topology_output_directory + "/topology_bestTree." + file_number)
+                os.rename("topology_bestTree." + file_number, topology_output_directory + "/Topology_bestTree." + file_number)
 
     return output_directory
 
