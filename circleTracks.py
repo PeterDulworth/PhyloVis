@@ -8,7 +8,7 @@ from Bio.SeqUtils import GC, GC_skew, GC123
 
 # the data
 record = SeqIO.read("NC_002703.gbk", "gb")
-
+print record
 
 
 # list of all data
@@ -67,7 +67,7 @@ for feature in record.features:
 max_len = max([len(r) for r in records])
 # in the case of 1 record the following would be equivalent
 # max_len = max(len(record))
-diagram.draw(format="circular", pagesize='A4', fragments=100, start=0, end=max_len, fragment_size=2)
+diagram.draw(format="circular", pagesize='A4', orientation='landscape', x=0.05, y=0.05, track_size=0.75, tracklines=0, fragments=100, start=0, end=max_len, fragment_size=2, circular=0)
 
 
 
