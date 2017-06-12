@@ -365,7 +365,7 @@ def image_combination(input_directory, plot):
         new_im.paste(im, (x_offset,y_offset))
         x_offset += im.size[0]
 
-    final_image = 'Final.jpg'
+    final_image = 'Final.png'
     new_im.save(final_image)
 
     # Create combined image of plot and bootstrapped trees
@@ -381,7 +381,7 @@ def image_combination(input_directory, plot):
         new_im.paste(im, (x_offset, y_offset))
         x_offset += im.size[0]
 
-    final_bootstrap_image =  'FinalBootstraps.jpg'
+    final_bootstrap_image =  'FinalBootstraps.png'
     new_im.save(final_bootstrap_image)
 
     # Automatically open image files
@@ -398,14 +398,14 @@ def image_combination(input_directory, plot):
 
 # Run commands below
 
-input_file = "phylip.txt"
-window_size = 10
-window_offset = 10
-
-windows_dirs = splittr(input_file, window_size, window_offset)
-RAx_dirs = raxml_windows(windows_dirs)
-Tree_dir = tree_display(RAx_dirs)
-num = num_windows(windows_dirs)
-likelihood = ml(num, RAx_dirs)
-plot = scatter(num, likelihood)
-image_combination(Tree_dir,plot)
+# input_file = "phylip.txt"
+# window_size = 10
+# window_offset = 10
+#
+# windows_dirs = splittr(input_file, window_size, window_offset)
+# RAx_dirs = raxml_windows(windows_dirs)
+# Tree_dir = tree_display(RAx_dirs)
+# num = num_windows(windows_dirs)
+# likelihood = ml(num, RAx_dirs)
+# plot = scatter(num, likelihood)
+# image_combination(Tree_dir,plot)

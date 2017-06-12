@@ -315,7 +315,8 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
-    plt.show()
+    # plt.show()
+
     # Save plot
     plot = "topologyPlot.png"
     plt.savefig(plot)
@@ -356,32 +357,34 @@ def topology_colorizer(color_scheme):
             im = Image.open(output_file)
             im.rotate(-90).save(output_file)
 
+            plt.clf()
+
             count += 1
 
 
 
 ### Trying to run all of these together
 
-# User inputs:
-num = 3
-
-# Function calls for plotting inputs:
-topologies_to_counts = topology_counter()
-
-list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
-
-top_topologies_to_counts = top_topologies(num, topologies_to_counts)
-
-windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
-
-topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
-
-donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
-
-# Functions for creating plots
-topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-topology_colorizer(topologies_to_colors)
+# # User inputs:
+# num = 3
+#
+# # Function calls for plotting inputs:
+# topologies_to_counts = topology_counter()
+#
+# list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
+#
+# top_topologies_to_counts = top_topologies(num, topologies_to_counts)
+#
+# windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
+#
+# topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
+#
+# donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
+#
+# # Functions for creating plots
+# topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+# topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+# topology_colorizer(topologies_to_colors)
 
 
 # def windows_to_topologies():
