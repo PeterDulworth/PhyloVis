@@ -196,6 +196,7 @@ def topology_colors(wins_to_tops, tops_list):
     for win in wins_to_tops:
         if wins_to_tops[win] in tops_to_colors.keys():
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
+
         else:
             tops_to_colors[wins_to_tops[win]] = top_colors[0]
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
@@ -313,12 +314,12 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
         yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
         cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
         plt.scatter(xc, yc, s=area, c=cols, label=cla)
-    # plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
+    plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
-    plt.show()
+    # plt.show()
     # Save plot
     plot = "topologyPlot.png"
     plt.savefig(plot)
@@ -372,7 +373,7 @@ def topology_colorizer(color_scheme):
 ### Trying to run all of these together
 
 # User inputs:
-num = 3
+num = 1
 
 # Function calls for plotting inputs:
 topologies_to_counts = topology_counter()
@@ -386,7 +387,7 @@ windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologie
 topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
 donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
-
+# donut_colors = ['#0000ff', '#ffff00', '#32cd32', '#ff0000']
 # Functions for creating plots
 topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
 topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)

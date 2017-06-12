@@ -398,14 +398,14 @@ def image_combination(input_directory, plot):
 
 # Run commands below
 
-# input_file = "phylip.txt"
-# window_size = 15
-# window_offset = 15
+input_file = "phylip.txt"
+window_size = 10
+window_offset = 10
 
-# windows_dirs = splittr(input_file, window_size, window_offset)
-# RAx_dirs = raxml_windows(windows_dirs)
-# Tree_dir = tree_display(RAx_dirs)
-# num = num_windows(windows_dirs)
-# likelihood = ml(num, RAx_dirs)
-# plot = scatter(num, likelihood)
-# image_combination(Tree_dir,plot)
+windows_dirs = splittr(input_file, window_size, window_offset)
+RAx_dirs = raxml_windows(windows_dirs)
+Tree_dir = tree_display(RAx_dirs)
+num = num_windows(windows_dirs)
+likelihood = ml(num, RAx_dirs)
+plot = scatter(num, likelihood)
+image_combination(Tree_dir,plot)
