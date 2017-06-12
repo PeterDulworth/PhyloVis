@@ -370,27 +370,27 @@ def topology_colorizer(color_scheme):
 
 
 ### Trying to run all of these together
+if __name__ == '__main__':
+    # User inputs:
+    num = 3
 
-# User inputs:
-num = 3
+    # Function calls for plotting inputs:
+    topologies_to_counts = topology_counter()
 
-# Function calls for plotting inputs:
-topologies_to_counts = topology_counter()
+    list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
-list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
+    top_topologies_to_counts = top_topologies(num, topologies_to_counts)
 
-top_topologies_to_counts = top_topologies(num, topologies_to_counts)
+    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
 
-windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
+    topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
-topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
+    donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
 
-donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
-
-# Functions for creating plots
-topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-topology_colorizer(topologies_to_colors)
+    # Functions for creating plots
+    topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+    topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+    topology_colorizer(topologies_to_colors)
 
 # print topologies_to_colors
 # print "Scatter", scatter_colors
