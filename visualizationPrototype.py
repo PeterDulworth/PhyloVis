@@ -305,6 +305,7 @@ def scatter(num, likelihood):
 
     plot = "Plot.png"
     plt.savefig(plot)
+    plt.clf()
     return plot
 
 

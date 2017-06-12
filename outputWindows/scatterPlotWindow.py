@@ -9,7 +9,6 @@ class ScatterPlotWindow(QtGui.QWidget, scatterPlotLayout.Ui_Form):
         self.setupUi(self)
 
     def display_image(self):
-        print 'asdfasdfs'
         standardSize = Image.open("topologyPlot.png").size
 
         self.move(800, 600)
