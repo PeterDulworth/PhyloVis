@@ -277,7 +277,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
         yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
         cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
         plt.scatter(xc, yc, s=area, c=cols, label=cla)
-    plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
+    # plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
     # labels axes
     plt.xlabel('Windows', fontsize=10)
