@@ -211,12 +211,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts)
 
         topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
-        plt.clf()
+
+        donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
+
         # Functions for creating plots
         tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-        plt.clf()
-        tf.topology_donut(num, list_of_top_counts, labels, sizes)
-        plt.clf()
+        tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
         tf.topology_colorizer(topologies_to_colors)
 
         #####################################################################
