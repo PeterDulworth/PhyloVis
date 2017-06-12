@@ -39,12 +39,12 @@ def splittr(filename, window_size, step_size):
     output_files = []
 
     with open(filename) as f:
-        # First line contains the number and length of sequences
+        # First line contains the number and length of the sequences
         line = f.readline()
         line = line.split()
 
-        number_of_sequences = line[0]
-        length_of_sequences = line[1]
+        number_of_sequences = int(line[0])
+        length_of_sequences = int(line[1])
 
         # Initialize a pointer for the beginning of each window
         i = 0
