@@ -10,7 +10,7 @@ from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 import topologyFrequency as tf
 import matplotlib.pyplot as plt
-import circleGraphGenerator
+# import circleGraphGenerator
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -227,9 +227,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
 
         windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts)
-        # print "YOOOOO\n",windows_to_top_topologies.items()
-
-        # print circleGraphGenerator.generateCircleGraph('phylip.txt', 3, [])
 
         topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
 
