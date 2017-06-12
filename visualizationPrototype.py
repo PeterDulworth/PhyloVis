@@ -365,7 +365,7 @@ def image_combination(input_directory, plot):
         new_im.paste(im, (x_offset,y_offset))
         x_offset += im.size[0]
 
-    final_image = 'Final.jpg'
+    final_image = 'Final.png'
     new_im.save(final_image)
 
     # Create combined image of plot and bootstrapped trees
@@ -381,7 +381,7 @@ def image_combination(input_directory, plot):
         new_im.paste(im, (x_offset, y_offset))
         x_offset += im.size[0]
 
-    final_bootstrap_image =  'FinalBootstraps.jpg'
+    final_bootstrap_image =  'FinalBootstraps.png'
     new_im.save(final_bootstrap_image)
 
     # Automatically open image files

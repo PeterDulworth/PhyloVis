@@ -43,6 +43,7 @@ def topology_counter():
 
     return topology_count
 
+
 def top_freqs(num, topologies):
     """
     Makes three lists containing the top 'num' topology
@@ -88,6 +89,7 @@ def top_freqs(num, topologies):
 
     return top, labels, sizes
 
+
 def top_topologies(num, topologies):
     """
     Maps the top 'num' topologies to the number of
@@ -114,7 +116,6 @@ def top_topologies(num, topologies):
 
     return top_topologies
 
-# print top_topologies(5, topology_counter())
 
 def windows_to_newick(top_topologies):
     """
@@ -127,6 +128,7 @@ def windows_to_newick(top_topologies):
 
     Returns:
     wins_to_tops --- a dictionary as described above
+    tops_list --- a list of the top topologies
     """
 
     ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
@@ -161,8 +163,6 @@ def windows_to_newick(top_topologies):
 
     return wins_to_tops, tops_list
 
-# Example run
-# print windows_to_newick(top_topologies(tls[0], topology_counter()))
 
 def topology_colors(wins_to_tops, tops_list):
     """
@@ -196,7 +196,6 @@ def topology_colors(wins_to_tops, tops_list):
     for win in wins_to_tops:
         if wins_to_tops[win] in tops_to_colors.keys():
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
-
         else:
             tops_to_colors[wins_to_tops[win]] = top_colors[0]
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
@@ -204,8 +203,6 @@ def topology_colors(wins_to_tops, tops_list):
 
     return tops_to_colors, scatter_colors, ylist
 
-# tscolors = topology_colors(windows_to_newick(top_topologies(5, topology_counter()))[0],
-#                            windows_to_newick(top_topologies(5,topology_counter()))[1])
 
 def donut_colors(top_topologies, tops_to_colors):
     """
@@ -220,16 +217,19 @@ def donut_colors(top_topologies, tops_to_colors):
     A list donut_colors.
     """
     # initialize color list
-    cols = []
+    donut_colors = []
 
-    for top1 in top_topologies:
+    tops = top_topologies.items()
+    topologies = sorted(tops, key=lambda tup: tup[1], reverse=True)
+
+    for i in range(len(topologies)):
         for top2 in tops_to_colors:
             # add color to list if topologies are the same
-            if top1 == top2:
-                cols.append(tops_to_colors[top2])
+            if topologies[i][0] == top2:
+                donut_colors.append(tops_to_colors[top2])
 
     # reverse color list for counterclockwise plotting
-    donut_colors = list(reversed(cols))
+    # donut_colors = list(reversed(cols))
 
     # add color mapped to 'Other' to end of list
     for color in tops_to_colors.values():
@@ -276,10 +276,6 @@ def topology_donut(num, top, labels, sizes, donut_colors):
     plt.savefig("topologyDonut.png")
     plt.clf()
 
-# topology_donut(5, tls[0], tls[1], tls[2])
-
-# Sample run command
-# print windows_to_topologies()
 
 def topology_scatter(wins_to_tops, scatter_colors, ylist):
     """
@@ -320,13 +316,12 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
     # plt.show()
+
     # Save plot
     plot = "topologyPlot.png"
     plt.savefig(plot)
     plt.clf()
 
-# Example run
-# topology_scatter(windows_to_newick(top_topologies(5, topology_counter()))[0], tscolors[1], tscolors[2])
 
 def topology_colorizer(color_scheme):
     """
@@ -362,12 +357,10 @@ def topology_colorizer(color_scheme):
             im = Image.open(output_file)
             im.rotate(-90).save(output_file)
 
+            plt.clf()
+
             count += 1
 
-# Example run
-# color_scheme = {"((A,B),C);":'red',"((B,C),A);":'blue',"((C,A),B);":'yellow'}
-# color_scheme2 = topology_colors(windows_to_newick(top_topologies(tls[0], topology_counter()))[0], topology_counter())[0]
-# topology_colorizer(color_scheme2)
 
 
 ### Trying to run all of these together
@@ -395,10 +388,6 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-
-# print topologies_to_colors
-# print "Scatter", scatter_colors
-# print "Donut", donut_colors
 
 
 # def windows_to_topologies():

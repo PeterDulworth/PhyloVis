@@ -225,13 +225,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         #####################################################################
 
         # open images in gui
-        standardSize = Image.open("Final.jpg").size
+        standardSize = Image.open("Final.png").size
 
         self.standardImage.setScaledContents(True)
-        self.standardImage.setPixmap(QtGui.QPixmap("Final.jpg"))
+        self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
 
         self.bootstrapImage.setScaledContents(True)
-        self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.jpg"))
+        self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
 
         self.displayResults()
         self.menuExport.setEnabled(True)
