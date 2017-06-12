@@ -16,16 +16,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
+        # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
 
         # moves menu bar into application -- mac only windows sux
-        # self.menubar.setNativeMenuBar(False)
+        self.menubar.setNativeMenuBar(False)
 
         # gui icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
 
+        # self.welcomeLogoImage.setScaledContents(True)
+        self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
+
         # windows dictionary
-        self.windows = {'inputPageRax': 0, 'inputPageNotRaxA': 1, 'inputPageNotRaxB': 2, 'inputPageNotRaxC': 3,
-                        'outputPage': 4}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4,
+                        'outputPage': 5}
 
         ############################# Link Events ##############################
 
@@ -60,6 +64,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
 
+
+
         # **************************** Rax Input Page Events ****************************#
 
         # ensure window is at minimum size when opened
@@ -78,6 +84,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # disable export menu initially
         self.menuExport.setEnabled(False)
+
+        # **************************** Rax Welcome Page Events ****************************#
+
+        self.raxBtn.clicked.connect(lambda: self.setWindow('inputPageRax'))
+        self.notRax1Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxA'))
+        self.notRax2Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxB'))
+        self.notRax3Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxC'))
+
+        self.raxBtn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
+        self.notRax1Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
+        self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
+        self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
     ################################# Handlers #################################
 
