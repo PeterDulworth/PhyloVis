@@ -120,33 +120,7 @@ def generateCircleGraph(file, number_of_top_topologies, windows_to_top_topologie
         .new_graph(full_data, style='bar',
                    altcolour=colors.transparent)
 
-        # # create graph sets and feature sets -- and add them to tracks
-    # graphSet = inner_track.new_set('graph')
-    # featureSet = outer_track.new_set('feature')
-    #
-    # # create a graph and add it to a graph set
-    # graphData = GC_skew(record.seq, 23)
-    # graphData = [(i * 23, graphData[i]) for i in range(len(graphData))]
-    #
-    # graphSet.new_graph(graphData, style="line")
-    #
-    # # add features to a feature set
-    # i = 0
-    # for feature in record.features:
-    #     if feature.type != "gene":
-    #         # Exclude this feature
-    #         continue
-    #     featureSet.add_feature(feature, color='red', label=False, name=str(i + 1), label_position="start", label_size=6,
-    #                            label_angle=0)
-    #     i += 1
-    #
-    # # build the diagram
-    # # if there is more than one record take the max of all the records
-    # max_len = max([len(r) for r in records])
-    # print type(max_len)
-    # # in the case of 1 record the folleowing would be equivalent
-    # max_len = max(len(record))
-    # diagram.draw(format="circular", pagesize='A4', fragments=10, start=0, end=9, fragment_size=2)
+     
     diagram.draw(format="circular", pagesize='A4', orientation='landscape', x=0.05, y=0.05, track_size=1.9, tracklines=0, circular=0)
     #
     # # save the file(s)
