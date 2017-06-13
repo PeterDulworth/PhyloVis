@@ -295,8 +295,9 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     area = math.pi * (5)**2
 
     # sizes plot appropriately
-    plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
-    plt.yticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    # plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    # plt.yticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    plt.yticks(np.arange(len(wins_to_tops) + 1, 0))
 
     # x-axis is window numbers
     x = wins_to_tops.keys()
@@ -309,7 +310,8 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
         xc = [p for (j, p) in enumerate(x) if wins_to_tops.values()[j] == cla]
         yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
         cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
-        plt.scatter(xc, yc, s=area, c=cols, label=cla)
+        plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1)
+        plt.grid = True
     plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
     # labels axes
@@ -385,8 +387,8 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
 
     # Functions for creating plots
     topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-    topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-    topology_colorizer(topologies_to_colors)
+    # topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+    # topology_colorizer(topologies_to_colors)
 
 
 
