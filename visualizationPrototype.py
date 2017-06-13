@@ -301,7 +301,7 @@ def scatter(num, likelihood):
         elif y > 0.75 and y <= 1:
             color = colors.hex2color('#FF0000')
 
-        plt.scatter(x, y, s = area, c = color, alpha = 1)
+    plt.scatter(x, y, s = area, c = color, alpha = 1)
 
     plot = "Plot.png"
     plt.savefig(plot)
