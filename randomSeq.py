@@ -25,7 +25,7 @@ def phylip(len, num, output_name):
     file.close()
 
 # phylip(100, 10, "phylip.txt")
-# phylip(1000000, 10, "phylipBig.txt")
+phylip(1000000, 10, "phylipBig.txt")
 # phylip(25, 5, "test.txt")
 
 
