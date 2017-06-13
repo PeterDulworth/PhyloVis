@@ -8,6 +8,7 @@ class AllTreesWindow(QtGui.QWidget, allTreesLayout.Ui_Form):
         super(AllTreesWindow, self).__init__(parent)
         self.setupUi(self)
 
+    def display_image(self):
         standardSize = Image.open("Topology0.png").size
 
         self.move(800, 0)

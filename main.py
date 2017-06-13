@@ -103,12 +103,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if self.checkboxAllTrees.isChecked():
             self.allTreesWindow.show()
+            self.allTreesWindow.display_image()
 
         if self.checkboxCircleGraph.isChecked():
             self.circleGraphWindow.show()
+            self.circleGraphWindow.display_image()
 
         if self.checkboxDonutPlot.isChecked():
             self.donutPlotWindow.show()
+            self.donutPlotWindow.display_image()
 
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
