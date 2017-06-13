@@ -41,46 +41,10 @@ def generateCircleGraph(file, number_of_top_topologies, windows_to_top_topologie
             else:
                 topologies_to_data[topology].append(tuple([window[0], 0]))
 
-    # print '\n\n'
-    # for t in topologies_to_data:
-    #     print t, '\n', topologies_to_data[t]
-    #     print
-    #
-    # a = zip(range(number_of_top_topologies + 1), topologies_to_data.values())
-    # print a
-
-    # try:
-    #     # check to see if phylip file is in interleaved format or sequential.
-    #     record = SeqIO.read(file, "phylip")
-    # except ValueError:
-    #     # if it is in sequential, convert to interleaved
-    #
-    #     filename = os.path.splitext(file)[0]
-    #     extension = os.path.splitext(file)[1]
-    #
-    #     input_handle = open(file, "rU")
-    #     output_handle = open(filename + "_interleaved" + extension, "w")
-    #
-    #     alignments = AlignIO.parse(input_handle, "phylip-relaxed")
-    #     AlignIO.write(alignments, output_handle, "phylip")
-    #
-    #     output_handle.close()
-    #     input_handle.close()
-    #
-    #     record = SeqIO.read(filename + "_interleaved" + extension, "phylip")
-
-    # list of all data
-    # records = [record]
-
-    ############################ features/graphs < featureSets/graphSets < tracks < diagram ############################
-
     # name of the figure
     name = "circleGraph"
 
     # create the diagram -- highest level container for everything
-    # the diagram directly contains tracks
-    # the diagram has levels -- for circular the innermost level is the lowest -- for linear the top level is the lowest
-    # after you are done building the diagram you call the .draw method to display it and the .write method to save it
     diagram = GenomeDiagram.Diagram(name)
 
     # print topologies_to_data
@@ -109,9 +73,9 @@ def generateCircleGraph(file, number_of_top_topologies, windows_to_top_topologie
     full_data = []
     for j in range(length_of_sequences/(window_size)):
         if j % 2 == 0:
-            full_data.append(tuple([j, 1]))
+            full_data.append(tuple([j, 0]))
         else:
-            full_data[0] = tuple([j, 0])
+            full_data[0] = tuple([j, 1])
 
     # last shit
     diagram.new_track(i + 3, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2,
@@ -120,9 +84,8 @@ def generateCircleGraph(file, number_of_top_topologies, windows_to_top_topologie
         .new_graph(full_data, style='bar',
                    altcolour=colors.transparent)
 
-     
-    diagram.draw(format="circular", pagesize='A4', orientation='landscape', x=0.05, y=0.05, track_size=1.9, tracklines=0, circular=0)
-    #
+    diagram.draw(format="circular", pagesize='A4', orientation='landscape', x=1, y=1, track_size=1.9, tracklines=0, circular=0)
+
     # # save the file(s)
     diagram.write(name + ".pdf", "PDF")
     # diagram.write(name + ".eps", "EPS")
