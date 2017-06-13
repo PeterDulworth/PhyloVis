@@ -7,4 +7,6 @@ class CircleGraphWindow(QtGui.QWidget, circleGraphLayout.Ui_Form):
     def __init__(self, parent=None):
         super(CircleGraphWindow, self).__init__(parent)
         self.setupUi(self)
-        self.move(0,0)
+
+    def display_image(self):
+        self.move(0, 0)

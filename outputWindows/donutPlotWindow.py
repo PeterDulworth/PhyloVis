@@ -8,6 +8,7 @@ class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_Form):
         super(DonutPlotWindow, self).__init__(parent)
         self.setupUi(self)
 
+    def display_image(self):
         standardSize = Image.open("topologyDonut.png").size
 
         self.move(0, 600)
