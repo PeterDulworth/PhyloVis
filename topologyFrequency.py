@@ -320,7 +320,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # plt.show()
 
     # Save plot
-    plot = "topologyPlot2.png"
+    plot = "topologyPlot.png"
     plt.savefig(plot)
     plt.clf()
 
