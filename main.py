@@ -64,8 +64,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
 
-
-
         # **************************** Rax Input Page Events ****************************#
 
         # ensure window is at minimum size when opened
@@ -114,6 +112,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
+            self.scatterPlotWindow.display_image()
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
