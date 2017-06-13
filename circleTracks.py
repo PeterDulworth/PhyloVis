@@ -47,7 +47,7 @@ featureSet = outer_track.new_set('feature')
 graphData = GC_skew(record.seq, 23)
 graphData = [(i * 23, graphData[i]) for i in range(len(graphData))]
 
-graphSet.new_graph(graphData, style="line")
+graphSet.new_graph(graphData, style="line", colour=colors.lightgreen, altcolour=colors.darkseagreen)
 
 
 

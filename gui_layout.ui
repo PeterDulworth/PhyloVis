@@ -93,7 +93,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>RAX BITCH</string>
+               <string>RAX</string>
               </property>
              </widget>
             </item>
@@ -103,7 +103,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>NOT RAX BICH 1</string>
+               <string>not rax 1</string>
               </property>
              </widget>
             </item>
@@ -113,7 +113,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>NOT RAX BITCH 2</string>
+               <string>not rax 2</string>
               </property>
              </widget>
             </item>
@@ -123,7 +123,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>NOT RAX CITY BISH 3</string>
+               <string>not rax 3</string>
               </property>
              </widget>
             </item>

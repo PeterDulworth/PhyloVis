@@ -68,9 +68,6 @@ def splittr(filename, window_size, step_size):
             file.write(str(window_size) + "\n")
             file.close()
 
-        # initialize l
-        l = 0
-
         # Subsequent lines contain taxon and sequence separated by a space
         for i in range(number_of_sequences):
             line = f.readline()

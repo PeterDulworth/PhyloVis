@@ -28,6 +28,8 @@ def phylip(len, num, output_name):
 # phylip(1000000, 10, "phylipBig.txt")
 # phylip(25, 5, "test.txt")
 
+phylip(1000, 10, "bitch.txt")
+
 
 # FASTA Format
 def fasta(len, num, output_name):
