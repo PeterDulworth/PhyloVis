@@ -136,7 +136,7 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
     diagram.write(name + ".pdf", "PDF")
     # diagram.write(name + ".eps", "EPS")
     # diagram.write(name + ".svg", "SVG")
-    # diagram.write(name + ".png", "PNG")
+    diagram.write(name + ".png", "PNG")
 
 
 if __name__ == '__main__':
