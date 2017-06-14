@@ -21,12 +21,25 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
         length_of_sequences = int(f.readline().split()[1])
     f.close()
 
+    windows_to_top_topologies2 = {}
+    for window in windows_to_top_topologies:
+        windows_to_top_topologies2[window * window_offset] = windows_to_top_topologies[window]
+    windows_to_top_topologies = windows_to_top_topologies2.items()
+
+    windows = []
+    for window_topology in windows_to_top_topologies:
+        windows.append(window_topology[0])
+
+    for i in range(length_of_sequences):
+        if i not in windows:
+            windows_to_top_topologies.append((i, 0))
+
+    print windows_to_top_topologies
 
     topologies_to_data = {}
 
     for topology in top_topologies_to_colors:
         topologies_to_data[topology] = []
-    topologies_to_data['Other'] = []
 
     for topology in top_topologies_to_colors:
         for window in windows_to_top_topologies:
@@ -58,6 +71,7 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
 
     # name of the figure
     name = "circleGraph"
+    graphStyle = 'line'
 
     # create the diagram -- highest level container for everything
     diagram = GenomeDiagram.Diagram(name)
@@ -73,10 +87,10 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
         scale_font='Helvetica',
         scale_fontsize=6,
         scale_fontangle=45,
-        scale_ticks=0,
+        scale_ticks=1,
         scale_largeticks=0.2,
         scale_smallticks=0.1,
-        scale_largetick_interval=(1000),
+        scale_largetick_interval=(length_of_sequences / 6),
         scale_smalltick_interval=(length_of_sequences / 12),
         scale_largetick_labels=1,
         scale_smalltick_labels=0
@@ -84,18 +98,18 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
 
     for i in range(number_of_top_topologies + 1):
         # create tracks -- and add them to the diagram
-        diagram.new_track(i + 2, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0)\
-               .new_set('graph')\
-               .new_graph(data[i], style='line', colour=colors.HexColor(data_to_colors[str(data[i])]), altcolour=colors.transparent, linewidth=0.01, center=1.0)
+        diagram\
+            .new_track(i + 2, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0)\
+            .new_set('graph')\
+            .new_graph(data[i], style=graphStyle, colour=colors.HexColor(data_to_colors[str(data[i])]), altcolour=colors.transparent, linewidth=0.01, center=1.0)
 
     # last shit
-    diagram.new_track(i + 3, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2,
-                      greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
+    diagram\
+        .new_track(i + 3, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
         .new_set('graph') \
-        .new_graph(full_data, style='bar',
-                   altcolour=colors.transparent)
+        .new_graph(full_data, style=graphStyle, altcolour=colors.transparent)
 
-    diagram.draw(format="circular", pagesize='A5', orientation='landscape', x=0.0, y=0.0, track_size=1.8, tracklines=0, circular=0, circle_core=0.3, start=0, end=len(data[0]))
+    diagram.draw(format="circular", pagesize='A5', orientation='landscape', x=0.0, y=0.0, track_size=1.8, tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
     # # save the file(s)
     diagram.write(name + ".pdf", "PDF")
@@ -109,8 +123,8 @@ if __name__ == '__main__':
     ############## Parameters ##################
 
     file = 'phylip2.txt'
-    windowSize = 2
-    windowOffset = 2
+    windowSize = 5
+    windowOffset = 10
 
     a = {0: 'Other', 1: 'Other', 2: 'Other', 3: '(((seq6,(((seq1,(seq4,seq2)),seq3),seq5)),seq9),(seq8,seq7),seq0);', 4: 'Other', 5: '(seq7,((seq3,seq9),(seq8,(seq4,((seq2,(seq6,seq5)),seq1)))),seq0);', 6: 'Other', 7: '((seq2,(seq4,seq5)),((seq8,(seq3,((seq1,seq9),seq7))),seq6),seq0);', 8: 'Other', 9: 'Other'}
     b = {'(((seq6,(((seq1,(seq4,seq2)),seq3),seq5)),seq9),(seq8,seq7),seq0);': '#0000ff', '(seq7,((seq3,seq9),(seq8,(seq4,((seq2,(seq6,seq5)),seq1)))),seq0);': '#ffff00', 'Other': '#ff0000', '((seq2,(seq4,seq5)),((seq8,(seq3,((seq1,seq9),seq7))),seq6),seq0);': '#32cd32'}
@@ -132,7 +146,7 @@ if __name__ == '__main__':
 
     ##################### Run stuff ####################
 
-    generateCircleGraph('2basePhylip1000.txt', a.items(), b, windowSize, windowOffset)
+    generateCircleGraph(file, a, b, windowSize, windowOffset)
 
     if platform == "win32":
         os.startfile("circleGraph" + ".pdf")
