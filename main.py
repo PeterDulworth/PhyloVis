@@ -97,9 +97,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     ################################# Handlers #################################
 
-    def displayResults(self):
-        # self.setWindow('outputPage')
-        # self.outputTabs.setCurrentIndex(0)
+    def displayResults(self, displayTree=False):
+        if displayTree:
+            self.setWindow('outputPage')
+            self.outputTabs.setCurrentIndex(0)
+            standardSize = Image.open("Final.png").size
+            self.resize(int(standardSize[0]), int(standardSize[1]))
+            self.standardImage.setScaledContents(True)
+            self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
+            self.bootstrapImage.setScaledContents(True)
+            self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
 
         if self.checkboxAllTrees.isChecked():
             self.allTreesWindow.show()
@@ -116,6 +123,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
+
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -216,8 +224,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         #####################################################################
 
-
-
         # User inputs:
         num = topTopologies
 
@@ -246,18 +252,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         #####################################################################
 
-        # open images in gui
-        standardSize = Image.open("Final.png").size
-
-        self.standardImage.setScaledContents(True)
-        self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
-
-        self.bootstrapImage.setScaledContents(True)
-        self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
-
-        self.displayResults()
+        self.displayResults(displayTree=True)
         self.menuExport.setEnabled(True)
-        # self.resize(int(standardSize[0]), int(standardSize[1]))
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
