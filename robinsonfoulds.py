@@ -1,4 +1,4 @@
-import Bio
+from Bio import Phylo
 import BioSQL
 import math
 import os
@@ -6,8 +6,14 @@ from dendropy import Tree
 from dendropy.calculate import treecompare
 
 
-s1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
-s2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
+f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
+f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
+f3 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.3"
+
+s1 = '(A, (B, C), (D, E))'
+s2 = '((A, B), C, D), E)'
+s3 = '(A, B, ((C, D), E))'
+
 
 #
 # def phylo_to_dendro(ref_newick, input_newick):
@@ -46,11 +52,26 @@ s2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
 # # print foulds(phylo_to_dendro(s1, s2)[0], phylo_to_dendro(s1, s2)[0], False)
 #
 
-def robinson_foulds(ref_newick, input_newick, Weighted):
+def robinson_foulds(input_newick, species_newick, Weighted):
     """
 
-    :param ref_newick:
     :param input_newick:
+    :param species_tree:
+    :param gene_tree:
     :param Weighted:
     :return:
     """
+    if os.path.isfile(input_newick):
+        input_tree = Tree.get_from_path(input_newick, 'newick')
+        print "file", input_tree
+    else:
+        input_tree = Tree.get_from_string
+        print "str", input_tree
+
+    species_tree = Tree.get_from_path(species_newick, 'newick')
+
+    if Weighted:
+        return "weighted: ", treecompare.weighted_robinson_foulds_distance(species_tree, input_tree),
+
+print robinson_foulds(f1, f2, False)
+print robinson_foulds(s1, f2, False)

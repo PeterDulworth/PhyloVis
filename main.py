@@ -205,11 +205,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
             RAx_dirs = vp.raxml_windows(windows_dirs)
-            Tree_dir = vp.tree_display(RAx_dirs)
-            num = vp.num_windows(windows_dirs)
-            likelihood = vp.ml(num, RAx_dirs)
-            plot = vp.scatter(num, likelihood)
-            vp.image_combination(Tree_dir, plot)
+            # Tree_dir = vp.tree_display(RAx_dirs)
+            # num = vp.num_windows(windows_dirs)
+            # likelihood = vp.ml(num, RAx_dirs)
+            # plot = vp.scatter(num, likelihood)
+            # vp.image_combination(Tree_dir, plot)
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
             return
@@ -233,12 +233,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
         print topologies_to_colors
 
-        donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
+        # donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
 
         # Functions for creating plots
-        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-        tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-        tf.topology_colorizer(topologies_to_colors)
+        # tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+        # tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+        # tf.topology_colorizer(topologies_to_colors)
 
         #####################################################################
 

@@ -7,6 +7,7 @@ from collections import defaultdict
 from Bio import Phylo
 from cStringIO import StringIO
 from PIL import Image
+from natsort import natsorted
 
 
 # list of colors for plots
@@ -137,7 +138,7 @@ def windows_to_newick(top_topologies):
     wins_to_tops = {}
 
     # Iterate over each folder in the given directory
-    for filename in os.listdir("Topologies"):
+    for filename in natsorted(os.listdir("Topologies")):
 
         # If file is the file with the topology of the best tree newick string
         if os.path.splitext(filename)[0] == "Topology_bestTree":

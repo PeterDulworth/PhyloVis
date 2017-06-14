@@ -36,10 +36,39 @@ inner_track = diagram.new_track(1, greytrack=1, name="Inner Track", height=1.0, 
 outer_track = diagram.new_track(2, greytrack=1, name="Outer Track", height=1.0, hide=0, greytrack_labels=2, greytrack_font_size=8,grey_track_font_color=colors.Color(0.6,0.6,0.6), scale=1, scale_color=colors.black, scale_font='Helvetica', scale_fontsize=6, scale_fontangle=45, scale_ticks=1, scale_largeticks=0.5, scale_smallticks=0.3, scale_largetick_interval=1000000, scale_small_tick_interval=10000, scale_largetick_labels=1, scale_smalltick_labels=0)
 
 
-
-#create graph sets and feature sets -- and add them to tracks
-graphSet = inner_track.new_set('graph')
-featureSet = outer_track.new_set('feature')
+# def new_graph(self, data, name=None, style='bar', color=colors.lightgreen,
+#  87                    altcolor=colors.darkseagreen, linewidth=1, center=None,
+#  88                    colour=None, altcolour=None, centre=None):
+#  89          """ new_graph(self, data, name=None, style='bar', color=colors.lightgreen,
+#  90                    altcolor=colors.darkseagreen)
+#  91
+#  92              o data      List of (position, value) int tuples
+#  93
+#  94              o name      String, description of the graph
+#  95
+#  96              o style     String ('bar', 'heat', 'line') describing how the graph
+#  97                          will be drawn
+#  98
+#  99              o color    colors.Color describing the color to draw all or 'high'
+# 100                         (some styles) data (overridden by backwards compatible
+# 101                         argument with UK spelling, colour).
+# 102
+# 103              o altcolor  colors.Color describing the color to draw 'low' (some
+# 104                          styles) data (overridden by backwards compatible argument
+# 105                          with UK spelling, colour).
+# 106
+# 107              o linewidth     Float describing linewidth for graph
+# 108
+# 109              o center        Float setting the value at which the x-axis
+# 110                              crosses the y-axis (overridden by backwards
+# 111                              compatible argument with UK spelling, centre)
+# 112
+# 113              Add a GraphData object to the diagram (will be stored
+# 114              internally
+#
+# #create graph sets and feature sets -- and add them to tracks
+# graphSet = inner_track.new_set('graph')
+# featureSet = outer_track.new_set('feature')
 
 
 
