@@ -205,8 +205,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
             RAx_dirs = vp.raxml_windows(windows_dirs)
-            Tree_dir = vp.tree_display(RAx_dirs)
-            num = vp.num_windows(windows_dirs)
+            # Tree_dir = vp.tree_display(RAx_dirs)
+            # num = vp.num_windows(windows_dirs)
             # likelihood = vp.ml(num, RAx_dirs)
             # plot = vp.scatter(num, likelihood)
             # vp.image_combination(Tree_dir, plot)
