@@ -1,5 +1,6 @@
 from Bio import SeqIO, AlignIO
 from Bio.Graphics import GenomeDiagram
+from Bio.Graphics.GenomeDiagram import Diagram, FeatureSet, GraphSet, Track
 from reportlab.lib.colors import red, grey, orange, green, brown, blue, lightblue, purple
 from reportlab.lib import colors
 from Bio.SeqUtils import GC, GC_skew, GC123
@@ -34,7 +35,6 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
         if i not in windows:
             windows_to_top_topologies.append((i, 0))
 
-    print windows_to_top_topologies
 
     topologies_to_data = {}
 
@@ -48,15 +48,15 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
             else:
                 topologies_to_data[topology].append(tuple([window[0], 0]))
 
-    print topologies_to_data
-
-    # print topologies_to_data
-    data = topologies_to_data.values()
-
     data_to_colors = {}
     for topology in topologies_to_data:
         data_to_colors[str(topologies_to_data[topology])] = top_topologies_to_colors[topology]
 
+    minor_topology_data = topologies_to_data['Other']
+    del topologies_to_data['Other']
+    data = topologies_to_data.values()
+
+    # data for bar on outside
     full_data = []
     for j in range(length_of_sequences):
         if j % 2 == 0:
@@ -85,7 +85,7 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
         scale_fontsize=6,
         scale_fontangle=45,
         scale_ticks=1,
-        scale_largeticks=0.2,
+        scale_largeticks=0.3,
         scale_smallticks=0.1,
         scale_largetick_interval=(length_of_sequences / 6),
         scale_smalltick_interval=(length_of_sequences / 12),
@@ -93,16 +93,27 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
         scale_smalltick_labels=0
                       )
 
-    for i in range(number_of_top_topologies + 1):
+    diagram \
+        .new_track(2, name="Minor Topologies", height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=1, scale_ticks=0, axis_labels=0) \
+        .new_set('graph') \
+        .new_graph(minor_topology_data, style=graphStyle, colour=colors.HexColor(data_to_colors[str(minor_topology_data)]), altcolour=colors.transparent, linewidth=1)
+
+    for i in range(number_of_top_topologies):
         # create tracks -- and add them to the diagram
-        diagram\
-            .new_track(i + 2, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0)\
-            .new_set('graph')\
-            .new_graph(data[i], style=graphStyle, colour=colors.HexColor(data_to_colors[str(data[i])]), altcolour=colors.transparent, linewidth=1)
+        if i == 0:
+            diagram \
+                .new_track(i + 3, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=1, scale_ticks=0, axis_labels=0) \
+                .new_set('graph') \
+                .new_graph(data[i], style=graphStyle, colour=colors.HexColor(data_to_colors[str(data[i])]), altcolour=colors.transparent, linewidth=1)
+        else:
+            diagram\
+                .new_track(i + 3, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0)\
+                .new_set('graph')\
+                .new_graph(data[i], style=graphStyle, colour=colors.HexColor(data_to_colors[str(data[i])]), altcolour=colors.transparent, linewidth=1)
 
     # last shit
     diagram\
-        .new_track(i + 3, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
+        .new_track(i + 4, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2, greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
         .new_set('graph') \
         .new_graph(full_data, style=graphStyle, color=colors.HexColor('#2f377c'), altcolour=colors.transparent)
 
@@ -122,7 +133,7 @@ if __name__ == '__main__':
 
     ############## Parameters ##################
 
-    file = 'phylip2.txt'
+    file = 'phylip.txt'
     windowSize = 10
     windowOffset = 10
 
