@@ -10,6 +10,7 @@ from PIL import Image
 import shutil
 from sys import platform
 import re
+from natsort import natsorted
 
 """
 Functions for creating a visualization tool for the summary and analysis 
@@ -116,9 +117,8 @@ def raxml_windows(window_directory):
 
     os.makedirs(topology_output_directory)
 
-
     # Iterate over each folder in the given directory
-    for filename in os.listdir(window_directory):
+    for filename in natsorted(os.listdir(window_directory)):
 
         # If file is a phylip file run RAxML on it
         if filename.endswith(".phylip"):
@@ -385,6 +385,9 @@ def image_combination(input_directory, plot):
     final_bootstrap_image =  'FinalBootstraps.png'
     new_im.save(final_bootstrap_image)
 
+
+
+
     # Automatically open image files
     # if platform == "win32":
     #     # WINDOWS OPEN FILE
@@ -401,8 +404,8 @@ def image_combination(input_directory, plot):
 
 if __name__ == '__main__':
     input_file = "phylip.txt"
-    window_size = 10
-    window_offset = 10
+    window_size = 9
+    window_offset = 9
 
     windows_dirs = splittr(input_file, window_size, window_offset)
     RAx_dirs = raxml_windows(windows_dirs)
