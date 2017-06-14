@@ -10,7 +10,7 @@ from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 import topologyFrequency as tf
 import matplotlib.pyplot as plt
-# import circleGraphGenerator
+import circleGraphGenerator
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -233,12 +233,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
         print topologies_to_colors
 
-        # donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
+        donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
 
         # Functions for creating plots
-        # tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-        # tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-        # tf.topology_colorizer(topologies_to_colors)
+        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+        tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+        tf.topology_colorizer(topologies_to_colors)
+
+        #####################################################################
+
+        circleGraphGenerator.generateCircleGraph(input_file_name, windows_to_top_topologies, topologies_to_colors, window_size, window_offset)
 
         #####################################################################
 
