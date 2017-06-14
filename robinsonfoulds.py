@@ -1,81 +1,57 @@
-from Bio import Phylo
-import BioSQL
-import math
 import os
+import dendropy
 from dendropy import Tree
 from dendropy.calculate import treecompare
 
 
-f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
-f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
-f3 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.3"
-
-s1 = '(A, (B, C), (D, E))'
-s2 = '((A, B), C, D), E)'
-s3 = '(A, B, ((C, D), E))'
-
-
-#
-# def phylo_to_dendro(ref_newick, input_newick):
-#     """
-#
-#     :param ref_newick:
-#     :param input_newick:
-#     :return:
-#     """
-#     ref = Phylo.write(bptree, ref_newick, "newick")
-#     ref_tree = Tree.get(ref, "newick")
-#
-#     tree = Phylo.write(bptree, input_newick, "newick")
-#     input_tree = Tree.write(tree)
-#
-#     return ref_tree, input_tree
-#
-#
-# def foulds(ref_tree, input_tree, Weighted):
-#     """
-#
-#     :param newick1:
-#     :param newick2:
-#     :param Weighted:
-#     :return:
-#     """
-#     if Weighted == True:
-#         return "W", treecompare.robinson_foulds_distance(ref_tree, input_tree,
-#                                                     edge_weight_attr="length"),\
-#                "U", treecompare.symmetric_difference(ref_tree, input_tree,
-#                                                 is_bipartitions_updated=False)
-#     else:
-#         return treecompare.symmetric_difference(ref_tree, input_tree,
-#                                                 is_bipartitions_updated=False)
-#
-# # print foulds(phylo_to_dendro(s1, s2)[0], phylo_to_dendro(s1, s2)[0], False)
-#
 
 def robinson_foulds(input_newick, species_newick, Weighted):
     """
+    Calculates the Robinson Foulds distances for weighted and unweighted
+    trees.
 
-    :param input_newick:
-    :param species_tree:
-    :param gene_tree:
-    :param Weighted:
-    :return:
+    Input:
+    input_newick   -- newick file or newick string containing the tree to
+                      be compared to the species tree
+    species_newick -- newick file containing the species tree
+                      * this should not change *
+    Weighted       -- boolean parameter for whether the files have weights
+
+    Returns:
+    The weighted and/or unweighted Robinson Foulds distance of the species
+    tree and input tree.
     """
+    # taxon names
+    tns = dendropy.TaxonNamespace()
+
+    # dendropy tree from species file
+    species_tree = Tree.get_from_path(species_newick, 'newick', taxon_namespace=tns)
+
+    # dendropy tree from input file
     if os.path.isfile(input_newick):
-        input_tree = Tree.get_from_path(input_newick, 'newick')
+        input_tree = Tree.get_from_path(input_newick, 'newick', taxon_namespace=tns)
 
+    # dendropy tree from input newick
     else:
-        input_tree = Tree.get_from_string
+        input_tree = Tree.get_from_string(input_newick, 'newick', taxon_namespace=tns)
 
-    species_tree = Tree.get_from_path(species_newick, 'newick')
-
+    # both weighted and unweighted foulds distance
     if Weighted:
-        return "weighted: ", treecompare.weighted_robinson_foulds_distance(species_tree, input_tree), \
-               "unweighted: ", treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+        return treecompare.weighted_robinson_foulds_distance(species_tree, input_tree), \
+               treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
 
+    # only unweighted foulds distance
     else:
-        return "unweighted: ", treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+        return treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
 
 
-print robinson_foulds(f1, f2, False)
-print robinson_foulds(s1, f2, False)
+# s1 = '(seq8:0.00000100000050002909, ((((seq3:0.65020833412901768433,((seq7:0.00000100000050002909, ' \
+#      '(seq6:0.68152455233459297013,seq1:0.00000100000050002909):1.24521798063484312458):0.58859971808264277549, ' \
+#      'seq5:0.00000100000050002909):0.42899887291206934004):1.25531743587387700778,' \
+#      'seq2:0.22759388849035810942):34.53877639491068407551,' \
+#      'seq9:0.31954588819430751467):0.00000100000050002909,seq4:1.43351615153153244542):0.85579630090819847066,seq0:1.65212366516800979177):0.0;'
+# f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
+# f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
+#
+# print robinson_foulds(s1, f2, True)
+# print robinson_foulds(f1, f2, True)
