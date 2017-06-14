@@ -63,15 +63,19 @@ def robinson_foulds(input_newick, species_newick, Weighted):
     """
     if os.path.isfile(input_newick):
         input_tree = Tree.get_from_path(input_newick, 'newick')
-        print "file", input_tree
+
     else:
         input_tree = Tree.get_from_string
-        print "str", input_tree
 
     species_tree = Tree.get_from_path(species_newick, 'newick')
 
     if Weighted:
-        return "weighted: ", treecompare.weighted_robinson_foulds_distance(species_tree, input_tree),
+        return "weighted: ", treecompare.weighted_robinson_foulds_distance(species_tree, input_tree), \
+               "unweighted: ", treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+
+    else:
+        return "unweighted: ", treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+
 
 print robinson_foulds(f1, f2, False)
 print robinson_foulds(s1, f2, False)
