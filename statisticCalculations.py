@@ -2,6 +2,10 @@ import subprocess
 import os
 from natsort import natsorted
 import re
+import dendropy
+from dendropy import Tree
+from dendropy.calculate import treecompare
+
 
 def calculate_p_of_gt_given_st(species_tree, gene_tree):
     """
@@ -87,6 +91,45 @@ def calculate_windows_to_p_gtst(species_tree):
 
     return windows_to_p_gtst
 
+
+def robinson_foulds(input_newick, species_newick, weighted):
+    """
+    Calculates the Robinson Foulds distances for weighted and unweighted
+    trees.
+
+    Input:
+    input_newick   -- newick file or newick string containing the tree to
+                      be compared to the species tree
+    species_newick -- newick file containing the species tree
+                      * this should not change *
+    weighted       -- boolean parameter for whether the files have weights
+
+    Returns:
+    The weighted and/or unweighted Robinson Foulds distance of the species
+    tree and input tree.
+    """
+    # taxon names
+    tns = dendropy.TaxonNamespace()
+
+    # dendropy tree from species file
+    species_tree = Tree.get_from_path(species_newick, 'newick', taxon_namespace=tns)
+
+    # dendropy tree from input file
+    if os.path.isfile(input_newick):
+        input_tree = Tree.get_from_path(input_newick, 'newick', taxon_namespace=tns)
+
+    # dendropy tree from input newick
+    else:
+        input_tree = Tree.get_from_string(input_newick, 'newick', taxon_namespace=tns)
+
+    # both weighted and unweighted foulds distance
+    if weighted:
+        return treecompare.weighted_robinson_foulds_distance(species_tree, input_tree), \
+               treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+
+    # only unweighted foulds distance
+    else:
+        return treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
 
 # Run commands below
 

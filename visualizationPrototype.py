@@ -288,16 +288,6 @@ def scatter(num, likelihood):
         x = i
         y = float(likelihood[i]) / 100
 
-        # changes color for different ranges
-        # if y <= 0.25:
-        #     color = colors.hex2color('#0000FF')
-        # elif y > 0.25 and y <= 0.50:
-        #     color = colors.hex2color('#00CC00')
-        # elif y > 0.50 and y <= 0.75:
-        #     color = colors.hex2color('#FFFF00')
-        # elif y > 0.75 and y <= 1:
-        #     color = colors.hex2color('#FF0000')
-
         plt.scatter(x, y, s = area, c = '#000000', alpha = 1)
 
     plot = "Plot.png"
