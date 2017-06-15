@@ -6,6 +6,25 @@ import dendropy
 from dendropy import Tree
 from dendropy.calculate import treecompare
 
+def newick_reformat(newick):
+    """
+    Reformat the inputted newick string to work with the PhyloNet jar file
+    "(a:2.5,(b:1.0,c:1.0):1.5)" This format works
+    "(a:2.0,(b:1.0,c:1.0):1.0);" This format works
+    "(a:2.0,(b:1.0,c:1.0)):1.0;" THIS FORMAT DOES NOT WORK --- trees from RAxML are in this format
+    Inputs:
+    newick --- an incorrectly formatted newick string
+    Output:
+    newick --- a correctly formatted newick string
+    """
+
+    # Find root length and remove it
+    pattern = "(?!.*\))(.*?)(?=\;)"
+
+    newick = re.sub(pattern, '', newick)
+
+    return newick
+
 
 def calculate_p_of_gt_given_st(species_tree, gene_tree):
     """
@@ -25,16 +44,21 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
 
     # Check if the species tree is formatted correctly for PhyloNet if not reformat it
     if species_tree[-2] != ")" or species_tree[-1] != ")":
-        species_tree = newick_reformat(species_tree)
+        species_tree = newick_reformat(species_tree).replace("\n","")
 
     # If gene_tree input is a file read in the newick string
     if os.path.isfile(gene_tree):
         with open(gene_tree) as f:
             gene_tree = f.readline()
-    print "gt", gene_tree
+
+    # print "gt", gene_tree
+
     # Check if the gene tree is formatted correctly for PhyloNet if not reformat it
     if gene_tree[-2] != ")" or gene_tree[-1] != ")":
-        gene_tree = newick_reformat(gene_tree)
+        gene_tree = newick_reformat(gene_tree).replace("\n","")
+
+    # print "gt", gene_tree
+    # print "st", species_tree
 
     # Run PhyloNet jar file
     p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
@@ -43,26 +67,6 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
     p_of_gt_given_st = float(p.stdout.readline())
 
     return p_of_gt_given_st
-
-
-def newick_reformat(newick):
-    """
-    Reformat the inputted newick string to work with the PhyloNet jar file
-    "(a:2.5,(b:1.0,c:1.0):1.5)" This format works
-    "(a:2.0,(b:1.0,c:1.0):1.0);" This format works
-    "(a:2.0,(b:1.0,c:1.0)):1.0;" THIS FORMAT DOES NOT WORK --- trees from RAxML are in this format
-    Inputs:
-    newick --- an incorrectly formatted newick string
-    Output:
-    newick --- a correctly formatted newick string
-    """
-
-    # Find root length and remove it
-    pattern = "(?!.*\))(.*?)(?=\;)"
-
-    newick = re.sub(pattern, '', newick)
-
-    return newick
 
 
 def calculate_windows_to_p_gtst(species_tree):
@@ -139,6 +143,7 @@ def calculate_robinson_foulds(species_tree, gene_tree, weighted):
     else:
         return treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
 
+
 def calculate_windows_to_rf(species_tree, weighted):
     """
     Calculate Robinson-Foulds distance for each window and create a mapping of window numbers to RF distance
@@ -184,8 +189,8 @@ def calculate_windows_to_rf(species_tree, weighted):
 
 # Run commands below
 
-if __name__ == '__main__':
-    species_tree = "RAx_Files\RAxML_bestTree.0"
-
+# if __name__ == '__main__':
+    # species_tree = "RAx_Files\RAxML_bestTree.0"
+    #
     # print calculate_windows_to_p_gtst(species_tree)
-    print calculate_windows_to_rf(species_tree, False)
+    # print calculate_windows_to_rf(species_tree, False)
