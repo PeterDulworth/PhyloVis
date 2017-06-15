@@ -229,21 +229,21 @@ def stat_scatter(stat_map, name):
 
     # labels y-axis
     if name == 'weightedRF':
-        plt.ylabel('Weighted Robinson Foulds', fontsize=10)
+        plt.ylabel('Weighted Robinson Foulds Distance', fontsize=10)
 
         # saves and names plot
         plot = "WeightedFouldsPlot.png"
         plt.savefig(plot)
 
     elif name == 'unweightedRF':
-        plt.ylabel('Unweighted Robinson Foulds', fontsize=10)
+        plt.ylabel('Unweighted Robinson Foulds Distance', fontsize=10)
 
         # saves and names plot
         plot = "UnweightedFouldsPlot.png"
         plt.savefig(plot)
 
     elif name == 'PGTST':
-        plt.ylabel('P(Gene Tree | Species Tree)', fontsize=10)
+        plt.ylabel('P(gt|st)', fontsize=10)
 
         # saves and names plot
         plot = "PGTSTPlot.png"
@@ -262,8 +262,27 @@ def stat_scatter(stat_map, name):
 
 # Run commands below
 
-# if __name__ == '__main__':
-    # species_tree = "RAx_Files\RAxML_bestTree.0"
-    #
-    # print calculate_windows_to_p_gtst(species_tree)
-    # print calculate_windows_to_rf(species_tree, False)
+if __name__ == '__main__':
+    # Inputs
+    species_tree = "RAx_Files\RAxML_bestTree.0"
+    weighted = True
+
+    # Run commands
+    windows_to_p_gtst = calculate_windows_to_p_gtst(species_tree)
+    stat_scatter(windows_to_p_gtst, "PGTST")
+
+    # Unweighted Robinson-Foulds
+    if not weighted:
+        windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+        stat_scatter(windows_to_uw_rf, "unweightedRF")
+
+    # Weighted Robinson-Foulds
+    if weighted:
+        windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+        stat_scatter(windows_to_w_rf, "weightedRF")
+        stat_scatter(windows_to_uw_rf, "unweightedRF")
+
+
+
+
+
