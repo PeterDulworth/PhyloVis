@@ -68,6 +68,8 @@ def newick_reformat(newick):
 def calculate_windows_to_p_gtst(species_tree):
     """
     Calculate p(gt|st) for each window and create a mapping of window numbers to probabilities
+    Inputs:
+    species_tree --- a newick string containing a species tree with branch lengths as outputted by RAxML or inputted by user
     Output:
     windows_to_p_gtst --- a mapping of window numbers to their p(gt|st)
     """
@@ -92,48 +94,98 @@ def calculate_windows_to_p_gtst(species_tree):
     return windows_to_p_gtst
 
 
-def robinson_foulds(input_newick, species_newick, weighted):
+def calculate_robinson_foulds(species_tree, gene_tree, weighted):
     """
     Calculates the Robinson Foulds distances for weighted and unweighted
     trees.
 
     Input:
-    input_newick   -- newick file or newick string containing the tree to
-                      be compared to the species tree
-    species_newick -- newick file containing the species tree
+    species_tree -- newick file containing the species tree
                       * this should not change *
+    gene_tree   -- newick file or newick string containing the tree to
+                      be compared to the species tree
     weighted       -- boolean parameter for whether the files have weights
 
     Returns:
     The weighted and/or unweighted Robinson Foulds distance of the species
     tree and input tree.
     """
+
     # taxon names
     tns = dendropy.TaxonNamespace()
 
-    # dendropy tree from species file
-    species_tree = Tree.get_from_path(species_newick, 'newick', taxon_namespace=tns)
+    # Create dendropy tree from species tree input file
+    if os.path.isfile(species_tree):
+        species_tree = Tree.get_from_path(species_tree, 'newick', taxon_namespace=tns)
 
-    # dendropy tree from input file
-    if os.path.isfile(input_newick):
-        input_tree = Tree.get_from_path(input_newick, 'newick', taxon_namespace=tns)
-
-    # dendropy tree from input newick
+    # Create dendropy tree from species tree input newick string
     else:
-        input_tree = Tree.get_from_string(input_newick, 'newick', taxon_namespace=tns)
+        species_tree = Tree.get_from_string(species_tree, 'newick', taxon_namespace=tns)
+
+    # Create dendropy tree from gene tree input file
+    if os.path.isfile(gene_tree):
+        gene_tree = Tree.get_from_path(gene_tree, 'newick', taxon_namespace=tns)
+
+    # Create dendropy tree from gene tree input newick string
+    else:
+        gene_tree = Tree.get_from_string(gene_tree, 'newick', taxon_namespace=tns)
 
     # both weighted and unweighted foulds distance
     if weighted:
-        return treecompare.weighted_robinson_foulds_distance(species_tree, input_tree), \
-               treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+        return treecompare.weighted_robinson_foulds_distance(species_tree, gene_tree), \
+               treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
 
     # only unweighted foulds distance
     else:
-        return treecompare.unweighted_robinson_foulds_distance(species_tree, input_tree)
+        return treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
+
+def calculate_windows_to_rf(species_tree, weighted):
+    """
+    Calculate Robinson-Foulds distance for each window and create a mapping of window numbers to RF distance
+    Inputs:
+    species_tree --- a newick string containing a species tree with branch lengths as outputted by RAxML or inputted by user
+    weighted --- a boolean corresponding to calculating the weighted or unweighted RF distance
+    Output:
+    windows_to_rf --- a mapping of window numbers to their RF distance
+    """
+
+    # Initialize a mapping for the weighted and unweighted RF distance
+    windows_to_w_rf = {}
+    windows_to_uw_rf = {}
+
+    # Iterate over each folder in the given directory
+    for filename in natsorted(os.listdir("RAx_Files")):
+
+        # If file is the file with the best tree newick string
+        if os.path.splitext(filename)[0] == "RAxML_bestTree":
+            window_num = (os.path.splitext(filename)[1]).replace(".", "")
+
+            gene_tree_filename = os.path.join("RAx_Files", filename)
+
+            rf_distance = calculate_robinson_foulds(species_tree, gene_tree_filename, weighted)
+
+            if weighted:
+
+                # Weighted RF
+                windows_to_w_rf[window_num] = rf_distance[0]
+                # Unweighted RF
+                windows_to_uw_rf[window_num] = rf_distance[1]
+
+            else:
+
+                # Unweighted RF
+                windows_to_uw_rf[window_num] = rf_distance
+
+    if weighted:
+        return windows_to_w_rf, windows_to_uw_rf
+
+    else:
+        return windows_to_uw_rf
 
 # Run commands below
 
 if __name__ == '__main__':
-    # species_tree =
-    #
+    species_tree = "RAx_Files\RAxML_bestTree.0"
+
     # print calculate_windows_to_p_gtst(species_tree)
+    print calculate_windows_to_rf(species_tree, False)
