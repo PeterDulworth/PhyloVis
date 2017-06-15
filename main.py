@@ -10,7 +10,7 @@ from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 import topologyFrequency as tf
 import matplotlib.pyplot as plt
-# import circleGraphGenerator
+import circleGraphGenerator
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -97,9 +97,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     ################################# Handlers #################################
 
-    def displayResults(self):
-        # self.setWindow('outputPage')
-        # self.outputTabs.setCurrentIndex(0)
+    def displayResults(self, displayTree=False):
+        if displayTree:
+            self.setWindow('outputPage')
+            self.outputTabs.setCurrentIndex(0)
+            standardSize = Image.open("Final.png").size
+            self.resize(int(standardSize[0]), int(standardSize[1]))
+            self.standardImage.setScaledContents(True)
+            self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
+            self.bootstrapImage.setScaledContents(True)
+            self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
 
         if self.checkboxAllTrees.isChecked():
             self.allTreesWindow.show()
@@ -116,6 +123,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
+
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -216,8 +224,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         #####################################################################
 
-
-
         # User inputs:
         num = topTopologies
 
@@ -233,27 +239,21 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
         print topologies_to_colors
 
-        # donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
+        donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
 
         # Functions for creating plots
-        # tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-        # tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-        # tf.topology_colorizer(topologies_to_colors)
+        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+        tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+        tf.topology_colorizer(topologies_to_colors)
 
         #####################################################################
 
-        # open images in gui
-        standardSize = Image.open("Final.png").size
+        circleGraphGenerator.generateCircleGraph(input_file_name, windows_to_top_topologies, topologies_to_colors, window_size, window_offset)
 
-        self.standardImage.setScaledContents(True)
-        self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
+        #####################################################################
 
-        self.bootstrapImage.setScaledContents(True)
-        self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
-
-        self.displayResults()
+        self.displayResults(displayTree=True)
         self.menuExport.setEnabled(True)
-        # self.resize(int(standardSize[0]), int(standardSize[1]))
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
