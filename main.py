@@ -31,6 +31,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
+        self.runComplete = False
+
         ############################# Link Events ##############################
 
         # **************************** Menu Bar Events ****************************#
@@ -63,6 +65,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
+
+        self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
+        self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
+        self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
+        self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -124,6 +131,44 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
 
+    def getNumberChecked(self):
+        """
+        returns the number of checkboxes that are checked
+        """
+        return (self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+
+    def updatedDisplayWindows(self, btnClicked=None):
+
+        if btnClicked == None or btnClicked.isChecked():
+            if self.runComplete == True:
+                print 'UPDATEBITCH'
+                if self.getNumberChecked() > 0:
+                    # User inputs:
+                    num = self.topTopologies #
+                    # Function calls for plotting inputs:
+                    topologies_to_counts = tf.topology_counter()
+                    list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
+                    top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
+                    windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts) # all trees, scatter, circle, donut
+                    topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
+                    # print windows_to_top_topologies
+
+                if self.checkboxDonutPlot.isChecked():
+                    donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors) # donut
+                    tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
+                    self.displayResults()
+
+                if self.checkboxScatterPlot.isChecked():
+                    tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
+                    self.displayResults()
+
+                if self.checkboxAllTrees.isChecked():
+                    tf.topology_colorizer(topologies_to_colors) # all trees
+                    self.displayResults()
+
+                if self.checkboxCircleGraph.isChecked():
+                    circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
+                    self.displayResults()
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -170,12 +215,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def run(self):
         # Error handling for input file
         try:
-            input_file_name = str(self.inputFileEntry.text())
-            input_file_extension = os.path.splitext(input_file_name)[1]
+            self.input_file_name = str(self.inputFileEntry.text())
+            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
 
-            if input_file_name == "":
+            if self.input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
-            elif input_file_extension != '.txt' and input_file_extension != '.phylip' and input_file_extension != '.fasta':
+            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
                 raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
@@ -183,8 +228,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for number of top topologies
         try:
-            topTopologies = int(self.numberOfTopTopologiesEntry.text())
-            if topTopologies <= 0 or topTopologies > 15:
+            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
+            if self.topTopologies <= 0 or self.topTopologies > 15:
                 raise ValueError, "Please enter an integer between 0 and 15."
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
@@ -192,8 +237,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for window size
         try:
-            window_size = int(self.windowSizeEntry.text())
-            if window_size <= 0:
+            self.window_size = int(self.windowSizeEntry.text())
+            if self.window_size <= 0:
                 raise ValueError, "Positive integers only"
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
@@ -201,8 +246,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for window offset
         try:
-            window_offset = int(self.windowOffsetEntry.text())
-            if window_offset <= 0:
+            self.window_offset = int(self.windowOffsetEntry.text())
+            if self.window_offset <= 0:
                 raise ValueError, "Positive integers only"
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
@@ -211,48 +256,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.runProgressBar()
 
         try:
-            windows_dirs = vp.splittr(input_file_name, window_size, window_offset)
-            RAx_dirs = vp.raxml_windows(windows_dirs)
-            # Tree_dir = vp.tree_display(RAx_dirs)
-            # num = vp.num_windows(windows_dirs)
-            # likelihood = vp.ml(num, RAx_dirs)
-            # plot = vp.scatter(num, likelihood)
-            # vp.image_combination(Tree_dir, plot)
+            self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
+            self.RAx_dirs = vp.raxml_windows(self.windows_dirs) # run once - not rerun
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
             return
 
         #####################################################################
 
-        # User inputs:
-        num = topTopologies
+        self.runComplete = True
+        self.updatedDisplayWindows()
 
-        # Function calls for plotting inputs:
-        topologies_to_counts = tf.topology_counter()
-
-        list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
-
-        top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
-
-        windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts)
-        print windows_to_top_topologies
-        topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)
-        print topologies_to_colors
-
-        donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)
-
-        # Functions for creating plots
-        tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-        tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-        tf.topology_colorizer(topologies_to_colors)
-
-        #####################################################################
-
-        circleGraphGenerator.generateCircleGraph(input_file_name, windows_to_top_topologies, topologies_to_colors, window_size, window_offset)
-
-        #####################################################################
-
-        self.displayResults(displayTree=True)
+        # self.displayResults(displayTree=False)
         self.menuExport.setEnabled(True)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
