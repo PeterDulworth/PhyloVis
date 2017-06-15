@@ -4,7 +4,10 @@ from natsort import natsorted
 import re
 import dendropy
 from dendropy import Tree
+import math
 from dendropy.calculate import treecompare
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def calculate_p_of_gt_given_st(species_tree, gene_tree):
@@ -31,7 +34,7 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
     if os.path.isfile(gene_tree):
         with open(gene_tree) as f:
             gene_tree = f.readline()
-    print "gt", gene_tree
+
     # Check if the gene tree is formatted correctly for PhyloNet if not reformat it
     if gene_tree[-2] != ")" or gene_tree[-1] != ")":
         gene_tree = newick_reformat(gene_tree)
@@ -139,6 +142,7 @@ def calculate_robinson_foulds(species_tree, gene_tree, weighted):
     else:
         return treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
 
+
 def calculate_windows_to_rf(species_tree, weighted):
     """
     Calculate Robinson-Foulds distance for each window and create a mapping of window numbers to RF distance
@@ -182,10 +186,77 @@ def calculate_windows_to_rf(species_tree, weighted):
     else:
         return windows_to_uw_rf
 
+
+def stat_scatter(stat_map, name):
+    """
+    Creates a scatter plot for use in the
+    visualization tool.
+
+    Input:
+    num        -- count outputted by num_windows
+    likelihood -- number outputted by ml
+
+    Returns:
+    A scatter plot with num as the x-axis and
+    likelihood as the y-axis.
+    """
+    # sizes plot circles
+    area = math.pi * (3) ** 2
+
+    x_list = []
+
+    # makes x values integers
+    xlist = stat_map.keys()
+    for j in range(len(xlist)):
+        x_list.append(int(xlist[j]))
+
+    x = np.array(x_list)
+
+    # gets y values from dictionary
+    ylist = stat_map.values()
+    y = np.array(ylist)
+
+    plt.scatter(x, y, s=area, c='#000000', alpha=1)
+
+    # labels x-axis
+    plt.xlabel('Windows', fontsize=10)
+
+    # labels y-axis
+    if name == 'weightedRF':
+        plt.ylabel('Weighted Robinson Foulds', fontsize=10)
+
+        # saves and names plot
+        plot = "WeightedFouldsPlot.png"
+        plt.savefig(plot)
+
+    elif name == 'unweightedRF':
+        plt.ylabel('Unweighted Robinson Foulds', fontsize=10)
+
+        # saves and names plot
+        plot = "UnweightedFouldsPlot.png"
+        plt.savefig(plot)
+
+    elif name == 'P_GTST':
+        plt.ylabel('P(Gene Tree | Species Tree)', fontsize=10)
+
+        # saves and names plot
+        plot = "PGTSTPlot.png"
+        plt.savefig(plot)
+
+    plt.clf()
+
+
+# f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
+# f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
+# stat_scatter(calculate_windows_to_p_gtst(f1))
+# rf = calculate_windows_to_rf(f1, True)
+# 
+# stat_scatter(rf[0], 'weightedRF')
+# stat_scatter(rf[1], 'unweightedRF')
+
 # Run commands below
 
 if __name__ == '__main__':
     species_tree = "RAx_Files\RAxML_bestTree.0"
 
-    # print calculate_windows_to_p_gtst(species_tree)
-    print calculate_windows_to_rf(species_tree, False)
+

@@ -293,7 +293,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     windows as the y-axis.
     """
     # area of plotted circles
-    area = math.pi * (5)**2
+    area = math.pi * (3)**2
 
     # sizes plot appropriately
     # plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
