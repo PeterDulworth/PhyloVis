@@ -33,6 +33,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         'outputPage': 5}
 
         self.runComplete = False
+        self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
 
@@ -103,6 +104,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
         self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
+        self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsOptionsDisplay)
+
     ################################# Handlers #################################
 
     def displayResults(self, displayTree=False):
@@ -131,6 +134,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
+    
+    def toggleStatisticsOptionsDisplay(self):
+        if self.statisticsOptionsGroupBox.isVisible():
+            self.statisticsOptionsGroupBox.hide()
+        else:
+            self.statisticsOptionsGroupBox.show()
 
     def getNumberChecked(self):
         """
@@ -174,7 +183,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxStatistics.isChecked():
                     weighted = self.checkboxWeighted
                     species_tree = self.speciesTreeNewickStringsEntry
-                    
+
                     # Function calls for calculating statistics
                     windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
                     sc.stat_scatter(windows_to_p_gtst, "PGTST")
