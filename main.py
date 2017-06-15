@@ -146,8 +146,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.getNumberChecked() > 0:
                     # User inputs:
                     num = self.topTopologies
-                    weighted = self.
-                    species_tree = self.
 
                     # Function calls for plotting inputs:
                     topologies_to_counts = tf.topology_counter()
@@ -155,21 +153,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts) # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
-
-                    # Function calls for calculating statistics
-                    windows_to_p_gtst = calculate_windows_to_p_gtst(species_tree)
-                    stat_scatter(windows_to_p_gtst, "PGTST")
-
-                    # Unweighted Robinson-Foulds
-                    if not weighted:
-                        windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-                        stat_scatter(windows_to_uw_rf, "unweightedRF")
-
-                    # Weighted Robinson-Foulds
-                    if weighted:
-                        windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-                        stat_scatter(windows_to_w_rf, "weightedRF")
-                        stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors) # donut
@@ -187,6 +170,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxCircleGraph.isChecked():
                     circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
                     self.displayResults()
+
+                if self.checkboxStatistics.isChecked():
+                    weighted = self.checkboxWeighted
+                    species_tree = self.speciesTreeNewickStringsEntry
+                    
+                    # Function calls for calculating statistics
+                    windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
+                    sc.stat_scatter(windows_to_p_gtst, "PGTST")
+
+                    # Unweighted Robinson-Foulds
+                    if not weighted:
+                        windows_to_uw_rf = sc.calculate_windows_to_rf(species_tree, weighted)
+                        sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+
+                    # Weighted Robinson-Foulds
+                    if weighted:
+                        windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(species_tree, weighted)
+                        sc.stat_scatter(windows_to_w_rf, "weightedRF")
+                        sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
