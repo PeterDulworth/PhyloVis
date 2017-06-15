@@ -11,6 +11,7 @@ from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, ci
 import topologyFrequency as tf
 import matplotlib.pyplot as plt
 import circleGraphGenerator
+import statisticCalculations as sc
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -144,14 +145,31 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 print 'UPDATEBITCH'
                 if self.getNumberChecked() > 0:
                     # User inputs:
-                    num = self.topTopologies #
+                    num = self.topTopologies
+                    weighted = self.
+                    species_tree = self.
+
                     # Function calls for plotting inputs:
                     topologies_to_counts = tf.topology_counter()
                     list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts) # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
-                    # print windows_to_top_topologies
+
+                    # Function calls for calculating statistics
+                    windows_to_p_gtst = calculate_windows_to_p_gtst(species_tree)
+                    stat_scatter(windows_to_p_gtst, "PGTST")
+
+                    # Unweighted Robinson-Foulds
+                    if not weighted:
+                        windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+                        stat_scatter(windows_to_uw_rf, "unweightedRF")
+
+                    # Weighted Robinson-Foulds
+                    if weighted:
+                        windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+                        stat_scatter(windows_to_w_rf, "weightedRF")
+                        stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors) # donut
