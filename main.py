@@ -266,8 +266,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.runComplete = True
         self.updatedDisplayWindows()
-
-        # self.displayResults(displayTree=False)
         self.menuExport.setEnabled(True)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it

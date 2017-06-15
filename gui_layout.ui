@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>529</width>
-    <height>245</height>
+    <width>459</width>
+    <height>534</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>459</width>
-    <height>217</height>
+    <height>534</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -325,6 +325,30 @@
                   </item>
                  </layout>
                 </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
+                  <item>
+                   <widget class="QCheckBox" name="checkboxStatistics">
+                    <property name="text">
+                     <string>Statistics</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_15">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
                </layout>
               </item>
               <item>
@@ -468,6 +492,151 @@
                </layout>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="statisticsOptionsGroupBox">
+              <property name="title">
+               <string/>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <item>
+                <widget class="QLabel" name="statisticsOptionsLabel">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>15</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                   <kerning>false</kerning>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Statistics Options</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_12">
+                 <item>
+                  <widget class="QPushButton" name="pushButton">
+                   <property name="text">
+                    <string>Select Newick File</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_16">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_2">
+                   <property name="minimumSize">
+                    <size>
+                     <width>231</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <item>
+                  <widget class="QLabel" name="speciesTreeNewickStringsLabel">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Species Tree Newick String:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="speciesTreeNewickStringsEntry">
+                   <property name="minimumSize">
+                    <size>
+                     <width>40</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <widget class="QCheckBox" name="checboxRobinsonFoulds">
+                   <property name="text">
+                    <string>Robinson Foulds</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="checkboxWeighted">
+                   <property name="text">
+                    <string>Weighted</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_20">
+                 <item>
+                  <widget class="QCheckBox" name="checkboxProbability">
+                   <property name="text">
+                    <string>p(GT | ST)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+              <zorder>verticalLayoutWidget</zorder>
+              <zorder>verticalLayoutWidget</zorder>
+              <zorder>statisticsOptionsLabel</zorder>
+              <zorder>horizontalLayoutWidget_3</zorder>
+              <zorder>horizontalLayoutWidget_4</zorder>
+              <zorder>horizontalLayoutWidget_5</zorder>
+              <zorder>horizontalLayoutWidget_2</zorder>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -691,7 +860,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>529</width>
+     <width>459</width>
      <height>22</height>
     </rect>
    </property>
@@ -850,92 +1019,11 @@
   <tabstop>checkboxAllTrees</tabstop>
   <tabstop>checkboxScatterPlot</tabstop>
   <tabstop>checkboxDonutPlot</tabstop>
-  <tabstop>checkboxCircleGraph</tabstop>
   <tabstop>outputTabs</tabstop>
   <tabstop>pushButton_2</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>actionAllTrees</sender>
-   <signal>triggered()</signal>
-   <receiver>checkboxAllTrees</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>72</x>
-     <y>116</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkboxAllTrees</sender>
-   <signal>clicked()</signal>
-   <receiver>actionAllTrees</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>116</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCircleGraph</sender>
-   <signal>triggered()</signal>
-   <receiver>checkboxCircleGraph</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>357</x>
-     <y>116</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkboxCircleGraph</sender>
-   <signal>clicked()</signal>
-   <receiver>actionCircleGraph</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>357</x>
-     <y>116</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionDonutPlot</sender>
-   <signal>triggered()</signal>
-   <receiver>checkboxDonutPlot</receiver>
-   <slot>toggle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>261</x>
-     <y>116</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>checkboxDonutPlot</sender>
    <signal>clicked()</signal>
@@ -969,6 +1057,38 @@
    </hints>
   </connection>
   <connection>
+   <sender>actionAllTrees</sender>
+   <signal>triggered()</signal>
+   <receiver>checkboxAllTrees</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>72</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCircleGraph</sender>
+   <signal>triggered()</signal>
+   <receiver>checkboxCircleGraph</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>357</x>
+     <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>checkboxScatterPlot</sender>
    <signal>clicked()</signal>
    <receiver>actionScatterPlot</receiver>
@@ -981,6 +1101,54 @@
     <hint type="destinationlabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxAllTrees</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAllTrees</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxCircleGraph</sender>
+   <signal>clicked()</signal>
+   <receiver>actionCircleGraph</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDonutPlot</sender>
+   <signal>triggered()</signal>
+   <receiver>checkboxDonutPlot</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>116</y>
     </hint>
    </hints>
   </connection>
