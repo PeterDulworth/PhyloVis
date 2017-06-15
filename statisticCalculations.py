@@ -189,16 +189,20 @@ def calculate_windows_to_rf(species_tree, weighted):
 
 def stat_scatter(stat_map, name):
     """
-    Creates a scatter plot for use in the
-    visualization tool.
+    Creates a scatter plot with the x-axis being the
+    windows and the y-axis being the statistic to
+    be graphed.
 
     Input:
-    num        -- count outputted by num_windows
-    likelihood -- number outputted by ml
+    stat_map -- a mapping outputted by either
+                calculate_windows_to_p_gtst or
+                calculate_windows_to_rf ([0] or [1])
+    name -- the name of the mapping so the y-axis and
+            file names are labeled correctly
 
     Returns:
-    A scatter plot with num as the x-axis and
-    likelihood as the y-axis.
+    A scatter plot with windows as the x-axis and
+    a statistic as the y-axis.
     """
     # sizes plot circles
     area = math.pi * (3) ** 2
@@ -236,7 +240,7 @@ def stat_scatter(stat_map, name):
         plot = "UnweightedFouldsPlot.png"
         plt.savefig(plot)
 
-    elif name == 'P_GTST':
+    elif name == 'PGTST':
         plt.ylabel('P(Gene Tree | Species Tree)', fontsize=10)
 
         # saves and names plot
@@ -248,9 +252,9 @@ def stat_scatter(stat_map, name):
 
 # f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
 # f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
-# stat_scatter(calculate_windows_to_p_gtst(f1))
+# stat_scatter(calculate_windows_to_p_gtst(f1), 'PGTST')
 # rf = calculate_windows_to_rf(f1, True)
-# 
+
 # stat_scatter(rf[0], 'weightedRF')
 # stat_scatter(rf[1], 'unweightedRF')
 
