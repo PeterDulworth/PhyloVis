@@ -27,9 +27,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.welcomeLogoImage.setScaledContents(True)
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
-        # windows dictionary
+        # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4,
                         'outputPage': 5}
+
         self.windowSizes = {
                                 'welcomePage': {'x': 459, 'y': 245},
                                 'inputPageRax': {'x': 459, 'y': 488+22+22},
@@ -39,8 +40,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                                 'outputPage': {'x': 459, 'y': 245}
                             }
 
-        # 435, 488 + 22 + 22
         self.runComplete = False
+        self.checkboxWeighted.setEnabled(False)
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -113,8 +114,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
         self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
-        # self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsOptionsDisplay)
-        self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsEnabled)
+        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
+        self.checboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
 
     ################################# Handlers #################################
 
@@ -154,8 +155,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.resize(435,488+22+22)
         print self.inputPage.size()
 
-    def toggleStatisticsEnabled(self):
-        self.statisticsOptionsGroupBox.setEnabled(not self.statisticsOptionsGroupBox.isEnabled())
+    def toggleEnabled(self, object):
+        enabled = object.isEnabled()
+        object.setEnabled(not enabled)
 
     def getNumberChecked(self):
         """
@@ -218,7 +220,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
         self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
-        print window, self.size()
 
     def ensureSingleModeSelected(self, mode_selected):
         for mode in self.modes:
