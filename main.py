@@ -218,6 +218,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.speciesTree = self.speciesTreeNewickStringsEntry.text()
                     self.pgtst = self.checkboxProbability.isChecked()
 
+                    with open(self.newickFileEntry.text(), 'r') as f:
+                        print 'open'
+                        self.speciesTree = f.read().replace('\n', '')
+
                     if self.robinsonFoulds:
                         if self.weighted:
                             windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
@@ -277,7 +281,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 break
 
     def run(self):
-        # Error handling for input file
+        Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
             self.input_file_extension = os.path.splitext(self.input_file_name)[1]
