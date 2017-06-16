@@ -193,7 +193,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 if self.checkboxStatistics.isChecked():
                     weighted = self.checkboxWeighted
-                    species_tree = self.speciesTreeNewickStringsEntry
+                    species_tree = self.speciesTreeNewickStringsEntry.text()
 
                     # Function calls for calculating statistics
                     windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
