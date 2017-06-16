@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>245</height>
+    <width>508</width>
+    <height>572</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -572,7 +572,7 @@
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_12">
                  <item>
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="newickFileBtn">
                    <property name="text">
                     <string>Select Newick File</string>
                    </property>
@@ -592,7 +592,7 @@
                   </spacer>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit_2">
+                  <widget class="QLineEdit" name="newickFileEntry">
                    <property name="minimumSize">
                     <size>
                      <width>231</width>
@@ -896,7 +896,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>459</width>
+     <width>508</width>
      <height>22</height>
     </rect>
    </property>

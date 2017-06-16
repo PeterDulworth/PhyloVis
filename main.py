@@ -89,8 +89,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # if input file button is clicked run function -- file_open
-        self.inputFileBtn.clicked.connect(lambda: self.input_file_open(self.inputFileEntry))
-        self.actionOpen.triggered.connect(lambda: self.input_file_open(self.inputFileEntry))
+        self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
+        self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
 
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
@@ -101,6 +101,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # disable export menu initially
         self.menuExport.setEnabled(False)
+
+        self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
 
         # **************************** Rax Welcome Page Events ****************************#
 
@@ -241,7 +243,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         print dirName, name
         copytree(dirName, name)
 
-    def input_file_open(self, textEntry):
+    def openFile(self, textEntry):
         # get name of file
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
