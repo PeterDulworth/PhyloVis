@@ -89,8 +89,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # if input file button is clicked run function -- file_open
-        self.inputFileBtn.clicked.connect(self.input_file_open)
-        self.actionOpen.triggered.connect(self.input_file_open)
+        self.inputFileBtn.clicked.connect(lambda: self.input_file_open(self.inputFileEntry))
+        self.actionOpen.triggered.connect(lambda: self.input_file_open(self.inputFileEntry))
 
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
@@ -241,11 +241,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         print dirName, name
         copytree(dirName, name)
 
-    def input_file_open(self):
+    def input_file_open(self, textEntry):
         # get name of file
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
-        self.inputFileEntry.setText(name)
+        textEntry.setText(name)
 
     def runProgressBar(self):
         self.completed = 0
