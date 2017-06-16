@@ -455,6 +455,8 @@ class Ui_PhylogeneticVisualization(object):
         self.actionCircleGraph = QtGui.QAction(PhylogeneticVisualization)
         self.actionCircleGraph.setCheckable(True)
         self.actionCircleGraph.setObjectName(_fromUtf8("actionCircleGraph"))
+        self.actionStatistics = QtGui.QAction(PhylogeneticVisualization)
+        self.actionStatistics.setObjectName(_fromUtf8("actionStatistics"))
         self.menuExport.addAction(self.actionStandardJPG)
         self.menuExport.addAction(self.actionBootstrapJPG)
         self.menuExport.addAction(self.actionTextFile)
@@ -472,6 +474,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menuDisplay.addAction(self.actionScatterPlot)
         self.menuDisplay.addAction(self.actionDonutPlot)
         self.menuDisplay.addAction(self.actionCircleGraph)
+        self.menuDisplay.addAction(self.actionStatistics)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuMode.menuAction())
         self.menubar.addAction(self.menuDisplay.menuAction())
@@ -487,6 +490,8 @@ class Ui_PhylogeneticVisualization(object):
         QtCore.QObject.connect(self.checkboxAllTrees, QtCore.SIGNAL(_fromUtf8("clicked()")), self.actionAllTrees.toggle)
         QtCore.QObject.connect(self.checkboxCircleGraph, QtCore.SIGNAL(_fromUtf8("clicked()")), self.actionCircleGraph.toggle)
         QtCore.QObject.connect(self.actionDonutPlot, QtCore.SIGNAL(_fromUtf8("triggered()")), self.checkboxDonutPlot.toggle)
+        QtCore.QObject.connect(self.checkboxStatistics, QtCore.SIGNAL(_fromUtf8("clicked()")), self.actionStatistics.toggle)
+        QtCore.QObject.connect(self.actionStatistics, QtCore.SIGNAL(_fromUtf8("triggered()")), self.checkboxStatistics.toggle)
         QtCore.QMetaObject.connectSlotsByName(PhylogeneticVisualization)
         PhylogeneticVisualization.setTabOrder(self.inputFileEntry, self.windowSizeEntry)
         PhylogeneticVisualization.setTabOrder(self.windowSizeEntry, self.windowOffsetEntry)
@@ -547,6 +552,7 @@ class Ui_PhylogeneticVisualization(object):
         self.actionScatterPlot.setText(_translate("PhylogeneticVisualization", "Scatter Plot", None))
         self.actionDonutPlot.setText(_translate("PhylogeneticVisualization", "Donut Plot", None))
         self.actionCircleGraph.setText(_translate("PhylogeneticVisualization", "Circle Graph", None))
+        self.actionStatistics.setText(_translate("PhylogeneticVisualization", "Statistics", None))
 
 
 if __name__ == "__main__":

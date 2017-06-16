@@ -929,6 +929,7 @@
     <addaction name="actionScatterPlot"/>
     <addaction name="actionDonutPlot"/>
     <addaction name="actionCircleGraph"/>
+    <addaction name="actionStatistics"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMode"/>
@@ -1037,6 +1038,11 @@
    </property>
    <property name="text">
     <string>Circle Graph</string>
+   </property>
+  </action>
+  <action name="actionStatistics">
+   <property name="text">
+    <string>Statistics</string>
    </property>
   </action>
  </widget>
@@ -1178,6 +1184,38 @@
     <hint type="destinationlabel">
      <x>261</x>
      <y>116</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkboxStatistics</sender>
+   <signal>clicked()</signal>
+   <receiver>actionStatistics</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStatistics</sender>
+   <signal>triggered()</signal>
+   <receiver>checkboxStatistics</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>66</x>
+     <y>295</y>
     </hint>
    </hints>
   </connection>

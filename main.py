@@ -33,10 +33,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.windowSizes = {
                                 'welcomePage': {'x': 459, 'y': 245},
                                 'inputPageRax': {'x': 459, 'y': 488+22+22},
-                                'inputPageNotRaxA': {'x': 0, 'y': 0},
-                                'inputPageNotRaxB': {'x': 0, 'y': 0},
-                                'inputPageNotRaxC': {'x': 0, 'y': 0},
-                                'outputPage': {'x': 0, 'y': 0}
+                                'inputPageNotRaxA': {'x': 459, 'y': 245},
+                                'inputPageNotRaxB': {'x': 459, 'y': 245},
+                                'inputPageNotRaxC': {'x': 459, 'y': 245},
+                                'outputPage': {'x': 459, 'y': 245}
                             }
 
         # 435, 488 + 22 + 22
@@ -81,6 +81,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
 
+
         # **************************** Rax Input Page Events ****************************#
 
         #resize to size of welcome page
@@ -113,6 +114,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
         # self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsOptionsDisplay)
+        self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsEnabled)
 
     ################################# Handlers #################################
 
@@ -151,6 +153,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.statisticsOptionsGroupBox.show()
             self.resize(435,488+22+22)
         print self.inputPage.size()
+
+    def toggleStatisticsEnabled(self):
+        self.statisticsOptionsGroupBox.setEnabled(not self.statisticsOptionsGroupBox.isEnabled())
 
     def getNumberChecked(self):
         """
