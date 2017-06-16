@@ -171,7 +171,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if btnClicked == None or btnClicked.isChecked():
             if self.runComplete == True:
-                print 'UPDATEBITCH'
                 if self.getNumberChecked() > 0:
                     # User inputs:
                     num = self.topTopologies
@@ -201,23 +200,25 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
-                    weighted = self.checkboxWeighted
-                    species_tree = self.speciesTreeNewickStringsEntry.text()
+                    self.robinsonFoulds = self.checboxRobinsonFoulds.isChecked()
+                    self.weighted = self.checkboxWeighted.isChecked()
+                    self.speciesTree = self.speciesTreeNewickStringsEntry.text()
+                    self.pgtst = self.checkboxProbability.isChecked()
 
-                    # Function calls for calculating statistics
-                    windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
-                    sc.stat_scatter(windows_to_p_gtst, "PGTST")
+                    if self.robinsonFoulds:
+                        if self.weighted:
+                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
+                            sc.stat_scatter(windows_to_w_rf, "weightedRF")
+                            sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-                    # Unweighted Robinson-Foulds
-                    if not weighted:
-                        windows_to_uw_rf = sc.calculate_windows_to_rf(species_tree, weighted)
-                        sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+                        else:
+                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
+                            sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-                    # Weighted Robinson-Foulds
-                    if weighted:
-                        windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(species_tree, weighted)
-                        sc.stat_scatter(windows_to_w_rf, "weightedRF")
-                        sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+                    if self.pgtst:
+                        # Function calls for calculating statistics
+                        windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
+                        sc.stat_scatter(windows_to_p_gtst, "PGTST")
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -263,53 +264,53 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def run(self):
         # Error handling for input file
-        try:
-            self.input_file_name = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
-
-            if self.input_file_name == "":
-                raise ValueError, (1, "Please choose a file")
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
-                raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
-
-        # Error handling for number of top topologies
-        try:
-            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
-            if self.topTopologies <= 0 or self.topTopologies > 15:
-                raise ValueError, "Please enter an integer between 0 and 15."
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
-            return
-
-        # Error handling for window size
-        try:
-            self.window_size = int(self.windowSizeEntry.text())
-            if self.window_size <= 0:
-                raise ValueError, "Positive integers only"
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
-            return
-
-        # Error handling for window offset
-        try:
-            self.window_offset = int(self.windowOffsetEntry.text())
-            if self.window_offset <= 0:
-                raise ValueError, "Positive integers only"
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
-            return
-
-        # self.runProgressBar()
-
-        try:
-            self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
-            self.RAx_dirs = vp.raxml_windows(self.windows_dirs) # run once - not rerun
-        except IndexError:
-            QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
-            return
+        # try:
+        #     self.input_file_name = str(self.inputFileEntry.text())
+        #     self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+        #
+        #     if self.input_file_name == "":
+        #         raise ValueError, (1, "Please choose a file")
+        #     elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
+        #         raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+        # except ValueError, (ErrorNumber, ErrorMessage):
+        #     QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+        #     return
+        #
+        # # Error handling for number of top topologies
+        # try:
+        #     self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
+        #     if self.topTopologies <= 0 or self.topTopologies > 15:
+        #         raise ValueError, "Please enter an integer between 0 and 15."
+        # except ValueError:
+        #     QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
+        #     return
+        #
+        # # Error handling for window size
+        # try:
+        #     self.window_size = int(self.windowSizeEntry.text())
+        #     if self.window_size <= 0:
+        #         raise ValueError, "Positive integers only"
+        # except ValueError:
+        #     QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
+        #     return
+        #
+        # # Error handling for window offset
+        # try:
+        #     self.window_offset = int(self.windowOffsetEntry.text())
+        #     if self.window_offset <= 0:
+        #         raise ValueError, "Positive integers only"
+        # except ValueError:
+        #     QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
+        #     return
+        #
+        # # self.runProgressBar()
+        #
+        # try:
+        #     self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
+        #     self.RAx_dirs = vp.raxml_windows(self.windows_dirs) # run once - not rerun
+        # except IndexError:
+        #     QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
+        #     return
 
         #####################################################################
 
