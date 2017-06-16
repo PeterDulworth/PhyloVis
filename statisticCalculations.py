@@ -61,11 +61,16 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
     # print "gt", gene_tree
     # print "st", species_tree
 
+    # add quotes to the strings
+    species_tree = str(species_tree)
+    species_tree = "'"+ species_tree +"'"
+    gene_tree = "'" + gene_tree + "'"
+
     # Run PhyloNet jar file
     p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
 
     # Read output and convert to float
-    p_of_gt_given_st = float(p.stdout.readline())
+    p_of_gt_given_st = p.stdout.readline()
 
     return p_of_gt_given_st
 
