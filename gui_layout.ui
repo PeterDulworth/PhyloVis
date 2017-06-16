@@ -645,7 +645,7 @@
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_13">
                  <item>
-                  <widget class="QCheckBox" name="checboxRobinsonFoulds">
+                  <widget class="QCheckBox" name="checkboxRobinsonFoulds">
                    <property name="text">
                     <string>Robinson Foulds</string>
                    </property>

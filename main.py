@@ -7,7 +7,7 @@ import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow
 import topologyFrequency as tf
 import circleGraphGenerator
 import statisticCalculations as sc
@@ -76,6 +76,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
+        self.pgtstWindow = pgtstWindow.PGTSTWindow()
 
         self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
         self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
@@ -117,7 +118,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
-        self.checboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
+        self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
 
     ################################# Handlers #################################
 
@@ -147,7 +148,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.checkboxScatterPlot.isChecked():
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
-    
+
+        if self.checkboxStatistics.isChecked():
+            if self.checkboxRobinsonFoulds.isChecked():
+                if self.checkboxWeighted.isChecked():
+                    pass
+                else:
+                    pass
+            if self.checkboxProbability.isChecked():
+                self.pgtstWindow.show()
+                self.pgtstWindow.display_image()
+
     def toggleStatisticsOptionsDisplay(self):
         if self.statisticsOptionsGroupBox.isVisible():
             self.statisticsOptionsGroupBox.hide()
@@ -200,7 +211,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
-                    self.robinsonFoulds = self.checboxRobinsonFoulds.isChecked()
+                    self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
                     self.weighted = self.checkboxWeighted.isChecked()
                     self.speciesTree = self.speciesTreeNewickStringsEntry.text()
                     self.pgtst = self.checkboxProbability.isChecked()
