@@ -9,7 +9,6 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow
 import topologyFrequency as tf
-import matplotlib.pyplot as plt
 import circleGraphGenerator
 import statisticCalculations as sc
 
@@ -31,9 +30,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # windows dictionary
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4,
                         'outputPage': 5}
+        self.windowSizes = {
+                                'welcomePage': {'x': 459, 'y': 245},
+                                'inputPageRax': {'x': 459, 'y': 488+22+22},
+                                'inputPageNotRaxA': {'x': 0, 'y': 0},
+                                'inputPageNotRaxB': {'x': 0, 'y': 0},
+                                'inputPageNotRaxC': {'x': 0, 'y': 0},
+                                'outputPage': {'x': 0, 'y': 0}
+                            }
 
+        # 435, 488 + 22 + 22
         self.runComplete = False
-        self.statisticsOptionsGroupBox.hide()
+        # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
 
@@ -75,8 +83,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** Rax Input Page Events ****************************#
 
-        # ensure window is at minimum size when opened
-        self.resize(0,0)
+        #resize to size of welcome page
+        self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # if input file button is clicked run function -- file_open
         self.inputFileBtn.clicked.connect(self.input_file_open)
@@ -104,7 +112,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
         self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
-        self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsOptionsDisplay)
+        # self.checkboxStatistics.stateChanged.connect(self.toggleStatisticsOptionsDisplay)
 
     ################################# Handlers #################################
 
@@ -138,8 +146,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def toggleStatisticsOptionsDisplay(self):
         if self.statisticsOptionsGroupBox.isVisible():
             self.statisticsOptionsGroupBox.hide()
+            self.resize(435, 245 + 22 + 22)
         else:
             self.statisticsOptionsGroupBox.show()
+            self.resize(435,488+22+22)
+        print self.inputPage.size()
 
     def getNumberChecked(self):
         """
@@ -199,10 +210,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         sc.stat_scatter(windows_to_w_rf, "weightedRF")
                         sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
-        self.resize(0, 0)
+        self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
+        print window, self.size()
 
     def ensureSingleModeSelected(self, mode_selected):
         for mode in self.modes:
