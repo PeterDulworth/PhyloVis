@@ -22,30 +22,30 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
-        self.horizontalLayout = QtGui.QHBoxLayout(Form)
+class Ui_donutPlot(object):
+    def setupUi(self, donutPlot):
+        donutPlot.setObjectName(_fromUtf8("donutPlot"))
+        donutPlot.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(donutPlot)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.donutPlotImage = QtGui.QLabel(Form)
+        self.donutPlotImage = QtGui.QLabel(donutPlot)
         self.donutPlotImage.setText(_fromUtf8(""))
         self.donutPlotImage.setObjectName(_fromUtf8("donutPlotImage"))
         self.horizontalLayout.addWidget(self.donutPlotImage)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(donutPlot)
+        QtCore.QMetaObject.connectSlotsByName(donutPlot)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+    def retranslateUi(self, donutPlot):
+        donutPlot.setWindowTitle(_translate("donutPlot", "Top Topologies Donut Plot", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Form = QtGui.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    donutPlot = QtGui.QWidget()
+    ui = Ui_donutPlot()
+    ui.setupUi(donutPlot)
+    donutPlot.show()
     sys.exit(app.exec_())
 

@@ -22,30 +22,30 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
-        self.horizontalLayout = QtGui.QHBoxLayout(Form)
+class Ui_allTrees(object):
+    def setupUi(self, allTrees):
+        allTrees.setObjectName(_fromUtf8("allTrees"))
+        allTrees.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(allTrees)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.allTreesImage = QtGui.QLabel(Form)
+        self.allTreesImage = QtGui.QLabel(allTrees)
         self.allTreesImage.setText(_fromUtf8(""))
         self.allTreesImage.setObjectName(_fromUtf8("allTreesImage"))
         self.horizontalLayout.addWidget(self.allTreesImage)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(allTrees)
+        QtCore.QMetaObject.connectSlotsByName(allTrees)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+    def retranslateUi(self, allTrees):
+        allTrees.setWindowTitle(_translate("allTrees", "All Trees", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Form = QtGui.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    allTrees = QtGui.QWidget()
+    ui = Ui_allTrees()
+    ui.setupUi(allTrees)
+    allTrees.show()
     sys.exit(app.exec_())
 

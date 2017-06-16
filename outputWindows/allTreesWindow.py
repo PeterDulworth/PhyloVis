@@ -1,9 +1,9 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 import allTreesLayout
 from PIL import Image
 
 
-class AllTreesWindow(QtGui.QWidget, allTreesLayout.Ui_Form):
+class AllTreesWindow(QtGui.QWidget, allTreesLayout.Ui_allTrees):
     def __init__(self, parent=None):
         super(AllTreesWindow, self).__init__(parent)
         self.setupUi(self)

@@ -3,7 +3,7 @@ import pgtstLayout
 from PIL import Image
 
 
-class PGTSTWindow(QtGui.QWidget, pgtstLayout.Ui_Form):
+class PGTSTWindow(QtGui.QWidget, pgtstLayout.Ui_pgtst):
     def __init__(self, parent=None):
         super(PGTSTWindow, self).__init__(parent)
         self.setupUi(self)

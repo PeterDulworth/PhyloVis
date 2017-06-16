@@ -22,13 +22,13 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
-        self.horizontalLayout = QtGui.QHBoxLayout(Form)
+class Ui_robinsonFoulds(object):
+    def setupUi(self, robinsonFoulds):
+        robinsonFoulds.setObjectName(_fromUtf8("robinsonFoulds"))
+        robinsonFoulds.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(robinsonFoulds)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.tabWidget = QtGui.QTabWidget(Form)
+        self.tabWidget = QtGui.QTabWidget(robinsonFoulds)
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.unweightedTab = QtGui.QWidget()
         self.unweightedTab.setObjectName(_fromUtf8("unweightedTab"))
@@ -52,22 +52,22 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.weightedTab, _fromUtf8(""))
         self.horizontalLayout.addWidget(self.tabWidget)
 
-        self.retranslateUi(Form)
+        self.retranslateUi(robinsonFoulds)
         self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        QtCore.QMetaObject.connectSlotsByName(robinsonFoulds)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.unweightedTab), _translate("Form", "Unweighted", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.weightedTab), _translate("Form", "Weighted", None))
+    def retranslateUi(self, robinsonFoulds):
+        robinsonFoulds.setWindowTitle(_translate("robinsonFoulds", "Robinson Foulds", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.unweightedTab), _translate("robinsonFoulds", "Unweighted", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.weightedTab), _translate("robinsonFoulds", "Weighted", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Form = QtGui.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    robinsonFoulds = QtGui.QWidget()
+    ui = Ui_robinsonFoulds()
+    ui.setupUi(robinsonFoulds)
+    robinsonFoulds.show()
     sys.exit(app.exec_())
 

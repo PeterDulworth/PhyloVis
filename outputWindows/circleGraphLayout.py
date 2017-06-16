@@ -22,30 +22,30 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
-        self.horizontalLayout = QtGui.QHBoxLayout(Form)
+class Ui_circleGraph(object):
+    def setupUi(self, circleGraph):
+        circleGraph.setObjectName(_fromUtf8("circleGraph"))
+        circleGraph.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(circleGraph)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.circleGraphImage = QtGui.QLabel(Form)
+        self.circleGraphImage = QtGui.QLabel(circleGraph)
         self.circleGraphImage.setText(_fromUtf8(""))
         self.circleGraphImage.setObjectName(_fromUtf8("circleGraphImage"))
         self.horizontalLayout.addWidget(self.circleGraphImage)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(circleGraph)
+        QtCore.QMetaObject.connectSlotsByName(circleGraph)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+    def retranslateUi(self, circleGraph):
+        circleGraph.setWindowTitle(_translate("circleGraph", "Circle Track Graph", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Form = QtGui.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    circleGraph = QtGui.QWidget()
+    ui = Ui_circleGraph()
+    ui.setupUi(circleGraph)
+    circleGraph.show()
     sys.exit(app.exec_())
 

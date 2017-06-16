@@ -22,30 +22,30 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
-        self.horizontalLayout = QtGui.QHBoxLayout(Form)
+class Ui_scatterPlot(object):
+    def setupUi(self, scatterPlot):
+        scatterPlot.setObjectName(_fromUtf8("scatterPlot"))
+        scatterPlot.resize(400, 300)
+        self.horizontalLayout = QtGui.QHBoxLayout(scatterPlot)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.scatterPlotImage = QtGui.QLabel(Form)
+        self.scatterPlotImage = QtGui.QLabel(scatterPlot)
         self.scatterPlotImage.setText(_fromUtf8(""))
         self.scatterPlotImage.setObjectName(_fromUtf8("scatterPlotImage"))
         self.horizontalLayout.addWidget(self.scatterPlotImage)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(scatterPlot)
+        QtCore.QMetaObject.connectSlotsByName(scatterPlot)
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Form", None))
+    def retranslateUi(self, scatterPlot):
+        scatterPlot.setWindowTitle(_translate("scatterPlot", "Scatter Plot", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Form = QtGui.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    scatterPlot = QtGui.QWidget()
+    ui = Ui_scatterPlot()
+    ui.setupUi(scatterPlot)
+    scatterPlot.show()
     sys.exit(app.exec_())
 

@@ -3,7 +3,7 @@ import donutPlotLayout
 from PIL import Image
 
 
-class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_Form):
+class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_donutPlot):
     def __init__(self, parent=None):
         super(DonutPlotWindow, self).__init__(parent)
         self.setupUi(self)

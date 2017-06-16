@@ -56,9 +56,6 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
     del topologies_to_data['Other']
     data = topologies_to_data.values()
 
-    for d in data:
-        print d
-
     windowed_data = []
     nonwindowed_data = []
     for i in range(length_of_sequences):

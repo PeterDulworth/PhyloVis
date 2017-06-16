@@ -3,7 +3,7 @@ import circleGraphLayout
 from PIL import Image
 
 
-class CircleGraphWindow(QtGui.QWidget, circleGraphLayout.Ui_Form):
+class CircleGraphWindow(QtGui.QWidget, circleGraphLayout.Ui_circleGraph):
     def __init__(self, parent=None):
         super(CircleGraphWindow, self).__init__(parent)
         self.setupUi(self)

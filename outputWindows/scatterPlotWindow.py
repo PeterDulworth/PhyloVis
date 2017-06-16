@@ -3,7 +3,7 @@ import scatterPlotLayout
 from PIL import Image
 
 
-class ScatterPlotWindow(QtGui.QWidget, scatterPlotLayout.Ui_Form):
+class ScatterPlotWindow(QtGui.QWidget, scatterPlotLayout.Ui_scatterPlot):
     def __init__(self, parent=None):
         super(ScatterPlotWindow, self).__init__(parent)
         self.setupUi(self)
