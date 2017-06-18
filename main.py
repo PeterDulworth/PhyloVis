@@ -213,14 +213,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
-                    self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                    self.weighted = self.checkboxWeighted.isChecked()
-                    self.speciesTree = self.speciesTreeNewickStringsEntry.text()
-                    self.pgtst = self.checkboxProbability.isChecked()
+                    # self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
+                    # self.weighted = self.checkboxWeighted.isChecked()
+                    # self.speciesTree = self.speciesTreeNewickStringsEntry.text()
+                    # self.pgtst = self.checkboxProbability.isChecked()
 
-                    with open(self.newickFileEntry.text(), 'r') as f:
-                        print 'open'
-                        self.speciesTree = f.read().replace('\n', '')
+                    # with open(self.newickFileEntry.text(), 'r') as f:
+                    #     print 'open'
+                    #     self.speciesTree = f.read().replace('\n', '')
 
                     if self.robinsonFoulds:
                         if self.weighted:
@@ -293,9 +293,23 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 raise ValueError, (1, "Please choose a file or enter a newick string")
             elif self.newickFileName != "" and self.newickStringFromEntry != "":
                 raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
-            elif self.newickFileExtension != '.txt' and self.newickFileExtension != '.phylip' and self.newickFileExtension != '.fasta' and self.newickFileName != '':
-                raise ValueError, (
-                3, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+            # elif self.newickFileExtension != '.txt' and self.newickFileExtension != '.phylip' and self.newickFileExtension != '.fasta' and self.newickFileName != '':
+            #     raise ValueError, (
+            #     3, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+
+            # get checkbox values
+            self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
+            self.weighted = self.checkboxWeighted.isChecked()
+            self.pgtst = self.checkboxProbability.isChecked()
+
+            # if the newick input is from the file chooser
+            if self.newickFileName != '':
+                with open(self.newickFileEntry.text(), 'r') as f:
+                    self.speciesTree = f.read().replace('\n', '')
+            # else if the newick input is from the manual text entry
+            elif self.newickStringFromEntry != '':
+                self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
+
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -341,7 +355,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
 
-        # self.runProgressBar()
+        self.runProgressBar()
 
         try:
             self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
