@@ -336,6 +336,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
             return
 
+
+          # asfgasdf as¡
         # Error handling for window size
         try:
             self.window_size = int(self.windowSizeEntry.text())
@@ -356,6 +358,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
 
         self.runProgressBar()
+        # hello im changing this
 
         try:
             self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
