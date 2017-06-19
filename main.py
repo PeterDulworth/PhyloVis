@@ -203,20 +203,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
-                    self.displayResults()
 
                 if self.checkboxScatterPlot.isChecked():
                     tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
-                    self.displayResults()
 
                 if self.checkboxAllTrees.isChecked():
                     tf.topology_colorizer(topologies_to_colors)  # all trees
-                    self.displayResults()
 
                 if self.checkboxCircleGraph.isChecked():
                     circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
                                                              topologies_to_colors, self.window_size, self.window_offset)
-                    self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
                     if self.robinsonFoulds:
@@ -234,7 +230,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         # Function calls for calculating statistics
                         windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
-                    self.displayResults()
+                self.displayResults()
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
