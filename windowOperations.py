@@ -6,7 +6,7 @@ import os
 import re
 
 """
-Functions for creating sequence windows and running RAxML
+Functions for creating sequence windows and running RAxML.
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
@@ -15,7 +15,8 @@ Peter Dulworth
 
 def window_splitter(filename, window_size, step_size):
     """
-    Creates smaller PHYLIP files based on a given window size
+    Creates smaller PHYLIP files based on a window size inputted into
+    the GUI.
     
     Inputs:
     filename --- name of the PHYLIP file to be used
@@ -23,7 +24,7 @@ def window_splitter(filename, window_size, step_size):
     step_size --- the number of nucleotides between the beginning of each window
     
     Output:
-    Smaller "window" files showing sections of the genome in PHYLIP format
+    Smaller "window" files showing sections of the genome in PHYLIP format.
     """
 
     output_folder = "windows"
@@ -83,7 +84,7 @@ def window_splitter(filename, window_size, step_size):
                 for k in range(window_size):
                     window += sequence[l+k]
 
-
+                # Writes file to folder
                 file.write(window + "\n")
                 file.close()
 
@@ -92,7 +93,8 @@ def window_splitter(filename, window_size, step_size):
 
 def raxml_windows(window_directory):
     """
-    Runs RAxML on files in the directory containing the windows
+    Runs RAxML on files in the directory containing files from
+    window_splitter().
     
     Inputs:
     window_directory ---  the window directory location
@@ -162,9 +164,6 @@ def raxml_windows(window_directory):
                 os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
                 os.rename("topology_bestTree." + file_number, topology_output_directory + "/Topology_bestTree." + file_number)
 
-    return
-
-
 
 # Run commands below
 
@@ -175,3 +174,4 @@ if __name__ == '__main__':
 
     windows_dir = window_splitter(input_file, window_size, window_offset)
     raxml_windows(windows_dir)
+
