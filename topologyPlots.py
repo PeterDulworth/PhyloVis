@@ -386,11 +386,15 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         length_of_sequences = int(f.readline().split()[1])
     f.close()
 
+    print 'accounts for offset'
+
     # accounts for offset
     windows_to_top_topologies2 = {}
     for window in windows_to_top_topologies:
         windows_to_top_topologies2[window * window_offset] = windows_to_top_topologies[window]
     windows_to_top_topologies = windows_to_top_topologies2.items()
+
+    print 'accounts for offset'
 
     # gets windows
     windows = []
@@ -400,6 +404,8 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     for i in range(length_of_sequences):
         if i not in windows:
             windows_to_top_topologies.append((i, 0))
+
+    print 'accounts for offset'
 
     # maps data to topologies
     topologies_to_data = {}
@@ -413,10 +419,14 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
             else:
                 topologies_to_data[topology].append(tuple([window[0], -0.1]))
 
+    print 'accounts for offset'
+
     # maps data to colors
     data_to_colors = {}
     for topology in topologies_to_data:
         data_to_colors[str(topologies_to_data[topology])] = topologies_to_colors[topology]
+
+    print 'accounts for offset'
 
     # removes 'Other' from mapping
     if 'Other' in topologies_to_data:
@@ -425,18 +435,20 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     data = topologies_to_data.values()
 
     # separates data into windowed and unwindowed
-    windowed_data = []
-    nonwindowed_data = []
-    for i in range(length_of_sequences):
-        if i not in windows:
-            nonwindowed_data.append(tuple([i, 1]))
-            windowed_data.append(tuple([i, 0]))
-        else:
-            for j in range(i, i + window_size):
-                windowed_data.append((j, 1))
-            nonwindowed_data.append(tuple([i, 0]))
+    # windowed_data = []
+    # nonwindowed_data = []
+    # for i in range(length_of_sequences):
+    #     if i not in windows:
+    #         nonwindowed_data.append(tuple([i, 1]))
+    #         windowed_data.append(tuple([i, 0]))
+    #     else:
+    #         for j in range(i, i + window_size):
+    #             windowed_data.append((j, 1))
+    #         nonwindowed_data.append(tuple([i, 0]))
 
     ############################# Build Graph #############################
+
+    print 'A'
 
     # name of the figure
     name = "GenomeAtlas"
@@ -444,6 +456,8 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
     # create the diagram -- highest level container for everything
     diagram = GenomeDiagram.Diagram(name)
+
+    print 'B'
 
     diagram.new_track(
         1,
@@ -465,6 +479,8 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         scale_smalltick_labels=0
     )
 
+    print 'C'
+
     if 'Other' in topologies_to_data:
         diagram \
             .new_track(2, name="Minor Topologies", height=1.0, hide=0, greytrack=0, greytrack_labels=2,
@@ -475,8 +491,14 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
                        colour=colors.HexColor(data_to_colors[str(minor_topology_data)]),
                        altcolour=colors.transparent, linewidth=1)
 
+    print 'D'
+
     for i in range(number_of_top_topologies):
         # create tracks -- and add them to the diagram
+
+        print i
+        print
+
         if i == 0:
             diagram \
                 .new_track(i + 3, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0,
@@ -495,25 +517,31 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
                            altcolour=colors.transparent, linewidth=1)
 
     # outer ring shit
-    graph_set = GraphSet('graph')
-    graph_set.new_graph(nonwindowed_data, style=graphStyle, color=colors.HexColor('#cccccc'),
-                        altcolour=colors.transparent)
-    graph_set.new_graph(windowed_data, style=graphStyle, color=colors.HexColor('#2f377c'),
-                        altcolour=colors.transparent)
+    # graph_set = GraphSet('graph')
+    # graph_set.new_graph(nonwindowed_data, style=graphStyle, color=colors.HexColor('#cccccc'),
+    #                     altcolour=colors.transparent)
+    # graph_set.new_graph(windowed_data, style=graphStyle, color=colors.HexColor('#2f377c'),
+    #                     altcolour=colors.transparent)
+    #
+    # diagram \
+    #     .new_track(i + 4, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2,
+    #                greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
+    #     .add_set(graph_set)
 
-    diagram \
-        .new_track(i + 4, name="Track" + str(i + 1), height=2, hide=0, greytrack=0, greytrack_labels=2,
-                   greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
-        .add_set(graph_set)
+    print 'E'
 
     diagram.draw(format="circular", pagesize='A5', orientation='landscape', x=0.0, y=0.0, track_size=1.88,
                  tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
+
+    print 'F'
 
     # save the file
     # diagram.write(name + ".pdf", "PDF")
     # diagram.write(name + ".eps", "EPS")
     # diagram.write(name + ".svg", "SVG")
     diagram.write(name + ".png", "PNG")
+
+    print 'G'
 
 
 # Run commands below
@@ -547,11 +575,10 @@ if __name__ == '__main__':
     topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-    # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
-    #
-    # if platform == "win32":
-    #     os.startfile("GenomeAtlas" + ".pdf")
-    #
-    # elif platform == "darwin":
-    #     os.system("open " + "GenomeAtlas" + ".pdf")
-    #
+    generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
+
+    if platform == "win32":
+        os.startfile("GenomeAtlas" + ".png")
+
+    elif platform == "darwin":
+        os.system("open " + "GenomeAtlas" + ".png")
