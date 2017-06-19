@@ -9,9 +9,9 @@ class CircleGraphWindow(QtGui.QWidget, circleGraphLayout.Ui_circleGraph):
         self.setupUi(self)
 
     def display_image(self):
-        standardSize = Image.open("circleGraph.png").size
+        standardSize = Image.open("genomeAtlas.png").size
 
         self.move(0, 0)
         self.circleGraphImage.setScaledContents(True)
-        self.circleGraphImage.setPixmap(QtGui.QPixmap("circleGraph.png"))
+        self.circleGraphImage.setPixmap(QtGui.QPixmap("genomeAtlas.png"))
         self.resize(int(standardSize[0]), int(standardSize[1]))

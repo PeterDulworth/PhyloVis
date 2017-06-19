@@ -366,7 +366,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     window_size --- size inputted in GUI
     window_offset --- size inputted in GUI
     Returns:
-    A genetic circle graph GenomeAltase.
+    A genetic circle graph GenomeAtlas.
     """
 
     ############################# Format Data #############################
@@ -412,8 +412,9 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         data_to_colors[str(topologies_to_data[topology])] = topologies_to_colors[topology]
 
     # removes 'Other' from mapping
-    minor_topology_data = topologies_to_data['Other']
-    del topologies_to_data['Other']
+    if topologies_to_data['Other']:
+        minor_topology_data = topologies_to_data['Other']
+        del topologies_to_data['Other']
     data = topologies_to_data.values()
 
     # separates data into windowed and unwindowed
@@ -431,7 +432,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     ############################# Build Graph #############################
 
     # name of the figure
-    name = "GenomeAltase"
+    name = "GenomeAtlas"
     graphStyle = 'bar'
 
     # create the diagram -- highest level container for everything
@@ -500,10 +501,10 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     diagram.draw(format="circular", pagesize='A5', orientation='landscape', x=0.0, y=0.0, track_size=1.88,
                  tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
-    # # save the file(s)
+    # save the file
     diagram.write(name + ".pdf", "PDF")
-    # diagram.write(name + ".eps", "EPS")
-    # diagram.write(name + ".svg", "SVG")
+    diagram.write(name + ".eps", "EPS")
+    diagram.write(name + ".svg", "SVG")
     diagram.write(name + ".png", "PNG")
 
 
@@ -513,7 +514,7 @@ if __name__ == '__main__':
     # User inputs:
     num = 3
     # file = 'phylip.txt'
-    file = "ChillLeo.phylip"
+    file = "testFiles/ChillLeo.phylip"
     windowSize = 50000
     windowOffset = 50000
 
@@ -541,8 +542,8 @@ if __name__ == '__main__':
     generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
 
     if platform == "win32":
-        os.startfile("GenomeAltase" + ".pdf")
+        os.startfile("GenomeAtlas" + ".pdf")
 
     elif platform == "darwin":
-        os.system("open " + "GenomeAltase" + ".pdf")
+        os.system("open " + "GenomeAtlas" + ".pdf")
 
