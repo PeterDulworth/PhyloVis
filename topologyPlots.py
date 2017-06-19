@@ -365,7 +365,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     window_size --- size inputted in GUI
     window_offset --- size inputted in GUI
     Returns:
-    A genetic circle graph GenomeAltase.
+    A genetic circle graph GenomeAtlas.
     """
 
     ############################# Format Data #############################
@@ -430,7 +430,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     ############################# Build Graph #############################
 
     # name of the figure
-    name = "GenomeAltase"
+    name = "GenomeAtlas"
     graphStyle = 'bar'
 
     # create the diagram -- highest level container for everything
@@ -537,8 +537,8 @@ if __name__ == '__main__':
     generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
 
     if platform == "win32":
-        os.startfile("GenomeAltase" + ".pdf")
+        os.startfile("GenomeAtlas" + ".pdf")
 
     elif platform == "darwin":
-        os.system("open " + "GenomeAltase" + ".pdf")
+        os.system("open " + "GenomeAtlas" + ".pdf")
 

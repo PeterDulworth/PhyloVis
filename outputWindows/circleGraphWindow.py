@@ -13,5 +13,5 @@ class CircleGraphWindow(QtGui.QWidget, circleGraphLayout.Ui_circleGraph):
 
         self.move(0, 0)
         self.circleGraphImage.setScaledContents(True)
-        self.circleGraphImage.setPixmap(QtGui.QPixmap("circleGraph.png"))
+        self.circleGraphImage.setPixmap(QtGui.QPixmap("genomeAltase.png"))
         self.resize(int(standardSize[0]), int(standardSize[1]))
