@@ -257,6 +257,7 @@ def topology_donut(num, top, labels, sizes, donut_colors):
     of the top 'num' scores.
     """
     # plots pie chart
+    plt.rcParams['patch.edgecolor'] = 'black'
     plt.pie(sizes, explode=None, labels=labels,
             colors=donut_colors, autopct=None, shadow=False)
 
@@ -503,9 +504,9 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
                  tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
     # save the file
-    diagram.write(name + ".pdf", "PDF")
-    diagram.write(name + ".eps", "EPS")
-    diagram.write(name + ".svg", "SVG")
+    # diagram.write(name + ".pdf", "PDF")
+    # diagram.write(name + ".eps", "EPS")
+    # diagram.write(name + ".svg", "SVG")
     diagram.write(name + ".png", "PNG")
 
 
