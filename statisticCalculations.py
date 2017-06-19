@@ -97,14 +97,14 @@ def calculate_windows_to_p_gtst(species_tree):
     windows_to_p_gtst = {}
 
     # Iterate over each folder in the given directory
-    for filename in natsorted(os.listdir("RAx_Files")):
+    for filename in natsorted(os.listdir("RAxML_Files")):
 
         # If file is the file with the best tree newick string
         if os.path.splitext(filename)[0] == "RAxML_bestTree":
 
             window_num = (os.path.splitext(filename)[1]).replace(".","")
 
-            gene_tree_filename = os.path.join("RAx_Files", filename)
+            gene_tree_filename = os.path.join("RAxML_Files", filename)
 
             p_gtst = calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
@@ -178,14 +178,14 @@ def calculate_windows_to_rf(species_tree, weighted):
     windows_to_uw_rf = {}
 
     # Iterate over each folder in the given directory
-    for filename in natsorted(os.listdir("RAx_Files")):
+    for filename in natsorted(os.listdir("RAxML_Files")):
 
         # If file is the file with the best tree newick string
         if os.path.splitext(filename)[0] == "RAxML_bestTree":
             # makes file and calculates rf distance
             window_num = (os.path.splitext(filename)[1]).replace(".", "")
 
-            gene_tree_filename = os.path.join("RAx_Files", filename)
+            gene_tree_filename = os.path.join("RAxML_Files", filename)
 
             rf_distance = calculate_robinson_foulds(species_tree, gene_tree_filename, weighted)
 
@@ -276,7 +276,7 @@ def stat_scatter(stat_map, name):
 
 if __name__ == '__main__':
     # Inputs
-    species_tree = "RAxML_Files\RAxML_bestTree_ChillLeo.0"
+    species_tree = "ChillLeo_species_tree.0"
     weighted = True
 
     # Run commands
