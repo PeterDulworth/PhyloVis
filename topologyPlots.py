@@ -521,10 +521,11 @@ def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_color
 
 if __name__ == '__main__':
     # User inputs:
-    num = 3
-    file = 'phylip.txt'
-    windowSize = 10
-    windowOffset = 10
+    num = 2
+    # file = 'phylip.txt'
+    file = "ChillLeo.phylip"
+    windowSize = 50000
+    windowOffset = 50000
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
@@ -544,7 +545,7 @@ if __name__ == '__main__':
     topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-    generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_colors, windowSize, windowOffset)
+    # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
 
     if platform == "win32":
         os.startfile("circleGraph" + ".pdf")
