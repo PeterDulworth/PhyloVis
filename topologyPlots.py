@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from Bio.Graphics.GenomeDiagram import GraphSet
 from Bio.Graphics import GenomeDiagram
 from collections import defaultdict

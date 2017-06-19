@@ -63,7 +63,7 @@ def window_splitter(filename, window_size, step_size):
         # Write the number and length of the sequences to each file
         for i in range(num_windows):
             file = open(output_files[i].name,"a")
-            file.write(str(number_of_sequences) + "\n")
+            file.write(" " + str(number_of_sequences) + " ")
             file.write(str(window_size) + "\n")
             file.close()
 
@@ -165,13 +165,16 @@ def raxml_windows(window_directory):
     return
 
 
-
 # Run commands below
 
 if __name__ == '__main__':
-    input_file = "phylip.txt"
-    window_size = 10
-    window_offset = 10
+    # input_file = "phylip.txt"
+    # window_size = 10
+    # window_offset = 10
+
+    input_file = "ChillLeo.phylip"
+    window_size = 500000
+    window_offset = 500000
 
     windows_dir = window_splitter(input_file, window_size, window_offset)
     raxml_windows(windows_dir)
