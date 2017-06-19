@@ -13,7 +13,7 @@ import math
 import os
 
 """
-Functions for creating sequence windows and running RAxML
+Functions for creating plots based on the topologies
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
@@ -519,12 +519,6 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     # diagram.write(name + ".svg", "SVG")
     diagram.write(name + ".png", "PNG")
 
-if __name__ == '__main__':
-    ############## Parameters ##################
-
-    file = 'phylip.txt'
-    windowSize = 10
-    windowOffset = 10
 
 # Run commands below
 
