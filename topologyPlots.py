@@ -304,7 +304,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
         xc = [p for (j, p) in enumerate(x) if wins_to_tops.values()[j] == cla]
         yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
         cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
-        plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1)
+        plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1, edgecolors='black')
         plt.grid = True
     plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
@@ -541,11 +541,11 @@ if __name__ == '__main__':
     topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-    generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
-
-    if platform == "win32":
-        os.startfile("GenomeAtlas" + ".pdf")
-
-    elif platform == "darwin":
-        os.system("open " + "GenomeAtlas" + ".pdf")
-
+    # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
+    #
+    # if platform == "win32":
+    #     os.startfile("GenomeAtlas" + ".pdf")
+    #
+    # elif platform == "darwin":
+    #     os.system("open " + "GenomeAtlas" + ".pdf")
+    #
