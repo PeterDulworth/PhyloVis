@@ -458,14 +458,15 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         scale_smalltick_labels=0
     )
 
-    diagram \
-        .new_track(2, name="Minor Topologies", height=1.0, hide=0, greytrack=0, greytrack_labels=2,
-                   greytrack_font_size=8, grey_track_font_color=colors.black, scale=1, scale_ticks=0,
-                   axis_labels=0) \
-        .new_set('graph') \
-        .new_graph(minor_topology_data, style=graphStyle,
-                   colour=colors.HexColor(data_to_colors[str(minor_topology_data)]),
-                   altcolour=colors.transparent, linewidth=1)
+    if 'Other' in topologies_to_data:
+        diagram \
+            .new_track(2, name="Minor Topologies", height=1.0, hide=0, greytrack=0, greytrack_labels=2,
+                       greytrack_font_size=8, grey_track_font_color=colors.black, scale=1, scale_ticks=0,
+                       axis_labels=0) \
+            .new_set('graph') \
+            .new_graph(minor_topology_data, style=graphStyle,
+                       colour=colors.HexColor(data_to_colors[str(minor_topology_data)]),
+                       altcolour=colors.transparent, linewidth=1)
 
     for i in range(number_of_top_topologies):
         # create tracks -- and add them to the diagram
