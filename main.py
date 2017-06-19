@@ -4,13 +4,13 @@ sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
 import time
-import visualizationPrototype as vp
+import windowOperations as wo
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
     robinsonFouldsWindow
-import topologyFrequency as tf
+import topologyPlots as tp
 import circleGraphGenerator
 import statisticCalculations as sc
 
@@ -192,28 +192,28 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts = tf.topology_counter()
+                    topologies_to_counts = tp.topology_counter()
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
-                    list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
-                    top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
-                    windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(
+                    list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
+                    top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
+                    windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
                         top_topologies_to_counts)  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies,
+                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,
                                                                                      top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
-                    donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
+                    donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
+                    tp.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():
-                    tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
+                 tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxAllTrees.isChecked():
-                    tf.topology_colorizer(topologies_to_colors)  # all trees
+                 tp.topology_colorizer(topologies_to_colors)  # all trees
 
                 if self.checkboxCircleGraph.isChecked():
-                    circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
+                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
                                                              topologies_to_colors, self.window_size, self.window_offset)
 
                 if self.checkboxStatistics.isChecked():
@@ -352,9 +352,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.runProgressBar()
 
         try:
-            self.windows_dirs = vp.splittr(self.input_file_name, self.window_size,
+            self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size,
                                            self.window_offset)  # run once - not rerun
-            self.RAx_dirs = vp.raxml_windows(self.windows_dirs)  # run once - not rerun
+            wo.raxml_windows(self.windows_dirs)  # run once - not rerun
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
             return
