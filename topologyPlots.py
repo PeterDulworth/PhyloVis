@@ -141,10 +141,8 @@ def windows_to_newick(top_topologies):
     wins_to_tops --- a dictionary as described above
     tops_list --- a list of the top topologies
     """
-
-    ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
+    # Get top topologies and initialize dictionary
     tops_list = top_topologies.keys()
-
     wins_to_tops = {}
 
     # Iterate over each folder in the given directory
@@ -170,6 +168,7 @@ def windows_to_newick(top_topologies):
             else:
 
                 wins_to_tops[window_number] = "Other"
+    # Adds "Other" so all topologies are included with top ones
     tops_list.append("Other")
 
     return wins_to_tops, tops_list
@@ -203,7 +202,7 @@ def topology_colors(wins_to_tops, tops_list):
     # create list of colors of same length as number of windows
     top_colors = COLORS[:len(ylist)]
 
-    # map colors to topologies so they are the same in the plot
+    # map colors to topologies so they are the same in scatter plot
     for win in wins_to_tops:
         if wins_to_tops[win] in tops_to_colors.keys():
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
@@ -230,6 +229,7 @@ def donut_colors(top_topologies, tops_to_colors):
     # initialize color list
     donut_colors = []
 
+    # sort topologies based on number of occurrences (high to low)
     tops = top_topologies.items()
     topologies = sorted(tops, key=lambda tup: tup[1], reverse=True)
 
@@ -302,9 +302,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # area of plotted circles
     area = math.pi * (3)**2
 
-    # sizes plot appropriately
-    # plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
-    # plt.yticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    # size y-axis on plot
     plt.yticks(np.arange(len(wins_to_tops) + 1, 0))
 
     # x-axis is window numbers
@@ -325,10 +323,9 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
-    # plt.show()
 
-    # Save plot
-    plot = "topologyPlot.png"
+    # save plot
+    plot = "topologyScatter.png"
     plt.savefig(plot)
     plt.clf()
 
@@ -344,6 +341,7 @@ def topology_colorizer(color_scheme):
 
     # Create a count for the number of the topologies
     count = 0
+
     # Iterate over each newick string in color_scheme
     for newick in color_scheme:
 
