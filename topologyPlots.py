@@ -67,6 +67,7 @@ def top_freqs(num, topologies_to_counts):
     Outputs:
     list_of_top_counts --- labels, and sizes
     """
+
     # initialize lists for plot inputs
     sizes = []
     labels = []
@@ -510,7 +511,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
 if __name__ == '__main__':
     # User inputs:
-    num = 2
+    num = 3
     # file = 'phylip.txt'
     file = "ChillLeo.phylip"
     windowSize = 50000
@@ -518,6 +519,9 @@ if __name__ == '__main__':
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
+
+    if num > len(topologies_to_counts):
+        num = len(topologies_to_counts)
 
     list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
