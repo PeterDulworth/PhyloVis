@@ -9,6 +9,15 @@ from dendropy.calculate import treecompare
 import matplotlib.pyplot as plt
 import numpy as np
 
+"""
+Functions for calculating statistics for sequence windows and for 
+comparison to species tree.
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
+
+
 def newick_reformat(newick):
     """
     Reformat the inputted newick string to work with the PhyloNet jar file
@@ -32,12 +41,12 @@ def newick_reformat(newick):
 def calculate_p_of_gt_given_st(species_tree, gene_tree):
     """
     Computes the probability that a gene tree occurs given a species tree. If the taxon names between the two trees are not the
-    same then the probability returned is 0.0. If trees are the exact same then probability is 1.0
+    same then the probability returned is 0.0. If trees are the exact same then probability is 1.0.
     Inputs:
     species_tree --- a newick string containing a species tree with branch lengths as outputted by RAxML or inputted by user
     gene_tree --- a newick string containing a gene tree with branch lengths as outputted by RAxML run on windows
     Output:
-    p_of_gt_given_st --- the probability that a gene tree occurs given a species tree
+    p_of_gt_given_st --- the probability that a gene tree occurs given a species tree.
     """
 
     # If species_tree input is a file read in the newick string
@@ -58,9 +67,6 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
     if gene_tree[-2] != ")" or gene_tree[-1] != ")":
         gene_tree = newick_reformat(gene_tree).replace("\n","")
 
-    # print "gt", gene_tree
-    # print "st", species_tree
-
     # add quotes to the strings
     species_tree = str(species_tree)
     species_tree = "'"+ species_tree +"'"
@@ -77,11 +83,14 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
 
 def calculate_windows_to_p_gtst(species_tree):
     """
-    Calculate p(gt|st) for each window and create a mapping of window numbers to probabilities
+    Calculate p(gt|st) for each window and create a mapping
+    of window numbers to probabilities.
     Inputs:
-    species_tree --- a newick string containing a species tree with branch lengths as outputted by RAxML or inputted by user
+    species_tree --- a newick string containing a species tree
+                    with branch lengths as outputted by RAxML or
+                    inputted by user
     Output:
-    windows_to_p_gtst --- a mapping of window numbers to their p(gt|st)
+    windows_to_p_gtst --- a mapping of window numbers to their p(gt|st).
     """
 
     # Initialize a mapping
@@ -152,12 +161,16 @@ def calculate_robinson_foulds(species_tree, gene_tree, weighted):
 
 def calculate_windows_to_rf(species_tree, weighted):
     """
-    Calculate Robinson-Foulds distance for each window and create a mapping of window numbers to RF distance
+    Calculate Robinson-Foulds distance for each window and create a
+    mapping of window numbers to RF distance.
     Inputs:
-    species_tree --- a newick string containing a species tree with branch lengths as outputted by RAxML or inputted by user
-    weighted --- a boolean corresponding to calculating the weighted or unweighted RF distance
+    species_tree --- a newick string containing a species tree with
+                     branch lengths as outputted by RAxML or inputted
+                     by user
+    weighted --- a boolean corresponding to calculating the weighted
+                 or unweighted RF distance
     Output:
-    windows_to_rf --- a mapping of window numbers to their RF distance
+    windows_to_rf --- a mapping of window numbers to their RF distance.
     """
 
     # Initialize a mapping for the weighted and unweighted RF distance
@@ -169,6 +182,7 @@ def calculate_windows_to_rf(species_tree, weighted):
 
         # If file is the file with the best tree newick string
         if os.path.splitext(filename)[0] == "RAxML_bestTree":
+            # makes file and calculates rf distance
             window_num = (os.path.splitext(filename)[1]).replace(".", "")
 
             gene_tree_filename = os.path.join("RAx_Files", filename)
@@ -187,6 +201,7 @@ def calculate_windows_to_rf(species_tree, weighted):
                 # Unweighted RF
                 windows_to_uw_rf[window_num] = rf_distance
 
+    # returns weighted and/or unweighted Robinson Foulds mappings
     if weighted:
         return windows_to_w_rf, windows_to_uw_rf
 
@@ -232,7 +247,7 @@ def stat_scatter(stat_map, name):
     # labels x-axis
     plt.xlabel('Windows', fontsize=10)
 
-    # labels y-axis
+    # labels y-axis based on type of statistic
     if name == 'weightedRF':
         plt.ylabel('Weighted Robinson Foulds Distance', fontsize=10)
 
@@ -257,14 +272,6 @@ def stat_scatter(stat_map, name):
     plt.clf()
 
 
-# f1 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.1"
-# f2 = "C:\Users\chaba\GitProjects\PhyloVis\RAx_Files\RAxML_bestTree.2"
-# stat_scatter(calculate_windows_to_p_gtst(f1), 'PGTST')
-# rf = calculate_windows_to_rf(f1, True)
-
-# stat_scatter(rf[0], 'weightedRF')
-# stat_scatter(rf[1], 'unweightedRF')
-
 # Run commands below
 
 if __name__ == '__main__':
@@ -286,8 +293,4 @@ if __name__ == '__main__':
         windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
         stat_scatter(windows_to_w_rf, "weightedRF")
         stat_scatter(windows_to_uw_rf, "unweightedRF")
-
-
-
-
 
