@@ -411,8 +411,9 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         data_to_colors[str(topologies_to_data[topology])] = topologies_to_colors[topology]
 
     # removes 'Other' from mapping
-    minor_topology_data = topologies_to_data['Other']
-    del topologies_to_data['Other']
+    if topologies_to_data['Other']:
+        minor_topology_data = topologies_to_data['Other']
+        del topologies_to_data['Other']
     data = topologies_to_data.values()
 
     # separates data into windowed and unwindowed
@@ -500,6 +501,9 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
                  tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
     # save the file
+    diagram.write(name + ".pdf", "PDF")
+    diagram.write(name + ".eps", "EPS")
+    diagram.write(name + ".svg", "SVG")
     diagram.write(name + ".png", "PNG")
 
 
@@ -509,7 +513,7 @@ if __name__ == '__main__':
     # User inputs:
     num = 2
     # file = 'phylip.txt'
-    file = "ChillLeo.phylip"
+    file = "testFiles/ChillLeo.phylip"
     windowSize = 50000
     windowOffset = 50000
 
