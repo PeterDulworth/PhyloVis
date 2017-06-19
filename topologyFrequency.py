@@ -1,32 +1,31 @@
-""" Functions for creating circle chart depicting topology frequencies."""
-import os
-import math
-import numpy as np
-import matplotlib.pyplot as plt
 from collections import defaultdict
-from Bio import Phylo
+import matplotlib.pyplot as plt
 from cStringIO import StringIO
-from PIL import Image
 from natsort import natsorted
-
+from Bio import Phylo
+from PIL import Image
+import numpy as np
+import math
+import os
 
 # list of colors for plots
-colors = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
+COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
           '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
 def topology_counter():
     """
     Counts the number of times that each topology appears as outputted by RAxML
     Output:
-    topologies --- a dictionary mapping topologies to the number of times they appear
+    topology_count --- a dictionary mapping topologies to the number of times they appear
     """
 
     # Get the topology files from the "Topologies" folder
     input_directory = "Topologies"
 
+    # Initialize topology_count to a defaultdict
     topology_count = defaultdict(int)
 
-    # Iterate over each folder in the given directory
+    # Iterate over each file in the given directory
     for filename in os.listdir(input_directory):
 
         # If file is the file with the best tree newick string
@@ -191,7 +190,7 @@ def topology_colors(wins_to_tops, tops_list):
                 ylist.append(j)
 
     # create list of colors of same length as number of windows
-    top_colors = colors[:len(ylist)]
+    top_colors = COLORS[:len(ylist)]
 
     # map colors to topologies so they are the same in the plot
     for win in wins_to_tops:
@@ -228,9 +227,6 @@ def donut_colors(top_topologies, tops_to_colors):
             # add color to list if topologies are the same
             if topologies[i][0] == top2:
                 donut_colors.append(tops_to_colors[top2])
-
-    # reverse color list for counterclockwise plotting
-    # donut_colors = list(reversed(cols))
 
     # add color mapped to 'Other' to end of list
     for color in tops_to_colors.values():
@@ -366,15 +362,14 @@ def topology_colorizer(color_scheme):
 
 
 
-### Trying to run all of these together
+# Run commands below
 
-if __name__ == '__main__':  # if we're running file directly and not importing it
+if __name__ == '__main__':
     # User inputs:
     num = 3
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
-
 
     list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
