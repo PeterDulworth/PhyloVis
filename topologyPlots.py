@@ -261,11 +261,17 @@ def topology_donut(num, top, labels, sizes, donut_colors):
     plt.pie(sizes, explode=None, labels=labels,
             colors=donut_colors, autopct=None, shadow=False)
 
+    # create circle behind pie chart to outline it
+    outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False,
+                              linewidth=1.25)
+
+
     # impose circle over pie chart to make a donut chart
-    circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff',
+    inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff',
                         linewidth=1.25)
     fig = plt.gcf()
-    fig.gca().add_artist(circle)
+    fig.gca().add_artist(inner_circle)
+    fig.gca().add_artist(outer_circle)
 
     # set axes equal
     plt.axis('equal')
