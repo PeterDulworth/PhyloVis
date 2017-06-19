@@ -67,7 +67,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # export directories
         self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
-        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAx_Files'))
+        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAxML_Files'))
         self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
 
         # set up other windows
