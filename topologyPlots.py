@@ -257,11 +257,12 @@ def topology_donut(num, top, labels, sizes, donut_colors):
     of the top 'num' scores.
     """
     # plots pie chart
+    plt.rcParams['patch.edgecolor'] = '#000000'
     plt.pie(sizes, explode=None, labels=labels,
             colors=donut_colors, autopct=None, shadow=False)
 
     # impose circle over pie chart to make a donut chart
-    circle = plt.Circle((0, 0), 0.65, color='black', fc='white',
+    circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff',
                         linewidth=1.25)
     fig = plt.gcf()
     fig.gca().add_artist(circle)
@@ -303,7 +304,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
         xc = [p for (j, p) in enumerate(x) if wins_to_tops.values()[j] == cla]
         yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
         cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
-        plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1)
+        plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1, edgecolors='#000000')
         plt.grid = True
     plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
