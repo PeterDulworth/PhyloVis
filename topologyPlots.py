@@ -510,10 +510,11 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
 if __name__ == '__main__':
     # User inputs:
-    num = 3
-    file = 'phylip.txt'
-    windowSize = 10
-    windowOffset = 10
+    num = 2
+    # file = 'phylip.txt'
+    file = "ChillLeo.phylip"
+    windowSize = 50000
+    windowOffset = 50000
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
