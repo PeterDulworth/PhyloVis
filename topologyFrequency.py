@@ -366,7 +366,7 @@ def topology_colorizer(color_scheme):
 
 if __name__ == '__main__':
     # User inputs:
-    num = 3
+    num = 2
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
@@ -383,8 +383,8 @@ if __name__ == '__main__':
 
     # Functions for creating plots
     topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-    # topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
-    # topology_colorizer(topologies_to_colors)
+    topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+    topology_colorizer(topologies_to_colors)
 
 
 
