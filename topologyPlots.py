@@ -412,7 +412,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
         data_to_colors[str(topologies_to_data[topology])] = topologies_to_colors[topology]
 
     # removes 'Other' from mapping
-    if topologies_to_data['Other']:
+    if 'Other' in topologies_to_data:
         minor_topology_data = topologies_to_data['Other']
         del topologies_to_data['Other']
     data = topologies_to_data.values()
