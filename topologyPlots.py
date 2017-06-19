@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from Bio.Graphics.GenomeDiagram import GraphSet
 from Bio.Graphics import GenomeDiagram
 from collections import defaultdict
@@ -552,6 +553,4 @@ if __name__ == '__main__':
 
     elif platform == "darwin":
         os.system("open " + "circleGraph" + ".pdf")
-
-
 
