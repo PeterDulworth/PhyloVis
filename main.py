@@ -1,5 +1,4 @@
 import sip
-
 sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
@@ -11,7 +10,6 @@ from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
     robinsonFouldsWindow
 import topologyPlots as tp
-import circleGraphGenerator
 import statisticCalculations as sc
 
 

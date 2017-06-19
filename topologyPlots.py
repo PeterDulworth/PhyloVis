@@ -1,8 +1,9 @@
-from Bio.Graphics.GenomeDiagram import GraphSet
 from Bio.Graphics import GenomeDiagram
 from collections import defaultdict
 from reportlab.lib import colors
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Qt4Agg')
+from matplotlib import pyplot as plt
 from cStringIO import StringIO
 from natsort import natsorted
 from sys import platform
