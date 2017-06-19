@@ -108,6 +108,11 @@ def calculate_windows_to_p_gtst(species_tree):
 
             p_gtst = calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
+            p_gtst = p_gtst.replace('\r', '')
+            p_gtst = p_gtst.replace('\n', '')
+
+            p_gtst = float(p_gtst)
+
             windows_to_p_gtst[window_num] = p_gtst
 
     return windows_to_p_gtst
