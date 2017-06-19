@@ -1,4 +1,5 @@
 import sip
+
 sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
@@ -7,7 +8,8 @@ import visualizationPrototype as vp
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
+    robinsonFouldsWindow
 import topologyFrequency as tf
 import circleGraphGenerator
 import statisticCalculations as sc
@@ -29,17 +31,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4,
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3,
+                        'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
-        self.windowSizes = {
-                                'welcomePage': {'x': 459, 'y': 245},
-                                'inputPageRax': {'x': 459, 'y': 488+22+22},
-                                'inputPageNotRaxA': {'x': 459, 'y': 245},
-                                'inputPageNotRaxB': {'x': 459, 'y': 245},
-                                'inputPageNotRaxC': {'x': 459, 'y': 245},
-                                'outputPage': {'x': 459, 'y': 245}
-                            }
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22},
+                            'inputPageNotRaxA': {'x': 459, 'y': 245}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
+                            'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
 
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -80,14 +78,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
 
-        self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
-        self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
+        self.checkboxCircleGraph.stateChanged.connect(
+            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
+        self.checkboxScatterPlot.stateChanged.connect(
+            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
-        self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
+        self.checkboxDonutPlot.stateChanged.connect(
+            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
 
         # **************************** Rax Input Page Events ****************************#
 
-        #resize to size of welcome page
+        # resize to size of welcome page
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # if input file button is clicked run function -- file_open
@@ -168,7 +169,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.resize(435, 245 + 22 + 22)
         else:
             self.statisticsOptionsGroupBox.show()
-            self.resize(435,488+22+22)
+            self.resize(435, 488 + 22 + 22)
         print self.inputPage.size()
 
     def toggleEnabled(self, object):
@@ -179,7 +180,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         """
         returns the number of checkboxes that are checked
         """
-        return (self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+        return (
+               self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -193,11 +195,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     topologies_to_counts = tf.topology_counter()
                     list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
-                    windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(top_topologies_to_counts) # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
+                    windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(
+                        top_topologies_to_counts)  # all trees, scatter, circle, donut
+                    topologies_to_colors, scatter_colors, ylist = tf.topology_colors(windows_to_top_topologies,
+                                                                                     top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
-                    donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors) # donut
+                    donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
                     self.displayResults()
 
@@ -206,17 +210,19 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.displayResults()
 
                 if self.checkboxAllTrees.isChecked():
-                    tf.topology_colorizer(topologies_to_colors) # all trees
+                    tf.topology_colorizer(topologies_to_colors)  # all trees
                     self.displayResults()
 
                 if self.checkboxCircleGraph.isChecked():
-                    circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
+                    circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
+                                                             topologies_to_colors, self.window_size, self.window_offset)
                     self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
                     if self.robinsonFoulds:
                         if self.weighted:
-                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
+                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree,
+                                                                                           self.weighted)
                             sc.stat_scatter(windows_to_w_rf, "weightedRF")
                             sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
@@ -315,7 +321,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             if self.input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
             elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
-                raise ValueError, (2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+                raise ValueError, (
+                2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -326,7 +333,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             if self.topTopologies <= 0 or self.topTopologies > 15:
                 raise ValueError, "Please enter an integer between 0 and 15."
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Number of top topologies needs to be an integer between 0 and 15.")
+            QtGui.QMessageBox.about(self, "Invalid Input",
+                                    "Number of top topologies needs to be an integer between 0 and 15.")
             return
 
         # Error handling for window size
@@ -347,12 +355,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-
         self.runProgressBar()
 
         try:
-            self.windows_dirs = vp.splittr(self.input_file_name, self.window_size, self.window_offset) # run once - not rerun
-            self.RAx_dirs = vp.raxml_windows(self.windows_dirs) # run once - not rerun
+            self.windows_dirs = vp.splittr(self.input_file_name, self.window_size,
+                                           self.window_offset)  # run once - not rerun
+            self.RAx_dirs = vp.raxml_windows(self.windows_dirs)  # run once - not rerun
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
             return
@@ -362,6 +370,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runComplete = True
         self.updatedDisplayWindows()
         self.menuExport.setEnabled(True)
+
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
