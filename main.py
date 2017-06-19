@@ -181,7 +181,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         returns the number of checkboxes that are checked
         """
         return (
-               self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+                   self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -205,20 +205,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tf.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     tf.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
-                    self.displayResults()
 
                 if self.checkboxScatterPlot.isChecked():
                     tf.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
-                    self.displayResults()
 
                 if self.checkboxAllTrees.isChecked():
                     tf.topology_colorizer(topologies_to_colors)  # all trees
-                    self.displayResults()
 
                 if self.checkboxCircleGraph.isChecked():
                     circleGraphGenerator.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
                                                              topologies_to_colors, self.window_size, self.window_offset)
-                    self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
                     if self.robinsonFoulds:
@@ -236,7 +232,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         # Function calls for calculating statistics
                         windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
-                    self.displayResults()
+                self.displayResults()
 
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
@@ -282,39 +278,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def run(self):
 
-        # Error handling for newick file
-        if self.checkboxProbability.isChecked():
-            try:
-                self.newickFileName = str(self.newickFileEntry.text())
-                self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
-
-                self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
-
-                if self.newickFileName == "" and self.newickStringFromEntry == "":
-                    raise ValueError, (1, "Please choose a file or enter a newick string")
-                elif self.newickFileName != "" and self.newickStringFromEntry != "":
-                    raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
-                # elif self.newickFileExtension != '.txt' and self.newickFileExtension != '.phylip' and self.newickFileExtension != '.fasta' and self.newickFileName != '':
-                #     raise ValueError, (
-                #     3, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
-
-                # get checkbox values
-                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                self.weighted = self.checkboxWeighted.isChecked()
-                self.pgtst = self.checkboxProbability.isChecked()
-
-                # if the newick input is from the file chooser
-                if self.newickFileName != '':
-                    with open(self.newickFileEntry.text(), 'r') as f:
-                        self.speciesTree = f.read().replace('\n', '')
-                # else if the newick input is from the manual text entry
-                elif self.newickStringFromEntry != '':
-                    self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
-
-            except ValueError, (ErrorNumber, ErrorMessage):
-                QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-                return
-
         # Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
@@ -324,7 +287,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 raise ValueError, (1, "Please choose a file")
             elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
                 raise ValueError, (
-                2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+                    2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -357,7 +320,36 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
             return
 
-        self.runProgressBar()
+        # Error handling for newick file
+        try:
+            if self.checkboxProbability.isChecked():
+                self.newickFileName = str(self.newickFileEntry.text())
+                self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
+                self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
+
+                if self.newickFileName == "" and self.newickStringFromEntry == "":
+                    raise ValueError, (1, "Please choose a file or enter a newick string")
+                elif self.newickFileName != "" and self.newickStringFromEntry != "":
+                    raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
+
+                # get checkbox values
+                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
+                self.weighted = self.checkboxWeighted.isChecked()
+                self.pgtst = self.checkboxProbability.isChecked()
+
+                # if the newick input is from the file chooser
+                if self.newickFileName != '':
+                    with open(self.newickFileEntry.text(), 'r') as f:
+                        self.speciesTree = f.read().replace('\n', '')
+                # else if the newick input is from the manual text entry
+                elif self.newickStringFromEntry != '':
+                    self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
+
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        # self.runProgressBar()
 
         try:
             self.windows_dirs = vp.splittr(self.input_file_name, self.window_size,

@@ -9,9 +9,9 @@ class ScatterPlotWindow(QtGui.QWidget, scatterPlotLayout.Ui_scatterPlot):
         self.setupUi(self)
 
     def display_image(self):
-        standardSize = Image.open("topologyPlot.png").size
+        standardSize = Image.open("topologyScatter.png").size
 
         self.move(800, 600)
         self.scatterPlotImage.setScaledContents(True)
-        self.scatterPlotImage.setPixmap(QtGui.QPixmap("topologyPlot.png"))
+        self.scatterPlotImage.setPixmap(QtGui.QPixmap("topologyScatter.png"))
         self.resize(int(standardSize[0]), int(standardSize[1]))
