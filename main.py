@@ -35,7 +35,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
-        self.windowSizes = {'welcomePage': {'x': 1000, 'y': 1000}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22},
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22},
                             'inputPageNotRaxA': {'x': 459, 'y': 245}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
                             'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
 
