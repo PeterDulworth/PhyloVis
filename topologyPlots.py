@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from Bio.Graphics.GenomeDiagram import GraphSet
 from Bio.Graphics import GenomeDiagram
 from collections import defaultdict
@@ -5,7 +6,6 @@ from reportlab.lib import colors
 import matplotlib.pyplot as plt
 from cStringIO import StringIO
 from natsort import natsorted
-from sys import platform
 from Bio import Phylo
 from PIL import Image
 import numpy as np
@@ -26,8 +26,7 @@ COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ff
 
 def topology_counter():
     """
-    Counts the number of times that each topology appears as outputted by
-    running RAxML.
+    Counts the number of times that each topology appears as outputted by RAxML
     
     Output:
     topologies_to_counts --- a dictionary mapping topologies to the number of times they appear
@@ -143,8 +142,10 @@ def windows_to_newick(top_topologies):
     wins_to_tops --- a dictionary as described above
     tops_list --- a list of the top topologies
     """
-    # Get top topologies and initialize dictionary
+
+    ###May be possible to optimize this so it doesn't have to iterate over files that aren't Topology_bestTree
     tops_list = top_topologies.keys()
+
     wins_to_tops = {}
 
     # Iterate over each folder in the given directory
@@ -170,7 +171,6 @@ def windows_to_newick(top_topologies):
             else:
 
                 wins_to_tops[window_number] = "Other"
-    # Adds "Other" so all topologies are included with top ones
     tops_list.append("Other")
 
     return wins_to_tops, tops_list
@@ -204,7 +204,7 @@ def topology_colors(wins_to_tops, tops_list):
     # create list of colors of same length as number of windows
     top_colors = COLORS[:len(ylist)]
 
-    # map colors to topologies so they are the same in scatter plot
+    # map colors to topologies so they are the same in the plot
     for win in wins_to_tops:
         if wins_to_tops[win] in tops_to_colors.keys():
             scatter_colors.append(tops_to_colors[wins_to_tops[win]])
@@ -231,7 +231,6 @@ def donut_colors(top_topologies, tops_to_colors):
     # initialize color list
     donut_colors = []
 
-    # sort topologies based on number of occurrences (high to low)
     tops = top_topologies.items()
     topologies = sorted(tops, key=lambda tup: tup[1], reverse=True)
 
@@ -304,7 +303,9 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # area of plotted circles
     area = math.pi * (3)**2
 
-    # size y-axis on plot
+    # sizes plot appropriately
+    # plt.xticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
+    # plt.yticks(np.arange(0, len(wins_to_tops) + 1, 1.0))
     plt.yticks(np.arange(len(wins_to_tops) + 1, 0))
 
     # x-axis is window numbers
@@ -325,9 +326,10 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
+    # plt.show()
 
-    # save plot
-    plot = "topologyScatter.png"
+    # Save plot
+    plot = "topologyPlot.png"
     plt.savefig(plot)
     plt.clf()
 
@@ -343,7 +345,6 @@ def topology_colorizer(color_scheme):
 
     # Create a count for the number of the topologies
     count = 0
-
     # Iterate over each newick string in color_scheme
     for newick in color_scheme:
 
@@ -372,25 +373,22 @@ def topology_colorizer(color_scheme):
             count += 1
 
 
-def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset):
+def generateCircleGraph(file, windows_to_top_topologies, top_topologies_to_colors, window_size, window_offset):
     """
     Creates genetic circle graph showing the windows and the areas where each topology appears
 
     Inputs:
-    file --- phylip file inputted in GUI
-    windows_to_top_topologies --- mapping outputted by windows_to_newick()[0]
-    topologies_to_colors --- mapping outputted by topology_colors()[0]
-    window_size --- size inputted in GUI
-    window_offset --- size inputted in GUI
-
-    Returns:
-    A genetic circle graph GenomeAltase.
+    file --- 
+    windows_to_top_topologies ---
+    top_topologies_to_colors --- 
+    window_size --- 
+    window_offset ---
     """
 
     ############################# Format Data #############################
 
     # -1 because top_topologies_to_colors includes 'Other'
-    number_of_top_topologies = len(topologies_to_colors) - 1
+    number_of_top_topologies = len(top_topologies_to_colors) - 1
 
     # get the length of the sequence
     with open(file) as f:
@@ -412,10 +410,10 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
     topologies_to_data = {}
 
-    for topology in topologies_to_colors:
+    for topology in top_topologies_to_colors:
         topologies_to_data[topology] = []
 
-    for topology in topologies_to_colors:
+    for topology in top_topologies_to_colors:
         for window in windows_to_top_topologies:
             if topology == window[1]:
                 topologies_to_data[topology].append(tuple([window[0], 1]))
@@ -424,7 +422,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
     data_to_colors = {}
     for topology in topologies_to_data:
-        data_to_colors[str(topologies_to_data[topology])] = topologies_to_colors[topology]
+        data_to_colors[str(topologies_to_data[topology])] = top_topologies_to_colors[topology]
 
     minor_topology_data = topologies_to_data['Other']
     del topologies_to_data['Other']
@@ -444,7 +442,7 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     ############################# Build Graph #############################
 
     # name of the figure
-    name = "GenomeAltase"
+    name = "circleGraph"
     graphStyle = 'bar'
 
     # create the diagram -- highest level container for everything
@@ -524,10 +522,11 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
 
 if __name__ == '__main__':
     # User inputs:
-    num = 3
-    file = 'phylip.txt'
-    windowSize = 10
-    windowOffset = 10
+    num = 2
+    # file = 'phylip.txt'
+    file = "ChillLeo.phylip"
+    windowSize = 50000
+    windowOffset = 50000
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
@@ -547,13 +546,11 @@ if __name__ == '__main__':
     topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-    generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
+    # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
 
     if platform == "win32":
-        os.startfile("GenomeAltase" + ".pdf")
+        os.startfile("circleGraph" + ".pdf")
 
     elif platform == "darwin":
-        os.system("open " + "GenomeAltase" + ".pdf")
-
-
+        os.system("open " + "circleGraph" + ".pdf")
 
