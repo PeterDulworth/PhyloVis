@@ -12,6 +12,7 @@ import topologyFrequency as tf
 import circleGraphGenerator
 import statisticCalculations as sc
 
+
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
@@ -213,15 +214,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.displayResults()
 
                 if self.checkboxStatistics.isChecked():
-                    # self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                    # self.weighted = self.checkboxWeighted.isChecked()
-                    # self.speciesTree = self.speciesTreeNewickStringsEntry.text()
-                    # self.pgtst = self.checkboxProbability.isChecked()
-
-                    # with open(self.newickFileEntry.text(), 'r') as f:
-                    #     print 'open'
-                    #     self.speciesTree = f.read().replace('\n', '')
-
                     if self.robinsonFoulds:
                         if self.weighted:
                             windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
