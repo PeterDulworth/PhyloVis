@@ -280,35 +280,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def run(self):
 
-        # Error handling for newick file
-        try:
-            if self.checkboxProbability.isChecked():
-                self.newickFileName = str(self.newickFileEntry.text())
-                self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
-                self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
-
-                if self.newickFileName == "" and self.newickStringFromEntry == "":
-                    raise ValueError, (1, "Please choose a file or enter a newick string")
-                elif self.newickFileName != "" and self.newickStringFromEntry != "":
-                    raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
-
-                # get checkbox values
-                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                self.weighted = self.checkboxWeighted.isChecked()
-                self.pgtst = self.checkboxProbability.isChecked()
-
-                # if the newick input is from the file chooser
-                if self.newickFileName != '':
-                    with open(self.newickFileEntry.text(), 'r') as f:
-                        self.speciesTree = f.read().replace('\n', '')
-                # else if the newick input is from the manual text entry
-                elif self.newickStringFromEntry != '':
-                    self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
-
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
-
         # Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
@@ -349,6 +320,35 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 raise ValueError, "Positive integers only"
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
+            return
+
+        # Error handling for newick file
+        try:
+            if self.checkboxProbability.isChecked():
+                self.newickFileName = str(self.newickFileEntry.text())
+                self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
+                self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
+
+                if self.newickFileName == "" and self.newickStringFromEntry == "":
+                    raise ValueError, (1, "Please choose a file or enter a newick string")
+                elif self.newickFileName != "" and self.newickStringFromEntry != "":
+                    raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
+
+                # get checkbox values
+                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
+                self.weighted = self.checkboxWeighted.isChecked()
+                self.pgtst = self.checkboxProbability.isChecked()
+
+                # if the newick input is from the file chooser
+                if self.newickFileName != '':
+                    with open(self.newickFileEntry.text(), 'r') as f:
+                        self.speciesTree = f.read().replace('\n', '')
+                # else if the newick input is from the manual text entry
+                elif self.newickStringFromEntry != '':
+                    self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
+
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
 
         # self.runProgressBar()
