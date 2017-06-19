@@ -276,7 +276,7 @@ def stat_scatter(stat_map, name):
 
 if __name__ == '__main__':
     # Inputs
-    species_tree = "RAx_Files\RAxML_bestTree.0"
+    species_tree = "RAxML_Files\RAxML_bestTree_ChillLeo.0"
     weighted = True
 
     # Run commands

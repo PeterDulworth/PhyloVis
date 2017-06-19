@@ -193,6 +193,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                     # Function calls for plotting inputs:
                     topologies_to_counts = tf.topology_counter()
+                    if num > len(topologies_to_counts):
+                        num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = tf.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = tf.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tf.windows_to_newick(

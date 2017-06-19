@@ -370,7 +370,8 @@ if __name__ == '__main__':
 
     # Function calls for plotting inputs:
     topologies_to_counts = topology_counter()
-
+    if num > len(topologies_to_counts):
+        num = len(topologies_to_counts)
     list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
