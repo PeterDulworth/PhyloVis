@@ -12,19 +12,19 @@ class CircleGraphWindow(QtGui.QMainWindow, circleGraphLayout.Ui_circleGraph):
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
-        self.actionPNG.triggered.connect(lambda: self.exportFile('../genomeAtlas.png'))
-        self.actionPDF.triggered.connect(lambda: self.exportFile('../genomeAtlas.pdf'))
+        self.actionPNG.triggered.connect(lambda: self.exportFile('genomeAtlas.png'))
+        self.actionPDF.triggered.connect(lambda: self.exportFile('genomeAtlas.pdf'))
 
     def display_image(self):
         p = self.palette()
         p.setColor(self.backgroundRole(), QtCore.Qt.white)
         self.setPalette(p)
 
-        standardSize = Image.open("../genomeAtlas.png").size
+        standardSize = Image.open("genomeAtlas.png").size
 
         self.move(0, 0)
         self.circleGraphImage.setScaledContents(True)
-        self.circleGraphImage.setPixmap(QtGui.QPixmap("../genomeAtlas.png"))
+        self.circleGraphImage.setPixmap(QtGui.QPixmap("genomeAtlas.png"))
         self.resize(int(standardSize[0]), int(standardSize[1]))
 
     def exportFile(self, fileName):
@@ -33,7 +33,7 @@ class CircleGraphWindow(QtGui.QMainWindow, circleGraphLayout.Ui_circleGraph):
         copyfile(fileName, name)
 
 
-# if you want to test LOCALLY change the path to ../genomeAtlas.png #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# if you want to test LOCALLY change the path to genomeAtlas.png #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 if __name__ == '__main__':  # if we're running file directly and not importing it
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
 

@@ -43,9 +43,6 @@ def topology_counter():
     # taxon names
     tns = dendropy.TaxonNamespace()
 
-    # Create a boolean flag for determining the uniqueness of tree
-    new_tree_is_unique = True
-
     # Create a set of unique topologies
     unique_topologies = set([])
 
@@ -57,6 +54,9 @@ def topology_counter():
 
     # Iterate over each file in the given directory
     for filename in os.listdir(input_directory):
+
+        # Create a boolean flag for determining the uniqueness of tree
+        new_tree_is_unique = True
 
         # If file is the file with the best tree newick string
         if os.path.splitext(filename)[0] == "Topology_bestTree":
@@ -229,8 +229,6 @@ def topology_colors(wins_to_tops, tops_list):
     # y-axis is topology number
     for i in range(len(wins_to_tops)):
         for j in range(len(tops_list)):
-            a = tops_list[j]
-            b = wins_to_tops[i]
             if tops_list[j] == wins_to_tops[i]:
                 ylist.append(j)
                 count += 1
@@ -570,8 +568,8 @@ if __name__ == '__main__':
     num = 3
     # file = 'phylip.txt'
     file = "testFiles/ChillLeo.phylip"
-    windowSize = 1000
-    windowOffset = 500
+    windowSize = 10000
+    windowOffset = 10000
 
     # Function calls for plotting inputs:
     topologies_to_counts, unique_topologies_to_newicks = topology_counter()
@@ -584,6 +582,7 @@ if __name__ == '__main__':
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
 
     windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks)
+    print windows_to_top_topologies
 
     topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
@@ -594,10 +593,10 @@ if __name__ == '__main__':
     topology_donut(labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
-    generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
-
-    if platform == "win32":
-        os.startfile("GenomeAtlas" + ".png")
-
-    elif platform == "darwin":
-        os.system("open " + "GenomeAtlas" + ".png")
+    # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
+    #
+    # if platform == "win32":
+    #     os.startfile("GenomeAtlas" + ".png")
+    #
+    # elif platform == "darwin":
+    #     os.system("open " + "GenomeAtlas" + ".png")

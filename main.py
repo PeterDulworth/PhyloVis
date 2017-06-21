@@ -195,27 +195,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts = tp.topology_counter()
+                    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter()
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
-                        top_topologies_to_counts)  # all trees, scatter, circle, donut
+                        top_topologies_to_counts,unique_topologies_to_newicks)  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,
                                                                                      top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    # print 'donut_colors'
-                    # print donut_colors
-                    # print
-                    # print 'topology_colors'
-                    # print topologies_to_colors
-                    # print
-                    # print 'topology_counts'
-                    # print topologies_to_counts
-                    tp.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
+
+                    tp.topology_donut(labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():
                  tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
