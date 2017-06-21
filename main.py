@@ -44,6 +44,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupLabel.setEnabled(False)
 
         self.rooted = False
+        self.outGroup = ""
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -196,7 +197,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted=True,outgroup="O")
+                    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted=self.rooted,outgroup=self.outGroup)
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
@@ -361,7 +362,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
             return
-
 
         # self.runProgressBar()
 
