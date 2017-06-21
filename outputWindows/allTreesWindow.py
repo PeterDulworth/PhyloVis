@@ -10,7 +10,7 @@ class AllTreesWindow(QtGui.QMainWindow, allTreesLayout.Ui_allTrees):
         super(AllTreesWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../Topology0.png'
+        self.fileName = 'Topology0.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
