@@ -43,6 +43,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupEntry.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
 
+        self.rooted = False
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -201,7 +202,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
-                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=True,outgroup="O")  # all trees, scatter, circle, donut
+                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,
                                                                                      top_topologies_list)  # scatter, circle, (donut?)
 
@@ -352,6 +353,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
+
+        try:
+            if self.checkboxRooted.isChecked():
+                self.outGroup = str(self.outgroupEntry.text())
+                self.rooted = self.checkboxRooted.isChecked()
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
+            return
+
 
         # self.runProgressBar()
 
