@@ -1,6 +1,7 @@
 from PyQt4 import QtGui, QtCore
 import donutPlotLayout
 import sys
+from PIL import Image
 
 
 class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_donutPlot):
@@ -9,8 +10,14 @@ class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_donutPlot):
         self.setupUi(self)
 
     def display_image(self):
+        # image = Image.open('../topologyDonut.png')
+        # size = image.size
+        # image = image.resize((size[0]/2, size[1]/2), Image.ANTIALIAS)
+        # print size
+        # image.save('../test.png', 'PNG', quality=200)
+
         self.move(0, 600)
-        self.donutPixmap = QtGui.QPixmap("topologyDonut.png").scaled(800, 800, QtCore.Qt.KeepAspectRatio)
+        self.donutPixmap = QtGui.QPixmap("topologyDonut.png").scaled(600, 600, QtCore.Qt.KeepAspectRatio)
         self.donutPlotImage.setScaledContents(False)
         self.donutPlotImage.setPixmap(self.donutPixmap)
 

@@ -3,7 +3,7 @@ from Bio.Graphics import GenomeDiagram
 from collections import defaultdict
 from reportlab.lib import colors
 import matplotlib
-matplotlib.use('Qt4Agg')
+matplotlib.use('Qt4Agg') # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
 from cStringIO import StringIO
 from natsort import natsorted
@@ -278,8 +278,9 @@ def topology_donut(num, top, labels, sizes, donut_colors):
     # set axes equal
     plt.axis('equal')
 
+    # plt.tight_layout()
     # save plot
-    plt.savefig("topologyDonut.png")
+    plt.savefig("topologyDonut.png", dpi=250)
     plt.clf()
 
 
@@ -473,7 +474,6 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
     )
 
     if includeOther:
-        print 'other included'
         diagram \
             .new_track(2, name="Minor Topologies", height=1.0, hide=0, greytrack=0, greytrack_labels=2,
                        greytrack_font_size=8, grey_track_font_color=colors.black, scale=1, scale_ticks=0,
@@ -483,10 +483,8 @@ def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, w
                        colour=colors.HexColor(data_to_colors[str(minor_topology_data)]),
                        altcolour=colors.transparent, linewidth=1)
 
-    print number_of_top_topologies
     for i in range(number_of_top_topologies):
         # create tracks -- and add them to the diagram
-        print i
         if i == 0:
             diagram \
                 .new_track(i + 3, name="Track" + str(i + 1), height=1.0, hide=0, greytrack=0,
