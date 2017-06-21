@@ -10,7 +10,7 @@ class ScatterPlotWindow(QtGui.QMainWindow, scatterPlotLayout.Ui_scatterPlot):
         super(ScatterPlotWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../topologyScatter.png'
+        self.fileName = 'topologyScatter.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
