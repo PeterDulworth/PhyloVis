@@ -10,10 +10,14 @@ class CircleGraphWindow(QtGui.QMainWindow, circleGraphLayout.Ui_circleGraph):
         super(CircleGraphWindow, self).__init__(parent)
         self.setupUi(self)
 
+        self.fileName = 'genomeAtlas.png'
+
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
-        self.actionPNG.triggered.connect(lambda: self.exportFile('genomeAtlas.png'))
-        self.actionPDF.triggered.connect(lambda: self.exportFile('genomeAtlas.pdf'))
+
+        # bind export actions
+        self.actionPNG.triggered.connect(lambda: self.exportFile(self.fileName))
+        self.actionPDF.triggered.connect(lambda: self.exportFile(self.fileName))
 
     def display_image(self):
         p = self.palette()
@@ -24,7 +28,7 @@ class CircleGraphWindow(QtGui.QMainWindow, circleGraphLayout.Ui_circleGraph):
 
         self.move(0, 0)
         self.circleGraphImage.setScaledContents(True)
-        self.circleGraphImage.setPixmap(QtGui.QPixmap("genomeAtlas.png"))
+        self.circleGraphImage.setPixmap(QtGui.QPixmap(self.fileName))
         self.resize(int(standardSize[0]), int(standardSize[1]))
 
     def exportFile(self, fileName):

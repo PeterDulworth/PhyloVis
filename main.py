@@ -3,7 +3,7 @@ sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
 import time
-import windowOperations as wo
+import RAxMLOperations as wo
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
