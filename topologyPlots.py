@@ -28,7 +28,7 @@ Peter Dulworth
 COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
           '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
-def topology_counter():
+def topology_counter(rooted=False, outgroup=None):
     """
     Counts the number of times that each topology appears as outputted by
     running RAxML.
@@ -63,6 +63,10 @@ def topology_counter():
             input_file = os.path.join(input_directory, filename)
 
             new_tree = Tree.get_from_path(input_file, 'newick', taxon_namespace=tns)
+
+            if rooted:
+                outgroup_node = new_tree.find_node_with_taxon_label(outgroup)
+                new_tree.to_outgroup_position(outgroup_node, update_bipartitions=False)
 
             # Iterate over each topology in unique_topologies
             for unique_topology in unique_topologies:
@@ -158,7 +162,7 @@ def top_topologies(num, topologies):
     return top_topologies
 
 
-def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks):
+def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=None):
     """
     Creates a dictionary of window numbers to the topology of that window if
     the newick string contained in the window is a top topology; otherwise the
@@ -185,6 +189,16 @@ def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks):
             with open(filename) as f:
                 # Read newick string from file
                 newick = f.readline()
+
+            if rooted:
+                # taxon names
+                tns = dendropy.TaxonNamespace()
+
+                # Create tree root it and return newick string
+                new_tree = Tree.get_from_path(filename, 'newick', taxon_namespace=tns)
+                outgroup_node = new_tree.find_node_with_taxon_label(outgroup)
+                new_tree.to_outgroup_position(outgroup_node, update_bipartitions=False)
+                newick = new_tree.as_string("newick").replace("\n","")
 
             window_number = int((os.path.splitext(filename)[1]).replace(".", ""))
 
@@ -572,7 +586,8 @@ if __name__ == '__main__':
     windowOffset = 10000
 
     # Function calls for plotting inputs:
-    topologies_to_counts, unique_topologies_to_newicks = topology_counter()
+    # topologies_to_counts, unique_topologies_to_newicks = topology_counter()
+    topologies_to_counts, unique_topologies_to_newicks = topology_counter(rooted=True,outgroup="O")
 
     if num > len(topologies_to_counts):
         num = len(topologies_to_counts)
@@ -581,8 +596,8 @@ if __name__ == '__main__':
 
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
 
-    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks)
-    print windows_to_top_topologies
+
+    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=True,outgroup="O")
 
     topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
