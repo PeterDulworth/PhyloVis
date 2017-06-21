@@ -9,6 +9,7 @@ from dendropy.calculate import treecompare
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 """
 Functions for calculating statistics for sequence windows and for 
 comparison to species tree.
@@ -56,7 +57,8 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
 
     # Check if the species tree is formatted correctly for PhyloNet if not reformat it
     if species_tree[-2] != ")" or species_tree[-1] != ")":
-        species_tree = newick_reformat(species_tree).replace("\n","")
+        # species_tree = newick_reformat(species_tree).replace("\n","")
+        species_tree = species_tree.replace("\n","")
 
     # If gene_tree input is a file read in the newick string
     if os.path.isfile(gene_tree):
@@ -65,12 +67,13 @@ def calculate_p_of_gt_given_st(species_tree, gene_tree):
 
     # Check if the gene tree is formatted correctly for PhyloNet if not reformat it
     if gene_tree[-2] != ")" or gene_tree[-1] != ")":
-        gene_tree = newick_reformat(gene_tree).replace("\n","")
+        # gene_tree = newick_reformat(gene_tree).replace("\n","")
+        gene_tree = gene_tree.replace("\n","")
 
-    # add quotes to the strings
-    species_tree = str(species_tree)
-    species_tree = "'"+ species_tree +"'"
-    gene_tree = "'" + gene_tree + "'"
+    # # add quotes to the strings
+    # species_tree = str(species_tree)
+    # species_tree = "'"+ species_tree +"'"
+    # gene_tree = "'" + gene_tree + "'"
 
     # Run PhyloNet jar file
     p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
@@ -108,10 +111,8 @@ def calculate_windows_to_p_gtst(species_tree):
 
             p_gtst = calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
-            p_gtst = p_gtst.replace('\r', '')
-            p_gtst = p_gtst.replace('\n', '')
-
-            p_gtst = float(p_gtst)
+            # Reformat output
+            p_gtst = float(p_gtst.replace('\r', '').replace('\n', ''))
 
             windows_to_p_gtst[window_num] = p_gtst
 
@@ -286,16 +287,16 @@ if __name__ == '__main__':
 
     # Run commands
     windows_to_p_gtst = calculate_windows_to_p_gtst(species_tree)
-    stat_scatter(windows_to_p_gtst, "PGTST")
+    # stat_scatter(windows_to_p_gtst, "PGTST")
 
-    # Unweighted Robinson-Foulds
-    if not weighted:
-        windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-        stat_scatter(windows_to_uw_rf, "unweightedRF")
-
-    # Weighted Robinson-Foulds
-    if weighted:
-        windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-        stat_scatter(windows_to_w_rf, "weightedRF")
-        stat_scatter(windows_to_uw_rf, "unweightedRF")
+    # # Unweighted Robinson-Foulds
+    # if not weighted:
+    #     windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+    #     stat_scatter(windows_to_uw_rf, "unweightedRF")
+    #
+    # # Weighted Robinson-Foulds
+    # if weighted:
+    #     windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
+    #     stat_scatter(windows_to_w_rf, "weightedRF")
+    #     stat_scatter(windows_to_uw_rf, "unweightedRF")
 

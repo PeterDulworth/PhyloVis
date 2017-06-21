@@ -13,6 +13,9 @@ from PIL import Image
 import numpy as np
 import math
 import os
+from dendropy.calculate import treecompare
+from dendropy import Tree
+import dendropy
 
 """
 Functions for creating plots based on the topologies.
@@ -25,7 +28,6 @@ Peter Dulworth
 COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
           '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
-
 def topology_counter():
     """
     Counts the number of times that each topology appears as outputted by
@@ -34,6 +36,18 @@ def topology_counter():
     Output:
     topologies_to_counts --- a dictionary mapping topologies to the number of times they appear
     """
+
+    # Initialize a dictionary mapping newick strings to unique topologies
+    unique_topologies_to_newicks = {}
+
+    # taxon names
+    tns = dendropy.TaxonNamespace()
+
+    # Create a boolean flag for determining the uniqueness of tree
+    new_tree_is_unique = True
+
+    # Create a set of unique topologies
+    unique_topologies = set([])
 
     # Get the topology files from the "Topologies" folder
     input_directory = "Topologies"
@@ -48,14 +62,31 @@ def topology_counter():
         if os.path.splitext(filename)[0] == "Topology_bestTree":
             input_file = os.path.join(input_directory, filename)
 
-            with open(input_file) as f:
-                # Read newick string from file
-                topology = f.readline()
+            new_tree = Tree.get_from_path(input_file, 'newick', taxon_namespace=tns)
 
-                # Add to the count for that newick string
-                topologies_to_counts[topology] += 1
+            # Iterate over each topology in unique_topologies
+            for unique_topology in unique_topologies:
 
-    return topologies_to_counts
+                # Create a tree for each of the unique topologies calculate RF distance compared to new_tree
+                unique_tree = Tree.get_from_string(unique_topology, 'newick', taxon_namespace=tns)
+                rf_distance = treecompare.unweighted_robinson_foulds_distance(unique_tree, new_tree)
+
+                # If the RF distance is 0 then the new tree is the same as one of the unique topologies
+                if rf_distance == 0:
+                    topologies_to_counts[unique_topology] += 1
+                    new_tree_is_unique = False
+                    new_tree = new_tree.as_string("newick").replace("\n", "")
+                    unique_topologies_to_newicks[unique_topology].add(new_tree)
+                    break
+
+            # If the new tree is a unique tree add it to the set of unique topologies
+            if new_tree_is_unique:
+                new_tree = new_tree.as_string("newick").replace("\n","")
+                unique_topologies.add(new_tree)
+                topologies_to_counts[new_tree] += 1
+                unique_topologies_to_newicks[new_tree] = set([new_tree])
+
+    return topologies_to_counts, unique_topologies_to_newicks
 
 
 def top_freqs(num, topologies_to_counts):
@@ -127,19 +158,19 @@ def top_topologies(num, topologies):
     return top_topologies
 
 
-def windows_to_newick(top_topologies):
+def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks):
     """
     Creates a dictionary of window numbers to the topology of that window if
     the newick string contained in the window is a top topology; otherwise the
     window number is mapped to "Other".
     Input:
-    top_topologies -- a mapping outputted by top_topologies()
+    unique_topologies_to_newicks -- a mapping outputted by topology_counter()
     Returns:
     wins_to_tops --- a dictionary as described above
     tops_list --- a list of the top topologies
     """
-    # Get top topologies and initialize dictionary
-    tops_list = top_topologies.keys()
+    # Initialize dictionary
+    tops_list = top_topologies_to_counts.keys()
     wins_to_tops = {}
 
     # Iterate over each folder in the given directory
@@ -157,16 +188,22 @@ def windows_to_newick(top_topologies):
 
             window_number = int((os.path.splitext(filename)[1]).replace(".", ""))
 
-            # Only map windows to newick strings that are in the top topologies
-            if newick in tops_list:
+            for unique_topology in unique_topologies_to_newicks:
 
-                wins_to_tops[window_number] = newick
+                # If the newick string is in the set of newick strings corresponding to the unique topology
+                if newick in unique_topologies_to_newicks[unique_topology]:
 
-            else:
+                    # If the unique topology is a top topology map to it
+                    if unique_topology in tops_list:
+                        wins_to_tops[window_number] = unique_topology
 
-                wins_to_tops[window_number] = "Other"
-    # Adds "Other" so all topologies are included with top ones
-    tops_list.append("Other")
+                    # Otherwise map to "Other"
+                    else:
+                        wins_to_tops[window_number] = "Other"
+
+                        if "Other" not in tops_list:
+                            # Adds "Other" so all topologies are included with top ones
+                            tops_list.append("Other")
 
     return wins_to_tops, tops_list
 
@@ -187,12 +224,17 @@ def topology_colors(wins_to_tops, tops_list):
     scatter_colors = []
     tops_to_colors = {}
     ylist = []
+    count = 0
 
     # y-axis is topology number
     for i in range(len(wins_to_tops)):
         for j in range(len(tops_list)):
+            a = tops_list[j]
+            b = wins_to_tops[i]
             if tops_list[j] == wins_to_tops[i]:
                 ylist.append(j)
+                count += 1
+                break
 
     # create list of colors of same length as number of windows
     top_colors = COLORS[:len(ylist)]
@@ -240,14 +282,11 @@ def donut_colors(top_topologies, tops_to_colors):
     return donut_colors
 
 
-def topology_donut(num, top, labels, sizes, donut_colors):
+def topology_donut(labels, sizes, donut_colors):
     """
     Creates a donut chart showing the breakdown of the top 'num'
     topologies.
     Inputs:
-    num    -- the number of topologies to be shown
-    top    -- a list of the top frequencies outputted by
-              top_freqs()[0]
     labels -- a list of labels outputted by top_freqs()[1]
     sizes  -- a list of sizes outputted by top_freqs()[2]
     donut_colors -- a list of colors outputted by
@@ -319,6 +358,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     # labels axes
     plt.xlabel('Windows', fontsize=10)
     plt.ylabel('Top Newick Strings', fontsize=10)
+
 
     # save plot
     plot = "topologyScatter.png"
@@ -532,11 +572,11 @@ if __name__ == '__main__':
     num = 3
     # file = 'phylip.txt'
     file = "testFiles/ChillLeo.phylip"
-    windowSize = 50000
-    windowOffset = 50000
+    windowSize = 1000
+    windowOffset = 500
 
     # Function calls for plotting inputs:
-    topologies_to_counts = topology_counter()
+    topologies_to_counts, unique_topologies_to_newicks = topology_counter()
 
     if num > len(topologies_to_counts):
         num = len(topologies_to_counts)
@@ -544,8 +584,11 @@ if __name__ == '__main__':
     list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
+    # print top_topologies_to_counts
 
-    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts)
+    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks)
+    # print top_topologies_list
+    # print windows_to_top_topologies
 
     topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
@@ -553,7 +596,7 @@ if __name__ == '__main__':
 
     # Functions for creating plots
     topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-    topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)
+    topology_donut(labels, sizes, donut_colors)
     topology_colorizer(topologies_to_colors)
 
     generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
