@@ -34,7 +34,8 @@ class DonutPlotWindow(QtGui.QMainWindow, donutPlotLayout.Ui_donutPlot):
         # get size of image
 
         self.move(0, 600)
-        self.donutPixmap = QtGui.QPixmap(self.fileName).scaled(600, 600, QtCore.Qt.KeepAspectRatio)
+        self.donutPixmap = QtGui.QPixmap(self.fileName)
+        self.donutPixmap = self.donutPixmap.scaled(600, 600, QtCore.Qt.KeepAspectRatio)
         self.donutPlotImage.setScaledContents(False)
         self.donutPlotImage.setPixmap(self.donutPixmap)
 
