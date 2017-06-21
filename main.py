@@ -33,12 +33,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22},
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22+ 6 + 6 + 6},
                             'inputPageNotRaxA': {'x': 459, 'y': 245}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
                             'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
 
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
+        self.menuExport.setEnabled(False)
+        self.outgroupEntry.setEnabled(False)
+        self.outgroupLabel.setEnabled(False)
+
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -119,6 +123,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
+        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
+        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
 
     ################################# Handlers #################################
 
@@ -178,8 +184,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         """
         returns the number of checkboxes that are checked
         """
-        return (
-                   self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+        return (self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -202,6 +207,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
+                    # print 'donut_colors'
+                    # print donut_colors
+                    # print
+                    # print 'topology_colors'
+                    # print topologies_to_colors
+                    # print
+                    # print 'topology_counts'
+                    # print topologies_to_counts
                     tp.topology_donut(num, list_of_top_counts, labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():

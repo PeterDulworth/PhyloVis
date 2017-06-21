@@ -1,5 +1,6 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 import donutPlotLayout
+import sys
 from PIL import Image
 
 
@@ -9,9 +10,24 @@ class DonutPlotWindow(QtGui.QWidget, donutPlotLayout.Ui_donutPlot):
         self.setupUi(self)
 
     def display_image(self):
-        standardSize = Image.open("topologyDonut.png").size
+        # image = Image.open('../topologyDonut.png')
+        # size = image.size
+        # image = image.resize((size[0]/2, size[1]/2), Image.ANTIALIAS)
+        # print size
+        # image.save('../test.png', 'PNG', quality=200)
 
         self.move(0, 600)
-        self.donutPlotImage.setScaledContents(True)
-        self.donutPlotImage.setPixmap(QtGui.QPixmap("topologyDonut.png"))
-        self.resize(int(standardSize[0]), int(standardSize[1]))
+        self.donutPixmap = QtGui.QPixmap("topologyDonut.png").scaled(600, 600, QtCore.Qt.KeepAspectRatio)
+        self.donutPlotImage.setScaledContents(False)
+        self.donutPlotImage.setPixmap(self.donutPixmap)
+
+# if you want to test LOCALLY change the path to ../topologyDonut.png #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+if __name__ == '__main__':  # if we're running file directly and not importing it
+    app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+
+    # initialize main input window
+    form = DonutPlotWindow()  # We set the form to be our PhyloVisApp (design)
+    form.show()  # Show the form
+    form.display_image()
+
+    sys.exit(app.exec_())  # and execute the app

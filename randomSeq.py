@@ -75,5 +75,5 @@ def file_converter(input_file, input_type,output_type, output_file):
 
     return
 
-file_converter("seqfileWF1200m4Formatted2", "fasta", "phylip-sequential", "ChillLeo.phylip")
+# file_converter("seqfileWF1200m4Formatted2", "fasta", "phylip-sequential", "ChillLeo.phylip")
 

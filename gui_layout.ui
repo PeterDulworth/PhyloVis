@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>572</height>
+    <height>1001</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -646,6 +646,12 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_13">
                  <item>
                   <widget class="QCheckBox" name="checkboxRobinsonFoulds">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>Robinson Foulds</string>
                    </property>
@@ -653,6 +659,12 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="checkboxWeighted">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>Weighted</string>
                    </property>
@@ -664,8 +676,61 @@
                 <layout class="QHBoxLayout" name="horizontalLayout_20">
                  <item>
                   <widget class="QCheckBox" name="checkboxProbability">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>0</height>
+                    </size>
+                   </property>
                    <property name="text">
                     <string>p(GT | ST)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_22">
+                 <item>
+                  <widget class="QCheckBox" name="checkboxRooted">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>21</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>rooted</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_17">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="outgroupLabel">
+                   <property name="text">
+                    <string>Outgroup:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="outgroupEntry">
+                   <property name="minimumSize">
+                    <size>
+                     <width>231</width>
+                     <height>0</height>
+                    </size>
                    </property>
                   </widget>
                  </item>
