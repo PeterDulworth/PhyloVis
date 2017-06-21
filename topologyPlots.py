@@ -582,11 +582,8 @@ if __name__ == '__main__':
     list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
 
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
-    # print top_topologies_to_counts
 
     windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks)
-    # print top_topologies_list
-    # print windows_to_top_topologies
 
     topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
