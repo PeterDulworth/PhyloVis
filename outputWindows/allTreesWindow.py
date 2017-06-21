@@ -20,12 +20,15 @@ class AllTreesWindow(QtGui.QMainWindow, allTreesLayout.Ui_allTrees):
         self.actionPDF.triggered.connect(lambda: self.exportFile(self.fileName))
 
     def display_image(self):
+        # change background color to white
         p = self.palette()
         p.setColor(self.backgroundRole(), QtCore.Qt.white)
         self.setPalette(p)
 
+        # get size of image
         standardSize = Image.open(self.fileName).size
 
+        # move, display and resize window
         self.move(800, 0)
         self.allTreesImage.setScaledContents(True)
         self.allTreesImage.setPixmap(QtGui.QPixmap(self.fileName))
