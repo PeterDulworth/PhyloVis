@@ -128,9 +128,22 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     ################################# Handlers #################################
 
     def convertFile(self):
-        inputDir = self.fileConverterEntry.text()
-        outputDir = os.path.splitext(inputDir)[0] + '.phylip-sequential.txt'
-        fcc.file_converter(inputDir, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
+        try:
+            self.fileToBeConverted = str(self.fileConverterEntry.text())
+
+            if self.fileToBeConverted == "":
+                raise ValueError, (1, "Please choose a file")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        outputDir = os.path.splitext(self.fileToBeConverted)[0] + '.phylip-sequential.txt'
+        try:
+            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
+        except IOError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "File does not exist.")
+            return
+        QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
 
     def displayResults(self, displayTree=False):
         if displayTree:
