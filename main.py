@@ -328,7 +328,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for newick file
         try:
-            if self.checkboxProbability.isChecked():
+            if self.checkboxStatistics.isChecked():
                 self.newickFileName = str(self.newickFileEntry.text())
                 self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
                 self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
