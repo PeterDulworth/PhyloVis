@@ -3,6 +3,7 @@ from natsort import natsorted
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
 
 def is_site_informative(site):
     """
@@ -153,26 +154,37 @@ def heat_map_generator(dictionary):
     Output:
     """
 
+    # Create custom color map
+    colors = [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0),(0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 0.0, 0.0)]
+    name = "Chab's Colors"
+
+    blue_green = LinearSegmentedColormap.from_list(name, colors)
+    plt.register_cmap(cmap=blue_green)
+
+    plt.figure(figsize=(15, 2))
+
     array = np.array(dictionary.values())
 
     x_vals = np.empty([5, array.shape[0]])
 
     x_vals[:, :] = array
 
-    plt.contourf(x_vals, cmap="binary")
+    plt.contourf(x_vals, cmap=blue_green)
+    plt.colorbar()
     plt.yticks([])
 
 
-    plt.tight_layout()
+
+    # plt.tight_layout()
     plt.show()
 
 
-# window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
-# sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir,50000)
-#
+window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
+sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir,50000)
+
 # print str(pct_informative) + "%"
 # line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
-#
-# heat_map_generator(sites_to_informative)
+
+heat_map_generator(sites_to_informative)
 
 
