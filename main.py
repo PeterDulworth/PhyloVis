@@ -29,13 +29,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3,
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3,
                         'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
         self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22+ 6 + 6 + 6},
-                            'inputPageNotRaxA': {'x': 459, 'y': 245}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
+                            'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
                             'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+
+        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
 
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -54,13 +56,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # when you select a mode first deselect all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
         self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.actionNotRaxA.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
+        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
         self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
         self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
         # change the input mode based on which mode is selected in the menu bar
         self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
-        self.actionNotRaxA.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
+        self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
         self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
@@ -82,13 +84,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
 
-        self.checkboxCircleGraph.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
-        self.checkboxScatterPlot.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
+        # generate graphs
+        self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
+        self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
-        self.checkboxDonutPlot.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
+        self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -109,20 +109,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # disable export menu initially
         self.menuExport.setEnabled(False)
 
+        # choose newick file
         self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
 
         # **************************** Rax Welcome Page Events ****************************#
 
-        self.raxBtn.clicked.connect(lambda: self.setWindow('inputPageRax'))
-        self.notRax1Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxA'))
-        self.notRax2Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxB'))
-        self.notRax3Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxC'))
+        self.launchBtn.clicked.connect(lambda: self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()]))
 
-        self.raxBtn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.notRax1Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
-        self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
-        self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
-
+        # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
