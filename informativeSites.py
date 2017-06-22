@@ -156,9 +156,9 @@ def heat_map_generator(dictionary, name):
 
     # Create custom color map
     colors = [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0),(0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 0.0, 0.0)]
-    name = "Chab's Colors"
+    color_name = "Chab's Colors"
 
-    blue_green = LinearSegmentedColormap.from_list(name, colors)
+    blue_green = LinearSegmentedColormap.from_list(color_name, colors)
     plt.register_cmap(cmap=blue_green)
 
     plt.figure(figsize=(15, 2))
