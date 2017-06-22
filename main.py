@@ -165,7 +165,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 else:
                     self.robinsonFouldsWindow.show()
                     self.robinsonFouldsWindow.displayUnweightedImage()
-            if self.checkboxProbability.isChecked():
+            if self.checkboxPGTST.isChecked():
                 self.pgtstWindow.show()
                 self.pgtstWindow.display_image()
 
@@ -204,40 +204,37 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
                         top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,
-                                                                                     top_topologies_list)  # scatter, circle, (donut?)
+                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-
                     tp.topology_donut(labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():
-                 tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
-
-                if self.checkboxAllTrees.isChecked():
-                 tp.topology_colorizer(topologies_to_colors)  # all trees
+                    tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
-                                                             topologies_to_colors, self.window_size, self.window_offset)
+                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
 
                 if self.checkboxStatistics.isChecked():
-                    if self.robinsonFoulds:
-                        if self.weighted:
-                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree,
-                                                                                           self.weighted)
+                    if self.checkboxRobinsonFoulds.isChecked():
+                        if self.checkboxWeighted.isChecked():
+                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
                             sc.stat_scatter(windows_to_w_rf, "weightedRF")
                             sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                         else:
-                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
+                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
                             sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-                    if self.pgtst:
+                    if self.checkboxPGTST.isChecked():
                         # Function calls for calculating statistics
                         windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
+
+                if self.checkboxAllTrees.isChecked():
+                    tp.topology_colorizer(topologies_to_colors)  # all trees
+
                 self.displayResults()
 
     def setWindow(self, window):
@@ -338,11 +335,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 elif self.newickFileName != "" and self.newickStringFromEntry != "":
                     raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
 
-                # get checkbox values
-                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                self.weighted = self.checkboxWeighted.isChecked()
-                self.pgtst = self.checkboxProbability.isChecked()
-
                 # if the newick input is from the file chooser
                 if self.newickFileName != '':
                     with open(self.newickFileEntry.text(), 'r') as f:
@@ -366,8 +358,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.runProgressBar()
 
         try:
-            self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size,
-                                           self.window_offset)  # run once - not rerun
+            self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
             wo.raxml_windows(self.windows_dirs)  # run once - not rerun
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
