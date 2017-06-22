@@ -804,7 +804,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="inputFormatLabel">
             <property name="font">
              <font>
               <pointsize>16</pointsize>
@@ -818,7 +818,7 @@
            </widget>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="outputFormatDescriptionLabel">
             <property name="text">
              <string>This is a relaxed interpretation of the PHYLIP format which allows
  long names.</string>
@@ -839,14 +839,14 @@
            </spacer>
           </item>
           <item row="7" column="0">
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="fileConverterBtn">
             <property name="text">
              <string>Convert</string>
             </property>
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="outputFormatLabel">
             <property name="font">
              <font>
               <pointsize>16</pointsize>
@@ -860,7 +860,7 @@
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QComboBox" name="comboBox_2">
+           <widget class="QComboBox" name="inputFormatComboBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -927,14 +927,14 @@
           <item row="0" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="selectFileConverterInputBtn">
               <property name="text">
                <string>Choose File</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="selectFileConverterInputEntry"/>
             </item>
            </layout>
           </item>
