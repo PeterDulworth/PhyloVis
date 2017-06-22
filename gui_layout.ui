@@ -796,14 +796,21 @@
         </widget>
         <widget class="QWidget" name="inputPageNotRaxA">
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
-           <widget class="Line" name="line_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Input File</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QLabel" name="inputFormatLabel">
             <property name="font">
              <font>
@@ -818,14 +825,26 @@
            </widget>
           </item>
           <item row="5" column="0">
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
            <widget class="QLabel" name="outputFormatDescriptionLabel">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
             <property name="text">
              <string>This is a relaxed interpretation of the PHYLIP format which allows
  long names.</string>
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
+          <item row="8" column="0">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -838,14 +857,14 @@
             </property>
            </spacer>
           </item>
-          <item row="7" column="0">
+          <item row="9" column="0">
            <widget class="QPushButton" name="fileConverterBtn">
             <property name="text">
              <string>Convert</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
            <widget class="QLabel" name="outputFormatLabel">
             <property name="font">
              <font>
@@ -859,7 +878,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QComboBox" name="inputFormatComboBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -924,7 +943,7 @@
             </item>
            </widget>
           </item>
-          <item row="0" column="0">
+          <item row="1" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
              <widget class="QPushButton" name="selectFileConverterInputBtn">
