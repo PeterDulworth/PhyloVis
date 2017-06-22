@@ -146,12 +146,12 @@ def line_graph_generator(dictionary, xlabel, ylabel, name):
     plt.clf()
 
 
-def heat_map_generator(dictionary):
+def heat_map_generator(dictionary, name):
     """
     Create a heat map based on the inputted dictionary
     Input:
     dictionary --- a dictionary mapping integers to floats or integers
-    Output:
+    name --- a string for the image name
     """
 
     # Create custom color map
@@ -173,10 +173,8 @@ def heat_map_generator(dictionary):
     plt.colorbar()
     plt.yticks([])
 
-
-
-    # plt.tight_layout()
-    plt.show()
+    plt.savefig(name, dpi=250)
+    plt.clf()
 
 
 window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
@@ -185,6 +183,6 @@ sites_to_informative, windows_to_informative_count, windows_to_informative_pct, 
 # print str(pct_informative) + "%"
 # line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
 
-heat_map_generator(sites_to_informative)
+heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
 
 
