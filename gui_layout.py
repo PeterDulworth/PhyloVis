@@ -569,7 +569,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menubar.addAction(self.menuDisplay.menuAction())
 
         self.retranslateUi(PhylogeneticVisualization)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
         self.outputTabs.setCurrentIndex(0)
         QtCore.QObject.connect(self.checkboxDonutPlot, QtCore.SIGNAL(_fromUtf8("clicked()")), self.actionDonutPlot.toggle)
         QtCore.QObject.connect(self.actionScatterPlot, QtCore.SIGNAL(_fromUtf8("triggered()")), self.checkboxScatterPlot.toggle)
@@ -594,8 +594,8 @@ class Ui_PhylogeneticVisualization(object):
     def retranslateUi(self, PhylogeneticVisualization):
         PhylogeneticVisualization.setWindowTitle(_translate("PhylogeneticVisualization", "Phylogenetic Visualization", None))
         self.welcomeLabel.setText(_translate("PhylogeneticVisualization", "Welcome Daddy", None))
-        self.raxBtn.setText(_translate("PhylogeneticVisualization", "RAX", None))
-        self.notRax1Btn.setText(_translate("PhylogeneticVisualization", "not rax 1", None))
+        self.raxBtn.setText(_translate("PhylogeneticVisualization", "RAxML", None))
+        self.notRax1Btn.setText(_translate("PhylogeneticVisualization", "File Converter", None))
         self.notRax2Btn.setText(_translate("PhylogeneticVisualization", "not rax 2", None))
         self.notRax3Btn.setText(_translate("PhylogeneticVisualization", "not rax 3", None))
         self.inputFileBtn.setText(_translate("PhylogeneticVisualization", "Select Input File", None))

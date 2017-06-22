@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -106,7 +106,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>RAX</string>
+               <string>RAxML</string>
               </property>
              </widget>
             </item>
@@ -116,7 +116,7 @@
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>not rax 1</string>
+               <string>File Converter</string>
               </property>
              </widget>
             </item>
