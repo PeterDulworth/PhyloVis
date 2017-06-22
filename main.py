@@ -143,6 +143,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         except IOError:
             QtGui.QMessageBox.about(self, "Invalid Input", "File does not exist.")
             return
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "Inputted file type does not match selected file type.")
+            return
         QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
 
     def displayResults(self, displayTree=False):
