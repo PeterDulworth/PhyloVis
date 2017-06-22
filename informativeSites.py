@@ -1,6 +1,9 @@
 from collections import defaultdict
+from natsort import natsorted
+import os
+import matplotlib.pyplot as plt
 
-def is_informative(site):
+def is_site_informative(site):
     """
     Determines if a site is informative or not
     Input:
@@ -20,12 +23,131 @@ def is_informative(site):
 
     # Create a list of counts in descending order
     base_counts = sorted(base_to_counts.values(), reverse=True)
-    print base_counts
 
-    # If two different bases occur at least twice the site is informative
-    if (base_counts[0] >= 2) and (base_counts[1] >= 2):
-        return 1
+    if len(base_counts) >= 2:
+        # If two different bases occur at least twice the site is informative
+        if (base_counts[0] >= 2) and (base_counts[1] >= 2):
+            return 1
 
+        else:
+            return 0
     else:
         return 0
+
+
+def calculate_informativeness(window_directory, window_offset):
+    """
+    Calculates information about informative sites in an alignment
+    Input:
+    window_directory --- the location of the folder containing the phylip window files
+    window_offset --- the offset that was used to create the windows
+    Output:
+    sites_to_informative --- a mapping of each site in the alignment to 1 if informative 0 if not
+    windows_to_informative_count --- a mapping of each window number to the number of informative sites it has
+    windows_to_informative_pct --- a mapping of each window number to the percentage of informative sites it has
+    pct_informative --- the percentage of informative sites over the entire alignment
+    """
+
+    # Initialize the site index to 0
+    site_idx = 0
+
+    sites_to_informative = defaultdict(int)
+    windows_to_informative_count = defaultdict(int)
+    windows_to_informative_pct = {}
+    total_window_size = 0
+
+    # Iterate over each folder in the given directory in numerical order
+    for filename in natsorted(os.listdir(window_directory)):
+
+        # If file is a phylip file get the number of the window
+        if filename.endswith(".phylip"):
+            file_number = filename.replace("window", "")
+            file_number = int(file_number.replace(".phylip", ""))
+
+            input_file = os.path.join(window_directory, filename)
+
+            sequence_list = []
+
+            with open(input_file) as f:
+
+                # Create a list of each line in the file
+                lines = f.readlines()
+                # line = f.readline()
+                # line = line.split()
+
+                # First line contains the number and length of the sequences
+                first_line = lines[0].split()
+                number_of_sequences = int(first_line[0])
+                length_of_sequences = int(first_line[1])
+
+            for line in lines[1:]:
+                # Add each sequence to a list
+                sequence = line.split()[1]
+                sequence_list.append(sequence)
+
+            # Iterate over the indices in each window
+            for window_idx in range(length_of_sequences):
+
+                site = []
+
+                # Iterate over each sequence in the alignment
+                for sequence in sequence_list:
+
+                    # Add each base in a site to a list
+                    site.append(sequence[window_idx])
+
+                # Determine if a site is informative
+                informative = is_site_informative(site)
+
+                # If the site has not been visited before add to mappings (deals with overlapping windows)
+                if site_idx not in sites_to_informative:
+                    # If the site is informative add 1 to the mappings otherwise add 0
+                    sites_to_informative[site_idx] += informative
+
+                windows_to_informative_count[file_number] += informative
+
+                # Increment the site index
+                site_idx += 1
+
+            # Account for overlapping windows
+            site_idx += (window_offset - length_of_sequences)
+
+            # Map windows_to_informative_count to a percentage
+            windows_to_informative_pct[file_number] = windows_to_informative_count[file_number] * (100/float(length_of_sequences))
+
+            total_window_size += length_of_sequences
+
+    total_num_informative = sum(windows_to_informative_count.values())
+    pct_informative = float(total_num_informative * 100) / total_window_size
+
+    return sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative
+
+sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative =  calculate_informativeness("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows",5)
+
+print str(pct_informative) + "%"
+
+def line_graph_generator(dictionary, xlabel, ylabel):
+    """
+    Determines if a site is informative or not
+    Input:
+    dictionary --- a dictionary mapping integers to floats or integers
+    xlabel --- a string for the labeling the x-axis
+    ylabel --- a string for the labeling the y-axis
+    Output:
+    """
+
+    x = dictionary.keys()
+    y = dictionary.values()
+    plt.plot(x, y, "-", )
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.tight_layout()
+    plt.show()
+
+line_graph_generator(windows_to_informative_pct, "Windows", "Percent of Informative Sites")
+
+sites = sites_to_informative.keys()
+informative = sites_to_informative.values()
+plt.plot(sites, informative)
+plt.show()
 
