@@ -1,0 +1,130 @@
+LOCUS       seq0 TGGAC                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq0 TGGAC
+ACCESSION   seq0 TGGAC
+VERSION     seq0 TGGAC
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 gatttatcgg ttcctttgct aaccaagtct ctcgattccc aggtataaga ttctgaacgc
+       61 gcccacaagt cacagtgtac ggcaagagat tcgtt
+//
+LOCUS       seq1 CACAT                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq1 CACAT
+ACCESSION   seq1 CACAT
+VERSION     seq1 CACAT
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 ctaccttact tggaactggc taactccaac gatacctcgt atattctgct gcactgatta
+       61 ctcactcgtg aatccaatca tcgaggcaga tctct
+//
+LOCUS       seq2 ACCAC                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq2 ACCAC
+ACCESSION   seq2 ACCAC
+VERSION     seq2 ACCAC
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 ctgctttcga cgaaggacaa tagtgagacc cttcgtggcc atcctaggtg ttgagagtga
+       61 ttggcctcga aactcgcact cacgagctct gcggg
+//
+LOCUS       seq3 CGACC                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq3 CGACC
+ACCESSION   seq3 CGACC
+VERSION     seq3 CGACC
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 gtagtgtagc ttagtgacca ctatggtata gtattttggc taatagggtc cataggggcc
+       61 agtagtaaga ttttccccat tgtagcggac ttgtg
+//
+LOCUS       seq4 CAATA                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq4 CAATA
+ACCESSION   seq4 CAATA
+VERSION     seq4 CAATA
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 cagttggcta gtctggacga gtttgagccc aatatagtca atcagattgt tatgtgtcgc
+       61 cgtatcgcgt ggcatgttta tggcctttat ttaaa
+//
+LOCUS       seq5 AAACT                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq5 AAACT
+ACCESSION   seq5 AAACT
+VERSION     seq5 AAACT
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 agactacgat cagcccgcag cacccggtgt gcagtatatc taccgaaaag attacgcgag
+       61 ttcaatacca cgcagtagaa atcgtcgcct tctgg
+//
+LOCUS       seq6 TTTAA                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq6 TTTAA
+ACCESSION   seq6 TTTAA
+VERSION     seq6 TTTAA
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 gaatcttctg cgattgaaga ggaggtcagt cgagaaactt ttcgaaattg ctcaaacagg
+       61 aaacgcggcc tacgcgctac ttttcctctc ttttt
+//
+LOCUS       seq7 CGGAC                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq7 CGGAC
+ACCESSION   seq7 CGGAC
+VERSION     seq7 CGGAC
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 gtaatgtgac gaatgagttc ctcctcttca cagggcgtct cattatcttc tgatagcttg
+       61 ccgcatctct cattttcagt ccgttgacta tcgta
+//
+LOCUS       seq8 TGACG                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq8 TGACG
+ACCESSION   seq8 TGACG
+VERSION     seq8 TGACG
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 ccttcaacga gccttcagac tcggttattt aaggggaaga gttttccctg gatgattccg
+       61 gataaggcat cttagtttag tacgttatct tcgtg
+//
+LOCUS       seq9 TAGCA                95 bp    DNA              UNK 01-JAN-1980
+DEFINITION  seq9 TAGCA
+ACCESSION   seq9 TAGCA
+VERSION     seq9 TAGCA
+KEYWORDS    .
+SOURCE      .
+  ORGANISM  .
+            .
+FEATURES             Location/Qualifiers
+ORIGIN
+        1 ttccgtcggc atcacagcag acggtagtct aaatcaagtc gctttgcgta gcaatcgata
+       61 gcgactctcg ttacgaaaca aagcatgtgg tcatg
+//

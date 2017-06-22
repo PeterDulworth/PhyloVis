@@ -1,0 +1,81 @@
+LOCUS       NC_003212            3011208 bp    DNA     circular CON 26-FEB-2017
+DEFINITION  Listeria innocua Clip11262 complete genome.
+ACCESSION   NC_003212
+VERSION     NC_003212.1
+DBLINK      BioProject: PRJNA224116
+            BioSample: SAMEA3138320
+            Assembly: GCF_000195795.1
+KEYWORDS    RefSeq.
+SOURCE      Listeria innocua Clip11262
+  ORGANISM  Listeria innocua Clip11262
+            Bacteria; Firmicutes; Bacilli; Bacillales; Listeriaceae; Listeria.
+REFERENCE   1
+  AUTHORS   Glaser,P., Frangeul,L., Buchrieser,C., Rusniok,C., Amend,A.,
+            Baquero,F., Berche,P., Bloecker,H., Brandt,P., Chakraborty,T.,
+            Charbit,A., Chetouani,F., Couve,E., de Daruvar,A., Dehoux,P.,
+            Domann,E., Dominguez-Bernal,G., Duchaud,E., Durant,L.,
+            Dussurget,O., Entian,K.D., Fsihi,H., Garcia-del Portillo,F.,
+            Garrido,P., Gautier,L., Goebel,W., Gomez-Lopez,N., Hain,T.,
+            Hauf,J., Jackson,D., Jones,L.M., Kaerst,U., Kreft,J., Kuhn,M.,
+            Kunst,F., Kurapkat,G., Madueno,E., Maitournam,A., Vicente,J.M.,
+            Ng,E., Nedjari,H., Nordsiek,G., Novella,S., de Pablos,B.,
+            Perez-Diaz,J.C., Purcell,R., Remmel,B., Rose,M., Schlueter,T.,
+            Simoes,N., Tierrez,A., Vazquez-Boland,J.A., Voss,H., Wehland,J. and
+            Cossart,P.
+  TITLE     Comparative genomics of Listeria species
+  JOURNAL   Science 294 (5543), 849-852 (2001)
+   PUBMED   11679669
+REFERENCE   2  (bases 1 to 3011208)
+  AUTHORS   Glaser,P., Frangeul,L. and Rusniok,C.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (09-JUL-2001) Glaser P., Institut Pasteur, Genomique des
+            Microorganismes Pathogenes, 25 rue du Docteur Roux, 75724 Paris
+            Cedex 15, FRANCE
+COMMENT     REFSEQ INFORMATION: The reference sequence was derived from
+            AL592022.
+            E-mail: pglaser@pasteur.fr
+            Phone: +33 (0)1 45 68 89 96, Fax: +33 (0)1 45 68 87 86.
+            Annotation was added by the NCBI Prokaryotic Genome Annotation
+            Pipeline (released 2013). Information about the Pipeline can be
+            found here: https://www.ncbi.nlm.nih.gov/genome/annotation_prok/
+
+            ##Genome-Annotation-Data-START##
+            Annotation Provider               :: NCBI
+            Annotation Date                   :: 02/26/2017 10:40:44
+            Annotation Pipeline               :: NCBI Prokaryotic Genome
+                                                 Annotation Pipeline
+            Annotation Method                 :: Best-placed reference protein
+                                                 set; GeneMarkS+
+            Annotation Software revision      :: 4.1
+            Features Annotated                :: Gene; CDS; rRNA; tRNA; ncRNA;
+                                                 repeat_region
+            Genes (total)                     :: 3,218
+            CDS (total)                       :: 3,130
+            Genes (coding)                    :: 3,078
+            CDS (coding)                      :: 3,078
+            Genes (RNA)                       :: 88
+            rRNAs                             :: 6, 6, 6 (5S, 16S, 23S)
+            complete rRNAs                    :: 6, 6, 6 (5S, 16S, 23S)
+            tRNAs                             :: 66
+            ncRNAs                            :: 4
+            Pseudo Genes (total)              :: 52
+            Pseudo Genes (ambiguous residues) :: 0 of 52
+            Pseudo Genes (frameshifted)       :: 31 of 52
+            Pseudo Genes (incomplete)         :: 16 of 52
+            Pseudo Genes (internal stop)      :: 16 of 52
+            Pseudo Genes (multiple problems)  :: 11 of 52
+            CRISPR Arrays                     :: 1
+            ##Genome-Annotation-Data-END##
+            COMPLETENESS: full length.
+FEATURES             Location/Qualifiers
+     source          1..3011208
+                     /organism="Listeria innocua Clip11262"
+                     /mol_type="genomic DNA"
+                     /strain="Clip11262"
+                     /db_xref="taxon:272626"
+CONTIG      join(AL596163.1:1..231450,AL596164.1:51..224650,
+            AL596165.1:51..249050,AL596166.1:51..260050,AL596167.1:51..253050,
+            AL596168.1:51..333050,AL596169.1:51..239050,AL596170.1:51..313450,
+            AL596171.1:51..258650,AL596172.1:51..248050,AL596173.1:51..305050,
+            AL596174.1:51..96208)
+//
