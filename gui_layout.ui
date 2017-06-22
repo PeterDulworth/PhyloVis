@@ -50,12 +50,25 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_8">
               <item>
@@ -101,44 +114,54 @@
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="raxBtn">
+             <widget class="QComboBox" name="modeComboBox">
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <item>
+               <property name="text">
+                <string>RAx_ML</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>File Converter</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>not rax B</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>not rax C</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="launchBtn">
               <property name="focusPolicy">
                <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
-               <string>RAxML</string>
+               <string>Launch</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="notRax1Btn">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
               </property>
-              <property name="text">
-               <string>File Converter</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="notRax2Btn">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>not rax 2</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="notRax3Btn">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>not rax 3</string>
-              </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -858,7 +881,7 @@
            </spacer>
           </item>
           <item row="9" column="0">
-           <widget class="QPushButton" name="fileConverterBtn">
+           <widget class="QPushButton" name="runFileConverterBtn">
             <property name="text">
              <string>Convert</string>
             </property>
@@ -946,14 +969,14 @@
           <item row="1" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
-             <widget class="QPushButton" name="selectFileConverterInputBtn">
+             <widget class="QPushButton" name="fileConverterBtn">
               <property name="text">
                <string>Choose File</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="selectFileConverterInputEntry"/>
+             <widget class="QLineEdit" name="fileConverterEntry"/>
             </item>
            </layout>
           </item>
@@ -1163,7 +1186,7 @@
      <string>Mode</string>
     </property>
     <addaction name="actionRax"/>
-    <addaction name="actionNotRaxA"/>
+    <addaction name="actionConverter"/>
     <addaction name="actionNotRaxB"/>
     <addaction name="actionNotRaxC"/>
    </widget>
@@ -1197,15 +1220,15 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Rax</string>
+    <string>RAx_ML</string>
    </property>
   </action>
-  <action name="actionNotRaxA">
+  <action name="actionConverter">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Not Rax A</string>
+    <string>Converter</string>
    </property>
   </action>
   <action name="actionNotRaxB">
