@@ -2,6 +2,7 @@ from collections import defaultdict
 from natsort import natsorted
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 def is_site_informative(site):
     """
@@ -122,17 +123,15 @@ def calculate_informativeness(window_directory, window_offset):
 
     return sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative
 
-sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative =  calculate_informativeness("C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows",5)
 
-print str(pct_informative) + "%"
-
-def line_graph_generator(dictionary, xlabel, ylabel):
+def line_graph_generator(dictionary, xlabel, ylabel, name):
     """
-    Determines if a site is informative or not
+    Create a line graph based on the inputted dictionary
     Input:
     dictionary --- a dictionary mapping integers to floats or integers
     xlabel --- a string for the labeling the x-axis
     ylabel --- a string for the labeling the y-axis
+    name --- a string for the image name
     Output:
     """
 
@@ -142,12 +141,38 @@ def line_graph_generator(dictionary, xlabel, ylabel):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.tight_layout()
+    plt.savefig(name, dpi=250)
+    plt.clf()
+
+
+def heat_map_generator(dictionary):
+    """
+    Create a heat map based on the inputted dictionary
+    Input:
+    dictionary --- a dictionary mapping integers to floats or integers
+    Output:
+    """
+
+    array = np.array(dictionary.values())
+
+    x_vals = np.empty([5, array.shape[0]])
+
+    x_vals[:, :] = array
+
+    plt.contourf(x_vals, cmap="binary")
+    plt.yticks([])
+
+
+    plt.tight_layout()
     plt.show()
 
-line_graph_generator(windows_to_informative_pct, "Windows", "Percent of Informative Sites")
 
-sites = sites_to_informative.keys()
-informative = sites_to_informative.values()
-plt.plot(sites, informative)
-plt.show()
+# window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
+# sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir,50000)
+#
+# print str(pct_informative) + "%"
+# line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
+#
+# heat_map_generator(sites_to_informative)
+
 
