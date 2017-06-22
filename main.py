@@ -11,6 +11,7 @@ from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, ci
     robinsonFouldsWindow
 import topologyPlots as tp
 import statisticCalculations as sc
+import fileConverterController as fcc
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -29,13 +30,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageNotRaxA': 2, 'inputPageNotRaxB': 3,
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3,
                         'inputPageNotRaxC': 4,
                         'outputPage': 5}
 
         self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22+ 6 + 6 + 6},
-                            'inputPageNotRaxA': {'x': 459, 'y': 245}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
+                            'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
                             'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+
+        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
 
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -45,6 +48,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.rooted = False
         self.outGroup = ""
+
+        # set start page to the input page
+        self.stackedWidget.setCurrentIndex(0)
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -54,13 +60,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # when you select a mode first deselect all other modes to ensure only a single mode is ever selected
         self.modes = self.menuMode.actions()
         self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.actionNotRaxA.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
+        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
         self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
         self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
 
         # change the input mode based on which mode is selected in the menu bar
         self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
-        self.actionNotRaxA.triggered.connect(lambda: self.setWindow('inputPageNotRaxA'))
+        self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
         self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
         self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
@@ -82,13 +88,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
 
-        self.checkboxCircleGraph.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
-        self.checkboxScatterPlot.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
+        # generate graphs
+        self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
+        self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
-        self.checkboxDonutPlot.stateChanged.connect(
-            lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
+        self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -99,36 +103,47 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
         self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
 
-        # set start page to the input page
-        self.stackedWidget.setCurrentIndex(0)
-
         # run
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
 
-        # disable export menu initially
-        self.menuExport.setEnabled(False)
-
+        # choose newick file
         self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
 
         # **************************** Rax Welcome Page Events ****************************#
 
-        self.raxBtn.clicked.connect(lambda: self.setWindow('inputPageRax'))
-        self.notRax1Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxA'))
-        self.notRax2Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxB'))
-        self.notRax3Btn.clicked.connect(lambda: self.setWindow('inputPageNotRaxC'))
+        self.launchBtn.clicked.connect(lambda: self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()]))
 
-        self.raxBtn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.notRax1Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxA))
-        self.notRax2Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
-        self.notRax3Btn.clicked.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
-
+        # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
 
+        #################################
+
+        self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
+        self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
+
     ################################# Handlers #################################
+
+    def convertFile(self):
+        try:
+            self.fileToBeConverted = str(self.fileConverterEntry.text())
+
+            if self.fileToBeConverted == "":
+                raise ValueError, (1, "Please choose a file")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        outputDir = os.path.splitext(self.fileToBeConverted)[0] + '.phylip-sequential.txt'
+        try:
+            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
+        except IOError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "File does not exist.")
+            return
+        QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
 
     def displayResults(self, displayTree=False):
         if displayTree:
@@ -165,7 +180,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 else:
                     self.robinsonFouldsWindow.show()
                     self.robinsonFouldsWindow.displayUnweightedImage()
-            if self.checkboxProbability.isChecked():
+            if self.checkboxPGTST.isChecked():
                 self.pgtstWindow.show()
                 self.pgtstWindow.display_image()
 
@@ -204,40 +219,37 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
                         top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,
-                                                                                     top_topologies_list)  # scatter, circle, (donut?)
+                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-
                     tp.topology_donut(labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():
-                 tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
-
-                if self.checkboxAllTrees.isChecked():
-                 tp.topology_colorizer(topologies_to_colors)  # all trees
+                    tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies,
-                                                             topologies_to_colors, self.window_size, self.window_offset)
+                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
 
                 if self.checkboxStatistics.isChecked():
-                    if self.robinsonFoulds:
-                        if self.weighted:
-                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree,
-                                                                                           self.weighted)
+                    if self.checkboxRobinsonFoulds.isChecked():
+                        if self.checkboxWeighted.isChecked():
+                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
                             sc.stat_scatter(windows_to_w_rf, "weightedRF")
                             sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                         else:
-                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.weighted)
+                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
                             sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-                    if self.pgtst:
+                    if self.checkboxPGTST.isChecked():
                         # Function calls for calculating statistics
                         windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
+
+                if self.checkboxAllTrees.isChecked():
+                    tp.topology_colorizer(topologies_to_colors)  # all trees
+
                 self.displayResults()
 
     def setWindow(self, window):
@@ -338,11 +350,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 elif self.newickFileName != "" and self.newickStringFromEntry != "":
                     raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
 
-                # get checkbox values
-                self.robinsonFoulds = self.checkboxRobinsonFoulds.isChecked()
-                self.weighted = self.checkboxWeighted.isChecked()
-                self.pgtst = self.checkboxProbability.isChecked()
-
                 # if the newick input is from the file chooser
                 if self.newickFileName != '':
                     with open(self.newickFileEntry.text(), 'r') as f:
@@ -366,8 +373,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.runProgressBar()
 
         try:
-            self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size,
-                                           self.window_offset)  # run once - not rerun
+            self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
             wo.raxml_windows(self.windows_dirs)  # run once - not rerun
         except IndexError:
             QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
