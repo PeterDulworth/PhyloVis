@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -881,7 +881,7 @@
            </spacer>
           </item>
           <item row="9" column="0">
-           <widget class="QPushButton" name="fileConverterBtn">
+           <widget class="QPushButton" name="runFileConverterBtn">
             <property name="text">
              <string>Convert</string>
             </property>
@@ -969,14 +969,14 @@
           <item row="1" column="0">
            <layout class="QHBoxLayout" name="horizontalLayout_23">
             <item>
-             <widget class="QPushButton" name="selectFileConverterInputBtn">
+             <widget class="QPushButton" name="fileConverterBtn">
               <property name="text">
                <string>Choose File</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="selectFileConverterInputEntry"/>
+             <widget class="QLineEdit" name="fileConverterEntry"/>
             </item>
            </layout>
           </item>

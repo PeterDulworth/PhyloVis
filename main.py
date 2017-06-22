@@ -11,6 +11,7 @@ from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, ci
     robinsonFouldsWindow
 import topologyPlots as tp
 import statisticCalculations as sc
+import fileConverterController as fcc
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -47,6 +48,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.rooted = False
         self.outGroup = ""
+
+        # set start page to the input page
+        self.stackedWidget.setCurrentIndex(0)
         # self.statisticsOptionsGroupBox.hide()
 
         ############################# Link Events ##############################
@@ -99,15 +103,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
         self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
 
-        # set start page to the input page
-        self.stackedWidget.setCurrentIndex(0)
-
         # run
         self.runBtn.clicked.connect(self.run)
         self.progressBar.reset()
-
-        # disable export menu initially
-        self.menuExport.setEnabled(False)
 
         # choose newick file
         self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
@@ -122,7 +120,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
 
+        #################################
+
+        self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
+        self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
+
     ################################# Handlers #################################
+
+    def convertFile(self):
+        inputDir = self.fileConverterEntry.text()
+        outputDir = os.path.splitext(inputDir)[0] + '.phylip-sequential.txt'
+        fcc.file_converter(inputDir, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
 
     def displayResults(self, displayTree=False):
         if displayTree:
