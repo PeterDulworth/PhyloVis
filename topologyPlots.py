@@ -148,6 +148,7 @@ def top_topologies(num, topologies):
     top_topologies --- a mapping of the top 'num' topologies
     to the number of times they occur.
     """
+
     # initialize mapping
     top_topologies = {}
 
@@ -173,6 +174,7 @@ def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, ro
     wins_to_tops --- a dictionary as described above
     tops_list --- a list of the top topologies
     """
+
     # Initialize dictionary
     tops_list = top_topologies_to_counts.keys()
     wins_to_tops = {}
@@ -231,9 +233,9 @@ def topology_colors(wins_to_tops, tops_list):
     wins_to_tops -- mapping outputted by windows_to_newick()[0]
     tops_list    -- list outputted by windows_to_newick()[1]
     Returns:
-    A mapping tops_to_colors and two lists scatter_colors and
-    ylist.
+    A mapping tops_to_colors and two lists scatter_colors andylist.
     """
+
     # initialize dictionaries and ylist
     scatter_colors = []
     tops_to_colors = {}
@@ -273,6 +275,7 @@ def donut_colors(top_topologies, tops_to_colors):
     Returns:
     A list donut_colors.
     """
+
     # initialize color list
     donut_colors = []
 
@@ -309,6 +312,7 @@ def topology_donut(labels, sizes, donut_colors):
     most frequent 'num' topologies as the labels, and a list tops
     of the top 'num' scores.
     """
+
     # plots pie chart
     plt.rcParams['patch.edgecolor'] = '#000000'
     plt.pie(sizes, explode=None, labels=labels,
@@ -347,6 +351,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     A scatter plot with topologies as the x-axis and
     windows as the y-axis.
     """
+    
     # area of plotted circles
     area = math.pi * (3) ** 2
 
