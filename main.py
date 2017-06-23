@@ -34,7 +34,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
 
         self.windowSizes = {
-                            'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 22},
+                            'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 30},
                             'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
                             'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}
                             }
@@ -246,10 +246,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
+                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
                 if self.checkboxHeatMap.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', 50000)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
                     infSites.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
 
                 if self.checkboxStatistics.isChecked():
