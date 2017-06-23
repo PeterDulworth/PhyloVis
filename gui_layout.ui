@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -405,6 +405,9 @@
                    <widget class="QCheckBox" name="checkboxHeatMap">
                     <property name="text">
                      <string>Heat Map</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
