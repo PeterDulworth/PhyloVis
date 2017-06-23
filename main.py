@@ -128,9 +128,25 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     ################################# Handlers #################################
 
     def convertFile(self):
-        inputDir = self.fileConverterEntry.text()
-        outputDir = os.path.splitext(inputDir)[0] + '.phylip-sequential.txt'
-        fcc.file_converter(inputDir, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
+        try:
+            self.fileToBeConverted = str(self.fileConverterEntry.text())
+
+            if self.fileToBeConverted == "":
+                raise ValueError, (1, "Please choose a file")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        outputDir = os.path.splitext(self.fileToBeConverted)[0] + '.phylip-sequential.txt'
+        try:
+            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
+        except IOError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "File does not exist.")
+            return
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input", "Inputted file type does not match selected file type.")
+            return
+        QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
 
     def displayResults(self, displayTree=False):
         if displayTree:
@@ -235,7 +251,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
 
                 if self.checkboxAllTrees.isChecked():
-                    tp.topology_colorizer(topologies_to_colors)  # all trees
+                    tp.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
 
                 self.displayResults()
 
