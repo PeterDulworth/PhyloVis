@@ -177,12 +177,19 @@ def heat_map_generator(dictionary, name):
     plt.clf()
 
 
-window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
-sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir,50000)
+if __name__ == '__main__':  # if we're running file directly and not importing it
+    # travys window dir
+    # window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
 
-# print str(pct_informative) + "%"
-# line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
+    # peters window dir
+    window_dir = '/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/windows'
 
-heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
+    # chabs window dir ?
+    # window_dir = ''
 
+    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir, 50000)
 
+    # print str(pct_informative) + "%"
+    # line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
+
+    heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
