@@ -12,6 +12,7 @@ from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, ci
 import topologyPlots as tp
 import statisticCalculations as sc
 import fileConverterController as fcc
+import informativeSites as infSites
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
