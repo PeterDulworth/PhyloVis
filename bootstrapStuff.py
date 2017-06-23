@@ -1,6 +1,7 @@
 from Bio import Phylo
 from matplotlib import pyplot as plt
 
+###################Stuff to show trees
 # tree = Phylo.parse('RAxML_Files\\RAxML_bipartitions.0', 'newick')
 tree = Phylo.read('RAxML_Files\\RAxML_bipartitions.0', "newick")
 # tree.rooted = True
@@ -19,6 +20,8 @@ plt.show()
 
 # plt.clf()
 
+
+####################Stuff for regular expression
 import re
 
 
@@ -31,15 +34,8 @@ txt="start(gnsiun)1.235:1.234,finish"
 # txt = "(seq5:1.0,((((((seq3:7.8,seq8:0.6)0:0.9,seq1:0.9)50:3.1,seq6:0.9)50:7.5,seq4:0.9)0:3.6,seq2:0.9)0:0.9,(seq0:3.5,seq7:0.9)50:3.9)50:5.1,seq9:14.5);"
 # txt = "(seq3:7.8,seq8:0.6)0:0.9,"
 txt = "(((seq3:7.8,seq8:0.6)0:0.9,seq1:0.9)50:3.1,seq6:0.9)"
-re1='(\\()'	# Any Single Character 1
-re2='.*?'	# Non-greedy match on filler
-re3='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-re4='(:)'	# Any Single Character 2
-re5='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-re6='(\\,)'
 
-rg = re.compile(re1+re2+re3+re4+re5+re6,re.IGNORECASE|re.DOTALL)
-pattern
+
 m = re.sub(pattern,"",txt)
 
 print m
