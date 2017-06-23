@@ -10,7 +10,8 @@ class DonutPlotWindow(QtGui.QMainWindow, donutPlotLayout.Ui_donutPlot):
         super(DonutPlotWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = 'topologyDonut.png'
+        self.fileName = '../topologyDonut.png'
+        self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -20,28 +21,37 @@ class DonutPlotWindow(QtGui.QMainWindow, donutPlotLayout.Ui_donutPlot):
         self.actionPDF.triggered.connect(lambda: self.exportFile(self.fileName))
 
     def display_image(self):
-        # image = Image.open('../topologyDonut.png')
-        # size = image.size
-        # image = image.resize((size[0]/2, size[1]/2), Image.ANTIALIAS)
-        # print size
-        # image.save('../test.png', 'PNG', quality=200)
-
         # change background color to white
         p = self.palette()
         p.setColor(self.backgroundRole(), QtCore.Qt.white)
         self.setPalette(p)
 
-        # get size of image
+        # creates a lower quality version of the heatmap to display
+        image = Image.open(self.fileName)
+        size = image.size
+        image = image.resize((size[0] / 3, size[1] / 3), Image.ANTIALIAS)
+        image.save(os.path.splitext(self.fileName)[0] + '.lowQual.png', 'PNG', quality=200)
 
+        # positions the window relative to the top left corner of the screen (px)
         self.move(0, 600)
-        self.donutPixmap = QtGui.QPixmap(self.fileName)
-        self.donutPixmap = self.donutPixmap.scaled(600, 600, QtCore.Qt.KeepAspectRatio)
+
+        # displays the lower quality version of the image
+        self.donutPixmap = QtGui.QPixmap(self.lowQualFileName)
         self.donutPlotImage.setScaledContents(False)
         self.donutPlotImage.setPixmap(self.donutPixmap)
 
     def exportFile(self, fileName):
+        """
+                    input: fileName -- a string representing the name of the file to be saved
+
+                    * pops up a window asking for an output path
+
+                    output: saves file 'fileName' to new location inputted by the user
+        """
+
         extension = os.path.splitext(fileName)[1]
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Export ' + extension[1:]) + extension
+        windowTitle = 'Export ' + extension[1:]
+        name = QtGui.QFileDialog.getSaveFileName(self, windowTitle) + extension
         copyfile(fileName, name)
 
 # if you want to test LOCALLY change the path to ../topologyDonut.png #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
