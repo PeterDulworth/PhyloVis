@@ -8,10 +8,12 @@ from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
-    robinsonFouldsWindow
+    robinsonFouldsWindow, heatMapWindow
 import topologyPlots as tp
 import statisticCalculations as sc
 import fileConverterController as fcc
+import informativeSites as infSites
+import tetris
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -30,15 +32,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3,
-                        'inputPageNotRaxC': 4,
-                        'outputPage': 5}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
 
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22+ 6 + 6 + 6},
+        self.windowSizes = {
+                            'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 30},
                             'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
-                            'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+                            'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}
+                            }
 
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
+
+        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'not rax B': self.actionNotRaxB, 'not rax C': self.actionNotRaxC}
 
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -87,12 +91,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
+        self.heatMapWindow = heatMapWindow.HeatMapWindow()
 
         # generate graphs
         self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
         self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
+        self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
 
         # **************************** Rax Input Page Events ****************************#
 
@@ -112,7 +118,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** Rax Welcome Page Events ****************************#
 
-        self.launchBtn.clicked.connect(lambda: self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()]))
+        # self.launchBtn.clicked.connect( lambda: self.setWindow( self.comboboxModes_to_windowNames[self.modeComboBox.currentText()] ) )
+        self.launchBtn.clicked.connect( lambda: self.initializeMode())
 
         # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
@@ -126,6 +133,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
     ################################# Handlers #################################
+
+    def initializeMode(self):
+        if self.modeComboBox.currentText() != "Tetris":
+            self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
+            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
+        else:
+            self.tetrisWindow = tetris.Tetris()
+            self.tetrisWindow.show()
 
     def convertFile(self):
         try:
@@ -175,6 +190,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
 
+        if self.checkboxHeatMap.isChecked():
+            self.heatMapWindow.show()
+            self.heatMapWindow.display_image()
+
         if self.checkboxStatistics.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
@@ -204,7 +223,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         """
         returns the number of checkboxes that are checked
         """
-        return (self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+        return (self.checkboxHeatMap.checkState() + self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -232,7 +251,21 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
+                    # sites_to_informative = {0: 1, 1: 0, 2: 0, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 1, 11: 1,
+                    #                         12: 1, 13: 1, 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1,
+                    #                         23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1,
+                    #                         34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1, 41: 1, 42: 1, 43: 1, 44: 1,
+                    #                         45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 1, 52: 1, 53: 1, 54: 1, 55: 1,
+                    #                         56: 1, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 1, 63: 1, 64: 1, 65: 1, 66: 1,
+                    #                         67: 1, 68: 1, 69: 1, 70: 1, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 1, 77: 1,
+                    #                         78: 1, 79: 1, 80: 1, 81: 1, 82: 1, 83: 1, 84: 1, 85: 1, 86: 1, 87: 1, 88: 1,
+                    #                         89: 1, 90: 1, 91: 1, 92: 1, 93: 1, 94: 1, 95: 0, 96: 1, 97: 1, 98: 1, 99: 1}
+                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
+
+                if self.checkboxHeatMap.isChecked():
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
+                    infSites.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
 
                 if self.checkboxStatistics.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():

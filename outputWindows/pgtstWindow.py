@@ -10,7 +10,7 @@ class PGTSTWindow(QtGui.QMainWindow, pgtstLayout.Ui_pgtst):
         super(PGTSTWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../PGTSTPlot.png'
+        self.fileName = 'PGTSTPlot.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
