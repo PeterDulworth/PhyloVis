@@ -10,7 +10,7 @@ class HeatMapWindow(QtGui.QMainWindow, heatMapLayout.Ui_heatMap):
         super(HeatMapWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../HeatMapInfSites.png'
+        self.fileName = 'HeatMapInfSites.png'
         self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
         
         # moves menu bar into application -- mac only windows sux

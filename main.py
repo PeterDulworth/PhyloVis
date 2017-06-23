@@ -185,6 +185,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.scatterPlotWindow.show()
             self.scatterPlotWindow.display_image()
 
+        if self.checkboxHeatMap.isChecked():
+            self.heatMapWindow.show()
+            self.heatMapWindow.display_image()
+
         if self.checkboxStatistics.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
