@@ -175,6 +175,7 @@ class Ui_PhylogeneticVisualization(object):
         self.horizontalLayout_21 = QtGui.QHBoxLayout()
         self.horizontalLayout_21.setObjectName(_fromUtf8("horizontalLayout_21"))
         self.checkboxHeatMap = QtGui.QCheckBox(self.inputPage)
+        self.checkboxHeatMap.setChecked(True)
         self.checkboxHeatMap.setObjectName(_fromUtf8("checkboxHeatMap"))
         self.horizontalLayout_21.addWidget(self.checkboxHeatMap)
         spacerItem10 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
@@ -578,7 +579,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menubar.addAction(self.menuDisplay.menuAction())
 
         self.retranslateUi(PhylogeneticVisualization)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.outputTabs.setCurrentIndex(0)
         QtCore.QObject.connect(self.checkboxDonutPlot, QtCore.SIGNAL(_fromUtf8("clicked()")), self.actionDonutPlot.toggle)
         QtCore.QObject.connect(self.actionScatterPlot, QtCore.SIGNAL(_fromUtf8("triggered()")), self.checkboxScatterPlot.toggle)
