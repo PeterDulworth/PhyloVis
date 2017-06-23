@@ -161,7 +161,7 @@ def heat_map_generator(dictionary, name):
     blue_green = LinearSegmentedColormap.from_list(color_name, colors)
     plt.register_cmap(cmap=blue_green)
 
-    plt.figure(figsize=(7.5, 1))
+    plt.figure(figsize=(15, 2))
 
     array = np.array(dictionary.values())
 
