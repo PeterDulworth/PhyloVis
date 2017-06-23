@@ -251,7 +251,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
 
                 if self.checkboxAllTrees.isChecked():
-                    tp.topology_colorizer(topologies_to_colors)  # all trees
+                    tp.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
 
                 self.displayResults()
 

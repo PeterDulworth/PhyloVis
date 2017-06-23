@@ -379,12 +379,14 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     plt.clf()
 
 
-def topology_colorizer(color_scheme):
+def topology_colorizer(color_scheme, rooted=False, outgroup=False):
     """
     Create colored tree topology images based on a color scheme where
     the color of a tree is determined by the frequency that it occurs.
     Inputs:
     color scheme --- a dictionary mapping newick strings to colors
+    rooted ---
+    outgroup ---
     """
 
     # Create a count for the number of the topologies
@@ -399,7 +401,11 @@ def topology_colorizer(color_scheme):
 
             # Create the tree object and assign it to the appropriate color
             tree = Phylo.read(StringIO(newick), "newick")
-            tree.rooted = True
+            tree.rooted = rooted
+
+            if outgroup:
+                tree.root_with_outgroup(outgroup)
+
             tree.root.color = color_scheme[newick]
 
             # Create the figure
@@ -584,10 +590,12 @@ if __name__ == '__main__':
     file = "testFiles/ChillLeo.phylip"
     windowSize = 10000
     windowOffset = 10000
+    rooted = True
+    outgroup = "O"
 
     # Function calls for plotting inputs:
     # topologies_to_counts, unique_topologies_to_newicks = topology_counter()
-    topologies_to_counts, unique_topologies_to_newicks = topology_counter(rooted=True,outgroup="O")
+    topologies_to_counts, unique_topologies_to_newicks = topology_counter(rooted, outgroup)
 
     if num > len(topologies_to_counts):
         num = len(topologies_to_counts)
@@ -597,7 +605,7 @@ if __name__ == '__main__':
     top_topologies_to_counts = top_topologies(num, topologies_to_counts)
 
 
-    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=True,outgroup="O")
+    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted, outgroup)
 
     topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
 
@@ -606,7 +614,7 @@ if __name__ == '__main__':
     # Functions for creating plots
     topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
     topology_donut(labels, sizes, donut_colors)
-    topology_colorizer(topologies_to_colors)
+    topology_colorizer(topologies_to_colors, rooted, outgroup)
 
     # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
     #
