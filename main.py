@@ -32,9 +32,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.welcomeLogoImage.setScaledContents(True)
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
-        self.input_file_name = self.window_size = self.window_offset = None
-        self.raxmlOperations = ro.RAxMLOperations(self.input_file_name, self.window_size, self.window_offset)
+        # create new instance of RaxmlOperations class
+        self.raxmlOperations = ro.RAxMLOperations(None, None, None)
+        # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
+
+
+        # create new instance of RaxmlOperations class
+        self.topologyPlotter = tp.TopologyPlotter()
+        # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
@@ -117,12 +125,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
+
     ################################# Handlers #################################
+
+    def done(self):
+        print 'DONEENENENENENEN'
 
     def updateProgressBar(self, val):
         self.progressBar.setValue(self.progressBar.value() + val)
 
     def runProgressBar(self):
+        self.topologyPlotter.start()
         self.raxmlOperations.start()
 
     def initializeMode(self):
@@ -229,34 +242,25 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted=self.rooted,outgroup=self.outGroup)
+                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outGroup)
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
-                    list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
-                    top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
-                    windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(
+                    list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
+                    top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
+                    windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(
                         top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
+                    topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
-                    donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    tp.topology_donut(labels, sizes, donut_colors)  # donut
+                    donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
+                    self.topologyPlotter.topology_donut(labels, sizes, donut_colors)  # donut
 
                 if self.checkboxScatterPlot.isChecked():
-                    tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
+                    self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
-                    # sites_to_informative = {0: 1, 1: 0, 2: 0, 3: 1, 4: 1, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 1, 11: 1,
-                    #                         12: 1, 13: 1, 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1,
-                    #                         23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1,
-                    #                         34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1, 41: 1, 42: 1, 43: 1, 44: 1,
-                    #                         45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 1, 52: 1, 53: 1, 54: 1, 55: 1,
-                    #                         56: 1, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 1, 63: 1, 64: 1, 65: 1, 66: 1,
-                    #                         67: 1, 68: 1, 69: 1, 70: 1, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 1, 77: 1,
-                    #                         78: 1, 79: 1, 80: 1, 81: 1, 82: 1, 83: 1, 84: 1, 85: 1, 86: 1, 87: 1, 88: 1,
-                    #                         89: 1, 90: 1, 91: 1, 92: 1, 93: 1, 94: 1, 95: 0, 96: 1, 97: 1, 98: 1, 99: 1}
-                    tp.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
+                    self.topologyPlotter.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
                 if self.checkboxHeatMap.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
@@ -279,7 +283,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         sc.stat_scatter(windows_to_p_gtst, "PGTST")
 
                 if self.checkboxAllTrees.isChecked():
-                    tp.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
+                    self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
 
                 self.displayResults()
 
@@ -394,7 +398,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runProgressBar()
 
         #####################################################################
-
 
         self.runComplete = True
         # self.updatedDisplayWindows()

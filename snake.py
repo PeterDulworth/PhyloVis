@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import sys, time
-import thread
 from random import randrange
 
 from PyQt4 import QtGui, QtCore
@@ -66,7 +65,7 @@ class Snake(QtGui.QWidget):
         self.isPaused = False
         self.isOver = False
         self.FoodPlaced = False
-        self.speed = 10
+        self.speed = 200
         self.start()
 
     def pause(self):

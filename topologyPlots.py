@@ -3,11 +3,10 @@ from Bio.Graphics import GenomeDiagram
 from collections import defaultdict
 from reportlab.lib import colors
 import matplotlib
-matplotlib.use('Qt4Agg') # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
+matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
 from cStringIO import StringIO
 from natsort import natsorted
-from sys import platform
 from Bio import Phylo
 from PIL import Image
 import numpy as np
@@ -26,15 +25,15 @@ Travis Benedict
 Peter Dulworth
 """
 
+
 class TopologyPlotter(QtCore.QThread):
     def __init__(self, parent=None):
         super(TopologyPlotter, self).__init__(parent)
 
-    # list of colors for plots
-    COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
-              '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
+        # list of colors for plots
+        self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
-    def topology_counter(rooted=False, outgroup=None):
+    def topology_counter(self, rooted=False, outgroup=None):
         """
         Counts the number of times that each topology appears as outputted by
         running RAxML.
@@ -91,15 +90,14 @@ class TopologyPlotter(QtCore.QThread):
 
                 # If the new tree is a unique tree add it to the set of unique topologies
                 if new_tree_is_unique:
-                    new_tree = new_tree.as_string("newick").replace("\n","")
+                    new_tree = new_tree.as_string("newick").replace("\n", "")
                     unique_topologies.add(new_tree)
                     topologies_to_counts[new_tree] += 1
                     unique_topologies_to_newicks[new_tree] = set([new_tree])
 
         return topologies_to_counts, unique_topologies_to_newicks
 
-
-    def top_freqs(num, topologies_to_counts):
+    def top_freqs(self, num, topologies_to_counts):
         """
         Makes three lists containing the top 'num' topology
         frequencies and the labels and sizes for the
@@ -142,8 +140,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return list_of_top_counts, labels, sizes
 
-
-    def top_topologies(num, topologies):
+    def top_topologies(self, num, topologies):
         """
         Maps the top 'num' topologies to the number of
         times they occur.
@@ -168,8 +165,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return top_topologies
 
-
-    def windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=None):
+    def windows_to_newick(self, top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=None):
         """
         Creates a dictionary of window numbers to the topology of that window if
         the newick string contained in the window is a top topology; otherwise the
@@ -206,7 +202,7 @@ class TopologyPlotter(QtCore.QThread):
                     new_tree = Tree.get_from_path(filename, 'newick', taxon_namespace=tns)
                     outgroup_node = new_tree.find_node_with_taxon_label(outgroup)
                     new_tree.to_outgroup_position(outgroup_node, update_bipartitions=False)
-                    newick = new_tree.as_string("newick").replace("\n","")
+                    newick = new_tree.as_string("newick").replace("\n", "")
 
                 window_number = int((os.path.splitext(filename)[1]).replace(".", ""))
 
@@ -229,8 +225,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return wins_to_tops, tops_list
 
-
-    def topology_colors(wins_to_tops, tops_list):
+    def topology_colors(self, wins_to_tops, tops_list):
         """
         Maps topologies to colors and makes two lists
         containing the colors for the scatter plot and
@@ -257,7 +252,7 @@ class TopologyPlotter(QtCore.QThread):
                     break
 
         # create list of colors of same length as number of windows
-        top_colors = COLORS[:len(ylist)]
+        top_colors = self.COLORS[:len(ylist)]
 
         # map colors to topologies so they are the same in scatter plot
         for win in wins_to_tops:
@@ -270,8 +265,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return tops_to_colors, scatter_colors, ylist
 
-
-    def donut_colors(top_topologies, tops_to_colors):
+    def donut_colors(self, top_topologies, tops_to_colors):
         """
         Makes a color list formatted for use in the donut chart
         so that it matches the scatter plot.
@@ -302,8 +296,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return donut_colors
 
-
-    def topology_donut(labels, sizes, donut_colors):
+    def topology_donut(self, labels, sizes, donut_colors):
         """
         Creates a donut chart showing the breakdown of the top 'num'
         topologies.
@@ -328,10 +321,9 @@ class TopologyPlotter(QtCore.QThread):
         outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False,
                                   linewidth=1.25)
 
-
         # impose circle over pie chart to make a donut chart
         inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff',
-                            linewidth=1.25)
+                                  linewidth=1.25)
         fig = plt.gcf()
         fig.gca().add_artist(inner_circle)
         fig.gca().add_artist(outer_circle)
@@ -344,8 +336,7 @@ class TopologyPlotter(QtCore.QThread):
         plt.savefig("topologyDonut.png", dpi=250)
         plt.clf()
 
-
-    def topology_scatter(wins_to_tops, scatter_colors, ylist):
+    def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
         """
         Creates a scatter plot showing the topology as the
         y-axis and the window as the x-axis.
@@ -383,14 +374,12 @@ class TopologyPlotter(QtCore.QThread):
         plt.xlabel('Windows', fontsize=10)
         plt.ylabel('Top Newick Strings', fontsize=10)
 
-
         # save plot
         plot = "topologyScatter.png"
         plt.savefig(plot)
         plt.clf()
 
-
-    def topology_colorizer(color_scheme, rooted=False, outgroup=False):
+    def topology_colorizer(self, color_scheme, rooted=False, outgroup=False):
         """
         Create colored tree topology images based on a color scheme where
         the color of a tree is determined by the frequency that it occurs.
@@ -434,8 +423,7 @@ class TopologyPlotter(QtCore.QThread):
 
                 count += 1
 
-
-    def generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
+    def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
         """
         Creates genetic circle graph showing the windows and the areas where each topology appears
         Inputs:
@@ -607,8 +595,6 @@ class TopologyPlotter(QtCore.QThread):
 
 if __name__ == '__main__':
 
-    # sites_to_informative = {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1, 10: 1, 11: 1, 12: 1, 13: 1, 14: 1, 15: 1, 16: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1, 39: 1, 40: 1, 41: 1, 42: 1, 43: 1, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1, 50: 1, 51: 1, 52: 1, 53: 1, 54: 1, 55: 1, 56: 1, 57: 1, 58: 1, 59: 1, 60: 1, 61: 1, 62: 1, 63: 1, 64: 1, 65: 1, 66: 1, 67: 1, 68: 1, 69: 1, 70: 1, 71: 1, 72: 1, 73: 1, 74: 1, 75: 1, 76: 1, 77: 1, 78: 1, 79: 1, 80: 1, 81: 1, 82: 1, 83: 1, 84: 1, 85: 1, 86: 1, 87: 1, 88: 1, 89: 1, 90: 1, 91: 1, 92: 1, 93: 1, 94: 1, 95: 0, 96: 1, 97: 1, 98: 1, 99: 1}
-
     # User inputs:
     num = 3
     # file = 'phylip.txt'
@@ -618,28 +604,29 @@ if __name__ == '__main__':
     rooted = True
     outgroup = "O"
 
+    tp = TopologyPlotter()
+
     # Function calls for plotting inputs:
     # topologies_to_counts, unique_topologies_to_newicks = topology_counter()
-    topologies_to_counts, unique_topologies_to_newicks = topology_counter(rooted, outgroup)
+    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted, outgroup)
 
     if num > len(topologies_to_counts):
         num = len(topologies_to_counts)
 
-    list_of_top_counts, labels, sizes = top_freqs(num, topologies_to_counts)
+    list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
 
-    top_topologies_to_counts = top_topologies(num, topologies_to_counts)
+    top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
 
+    windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted, outgroup)
 
-    windows_to_top_topologies, top_topologies_list = windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted, outgroup)
+    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies, top_topologies_list)
 
-    topologies_to_colors, scatter_colors, ylist = topology_colors(windows_to_top_topologies, top_topologies_list)
-
-    donut_colors = donut_colors(top_topologies_to_counts, topologies_to_colors)
+    donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)
 
     # Functions for creating plots
-    topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-    topology_donut(labels, sizes, donut_colors)
-    topology_colorizer(topologies_to_colors, rooted, outgroup)
+    tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+    tp.topology_donut(labels, sizes, donut_colors)
+    tp.topology_colorizer(topologies_to_colors, rooted, outgroup)
 
     # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
     #

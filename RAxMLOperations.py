@@ -244,10 +244,9 @@ class RAxMLOperations(QtCore.QThread):
                 self.emit(QtCore.SIGNAL('RAX_PER'), 100 / len(os.listdir('windows')))
 
     def run(self):
-        print 'ASJHDBAJDHASJHDBASD'
-        print self.inputFilename, self.windowSize, self.windowOffset
         self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
         self.raxml_windows()
+        self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 
 
 if __name__ == '__main__':
