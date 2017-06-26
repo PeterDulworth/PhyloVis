@@ -23,7 +23,7 @@ class RAxMLOperations(QtCore.QThread):
         self.windowSize = windowSize
         self.windowOffset = windowOffset
 
-    def raxml_species_tree(phylip):
+    def raxml_species_tree(self, phylip):
         """
         Runs RAxML on input PHYLIP file to create a species
         tree.
@@ -84,7 +84,7 @@ class RAxMLOperations(QtCore.QThread):
             os.rename("RAxML_info.txt", output_directory + "/RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "/Topology_ST_bestTree.txt")
 
-    def window_splitter(filename, window_size, step_size):
+    def window_splitter(self, filename, window_size, step_size):
         """
         Creates smaller PHYLIP files based on a window size inputted into
         the GUI.
@@ -159,7 +159,7 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-    def raxml_windows(window_directory):
+    def raxml_windows(self):
         """
         Runs RAxML on files in the directory containing files from
         window_splitter().
@@ -168,6 +168,7 @@ class RAxMLOperations(QtCore.QThread):
         window_directory ---  the window directory location
         """
 
+        window_directory = 'windows'
         output_directory = "RAxML_Files"
 
         topology_output_directory = "Topologies"
@@ -240,11 +241,11 @@ class RAxMLOperations(QtCore.QThread):
                     os.rename("topology_bestTree." + file_number,
                               topology_output_directory + "/Topology_bestTree." + file_number)
 
-    def run(self):
-        self.window_splitter(self.inputFile, self.windowSize, self.windowOffset)
-        self.raxml_windows('windows')
-            val = sysinfo.getCPU()
-            self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
+    # def run(self):
+    #     self.window_splitter(self.inputFile, self.windowSize, self.windowOffset)
+    #     self.raxml_windows('windows')
+    #         val = sysinfo.getCPU()
+    #         self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
 
 
 if __name__ == '__main__':
@@ -252,9 +253,11 @@ if __name__ == '__main__':
     # window_size = 10
     # window_offset = 10
 
-    input_file = "ChillLeo.phylip"
-    window_size = 500000
-    window_offset = 500000
+    inputFile = "ChillLeo.phylip"
+    windowSize = 500000
+    windowOffset = 500000
 
-    windows_dir = window_splitter(input_file, window_size, window_offset)
-    raxml_windows(windows_dir)
+    ro = RAxMLOperations(inputFile, windowSize, windowOffset)
+
+    windows_dir = ro.window_splitter()
+    ro.raxml_windows()

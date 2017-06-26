@@ -22,13 +22,6 @@ class Worker(QtCore.QThread):
         super(Worker, self).__init__(parent)
 
     def run(self): # worker.start() calls this ? who knows why
-        try:
-            ro.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
-            ro.raxml_windows('windows')  # run once - not rerun
-        except IndexError:
-            QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
-            return
-
         while 1:
             val = sysinfo.getCPU()
             self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
