@@ -351,7 +351,7 @@ def topology_scatter(wins_to_tops, scatter_colors, ylist):
     A scatter plot with topologies as the x-axis and
     windows as the y-axis.
     """
-    
+
     # area of plotted circles
     area = math.pi * (3) ** 2
 
