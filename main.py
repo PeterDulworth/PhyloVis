@@ -37,7 +37,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
-
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
 
         # create new instance of RaxmlOperations class
         self.topologyPlotter = tp.TopologyPlotter()
@@ -128,15 +128,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     ################################# Handlers #################################
 
-    def done(self):
-        print 'DONEENENENENENEN'
-
     def updateProgressBar(self, val):
         self.progressBar.setValue(self.progressBar.value() + val)
 
     def runProgressBar(self):
-        self.topologyPlotter.start()
         self.raxmlOperations.start()
+
+    def runRAxML(self):
+        self.runProgressBar()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
@@ -395,7 +394,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
             return
 
-        self.runProgressBar()
+        self.runRAxML()
 
         #####################################################################
 
