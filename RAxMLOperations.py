@@ -4,7 +4,7 @@ import subprocess
 import shutil
 import os
 import re
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtCore
 
 """
 Functions for creating sequence windows and running RAxML.
@@ -16,12 +16,8 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFile, windowSize, windowOffset, parent=None):
+    def __init__(self, parent=None):
         super(RAxMLOperations, self).__init__(parent)
-
-        self.inputFile = inputFile
-        self.windowSize = windowSize
-        self.windowOffset = windowOffset
 
     def raxml_species_tree(self, phylip):
         """
@@ -249,7 +245,7 @@ class RAxMLOperations(QtCore.QThread):
 
 
 if __name__ == '__main__':
-    # input_file = "phylip.txt"
+    # input_file = "testFiles/phylip.txt"
     # window_size = 10
     # window_offset = 10
 
@@ -257,7 +253,7 @@ if __name__ == '__main__':
     windowSize = 500000
     windowOffset = 500000
 
-    ro = RAxMLOperations(inputFile, windowSize, windowOffset)
+    ro = RAxMLOperations()
 
-    windows_dir = ro.window_splitter(ro.inputFile, ro.windowSize, ro.windowOffset)
+    windows_dir = ro.window_splitter(inputFile, windowSize, windowOffset)
     ro.raxml_windows()
