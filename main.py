@@ -14,6 +14,7 @@ import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
 import tetris
+import snake
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -135,12 +136,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     ################################# Handlers #################################
 
     def initializeMode(self):
-        if self.modeComboBox.currentText() != "Tetris":
+        if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
             self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
             self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
         else:
-            self.tetrisWindow = tetris.Tetris()
-            self.tetrisWindow.show()
+            if self.modeComboBox.currentText() == "Tetris":
+                self.tetrisWindow = tetris.Tetris()
+                self.tetrisWindow.show()
+            if self.modeComboBox.currentText() == "Snake":
+                self.snakeWindow = snake.Snake()
+                self.snakeWindow.show()
 
     def convertFile(self):
         try:
