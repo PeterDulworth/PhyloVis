@@ -14,6 +14,7 @@ import fileConverterController as fcc
 import informativeSites as infSites
 import tetris, snake
 
+
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)

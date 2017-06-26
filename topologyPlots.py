@@ -390,8 +390,8 @@ def topology_colorizer(color_scheme, rooted=False, outgroup=False):
     the color of a tree is determined by the frequency that it occurs.
     Inputs:
     color scheme --- a dictionary mapping newick strings to colors
-    rooted ---
-    outgroup ---
+    rooted --- a boolean parameter corresponding to the tree being rooted
+    outgroup --- a string of the desired taxon to root at
     """
 
     # Create a count for the number of the topologies
