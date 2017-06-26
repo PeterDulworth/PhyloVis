@@ -16,8 +16,12 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, parent=None):
+    def __init__(self, inputFilename, windowSize, windowOffset, parent=None):
         super(RAxMLOperations, self).__init__(parent)
+
+        self.inputFilename = inputFilename
+        self.windowSize = windowSize
+        self.windowOffset = windowOffset
 
     def raxml_species_tree(self, phylip):
         """
@@ -239,11 +243,9 @@ class RAxMLOperations(QtCore.QThread):
 
                 self.emit(QtCore.SIGNAL('RAX_PER'), 5)
 
-    # def run(self):
-    #     self.window_splitter(self.inputFile, self.windowSize, self.windowOffset)
-    #     self.raxml_windows('windows')
-    #         val = sysinfo.getCPU()
-    #         self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
+    def run(self):
+        self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
+        self.raxml_windows()
 
 
 if __name__ == '__main__':
@@ -255,7 +257,7 @@ if __name__ == '__main__':
     windowSize = 500000
     windowOffset = 500000
 
-    ro = RAxMLOperations()
+    ro = RAxMLOperations(inputFile, windowSize, windowOffset)
 
-    windows_dir = ro.window_splitter(inputFile, windowSize, windowOffset)
+    windows_dir = ro.window_splitter(ro.inputFile, ro.windowSize, ro.windowOffset)
     ro.raxml_windows()

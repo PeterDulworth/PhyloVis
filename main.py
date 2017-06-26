@@ -155,15 +155,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
 
-
-
+        # self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
+        # self.raxmlOperations.raxml_windows()
     ################################# Handlers #################################
 
     def updateProgressBar(self, val):
         self.progressBar.setValue(self.progressBar.value() + val)
 
     def runProgressBar(self):
-        self.worker.start()
+        self.raxmlOperations.start()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris":
@@ -422,7 +422,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
             return
 
-        # self.runProgressBar()
+        self.runProgressBar()
 
         # try:
         #     ro.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
@@ -431,13 +431,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         #     QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
         #     return
 
-        self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
-        self.raxmlOperations.raxml_windows()
+        # self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
+        # self.raxmlOperations.raxml_windows()
 
         #####################################################################
 
+
         self.runComplete = True
-        self.updatedDisplayWindows()
+        # self.updatedDisplayWindows()
         self.menuExport.setEnabled(True)
 
 
