@@ -39,10 +39,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
 
-        # create new instance of RaxmlOperations class
+        # create new instance of TopologyPlotter class
         self.topologyPlotter = tp.TopologyPlotter()
-        # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
+        # create new instance of Statistics Calculations class
+        self.statisticsCalculations = sc.StatisticsCalculations()
+
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
@@ -268,18 +269,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxStatistics.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():
                         if self.checkboxWeighted.isChecked():
-                            windows_to_w_rf, windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            sc.stat_scatter(windows_to_w_rf, "weightedRF")
-                            sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+                            windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
+                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "weightedRF")
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                         else:
-                            windows_to_uw_rf = sc.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            sc.stat_scatter(windows_to_uw_rf, "unweightedRF")
+                            windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
                     if self.checkboxPGTST.isChecked():
                         # Function calls for calculating statistics
-                        windows_to_p_gtst = sc.calculate_windows_to_p_gtst(self.speciesTree)
-                        sc.stat_scatter(windows_to_p_gtst, "PGTST")
+                        windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
+                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTST")
 
                 if self.checkboxAllTrees.isChecked():
                     self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
