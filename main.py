@@ -2,7 +2,6 @@ import sip
 sip.setapi('QString', 2)
 import sys, os
 import gui_layout as gui
-import time
 import RAxMLOperations as ro
 from PIL import Image
 from PyQt4 import QtGui, QtCore
@@ -13,19 +12,7 @@ import topologyPlots as tp
 import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
-import tetris
-import sysinfo
-
-
-class Worker(QtCore.QThread):
-    def __init__(self, parent=None):
-        super(Worker, self).__init__(parent)
-
-    def run(self): # worker.start() calls this ? who knows why
-        while 1:
-            val = sysinfo.getCPU()
-            self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
-            print val
+import tetris, snake
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -150,8 +137,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.worker = Worker()
         # self.connect(self.worker, QtCore.SIGNAL('CPU_VALUE'), self.updateProgressBar)
 
+        self.input_file_name, self.window_size, self.window_offset = [None] * 3
+
         # create instance of raxml class
-        self.raxmlOperations = ro.RAxMLOperations()
+        self.raxmlOperations = ro.RAxMLOperations(self.input_file_name, self.window_size, self.window_offset)
 
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
 
@@ -166,12 +155,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations.start()
 
     def initializeMode(self):
-        if self.modeComboBox.currentText() != "Tetris":
+        if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
             self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
             self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
         else:
-            self.tetrisWindow = tetris.Tetris()
-            self.tetrisWindow.show()
+            if self.modeComboBox.currentText() == "Tetris":
+                self.tetrisWindow = tetris.Tetris()
+                self.tetrisWindow.show()
+            if self.modeComboBox.currentText() == "Snake":
+                self.snakeWindow = snake.Snake()
+                self.snakeWindow.show()
 
     def convertFile(self):
         try:
@@ -351,6 +344,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
+            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
             self.input_file_extension = os.path.splitext(self.input_file_name)[1]
 
             if self.input_file_name == "":
@@ -375,6 +369,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # Error handling for window size
         try:
             self.window_size = int(self.windowSizeEntry.text())
+            self.raxmlOperations.windowSize = int(self.windowSizeEntry.text())
+
             if self.window_size <= 0:
                 raise ValueError, "Positive integers only"
         except ValueError:
@@ -384,6 +380,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # Error handling for window offset
         try:
             self.window_offset = int(self.windowOffsetEntry.text())
+            self.raxmlOperations.windowOffset = int(self.windowOffsetEntry.text())
+
             if self.window_offset <= 0:
                 raise ValueError, "Positive integers only"
         except ValueError:
