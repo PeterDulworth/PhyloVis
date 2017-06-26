@@ -241,9 +241,11 @@ class RAxMLOperations(QtCore.QThread):
                     os.rename("topology_bestTree." + file_number,
                               topology_output_directory + "/Topology_bestTree." + file_number)
 
-                self.emit(QtCore.SIGNAL('RAX_PER'), 5)
+                self.emit(QtCore.SIGNAL('RAX_PER'), 100 / len(os.listdir('windows')))
 
     def run(self):
+        print 'ASJHDBAJDHASJHDBASD'
+        print self.inputFilename, self.windowSize, self.windowOffset
         self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
         self.raxml_windows()
 
@@ -259,5 +261,5 @@ if __name__ == '__main__':
 
     ro = RAxMLOperations(inputFile, windowSize, windowOffset)
 
-    windows_dir = ro.window_splitter(ro.inputFile, ro.windowSize, ro.windowOffset)
+    windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
     ro.raxml_windows()
