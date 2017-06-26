@@ -14,6 +14,42 @@ import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
 import tetris
+import sysinfo
+
+
+class Worker(QtCore.QThread):
+    def __init__(self, parent=None):
+        super(Worker, self).__init__(parent)
+
+    def run(self):
+        while 1:
+            val = sysinfo.getCPU()
+            self.emit(QtCore.SIGNAL('CPU_VALUE'), val)
+            print val
+
+
+class ProgressThread(QtCore.QThread):
+
+    progress_update = QtCore.pyqtSignal(int)
+
+    def __init__(self):
+        QtCore.QThread.__init__(self)
+
+    def __del__(self):
+        self.wait()
+
+    # def start(self, priority=None):
+    #     print 'started'
+
+    def run(self):
+        # your logic here
+        print 'asdf'
+        while 1:
+            maxVal = 1 # NOTE THIS CHANGED to 1 since updateProgressBar was updating the value by 1 every time
+            self.progress_update.emit(maxVal) # self.emit(SIGNAL('PROGRESS'), maxVal)
+            # Tell the thread to sleep for 1 second and let other things run
+            time.sleep(1)
+            print maxVal
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -56,6 +92,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # set start page to the input page
         self.stackedWidget.setCurrentIndex(0)
         # self.statisticsOptionsGroupBox.hide()
+
+        self.timer = QtCore.QBasicTimer()
+        self.step = 0
 
         ############################# Link Events ##############################
 
@@ -132,7 +171,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
+        self.progress_thread = ProgressThread()
+        self.progress_thread.progress_update.connect(self.updateProgressBar)
+
     ################################# Handlers #################################
+
+    def updateProgressBar(self, maxVal):
+        self.progressBar.setValue(self.progressBar.value() + maxVal)
+        if maxVal == 0:
+            self.progressBar.setValue(100)
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris":
@@ -319,16 +366,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         textEntry.setText(name)
 
     def runProgressBar(self):
-        self.completed = 0
-        self.progressBar.reset()
-
-        while True:
-            time.sleep(0.05)
-            value = self.progressBar.value() + 1
-            self.progressBar.setValue(value)
-            QtGui.qApp.processEvents()
-            if value >= 101:
-                break
+        self.progress_thread.run()
 
     def run(self):
 
@@ -406,7 +444,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
             return
 
-        # self.runProgressBar()
+        self.runProgressBar()
 
         try:
             self.windows_dirs = wo.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
