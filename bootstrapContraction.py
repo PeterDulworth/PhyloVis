@@ -46,7 +46,7 @@ def contraction_threshold(tree_file, confidence_threshold):
     # Get the final number of internal nodes
     num_internal_nodes_f = len(tree.get_nonterminals())
 
-    plt.title('Confidence Threshold: ' + str(confidence_threshold))
+    # plt.title('Confidence Threshold: ' + str(confidence_threshold))
     Phylo.draw(tree, "TestTree", axes=axes, do_show=False)
     plt.clf()
     # plt.show()
@@ -107,8 +107,8 @@ def double_line_graph_generator(list1, list2, xlabel, ylabel, name):
     plt.title('Number of Internal Nodes Confidence Threshold: ' + str(confidence_threshold))
     plt.legend(["Before Contraction", "After Contraction"], loc=0)
     # plt.tight_layout()
-    plt.show()
-    # plt.savefig(name, dpi=250)
+    # plt.show()
+    plt.savefig(name, dpi=250)
     plt.clf()
 
 
