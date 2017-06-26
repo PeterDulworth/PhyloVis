@@ -237,6 +237,8 @@ class RAxMLOperations(QtCore.QThread):
                     os.rename("topology_bestTree." + file_number,
                               topology_output_directory + "/Topology_bestTree." + file_number)
 
+                self.emit(QtCore.SIGNAL('RAX_PER'), 5)
+
     # def run(self):
     #     self.window_splitter(self.inputFile, self.windowSize, self.windowOffset)
     #     self.raxml_windows('windows')

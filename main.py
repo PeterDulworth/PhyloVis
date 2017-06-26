@@ -61,6 +61,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupEntry.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
 
+        self.progressBar.reset()
+
         self.rooted = False
         self.outGroup = ""
 
@@ -125,7 +127,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # run
         self.runBtn.clicked.connect(self.run)
-        self.progressBar.reset()
 
         # choose newick file
         self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
@@ -149,13 +150,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.worker = Worker()
         # self.connect(self.worker, QtCore.SIGNAL('CPU_VALUE'), self.updateProgressBar)
 
+        # create instance of raxml class
         self.raxmlOperations = ro.RAxMLOperations()
+
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
+
 
 
     ################################# Handlers #################################
 
     def updateProgressBar(self, val):
-        self.progressBar.setValue(val)
+        self.progressBar.setValue(self.progressBar.value() + val)
 
     def runProgressBar(self):
         self.worker.start()
@@ -425,6 +430,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # except IndexError:
         #     QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
         #     return
+
+        self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
+        self.raxmlOperations.raxml_windows()
 
         #####################################################################
 
