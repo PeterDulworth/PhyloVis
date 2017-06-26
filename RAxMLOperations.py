@@ -150,9 +150,6 @@ def window_splitter(filename, window_size, step_size):
                 file.write(window + "\n")
                 file.close()
 
-    return output_folder
-
-
 def raxml_windows(window_directory):
     """
     Runs RAxML on files in the directory containing files from
