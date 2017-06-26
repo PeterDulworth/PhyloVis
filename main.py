@@ -19,6 +19,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
+
+        # set UI style
         # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
 
         # moves menu bar into application -- mac only windows sux
@@ -30,65 +32,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # self.welcomeLogoImage.setScaledContents(True)
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
+        self.input_file_name = self.window_size = self.window_offset = None
+        self.raxmlOperations = ro.RAxMLOperations(self.input_file_name, self.window_size, self.window_offset)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
+
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
-
-        self.windowSizes = {
-                            'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 30},
-                            'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245},
-                            'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}
-                            }
-
+        # mapping from: windows --> dictionary of page dimensions
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 30}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
-
+        # mapping from: mode --> menu action
         self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'not rax B': self.actionNotRaxB, 'not rax C': self.actionNotRaxC}
 
-        self.runComplete = False
-        self.checkboxWeighted.setEnabled(False)
-        self.menuExport.setEnabled(False)
-        self.outgroupEntry.setEnabled(False)
-        self.outgroupLabel.setEnabled(False)
-
-        self.progressBar.reset()
-
-        self.rooted = False
-        self.outGroup = ""
-
-        # set start page to the input page
-        self.stackedWidget.setCurrentIndex(0)
-        # self.statisticsOptionsGroupBox.hide()
-
-        self.timer = QtCore.QBasicTimer()
-        self.step = 0
-
-        ############################# Link Events ##############################
-
-        # **************************** Menu Bar Events ****************************#
-
-        # when you select a mode first deselect all other modes to ensure only a single mode is ever selected
-        self.modes = self.menuMode.actions()
-        self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
-        self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
-        self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
-
-        # change the input mode based on which mode is selected in the menu bar
-        self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
-        self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
-        self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
-        self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
-
-        # export files
-        self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
-        self.actionBootstrapJPG.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
-        self.actionTextFile.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
-
-        # export directories
-        self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
-        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAxML_Files'))
-        self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
-
-        # set up other windows
+        # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
@@ -97,32 +54,50 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
 
-        # generate graphs
+        # default values
+        self.runComplete = False
+        self.checkboxWeighted.setEnabled(False)
+        self.menuExport.setEnabled(False)
+        self.outgroupEntry.setEnabled(False)
+        self.outgroupLabel.setEnabled(False)
+        self.progressBar.reset()
+        self.rooted = False
+        self.outGroup = ""
+        self.stackedWidget.setCurrentIndex(0)
+        self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
+
+        # **************************** RAXML PAGE ****************************#
+
+        # selecting a mode in the menu bar -> deselects all other modes first
+        # change the input mode based on which mode is selected in the menu bar
+        self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
+        self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
+        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
+        self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
+        self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
+        self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
+        self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
+        self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
+
+        # triggers export dialogs
+        self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
+        self.actionBootstrapJPG.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
+        self.actionTextFile.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
+        self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
+        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAxML_Files'))
+        self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
+
+        # triggers select file dialogs
+        self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
+        self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
+        self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
+
+        # regenerates each graph every time checkbox is checked
         self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
         self.checkboxScatterPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxScatterPlot))
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
         self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
-
-        # **************************** Rax Input Page Events ****************************#
-
-        # resize to size of welcome page
-        self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
-
-        # if input file button is clicked run function -- file_open
-        self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
-        self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
-
-        # run
-        self.runBtn.clicked.connect(self.run)
-
-        # choose newick file
-        self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
-
-        # **************************** Rax Welcome Page Events ****************************#
-
-        # self.launchBtn.clicked.connect( lambda: self.setWindow( self.comboboxModes_to_windowNames[self.modeComboBox.currentText()] ) )
-        self.launchBtn.clicked.connect( lambda: self.initializeMode())
 
         # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
@@ -130,23 +105,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
 
-        #################################
+        # run RAX_ML and generate graphs
+        self.runBtn.clicked.connect(self.run)
+
+        # **************************** WELCOME PAGE ****************************#
+
+        self.launchBtn.clicked.connect(lambda: self.initializeMode())
+
+        # **************************** CONVERTER PAGE ****************************#
 
         self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
-        # self.worker = Worker()
-        # self.connect(self.worker, QtCore.SIGNAL('CPU_VALUE'), self.updateProgressBar)
-
-        self.input_file_name, self.window_size, self.window_offset = [None] * 3
-
-        # create instance of raxml class
-        self.raxmlOperations = ro.RAxMLOperations(self.input_file_name, self.window_size, self.window_offset)
-
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
-
-        # self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
-        # self.raxmlOperations.raxml_windows()
     ################################# Handlers #################################
 
     def updateProgressBar(self, val):
@@ -318,7 +288,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
 
     def ensureSingleModeSelected(self, mode_selected):
-        for mode in self.modes:
+        for mode in self.menuMode.actions():
             if mode != mode_selected:
                 mode.setChecked(False)
 
@@ -422,16 +392,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
         self.runProgressBar()
-
-        # try:
-        #     ro.window_splitter(self.input_file_name, self.window_size, self.window_offset)  # run once - not rerun
-        #     ro.raxml_windows('windows')  # run once - not rerun
-        # except IndexError:
-        #     QtGui.QMessageBox.about(self, "asd", "Invalid file format.\nPlease check your data.")
-        #     return
-
-        # self.raxmlOperations.window_splitter(self.input_file_name, self.window_size, self.window_offset)
-        # self.raxmlOperations.raxml_windows()
 
         #####################################################################
 
