@@ -253,11 +253,11 @@ if __name__ == '__main__':
     # window_size = 10
     # window_offset = 10
 
-    inputFile = "ChillLeo.phylip"
+    inputFile = "testFiles/ChillLeo.phylip"
     windowSize = 500000
     windowOffset = 500000
 
     ro = RAxMLOperations(inputFile, windowSize, windowOffset)
 
-    windows_dir = ro.window_splitter()
+    windows_dir = ro.window_splitter(ro.inputFile, ro.windowSize, ro.windowOffset)
     ro.raxml_windows()
