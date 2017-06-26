@@ -1,80 +1,54 @@
 from Bio import Phylo
-from Bio.Phylo.Consensus import *
-from Bio.Phylo.Consensus import _BitString
-
 from matplotlib import pyplot as plt
 
 
-# Create the figure
-fig = plt.figure()
-axes = fig.add_subplot(1, 1, 1)
 
-target_tree = Phylo.read('RAxML_Files\\RAxML_bipartitions.1', "newick")
-trees = list(Phylo.parse('RAxML_Files\\RAxML_bootstrap.1', 'newick'))
+def contraction_threshold(tree_file, confidence_threshold):
+    """
+    Contract the inner nodes of a tree if the confidence values of the 
+    inner nodes are less than a specified threshold value
+    
+    Inputs:
+    tree_file --- a string containing the file name of a bootstrapped tree newick string
+    confidence_threshold --- an integer value for the lowest confidence value allowed for 
+    an internal node; nodes with confidence values less than this will be contracted
+    """
 
-# support_tree = get_support(target_tree, trees)
-#
-# Phylo.draw(support_tree, "Test Tree", axes=axes, do_show=False)
-# # Phylo.draw(target_tree, "Test Tree", axes=axes, do_show=False)
-#
-# plt.show()
+    # Create a plot for the figure
+    fig = plt.figure()
+    axes = fig.add_subplot(1, 1, 1)
 
-# get clade from tree
-clade = target_tree.get_nonterminals()[0]
+    tree = Phylo.read(tree_file, "newick")
 
-# suppose we are provided with a tree list, the first thing
-# to do is to get all the terminal names in the first tree
-term_names = [term.name for term in trees[0].get_terminals()]
+    # Outgroup is meant just for "phylip.txt" testing
+    tree.root_with_outgroup("seq5")
 
-# for a specific clade in any of the tree, also get its terminal names
-clade_term_names = [term.name for term in clade.get_terminals()]
+    # Creates a list of all internal nodes
+    internal_nodes = tree.get_nonterminals()
 
-# then create a boolean list
-boolvals = [name in clade_term_names for name in term_names]
+    # Get the number of internal nodes initially
+    num_internal_nodes_i = len(internal_nodes)
 
-# create the string version and pass it to _BitString
-bitstr = _BitString(''.join(map(str, map(int, boolvals))))
+    for clade in internal_nodes:
 
+        # If the clade has a confidence value less than the threshold contract it
+        if clade.confidence < confidence_threshold and clade.confidence:
 
+            # Print clad information for debugging
+            # print clade.__repr__()
 
+            tree.collapse(target=clade)
 
+    # Get the final number of internal nodes
+    num_internal_nodes_f = len(tree.get_nonterminals())
 
+    plt.title('Confidence Threshold: ' + str(confidence_threshold))
+    Phylo.draw(tree, "Test Tree", axes=axes, do_show=False)
+    plt.show()
 
-from Bio.Phylo.BaseTree import TreeMixin
+    return num_internal_nodes_i, num_internal_nodes_f
 
-target_tree = Phylo.read('RAxML_Files\\RAxML_bipartitions.0', "newick")
+tree_file = 'RAxML_Files\\RAxML_bipartitions.0'
+confidence_threshold = 100
 
-target_tree.root_with_outgroup("seq5")
-
-# print target_tree.get_terminals()
-# print
-
-# Creates a list of all internal nodes
-inner_nodes = target_tree.get_nonterminals()
-print "loooook " + str(len(inner_nodes))
-# ._repr_() displays clade information
-
-print inner_nodes[1].__repr__()
-print
-print target_tree.find_any(confidence=50).__repr__()
-print
-
-print "Find elements"
-interested_clades = target_tree.find_elements(confidence=0)
-
-for clade in interested_clades:
-    print clade.__repr__()
-    target_tree.collapse(target=clade)
-
-inner_nodes = target_tree.get_nonterminals()
-print "loooook" + str(len(inner_nodes))
-
-Phylo.draw(target_tree, "Test Tree", axes=axes, do_show=False)
-plt.show()
-
-
-# print inner_nodes
-
-
-
-# print target_tree._filter_search(confidence>20)
+print contraction_threshold(tree_file, confidence_threshold)
