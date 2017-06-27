@@ -55,7 +55,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # create new instance of BootstrapContraction class
         self.bootstrapContraction = bc.BootstrapContraction()
 
-
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
