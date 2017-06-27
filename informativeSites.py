@@ -16,7 +16,7 @@ Peter Dulworth
 
 
 class InformativeSites(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, parent=None):
+    def __init__(self, parent=None):
         super(InformativeSites, self).__init__(parent)
 
     def is_site_informative(self, site):

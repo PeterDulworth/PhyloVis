@@ -1,17 +1,24 @@
+# utilities
 import sip
 sip.setapi('QString', 2)
 import sys, os
-import gui_layout as gui
-import RAxMLOperations as ro
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
-    robinsonFouldsWindow, heatMapWindow
+
+# GUI
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow
+import gui_layout as gui
+
+# logic
+import RAxMLOperations as ro
 import topologyPlots as tp
 import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
+import bootstrapContraction as bc
+
+# more important logic
 import tetris, snake
 
 
@@ -43,6 +50,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.topologyPlotter = tp.TopologyPlotter()
         # create new instance of Statistics Calculations class
         self.statisticsCalculations = sc.StatisticsCalculations()
+        # create new instance of Informative Sites class
+        self.informativeSites = infSites.InformativeSites()
+        # create new instance of BootstrapContraction class
+        self.bootstrapContraction = bc.BootstrapContraction()
 
 
         # mapping from: windows --> page index
@@ -259,12 +270,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.topologyPlotter.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
                 if self.checkboxHeatMap.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
-                    infSites.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
+                    self.informativeSites.heat_map_generator(sites_to_informative, "HeatMapself.informativeSites.png")
 
                 if self.checkboxStatistics.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():

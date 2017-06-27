@@ -13,7 +13,7 @@ Peter Dulworth
 """
 
 class BootstrapContraction(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, parent=None):
+    def __init__(self, parent=None):
         super(BootstrapContraction, self).__init__(parent)
 
     def contraction_threshold(self, tree_file, confidence_threshold):
