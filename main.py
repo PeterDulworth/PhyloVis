@@ -429,9 +429,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for confidence threshold
         try:
-            self.confidenceLevel = int(self.confidenceLevelEntry.text())
-            if self.confidenceLevel < 0 or self.confidenceLevel > 100:
-                raise ValueError, "Please enter an integer between 0 and 100."
+            if self.checkboxBootstrap.isChecked():
+                self.confidenceLevel = int(self.confidenceLevelEntry.text())
+                if self.confidenceLevel < 0 or self.confidenceLevel > 100:
+                    raise ValueError, "Please enter an integer between 0 and 100."
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input",
                                     "Confidence level needs to be an integer between 0 and 100.")
@@ -439,9 +440,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for number of bootstraps
         try:
-            self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-            if self.numBootstraps < 0 or self.numBootstraps > 100:
-                raise ValueError, "Please enter an integer greater than 1."
+            if self.checkboxBootstrap.isChecked():
+                self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
+                if self.numBootstraps < 0 or self.numBootstraps > 100:
+                    raise ValueError, "Please enter an integer greater than 1."
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input",
                                     "Number of bootstraps needs to be an integer greater than 1.")

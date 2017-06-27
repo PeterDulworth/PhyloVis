@@ -11,6 +11,7 @@ class AllTreesWindow(QtGui.QMainWindow, allTreesLayout.Ui_allTrees):
         self.setupUi(self)
 
         self.fileName = 'TopTopologies.png'
+        self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -25,14 +26,19 @@ class AllTreesWindow(QtGui.QMainWindow, allTreesLayout.Ui_allTrees):
         p.setColor(self.backgroundRole(), QtCore.Qt.white)
         self.setPalette(p)
 
-        # get size of image
-        standardSize = Image.open(self.fileName).size
+        # creates a lower quality version of the heatmap to display
+        image = Image.open(self.fileName)
+        size = image.size
+        image = image.resize((size[0] / 3, size[1] / 3), Image.ANTIALIAS)
+        image.save(os.path.splitext(self.fileName)[0] + '.lowQual.png', 'PNG', quality=200)
 
-        # move, display and resize window
+        # positions the window relative to the top left corner of the screen (px)
         self.move(800, 0)
-        self.allTreesImage.setScaledContents(True)
-        self.allTreesImage.setPixmap(QtGui.QPixmap(self.fileName))
-        self.resize(int(standardSize[0]), int(standardSize[1]))
+
+        # displays the lower quality version of the image
+        self.allTreesPixmap = QtGui.QPixmap(self.lowQualFileName)
+        self.allTreesImage.setScaledContents(False)
+        self.allTreesImage.setPixmap(self.allTreesPixmap)
 
     def exportFile(self, fileName):
         extension = os.path.splitext(fileName)[1]
