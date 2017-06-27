@@ -19,7 +19,7 @@ class InformativeSites(QtCore.QThread):
     def __init__(self, inputFilename, windowSize, windowOffset, parent=None):
         super(InformativeSites, self).__init__(parent)
 
-    def is_site_informative(site):
+    def is_site_informative(self, site):
         """
         Determines if a site is informative or not
         Input:
@@ -51,7 +51,7 @@ class InformativeSites(QtCore.QThread):
             return 0
 
 
-    def calculate_informativeness(window_directory, window_offset):
+    def calculate_informativeness(self, window_directory, window_offset):
         """
         Calculates information about informative sites in an alignment
         Input:
@@ -113,7 +113,7 @@ class InformativeSites(QtCore.QThread):
                         site.append(sequence[window_idx])
 
                     # Determine if a site is informative
-                    informative = is_site_informative(site)
+                    informative = self.is_site_informative(site)
 
                     # If the site has not been visited before add to mappings (deals with overlapping windows)
                     if site_idx not in sites_to_informative:
@@ -139,7 +139,7 @@ class InformativeSites(QtCore.QThread):
         return sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative
 
 
-    def line_graph_generator(dictionary, xlabel, ylabel, name):
+    def line_graph_generator(self, dictionary, xlabel, ylabel, name):
         """
         Create a line graph based on the inputted dictionary
         Input:
@@ -160,7 +160,7 @@ class InformativeSites(QtCore.QThread):
         plt.clf()
 
 
-    def heat_map_generator(dictionary, name):
+    def heat_map_generator(self, dictionary, name):
         """
         Create a heat map based on the inputted dictionary
         Input:
@@ -201,9 +201,11 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     # chabs window dir ?
     # window_dir = ''
 
-    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = calculate_informativeness(window_dir, 50000)
+    infs = InformativeSites()
+
+    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infs.calculate_informativeness(window_dir, 50000)
 
     # print str(pct_informative) + "%"
-    # line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
+    # infs.line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
 
-    heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
+    infs.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
