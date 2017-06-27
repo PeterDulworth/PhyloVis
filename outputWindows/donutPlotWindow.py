@@ -10,7 +10,7 @@ class DonutPlotWindow(QtGui.QMainWindow, donutPlotLayout.Ui_donutPlot):
         super(DonutPlotWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../topologyDonut.png'
+        self.fileName = 'topologyDonut.png'
         self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
 
         # moves menu bar into application -- mac only windows sux
