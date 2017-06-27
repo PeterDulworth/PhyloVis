@@ -55,8 +55,8 @@ class Snake(QtGui.QWidget):
 
     def newGame(self):
         self.score = 0
-        self.x = 12;
-        self.y = 36;
+        self.x = 12
+        self.y = 36
         self.lastKeyPress = 'RIGHT'
         self.timer = QtCore.QBasicTimer()
         self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y]]
@@ -65,7 +65,7 @@ class Snake(QtGui.QWidget):
         self.isPaused = False
         self.isOver = False
         self.FoodPlaced = False
-        self.speed = 200
+        self.speed = 100
         self.start()
 
     def pause(self):
