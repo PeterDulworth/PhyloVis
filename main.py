@@ -80,10 +80,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menuExport.setEnabled(False)
         self.outgroupEntry.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
+        self.statisticsOptionsPage.setEnabled(False)
         self.progressBar.reset()
+        self.generateGraphsProgressBar.reset()
         self.rooted = False
         self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
+        self.raxmlToolBox.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # **************************** RAXML PAGE ****************************#
@@ -120,7 +123,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
 
         # toggle what inputs are actionable based on checkboxes
-        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
+        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))

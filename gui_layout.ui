@@ -231,7 +231,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <layout class="QHBoxLayout" name="inputFileHL">
             <item>
              <widget class="QPushButton" name="inputFileBtn">
               <property name="focusPolicy">
@@ -267,7 +267,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QToolBox" name="toolBox">
+           <widget class="QToolBox" name="raxmlToolBox">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -307,12 +307,12 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_21">
               <item>
-               <widget class="QGroupBox" name="groupBox_2">
+               <widget class="QGroupBox" name="raxmlOptionsGroupBox">
                 <layout class="QHBoxLayout" name="horizontalLayout_75">
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_16">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_76">
+                    <layout class="QHBoxLayout" name="bootstrapHL">
                      <item>
                       <widget class="QCheckBox" name="checkboxBootstrap">
                        <property name="minimumSize">
@@ -355,7 +355,7 @@
                     </layout>
                    </item>
                    <item>
-                    <widget class="QGroupBox" name="grouopie_2">
+                    <widget class="QGroupBox" name="bootstrapGroupBox">
                      <property name="layoutDirection">
                       <enum>Qt::LeftToRight</enum>
                      </property>
@@ -415,7 +415,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="Line" name="line_7">
+                  <widget class="Line" name="raxmlOptionsVLine">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -600,12 +600,12 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
-               <widget class="QGroupBox" name="groupBox_4">
+               <widget class="QGroupBox" name="graphOptionsGroupBox">
                 <layout class="QHBoxLayout" name="horizontalLayout_30">
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_10">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_31">
+                    <layout class="QHBoxLayout" name="allTreesHL">
                      <item>
                       <widget class="QCheckBox" name="checkboxAllTrees">
                        <property name="minimumSize">
@@ -645,7 +645,7 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_32">
+                    <layout class="QHBoxLayout" name="scatterPlotHL">
                      <item>
                       <widget class="QCheckBox" name="checkboxScatterPlot">
                        <property name="minimumSize">
@@ -685,7 +685,7 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_33">
+                    <layout class="QHBoxLayout" name="scatterPlotHL_2">
                      <item>
                       <widget class="QCheckBox" name="checkboxDonutPlot">
                        <property name="minimumSize">
@@ -727,7 +727,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="Line" name="line_4">
+                  <widget class="Line" name="graphOptionsVLine">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
@@ -770,7 +770,7 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_34">
+                    <layout class="QHBoxLayout" name="circleGraphHL">
                      <item>
                       <widget class="QCheckBox" name="checkboxCircleGraph">
                        <property name="minimumSize">
@@ -795,7 +795,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_27">
+                      <spacer name="circleGraphSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -810,7 +810,7 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_35">
+                    <layout class="QHBoxLayout" name="heatMapHL">
                      <item>
                       <widget class="QCheckBox" name="checkboxHeatMap">
                        <property name="font">
@@ -829,7 +829,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_28">
+                      <spacer name="heatMapSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -885,7 +885,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_14">
+                  <layout class="QHBoxLayout" name="newickFileHL">
                    <item>
                     <widget class="QPushButton" name="newickFileBtn">
                      <property name="font">
@@ -901,7 +901,7 @@
                     </widget>
                    </item>
                    <item>
-                    <spacer name="horizontalSpacer_29">
+                    <spacer name="newickFileSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -948,7 +948,7 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                  <layout class="QHBoxLayout" name="newickStringHL">
                    <item>
                     <widget class="QLabel" name="speciesTreeNewickStringsLabel">
                      <property name="sizePolicy">
@@ -970,7 +970,7 @@
                     </widget>
                    </item>
                    <item>
-                    <spacer name="horizontalSpacer_6">
+                    <spacer name="newickStringSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -1014,7 +1014,7 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_16">
+                  <layout class="QHBoxLayout" name="robinsonFouldsHL">
                    <item>
                     <widget class="QCheckBox" name="checkboxRobinsonFoulds">
                      <property name="minimumSize">
@@ -1058,7 +1058,7 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                  <layout class="QHBoxLayout" name="pgtstHL">
                    <item>
                     <widget class="QCheckBox" name="checkboxPGTST">
                      <property name="minimumSize">
@@ -1082,7 +1082,7 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_36">
+                  <layout class="QHBoxLayout" name="rootedHL">
                    <item>
                     <widget class="QCheckBox" name="checkboxRooted">
                      <property name="minimumSize">
@@ -1104,7 +1104,7 @@
                     </widget>
                    </item>
                    <item>
-                    <spacer name="horizontalSpacer_30">
+                    <spacer name="rootedSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -1163,7 +1163,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <layout class="QHBoxLayout" name="runRaxmlHL">
             <item>
              <widget class="QPushButton" name="runBtn">
               <property name="minimumSize">
@@ -1193,16 +1193,16 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_37">
+           <layout class="QHBoxLayout" name="generateGraphsHL">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="generateGraphsBtn">
               <property name="text">
                <string>Generate Graphs</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QProgressBar" name="progressBar_2">
+             <widget class="QProgressBar" name="generateGraphsProgressBar">
               <property name="value">
                <number>24</number>
               </property>
