@@ -16,10 +16,11 @@ from dendropy.calculate import treecompare
 from dendropy import Tree
 import dendropy
 from PyQt4 import QtCore
+import re
+
 
 """
 Functions for creating plots based on the topologies.
-~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
@@ -423,6 +424,74 @@ class TopologyPlotter(QtCore.QThread):
 
                 count += 1
 
+
+    def top_topology_visualization(self):
+        """
+        Combines tree topology images in pairwise vertical stacks
+        """
+
+        pattern = "(Topology)(\d)"
+
+        topology_images = []
+
+        # Iterate over each folder in the given directory
+        for filename in os.listdir("."):
+
+            # If file is a Topology image
+            if re.match(pattern, (os.path.splitext(filename)[0])):
+                topology_images.append(filename)
+
+        # Open the bottom images
+        topology_images = map(Image.open, topology_images)
+
+        num_images = len(topology_images)
+
+        widths, heights = zip(*(i.size for i in topology_images))
+
+        # If there are more than two topology images at most two are side by side
+        if num_images > 1:
+            total_width = (widths[0] * 2)
+
+        else:
+            total_width = widths[0]
+
+        # Total height is one of the heights times the number of images stacked vertically
+        total_height = int(heights[0] * math.ceil(num_images / 2.0))
+
+        # Create combined image of plot and trees
+        new_im = Image.new('RGB', (total_width, total_height))
+        new_im.paste((255, 255, 255), (0, 0, total_width, total_height))
+
+        x_offset = 0
+        y_offset = 0
+
+        odd = num_images % 2
+
+        # Combine images in pairwise vertical stacks
+        for i in range(len(topology_images)):
+
+            im = topology_images[i]
+
+            # If there are an odd number of images and the current one is the last one put it in the middle
+            if odd and i == (len(topology_images) - 1):
+                x_offset = total_width / 4
+                new_im.paste(im, (x_offset, y_offset), mask=im)
+
+
+            else:
+                if i % 2 == 1:
+                    x_offset = (total_width / 2)
+                    new_im.paste(im, (x_offset, y_offset), mask=im)
+                    new_im.save("TEst" + str(i) + ".png")
+                    y_offset += im.size[1]
+                    x_offset = 0
+
+                else:
+                    new_im.paste(im, (x_offset, y_offset), mask=im)
+
+        new_im.save("TopTopologies.png")
+
+
     def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
         """
         Creates genetic circle graph showing the windows and the areas where each topology appears
@@ -627,6 +696,7 @@ if __name__ == '__main__':
     tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
     tp.topology_donut(labels, sizes, donut_colors)
     tp.topology_colorizer(topologies_to_colors, rooted, outgroup)
+    tp.top_topology_visualization()
 
     # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
     #

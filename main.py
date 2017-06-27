@@ -284,6 +284,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 if self.checkboxAllTrees.isChecked():
                     self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
+                    self.topologyPlotter.top_topology_visualization()
 
                 self.displayResults()
 
