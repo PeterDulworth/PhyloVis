@@ -190,7 +190,7 @@ def raxml_windows(window_directory):
             input_file = os.path.join(window_directory, filename)
 
             # Run RAxML
-            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 10 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
             # Wait until command line is finished running
             p.wait()
 
