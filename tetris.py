@@ -47,7 +47,7 @@ class Board(QtGui.QFrame):
 
     BoardWidth = 10
     BoardHeight = 22
-    Speed = 300
+    Speed = 50
 
     def __init__(self, parent):
         super(Board, self).__init__(parent)
@@ -354,7 +354,7 @@ class Shape(object):
         self.pieceShape = shape
 
     def setRandomShape(self):
-        self.setShape(random.randint(1, 7))
+        self.setShape(random.randint(0, 7))
 
     def x(self, index):
         return self.coords[index][0]
