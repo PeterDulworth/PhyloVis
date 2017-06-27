@@ -288,9 +288,9 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
-            <widget class="QWidget" name="page_4">
+            <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -314,7 +314,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_76">
                      <item>
-                      <widget class="QCheckBox" name="checkboxAllBootstrap_2">
+                      <widget class="QCheckBox" name="checkboxBootstrap">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -340,7 +340,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_58">
+                      <spacer name="bootstrapSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -361,7 +361,7 @@
                      </property>
                      <layout class="QVBoxLayout" name="verticalLayout_22">
                       <item>
-                       <widget class="QLabel" name="label_6">
+                       <widget class="QLabel" name="confidenceLevelLabel">
                         <property name="layoutDirection">
                          <enum>Qt::LeftToRight</enum>
                         </property>
@@ -371,7 +371,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_3">
+                       <widget class="QLineEdit" name="confidenceLevelEntry">
                         <property name="minimumSize">
                          <size>
                           <width>40</width>
@@ -387,14 +387,14 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLabel" name="label_7">
+                       <widget class="QLabel" name="numberOfBootstrapsLabel">
                         <property name="text">
                          <string>Number of Bootstraps:</string>
                         </property>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="lineEdit_4">
+                       <widget class="QLineEdit" name="numberOfBootstrapsEntry">
                         <property name="minimumSize">
                          <size>
                           <width>40</width>
@@ -424,9 +424,9 @@
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_23">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_83">
+                    <layout class="QHBoxLayout" name="windowSizeHL">
                      <item>
-                      <spacer name="horizontalSpacer_65">
+                      <spacer name="windowSizeSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -439,14 +439,14 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QLabel" name="windowSizeLabel_9">
+                      <widget class="QLabel" name="windowSizeLabel">
                        <property name="text">
                         <string>Window Size:</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="windowSizeEntry_9">
+                      <widget class="QLineEdit" name="windowSizeEntry">
                        <property name="minimumSize">
                         <size>
                          <width>40</width>
@@ -477,9 +477,9 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_84">
+                    <layout class="QHBoxLayout" name="windowOffsetHL">
                      <item>
-                      <spacer name="windowSpacer_9">
+                      <spacer name="windowOffsetSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -492,14 +492,14 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QLabel" name="windowOffsetLabel_9">
+                      <widget class="QLabel" name="windowOffsetLabel">
                        <property name="text">
                         <string>Window Offset:</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="windowOffsetEntry_9">
+                      <widget class="QLineEdit" name="windowOffsetEntry">
                        <property name="minimumSize">
                         <size>
                          <width>40</width>
@@ -530,9 +530,9 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_85">
+                    <layout class="QHBoxLayout" name="numberOfTopTopologiesHL">
                      <item>
-                      <spacer name="horizontalSpacer_66">
+                      <spacer name="numberOfTopTopologiesSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -545,14 +545,14 @@
                       </spacer>
                      </item>
                      <item>
-                      <widget class="QLabel" name="numberOfTopTopologiesLabel_9">
+                      <widget class="QLabel" name="numberOfTopTopologiesLabel">
                        <property name="text">
                         <string>Number of Top Topologies:</string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="numberOfTopTopologiesEntry_9">
+                      <widget class="QLineEdit" name="numberOfTopTopologiesEntry">
                        <property name="minimumSize">
                         <size>
                          <width>40</width>
@@ -586,13 +586,13 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_5">
+            <widget class="QWidget" name="graphOptionsPage">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>278</width>
-               <height>157</height>
+               <width>727</width>
+               <height>703</height>
               </rect>
              </property>
              <attribute name="label">
@@ -607,7 +607,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_31">
                      <item>
-                      <widget class="QCheckBox" name="checkboxAllTrees_3">
+                      <widget class="QCheckBox" name="checkboxAllTrees">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -630,7 +630,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_23">
+                      <spacer name="allTreesSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -647,7 +647,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_32">
                      <item>
-                      <widget class="QCheckBox" name="checkboxScatterPlot_3">
+                      <widget class="QCheckBox" name="checkboxScatterPlot">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -670,7 +670,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_24">
+                      <spacer name="scatterPlotSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -687,7 +687,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_33">
                      <item>
-                      <widget class="QCheckBox" name="checkboxDonutPlot_3">
+                      <widget class="QCheckBox" name="checkboxDonutPlot">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -710,7 +710,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_25">
+                      <spacer name="donutPlotSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -736,9 +736,9 @@
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_11">
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_9">
+                    <layout class="QHBoxLayout" name="statisticsHL">
                      <item>
-                      <widget class="QCheckBox" name="checkboxStatistics_3">
+                      <widget class="QCheckBox" name="checkboxStatistics">
                        <property name="font">
                         <font>
                          <pointsize>13</pointsize>
@@ -755,7 +755,7 @@
                       </widget>
                      </item>
                      <item>
-                      <spacer name="horizontalSpacer_26">
+                      <spacer name="statisticsSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -772,7 +772,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_34">
                      <item>
-                      <widget class="QCheckBox" name="checkboxCircleGraph_3">
+                      <widget class="QCheckBox" name="checkboxCircleGraph">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
@@ -812,7 +812,7 @@
                    <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_35">
                      <item>
-                      <widget class="QCheckBox" name="checkboxHeatMap_3">
+                      <widget class="QCheckBox" name="checkboxHeatMap">
                        <property name="font">
                         <font>
                          <pointsize>13</pointsize>
@@ -850,7 +850,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_6">
+            <widget class="QWidget" name="statisticsOptionsPage">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -858,8 +858,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>489</width>
-               <height>242</height>
+               <width>727</width>
+               <height>703</height>
               </rect>
              </property>
              <attribute name="label">
@@ -867,7 +867,7 @@
              </attribute>
              <layout class="QHBoxLayout" name="horizontalLayout_5">
               <item>
-               <widget class="QGroupBox" name="statisticsOptionsGroupBox_2">
+               <widget class="QGroupBox" name="statisticsOptionsGroupBox">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -885,36 +885,9 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_12">
                  <item>
-                  <widget class="QLabel" name="statisticsOptionsLabel_2">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>15</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <pointsize>15</pointsize>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                     <kerning>false</kerning>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Statistics Options</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_14">
                    <item>
-                    <widget class="QPushButton" name="newickFileBtn_2">
+                    <widget class="QPushButton" name="newickFileBtn">
                      <property name="font">
                       <font>
                        <pointsize>13</pointsize>
@@ -941,7 +914,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="newickFileEntry_2">
+                    <widget class="QLineEdit" name="newickFileEntry">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -977,7 +950,7 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_15">
                    <item>
-                    <widget class="QLabel" name="speciesTreeNewickStringsLabel_2">
+                    <widget class="QLabel" name="speciesTreeNewickStringsLabel">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -1010,7 +983,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="speciesTreeNewickStringsEntry_2">
+                    <widget class="QLineEdit" name="speciesTreeNewickStringsEntry">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1043,7 +1016,7 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_16">
                    <item>
-                    <widget class="QCheckBox" name="checkboxRobinsonFoulds_2">
+                    <widget class="QCheckBox" name="checkboxRobinsonFoulds">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -1063,7 +1036,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QCheckBox" name="checkboxWeighted_2">
+                    <widget class="QCheckBox" name="checkboxWeighted">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -1087,7 +1060,7 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_21">
                    <item>
-                    <widget class="QCheckBox" name="checkboxPGTST_2">
+                    <widget class="QCheckBox" name="checkboxPGTST">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -1111,7 +1084,7 @@
                  <item>
                   <layout class="QHBoxLayout" name="horizontalLayout_36">
                    <item>
-                    <widget class="QCheckBox" name="checkboxRooted_2">
+                    <widget class="QCheckBox" name="checkboxRooted">
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -1144,7 +1117,7 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLabel" name="outgroupLabel_2">
+                    <widget class="QLabel" name="outgroupLabel">
                      <property name="font">
                       <font>
                        <pointsize>13</pointsize>
@@ -1158,7 +1131,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="outgroupEntry_2">
+                    <widget class="QLineEdit" name="outgroupEntry">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1188,6 +1161,54 @@
              </layout>
             </widget>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QPushButton" name="runBtn">
+              <property name="minimumSize">
+               <size>
+                <width>143</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="text">
+               <string>Run RAxML</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressBar">
+              <property name="value">
+               <number>24</number>
+              </property>
+              <property name="invertedAppearance">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_37">
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="text">
+               <string>Generate Graphs</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressBar_2">
+              <property name="value">
+               <number>24</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -1521,54 +1542,6 @@
           </item>
          </layout>
         </widget>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_10">
-      <item>
-       <widget class="QPushButton" name="runBtn">
-        <property name="minimumSize">
-         <size>
-          <width>143</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="text">
-         <string>Run RAxML</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progressBar">
-        <property name="value">
-         <number>24</number>
-        </property>
-        <property name="invertedAppearance">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_37">
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Generate Graphs</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progressBar_2">
-        <property name="value">
-         <number>24</number>
-        </property>
        </widget>
       </item>
      </layout>
