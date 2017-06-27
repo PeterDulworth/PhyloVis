@@ -354,7 +354,7 @@ class Shape(object):
         self.pieceShape = shape
 
     def setRandomShape(self):
-        self.setShape(random.randint(0, 7))
+        self.setShape(3)
 
     def x(self, index):
         return self.coords[index][0]
