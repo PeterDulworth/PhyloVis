@@ -7,7 +7,7 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 
 # GUI
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
 import gui_layout as gui
 
 # logic
@@ -72,6 +72,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
+        self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
 
         # default values
         self.runComplete = False
@@ -120,6 +121,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
         self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
+        self.checkboxBootstrap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxBootstrap))
 
         # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
@@ -218,6 +220,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.heatMapWindow.show()
             self.heatMapWindow.display_image()
 
+        if self.checkboxBootstrap.isChecked():
+            self.bootstrapContractionWindow.show()
+            self.bootstrapContractionWindow.display_image()
+
         if self.checkboxStatistics.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
@@ -297,6 +303,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         # Function calls for calculating statistics
                         windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
                         self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTST")
+
+                if self.checkboxBootstrap.isChecked():
+                    xLabel = "Window Indices"
+                    yLabel = "Number of Internal Nodes"
+                    name = "ContractedGraph.png"
+                    internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
+                    # generate bootstrap confidence graph
+                    self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)
 
                 if self.checkboxAllTrees.isChecked():
                     self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
@@ -404,12 +418,33 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
 
+        # error handling for is rooted checkbox
         try:
             if self.checkboxRooted.isChecked():
                 self.outGroup = str(self.outgroupEntry.text())
                 self.rooted = self.checkboxRooted.isChecked()
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
+            return
+
+        # Error handling for confidence threshold
+        try:
+            self.confidenceLevel = int(self.confidenceLevelEntry.text())
+            if self.confidenceLevel < 0 or self.confidenceLevel > 100:
+                raise ValueError, "Please enter an integer between 0 and 100."
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input",
+                                    "Confidence level needs to be an integer between 0 and 100.")
+            return
+
+        # Error handling for number of bootstraps
+        try:
+            self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
+            if self.numBootstraps < 0 or self.numBootstraps > 100:
+                raise ValueError, "Please enter an integer greater than 1."
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input",
+                                    "Number of bootstraps needs to be an integer greater than 1.")
             return
 
         self.runRAxML()

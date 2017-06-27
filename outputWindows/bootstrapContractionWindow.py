@@ -10,7 +10,7 @@ class BootstrapContractionWindow(QtGui.QMainWindow, bootstrapContractionLayout.U
         super(BootstrapContractionWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.fileName = '../ContractedGraph.png'
+        self.fileName = 'ContractedGraph.png'
         self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
 
         # moves menu bar into application -- mac only windows sux

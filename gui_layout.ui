@@ -339,7 +339,7 @@
                         <string>Bootstrap</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -388,6 +388,16 @@
                           <height>16777215</height>
                          </size>
                         </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                          <weight>50</weight>
+                          <bold>false</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string/>
+                        </property>
                        </widget>
                       </item>
                       <item>
@@ -410,6 +420,13 @@
                           <width>80</width>
                           <height>16777215</height>
                          </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                          <weight>50</weight>
+                          <bold>false</bold>
+                         </font>
                         </property>
                        </widget>
                       </item>
@@ -1013,6 +1030,9 @@
                        <bold>false</bold>
                       </font>
                      </property>
+                     <property name="text">
+                      <string/>
+                     </property>
                     </widget>
                    </item>
                   </layout>
@@ -1154,6 +1174,9 @@
                        <weight>50</weight>
                        <bold>false</bold>
                       </font>
+                     </property>
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>
