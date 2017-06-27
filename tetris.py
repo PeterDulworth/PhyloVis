@@ -47,7 +47,7 @@ class Board(QtGui.QFrame):
 
     BoardWidth = 10
     BoardHeight = 22
-    Speed = 50
+    Speed = 150
 
     def __init__(self, parent):
         super(Board, self).__init__(parent)
