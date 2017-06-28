@@ -233,29 +233,60 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(topology)
                     file.close()
 
-                if platform == "win32":
-                    # Move RAxML output files into their own destination folder - Windows
-                    os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
-                    os.rename("RAxML_bipartitions." + file_number,
-                              output_directory + "\RAxML_bipartitions." + file_number)
-                    os.rename("RAxML_bipartitionsBranchLabels." + file_number,
-                              output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
-                    os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
-                    os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
-                    os.rename("topology_bestTree." + file_number,
-                              topology_output_directory + "\Topology_bestTree." + file_number)
+                if self.bootstrap:
 
-                elif platform == "darwin":
-                    # Move RAxML output files into their own destination folder - Mac
-                    os.rename("RAxML_bestTree." + file_number, output_directory + "/RAxML_bestTree." + file_number)
-                    os.rename("RAxML_bipartitions." + file_number,
-                              output_directory + "/RAxML_bipartitions." + file_number)
-                    os.rename("RAxML_bipartitionsBranchLabels." + file_number,
-                              output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
-                    os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
-                    os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
-                    os.rename("topology_bestTree." + file_number,
-                              topology_output_directory + "/Topology_bestTree." + file_number)
+                    if platform == "win32":
+                        # Move RAxML output files into their own destination folder - Windows
+                        os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
+                        os.rename("RAxML_bipartitions." + file_number,
+                                  output_directory + "\RAxML_bipartitions." + file_number)
+                        os.rename("RAxML_bipartitionsBranchLabels." + file_number,
+                                  output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
+                        os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
+                        os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
+                        os.rename("topology_bestTree." + file_number,
+                                  topology_output_directory + "\Topology_bestTree." + file_number)
+
+                    elif platform == "darwin":
+                        # Move RAxML output files into their own destination folder - Mac
+                        os.rename("RAxML_bestTree." + file_number, output_directory + "/RAxML_bestTree." + file_number)
+                        os.rename("RAxML_bipartitions." + file_number,
+                                  output_directory + "/RAxML_bipartitions." + file_number)
+                        os.rename("RAxML_bipartitionsBranchLabels." + file_number,
+                                  output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
+                        os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
+                        os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
+                        os.rename("topology_bestTree." + file_number,
+                                  topology_output_directory + "/Topology_bestTree." + file_number)
+
+                else:
+
+                    if platform == "win32":
+                        # Move RAxML output files into their own destination folder - Windows
+                        os.rename("RAxML_bestTree." + file_number, output_directory + "\RAxML_bestTree." + file_number)
+                        os.rename("RAxML_log." + file_number,
+                                  output_directory + "\RAxML_log." + file_number)
+                        os.rename("RAxML_randomTree." + file_number,
+                                  output_directory + "\RAxML_randomTree." + file_number)
+                        os.rename("RAxML_result." + file_number,
+                                  output_directory + "\RAxML_result." + file_number)
+                        os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
+                        os.rename("topology_bestTree." + file_number,
+                                  topology_output_directory + "\Topology_bestTree." + file_number)
+
+                    elif platform == "darwin":
+                        # Move RAxML output files into their own destination folder - Mac
+                        os.rename("RAxML_bestTree." + file_number, output_directory + "/RAxML_bestTree." + file_number)
+                        os.rename("RAxML_log." + file_number,
+                                  output_directory + "/RAxML_log." + file_number)
+                        os.rename("RAxML_randomTree." + file_number,
+                                  output_directory + "/RAxML_randomTree." + file_number)
+                        os.rename("RAxML_result." + file_number,
+                                  output_directory + "/RAxML_result." + file_number)
+                        os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
+                        os.rename("topology_bestTree." + file_number,
+                                  topology_output_directory + "/Topology_bestTree." + file_number)
+
 
                 self.emit(QtCore.SIGNAL('RAX_PER'), 80 / len(os.listdir('windows')))
 
