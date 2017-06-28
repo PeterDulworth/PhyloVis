@@ -295,18 +295,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     if self.checkboxRobinsonFoulds.isChecked():
                         if self.checkboxWeighted.isChecked():
                             windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            (stat_map, name, title, xlabel, ylabel)
-                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "weightedRF")
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "unweightedRF")
+
+                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance")
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
 
                         else:
                             windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "unweightedRF")
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
 
                     if self.checkboxPGTST.isChecked():
                         # Function calls for calculating statistics
                         windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
-                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTST")
+                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTSTPlot.png", "p(gt|st)", "Windows", "Probability")
 
                 if self.checkboxBootstrap.isChecked():
                     xLabel = "Window Indices"
