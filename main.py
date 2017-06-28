@@ -259,7 +259,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         print self.inputPage.size()
 
     def toggleEnabled(self, object):
-        print 'asdfasdf'
         enabled = object.isEnabled()
         object.setEnabled(not enabled)
 
