@@ -484,6 +484,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
         self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
         self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
+        self.raxmlOperations.model = self.modelComboBox.currentText()
         self.runRAxML()
 
         #####################################################################

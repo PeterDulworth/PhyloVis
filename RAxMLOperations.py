@@ -16,7 +16,7 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, bootstrap=False, customRaxmlCommand=False, raxmlCommand="", parent=None):
+    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, model="GTRGAMMA", bootstrap=False, customRaxmlCommand=False, raxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
         self.inputFilename = inputFilename
@@ -25,6 +25,7 @@ class RAxMLOperations(QtCore.QThread):
         self.numBootstraps = numBootstraps
         self.customRaxmlCommand = customRaxmlCommand
         self.bootstrap = bootstrap
+        self.model = model
 
     def raxml_species_tree(self, phylip):
         """
@@ -170,7 +171,7 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-    def raxml_windows(self, numBootstraps):
+    def raxml_windows(self, numBootstraps, model):
         """
         Runs RAxML on files in the directory containing files from
         window_splitter().
@@ -210,9 +211,9 @@ class RAxMLOperations(QtCore.QThread):
                 # Run RAxML
                 if not self.customRaxmlCommand:
                     if self.bootstrap:
-                        p = subprocess.Popen( "raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps), shell=True)
+                        p = subprocess.Popen( "raxmlHPC -f a -x12345 -p 12345 -# {2} -m {3} -s {0} -n {1}".format(input_file, file_number, numBootstraps, model), shell=True)
                     else:
-                        p = subprocess.Popen("raxmlHPC -d -p 12345 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+                        p = subprocess.Popen("raxmlHPC -d -p 12345 -m {2} -s {0} -n {1}".format(input_file, file_number, model), shell=True)
                 else: # custom raxml command
                     p = subprocess.Popen(self.raxmlCommand + " -s {0} -n {1}".format(input_file, file_number), shell=True)
 
@@ -292,7 +293,7 @@ class RAxMLOperations(QtCore.QThread):
 
     def run(self):
         self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
-        self.raxml_windows(self.numBootstraps)
+        self.raxml_windows(self.numBootstraps, self.model)
         self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 
 
