@@ -45,6 +45,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
 
         # create new instance of TopologyPlotter class
         self.topologyPlotter = tp.TopologyPlotter()
@@ -58,7 +59,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 555}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
         # mapping from: mode --> menu action
@@ -83,6 +84,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
         self.progressBar.reset()
+        self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
         self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
@@ -133,6 +135,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)
+        self.generateSpeciesTreeBtn.clicked.connect(self.generateSpeciesTree)
 
         # **************************** WELCOME PAGE ****************************#
 
@@ -145,6 +148,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
 
     ################################# Handlers #################################
+
+
+    def updateSpeciesTreeProgressBar(self, val):
+        self.generateSpeciesTreeProgressBar.setValue(self.generateSpeciesTreeProgressBar.value() + val)
+        if self.generateSpeciesTreeProgressBar.value() >= 100:
+            QtGui.QMessageBox.about(self, "Species Tree Complete", "Species Tree has been generated.")
 
     def updateProgressBar(self, val):
         self.progressBar.setValue(self.progressBar.value() + val)
@@ -348,6 +357,24 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # set name of file to text entry
         textEntry.setText(name)
 
+    def generateSpeciesTree(self):
+        # Error handling for input file
+        try:
+            self.input_file_name = str(self.inputFileEntry.text())
+            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+
+            if self.input_file_name == "":
+                raise ValueError, (1, "Please choose a file")
+            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
+                raise ValueError, (
+                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        self.raxmlOperations.raxml_species_tree(self.input_file_name)
+
     def run(self):
 
         # Error handling for input file
@@ -360,7 +387,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 raise ValueError, (1, "Please choose a file")
             elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
                 raise ValueError, (
-                    2, "Luay does not approve of your filetype.\nPlease enter either a .txt, .fasta, or .phylip file")
+                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
         except ValueError, (ErrorNumber, ErrorMessage):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
@@ -448,11 +475,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 if self.numBootstraps < 0 or self.numBootstraps > 100:
                     raise ValueError, "Please enter an integer greater than 1."
+            else:
+                self.numBootstraps = self.raxmlOperations.numBootstraps = 1
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input",
                                     "Number of bootstraps needs to be an integer greater than 1.")
             return
 
+
+        self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
+        self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
         self.runRAxML()
 
         #####################################################################

@@ -16,13 +16,14 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, parent=None):
+    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, customRaxmlCommand=False, raxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
         self.inputFilename = inputFilename
         self.windowSize = windowSize
         self.windowOffset = windowOffset
         self.numBootstraps = numBootstraps
+        self.customRaxmlCommand = customRaxmlCommand
 
     def raxml_species_tree(self, phylip):
         """
@@ -44,12 +45,16 @@ class RAxMLOperations(QtCore.QThread):
 
         os.makedirs(output_directory)
 
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 11)
+
         # Run RAxML
         p = subprocess.Popen(
             "raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n txt".format(phylip),
             shell=True)
         # Wait until command line is finished running
         p.wait()
+
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 50)
 
         # Regular expression for identifying floats
         float_pattern = "([+-]?\\d*\\.\\d+)(?![-+0-9\\.])"
@@ -64,6 +69,8 @@ class RAxMLOperations(QtCore.QThread):
             file = open("Topology_bestTree.txt", "w")
             file.write(topology)
             file.close()
+
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 20)
 
         if platform == "win32":
             # Move RAxML output files into their own destination folder - Windows
@@ -84,6 +91,8 @@ class RAxMLOperations(QtCore.QThread):
             os.rename("RAxML_bootstrap.txt", output_directory + "/RAxML_ST_bootstrap.txt")
             os.rename("RAxML_info.txt", output_directory + "/RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "/Topology_ST_bestTree.txt")
+
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 20)
 
     def window_splitter(self, filename, window_size, step_size):
         """
@@ -197,10 +206,15 @@ class RAxMLOperations(QtCore.QThread):
 
                 input_file = os.path.join(window_directory, filename)
 
-                # Run RAxML
-                p = subprocess.Popen(
-                    "raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps),
-                    shell=True)
+                if not self.customRaxmlCommand:
+                    # Run RAxML
+                    if self.numBootstraps < 2:
+                        p = subprocess.Popen("raxmlHPC -d -p 12345 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+                    else:
+                        p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps), shell=True)
+                else: # custom raxml command
+                    p = subprocess.Popen(self.raxmlCommand + " -s {0} -n {1}".format(input_file, file_number), shell=True)
+
                 # Wait until command line is finished running
                 p.wait()
 
