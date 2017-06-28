@@ -482,7 +482,6 @@ class TopologyPlotter(QtCore.QThread):
                 if i % 2 == 1:
                     x_offset = (total_width / 2)
                     new_im.paste(im, (x_offset, y_offset), mask=im)
-                    new_im.save("TEst" + str(i) + ".png")
                     y_offset += im.size[1]
                     x_offset = 0
 
