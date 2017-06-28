@@ -259,28 +259,6 @@ class StatisticsCalculations(QtCore.QThread):
         plt.tight_layout()
         plt.savefig(name)
 
-        # # labels y-axis based on type of statistic
-        # if name == 'weightedRF':
-        #     plt.ylabel('Weighted Robinson Foulds Distance', fontsize=10)
-        #
-        #     # saves and names plot
-        #     plot = "WeightedFouldsPlot.png"
-        #     plt.savefig(plot)
-        #
-        # elif name == 'unweightedRF':
-        #     plt.ylabel('Unweighted Robinson Foulds Distance', fontsize=10)
-        #
-        #     # saves and names plot
-        #     plot = "UnweightedFouldsPlot.png"
-        #     plt.savefig(plot)
-        #
-        # elif name == 'PGTST':
-        #     plt.ylabel('P(gt|st)', fontsize=10)
-        #
-        #     # saves and names plot
-        #     plot = "PGTSTPlot.png"
-        #     plt.savefig(plot)
-
         plt.clf()
 
 
