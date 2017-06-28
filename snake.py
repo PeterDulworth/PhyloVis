@@ -65,7 +65,7 @@ class Snake(QtGui.QWidget):
         self.isPaused = False
         self.isOver = False
         self.FoodPlaced = False
-        self.speed = 200
+        self.speed = 100
         self.start()
 
     def pause(self):
