@@ -83,6 +83,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupLabel.setEnabled(False)
         self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
+        self.outgroupGroupBox.setEnabled(False)
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
@@ -132,6 +133,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
+        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)
@@ -257,6 +259,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         print self.inputPage.size()
 
     def toggleEnabled(self, object):
+        print 'asdfasdf'
         enabled = object.isEnabled()
         object.setEnabled(not enabled)
 
