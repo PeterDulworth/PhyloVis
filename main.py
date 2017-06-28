@@ -81,12 +81,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupEntry.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
         self.statisticsOptionsPage.setEnabled(False)
+        self.bootstrapGroupBox.setEnabled(False)
         self.progressBar.reset()
         self.generateGraphsProgressBar.reset()
         self.rooted = False
         self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
+        self.raxmlOptionsTabWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # **************************** RAXML PAGE ****************************#
@@ -128,6 +130,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
+        self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)

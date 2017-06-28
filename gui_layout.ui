@@ -311,80 +311,195 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_21">
               <item>
-               <widget class="QGroupBox" name="raxmlOptionsGroupBox">
-                <layout class="QHBoxLayout" name="horizontalLayout_75">
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_16">
-                   <item>
-                    <layout class="QHBoxLayout" name="bootstrapHL">
-                     <item>
-                      <widget class="QCheckBox" name="checkboxBootstrap">
-                       <property name="minimumSize">
-                        <size>
-                         <width>0</width>
-                         <height>21</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::NoFocus</enum>
-                       </property>
-                       <property name="text">
-                        <string>Bootstrap</string>
-                       </property>
-                       <property name="checked">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <spacer name="bootstrapSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <widget class="QGroupBox" name="bootstrapGroupBox">
-                     <property name="layoutDirection">
-                      <enum>Qt::LeftToRight</enum>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_22">
+               <widget class="QTabWidget" name="raxmlOptionsTabWidget">
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
+                <property name="tabShape">
+                 <enum>QTabWidget::Rounded</enum>
+                </property>
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
+                <property name="usesScrollButtons">
+                 <bool>false</bool>
+                </property>
+                <property name="documentMode">
+                 <bool>false</bool>
+                </property>
+                <widget class="QWidget" name="raxmlStandardOptionsTab">
+                 <attribute name="title">
+                  <string>Standard</string>
+                 </attribute>
+                 <layout class="QHBoxLayout" name="horizontalLayout">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_2">
+                    <item>
+                     <layout class="QHBoxLayout" name="bootstrapHL">
                       <item>
-                       <widget class="QLabel" name="confidenceLevelLabel">
-                        <property name="layoutDirection">
-                         <enum>Qt::LeftToRight</enum>
+                       <widget class="QCheckBox" name="checkboxBootstrap">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>21</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                          <weight>50</weight>
+                          <bold>false</bold>
+                         </font>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
                         </property>
                         <property name="text">
-                         <string>Confidence Level:</string>
+                         <string>Bootstrap</string>
+                        </property>
+                        <property name="checked">
+                         <bool>false</bool>
                         </property>
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="confidenceLevelEntry">
+                       <spacer name="bootstrapSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QGroupBox" name="bootstrapGroupBox">
+                      <property name="layoutDirection">
+                       <enum>Qt::LeftToRight</enum>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_24">
+                       <item>
+                        <widget class="QLabel" name="confidenceLevelLabel">
+                         <property name="layoutDirection">
+                          <enum>Qt::LeftToRight</enum>
+                         </property>
+                         <property name="text">
+                          <string>Confidence Level:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="confidenceLevelEntry">
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="numberOfBootstrapsLabel">
+                         <property name="text">
+                          <string>Number of Bootstraps:</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="numberOfBootstrapsEntry">
+                         <property name="minimumSize">
+                          <size>
+                           <width>40</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>80</width>
+                           <height>16777215</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="Line" name="raxmlOptionsVLine">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_25">
+                    <item>
+                     <layout class="QHBoxLayout" name="windowSizeHL">
+                      <item>
+                       <spacer name="windowSizeSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="windowSizeLabel">
+                        <property name="text">
+                         <string>Window Size:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="windowSizeEntry">
                         <property name="minimumSize">
                          <size>
                           <width>40</width>
-                          <height>0</height>
+                          <height>21</height>
                          </size>
                         </property>
                         <property name="maximumSize">
                          <size>
-                          <width>80</width>
+                          <width>40</width>
                           <height>16777215</height>
                          </size>
                         </property>
@@ -395,214 +510,128 @@
                           <bold>false</bold>
                          </font>
                         </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::WheelFocus</enum>
+                        </property>
                         <property name="text">
-                         <string/>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="numberOfBootstrapsLabel">
-                        <property name="text">
-                         <string>Number of Bootstraps:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="numberOfBootstrapsEntry">
-                        <property name="minimumSize">
-                         <size>
-                          <width>40</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>80</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>13</pointsize>
-                          <weight>50</weight>
-                          <bold>false</bold>
-                         </font>
+                         <string>10</string>
                         </property>
                        </widget>
                       </item>
                      </layout>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="Line" name="raxmlOptionsVLine">
-                   <property name="orientation">
-                    <enum>Qt::Vertical</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_23">
-                   <item>
-                    <layout class="QHBoxLayout" name="windowSizeHL">
-                     <item>
-                      <spacer name="windowSizeSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="windowSizeLabel">
-                       <property name="text">
-                        <string>Window Size:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="windowSizeEntry">
-                       <property name="minimumSize">
-                        <size>
-                         <width>40</width>
-                         <height>21</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>40</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::WheelFocus</enum>
-                       </property>
-                       <property name="text">
-                        <string>10</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="windowOffsetHL">
-                     <item>
-                      <spacer name="windowOffsetSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="windowOffsetLabel">
-                       <property name="text">
-                        <string>Window Offset:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="windowOffsetEntry">
-                       <property name="minimumSize">
-                        <size>
-                         <width>40</width>
-                         <height>21</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>40</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::WheelFocus</enum>
-                       </property>
-                       <property name="text">
-                        <string>10</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="numberOfTopTopologiesHL">
-                     <item>
-                      <spacer name="numberOfTopTopologiesSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="numberOfTopTopologiesLabel">
-                       <property name="text">
-                        <string>Number of Top Topologies:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLineEdit" name="numberOfTopTopologiesEntry">
-                       <property name="minimumSize">
-                        <size>
-                         <width>40</width>
-                         <height>21</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>40</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>5</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="windowOffsetHL">
+                      <item>
+                       <spacer name="windowOffsetSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="windowOffsetLabel">
+                        <property name="text">
+                         <string>Window Offset:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="windowOffsetEntry">
+                        <property name="minimumSize">
+                         <size>
+                          <width>40</width>
+                          <height>21</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>40</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                          <weight>50</weight>
+                          <bold>false</bold>
+                         </font>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::WheelFocus</enum>
+                        </property>
+                        <property name="text">
+                         <string>10</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="numberOfTopTopologiesHL">
+                      <item>
+                       <spacer name="numberOfTopTopologiesSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="numberOfTopTopologiesLabel">
+                        <property name="text">
+                         <string>Number of Top Topologies:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="numberOfTopTopologiesEntry">
+                        <property name="minimumSize">
+                         <size>
+                          <width>40</width>
+                          <height>21</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>40</width>
+                          <height>16777215</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>13</pointsize>
+                          <weight>50</weight>
+                          <bold>false</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>5</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QWidget" name="raxmlAdvancedOptionsTab">
+                 <attribute name="title">
+                  <string>Advanced</string>
+                 </attribute>
+                </widget>
                </widget>
               </item>
              </layout>
