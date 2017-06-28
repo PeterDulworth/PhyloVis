@@ -127,8 +127,7 @@ class StatisticsCalculations(QtCore.QThread):
         trees.
 
         Input:
-        species_tree -- newick file containing the species tree
-                          * this should not change *
+        species_tree -- newick file or newick string containing the species tree
         gene_tree   -- newick file or newick string containing the tree to
                           be compared to the species tree
         weighted       -- boolean parameter for whether the files have weights
@@ -215,7 +214,7 @@ class StatisticsCalculations(QtCore.QThread):
         else:
             return windows_to_uw_rf
 
-    def stat_scatter(self, stat_map, name):
+    def stat_scatter(self, stat_map, name, title, xlabel, ylabel):
         """
         Creates a scatter plot with the x-axis being the
         windows and the y-axis being the statistic to
@@ -225,8 +224,10 @@ class StatisticsCalculations(QtCore.QThread):
         stat_map -- a mapping outputted by either
                     calculate_windows_to_p_gtst or
                     calculate_windows_to_rf ([0] or [1])
-        name -- the name of the mapping so the y-axis and
-                file names are labeled correctly
+        name -- the name of the save file
+        title -- the title of the plot
+        xlabel -- the label for the x axis
+        ylabel -- the label for the y axis
 
         Returns:
         A scatter plot with windows as the x-axis and
@@ -250,30 +251,35 @@ class StatisticsCalculations(QtCore.QThread):
 
         plt.scatter(x, y, s=area, c='#000000', alpha=1)
 
-        # labels x-axis
-        plt.xlabel('Windows', fontsize=10)
+        # label the axes
+        plt.xlabel(xlabel, fontsize=10)
+        plt.ylabel(ylabel, fontsize=10)
 
-        # labels y-axis based on type of statistic
-        if name == 'weightedRF':
-            plt.ylabel('Weighted Robinson Foulds Distance', fontsize=10)
+        plt.title(title, fontsize=15)
+        plt.tight_layout()
+        plt.savefig(name)
 
-            # saves and names plot
-            plot = "WeightedFouldsPlot.png"
-            plt.savefig(plot)
-
-        elif name == 'unweightedRF':
-            plt.ylabel('Unweighted Robinson Foulds Distance', fontsize=10)
-
-            # saves and names plot
-            plot = "UnweightedFouldsPlot.png"
-            plt.savefig(plot)
-
-        elif name == 'PGTST':
-            plt.ylabel('P(gt|st)', fontsize=10)
-
-            # saves and names plot
-            plot = "PGTSTPlot.png"
-            plt.savefig(plot)
+        # # labels y-axis based on type of statistic
+        # if name == 'weightedRF':
+        #     plt.ylabel('Weighted Robinson Foulds Distance', fontsize=10)
+        #
+        #     # saves and names plot
+        #     plot = "WeightedFouldsPlot.png"
+        #     plt.savefig(plot)
+        #
+        # elif name == 'unweightedRF':
+        #     plt.ylabel('Unweighted Robinson Foulds Distance', fontsize=10)
+        #
+        #     # saves and names plot
+        #     plot = "UnweightedFouldsPlot.png"
+        #     plt.savefig(plot)
+        #
+        # elif name == 'PGTST':
+        #     plt.ylabel('P(gt|st)', fontsize=10)
+        #
+        #     # saves and names plot
+        #     plot = "PGTSTPlot.png"
+        #     plt.savefig(plot)
 
         plt.clf()
 
