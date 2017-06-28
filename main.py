@@ -1,17 +1,24 @@
+# utilities
 import sip
 sip.setapi('QString', 2)
 import sys, os
-import gui_layout as gui
-import RAxMLOperations as ro
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, \
-    robinsonFouldsWindow, heatMapWindow
+
+# GUI
+from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+import gui_layout as gui
+
+# logic
+import RAxMLOperations as ro
 import topologyPlots as tp
 import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
+import bootstrapContraction as bc
+
+# more important logic
 import tetris, snake
 
 
@@ -43,12 +50,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.topologyPlotter = tp.TopologyPlotter()
         # create new instance of Statistics Calculations class
         self.statisticsCalculations = sc.StatisticsCalculations()
-
+        # create new instance of Informative Sites class
+        self.informativeSites = infSites.InformativeSites()
+        # create new instance of BootstrapContraction class
+        self.bootstrapContraction = bc.BootstrapContraction()
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 459, 'y': 488 + 22 + 22 + 22 + 6 + 6 + 6 + 30}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 534}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
         # mapping from: mode --> menu action
@@ -62,6 +72,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
+        self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
 
         # default values
         self.runComplete = False
@@ -69,10 +80,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menuExport.setEnabled(False)
         self.outgroupEntry.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
+        self.statisticsOptionsPage.setEnabled(False)
         self.progressBar.reset()
+        self.generateGraphsProgressBar.reset()
         self.rooted = False
         self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
+        self.raxmlToolBox.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
 
         # **************************** RAXML PAGE ****************************#
@@ -107,9 +121,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxAllTrees.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxAllTrees))
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
         self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
+        self.checkboxBootstrap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxBootstrap))
 
         # toggle what inputs are actionable based on checkboxes
-        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsGroupBox))
+        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
@@ -137,6 +152,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def runRAxML(self):
         self.runProgressBar()
+
+    def resizeEvent(self, event):
+        print self.size()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
@@ -202,6 +220,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.heatMapWindow.show()
             self.heatMapWindow.display_image()
 
+        if self.checkboxBootstrap.isChecked():
+            self.bootstrapContractionWindow.show()
+            self.bootstrapContractionWindow.display_image()
+
         if self.checkboxStatistics.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
@@ -259,12 +281,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.topologyPlotter.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
                 if self.checkboxHeatMap.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infSites.calculate_informativeness('windows', self.window_offset)
-                    infSites.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
+                    self.informativeSites.heat_map_generator(sites_to_informative, "HeatMapself.informativeSites.png")
 
                 if self.checkboxStatistics.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():
@@ -282,6 +304,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         # Function calls for calculating statistics
                         windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
                         self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTST")
+
+                if self.checkboxBootstrap.isChecked():
+                    xLabel = "Window Indices"
+                    yLabel = "Number of Internal Nodes"
+                    name = "ContractedGraph.png"
+                    internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
+                    # generate bootstrap confidence graph
+                    self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)
 
                 if self.checkboxAllTrees.isChecked():
                     self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
@@ -389,12 +419,35 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
             return
 
+        # error handling for is rooted checkbox
         try:
             if self.checkboxRooted.isChecked():
                 self.outGroup = str(self.outgroupEntry.text())
                 self.rooted = self.checkboxRooted.isChecked()
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
+            return
+
+        # Error handling for confidence threshold
+        try:
+            if self.checkboxBootstrap.isChecked():
+                self.confidenceLevel = int(self.confidenceLevelEntry.text())
+                if self.confidenceLevel < 0 or self.confidenceLevel > 100:
+                    raise ValueError, "Please enter an integer between 0 and 100."
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input",
+                                    "Confidence level needs to be an integer between 0 and 100.")
+            return
+
+        # Error handling for number of bootstraps
+        try:
+            if self.checkboxBootstrap.isChecked():
+                self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
+                if self.numBootstraps < 0 or self.numBootstraps > 100:
+                    raise ValueError, "Please enter an integer greater than 1."
+        except ValueError:
+            QtGui.QMessageBox.about(self, "Invalid Input",
+                                    "Number of bootstraps needs to be an integer greater than 1.")
             return
 
         self.runRAxML()
