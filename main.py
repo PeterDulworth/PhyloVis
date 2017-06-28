@@ -270,6 +270,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     if self.checkboxRobinsonFoulds.isChecked():
                         if self.checkboxWeighted.isChecked():
                             windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
+                            (stat_map, name, title, xlabel, ylabel)
                             self.statisticsCalculations.stat_scatter(windows_to_w_rf, "weightedRF")
                             self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "unweightedRF")
 
