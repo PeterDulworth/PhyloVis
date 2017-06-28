@@ -40,7 +40,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # create new instance of RaxmlOperations class
-        self.raxmlOperations = ro.RAxMLOperations(None, None, None)
+        self.raxmlOperations = ro.RAxMLOperations(None, None, None, None)
         # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
@@ -58,7 +58,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 534}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 555}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
         # mapping from: mode --> menu action
@@ -83,7 +83,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
         self.progressBar.reset()
-        self.generateGraphsProgressBar.reset()
         self.rooted = False
         self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
@@ -446,6 +445,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             if self.checkboxBootstrap.isChecked():
                 self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
+                self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 if self.numBootstraps < 0 or self.numBootstraps > 100:
                     raise ValueError, "Please enter an integer greater than 1."
         except ValueError:
