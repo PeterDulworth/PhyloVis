@@ -16,12 +16,13 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, parent=None):
+    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
         self.inputFilename = inputFilename
         self.windowSize = windowSize
         self.windowOffset = windowOffset
+        self.numBootstraps = numBootstraps
 
     def raxml_species_tree(self, phylip):
         """
@@ -159,7 +160,7 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-    def raxml_windows(self):
+    def raxml_windows(self, numBootstraps):
         """
         Runs RAxML on files in the directory containing files from
         window_splitter().
@@ -198,7 +199,7 @@ class RAxMLOperations(QtCore.QThread):
 
                 # Run RAxML
                 p = subprocess.Popen(
-                    "raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number),
+                    "raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps),
                     shell=True)
                 # Wait until command line is finished running
                 p.wait()
@@ -241,11 +242,11 @@ class RAxMLOperations(QtCore.QThread):
                     os.rename("topology_bestTree." + file_number,
                               topology_output_directory + "/Topology_bestTree." + file_number)
 
-                self.emit(QtCore.SIGNAL('RAX_PER'), 100 / len(os.listdir('windows')))
+                self.emit(QtCore.SIGNAL('RAX_PER'), 80 / len(os.listdir('windows')))
 
     def run(self):
         self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
-        self.raxml_windows()
+        self.raxml_windows(self.numBootstraps)
         self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 
 

@@ -303,7 +303,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>713</height>
+               <height>740</height>
               </rect>
              </property>
              <attribute name="label">
@@ -323,7 +323,7 @@
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="usesScrollButtons">
                  <bool>false</bool>
@@ -687,7 +687,7 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_9">
                     <item>
-                     <widget class="QLabel" name="label_4">
+                     <widget class="QLabel" name="customRaxmlCommandLabel">
                       <property name="font">
                        <font>
                         <pointsize>15</pointsize>
@@ -701,14 +701,14 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QCheckBox" name="checkBox">
+                     <widget class="QCheckBox" name="checkBoxCustomRaxml">
                       <property name="text">
                        <string/>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <spacer name="horizontalSpacer_5">
+                     <spacer name="customRaxmlSpacer">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -723,7 +723,7 @@
                    </layout>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="lineEdit"/>
+                   <widget class="QLineEdit" name="customRaxmlEntry"/>
                   </item>
                   <item>
                    <spacer name="verticalSpacer_5">
@@ -739,7 +739,7 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_5">
+                   <widget class="QLabel" name="customAlignmentDirectoryLabel">
                     <property name="font">
                      <font>
                       <pointsize>15</pointsize>
@@ -753,7 +753,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_6">
+                   <widget class="QLabel" name="customAlignmentDirectoryDescriptionLabel">
                     <property name="font">
                      <font>
                       <italic>true</italic>
@@ -767,10 +767,10 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_7">
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_2"/>
+                     <widget class="QLineEdit" name="customAlignmentDirectoryEntry"/>
                     </item>
                     <item>
-                     <widget class="QToolButton" name="toolButton">
+                     <widget class="QToolButton" name="customAlignmentDirectoryBtn">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -792,7 +792,7 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_7">
+                   <widget class="QLabel" name="customRaxmlDirectoryLabel">
                     <property name="font">
                      <font>
                       <pointsize>15</pointsize>
@@ -806,7 +806,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_8">
+                   <widget class="QLabel" name="customRaxmlDirectoryDescriptionLabel">
                     <property name="font">
                      <font>
                       <italic>true</italic>
@@ -820,10 +820,10 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_6">
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_3"/>
+                     <widget class="QLineEdit" name="customRaxmlDirectoryEntry"/>
                     </item>
                     <item>
-                     <widget class="QToolButton" name="toolButton_2">
+                     <widget class="QToolButton" name="customRaxmlDirectoryBtn">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -845,7 +845,7 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_9">
+                   <widget class="QLabel" name="generateSpeciesTreeLabel">
                     <property name="font">
                      <font>
                       <pointsize>15</pointsize>
@@ -861,7 +861,7 @@
                   <item>
                    <layout class="QHBoxLayout" name="runRaxmlHL_2">
                     <item>
-                     <widget class="QPushButton" name="runBtn_2">
+                     <widget class="QPushButton" name="generateSpeciesTreeBtn">
                       <property name="minimumSize">
                        <size>
                         <width>143</width>
@@ -872,12 +872,12 @@
                        <enum>Qt::NoFocus</enum>
                       </property>
                       <property name="text">
-                       <string>Run RAxML</string>
+                       <string>Generate Species Tree</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QProgressBar" name="progressBar_2">
+                     <widget class="QProgressBar" name="generateSpeciesTreeProgressBar">
                       <property name="value">
                        <number>24</number>
                       </property>
@@ -900,7 +900,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>713</height>
+               <height>740</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1167,7 +1167,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>713</height>
+               <height>740</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1477,6 +1477,29 @@
            </widget>
           </item>
           <item>
+           <widget class="Line" name="line">
+            <property name="font">
+             <font>
+              <pointsize>13</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="midLineWidth">
+             <number>0</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="runRaxmlHL">
             <item>
              <widget class="QPushButton" name="runBtn">
@@ -1501,27 +1524,6 @@
               </property>
               <property name="invertedAppearance">
                <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="generateGraphsHL">
-            <item>
-             <widget class="QPushButton" name="generateGraphsBtn">
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="text">
-               <string>Generate Graphs</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QProgressBar" name="generateGraphsProgressBar">
-              <property name="value">
-               <number>24</number>
               </property>
              </widget>
             </item>
