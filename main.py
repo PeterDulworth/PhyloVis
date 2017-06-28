@@ -473,10 +473,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             if self.checkboxBootstrap.isChecked():
                 self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-                if self.numBootstraps < 0 or self.numBootstraps > 100:
+                if self.numBootstraps < 2:
                     raise ValueError, "Please enter an integer greater than 1."
-            else:
-                self.numBootstraps = self.raxmlOperations.numBootstraps = 1
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input",
                                     "Number of bootstraps needs to be an integer greater than 1.")
@@ -485,6 +483,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
         self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
+        self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
         self.runRAxML()
 
         #####################################################################

@@ -16,7 +16,7 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, customRaxmlCommand=False, raxmlCommand="", parent=None):
+    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, bootstrap=False, customRaxmlCommand=False, raxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
         self.inputFilename = inputFilename
@@ -24,6 +24,7 @@ class RAxMLOperations(QtCore.QThread):
         self.windowOffset = windowOffset
         self.numBootstraps = numBootstraps
         self.customRaxmlCommand = customRaxmlCommand
+        self.bootstrap = bootstrap
 
     def raxml_species_tree(self, phylip):
         """
@@ -206,12 +207,12 @@ class RAxMLOperations(QtCore.QThread):
 
                 input_file = os.path.join(window_directory, filename)
 
+                # Run RAxML
                 if not self.customRaxmlCommand:
-                    # Run RAxML
-                    if self.numBootstraps < 2:
-                        p = subprocess.Popen("raxmlHPC -d -p 12345 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
+                    if self.bootstrap:
+                        p = subprocess.Popen( "raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps), shell=True)
                     else:
-                        p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# {2} -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number, numBootstraps), shell=True)
+                        p = subprocess.Popen("raxmlHPC -d -p 12345 -m GTRGAMMA -s {0} -n {1}".format(input_file, file_number), shell=True)
                 else: # custom raxml command
                     p = subprocess.Popen(self.raxmlCommand + " -s {0} -n {1}".format(input_file, file_number), shell=True)
 
