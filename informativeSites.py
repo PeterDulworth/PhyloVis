@@ -196,7 +196,7 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     # window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
 
     # peters window dir
-    window_dir = '/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/windows'
+    # window_dir = '/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/windows'
 
     # chabs window dir ?
     # window_dir = ''
@@ -206,6 +206,7 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = infs.calculate_informativeness(window_dir, 50000)
 
     # print str(pct_informative) + "%"
+
     # infs.line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
 
     infs.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")

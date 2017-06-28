@@ -129,12 +129,12 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     bc = BootstrapContraction()
 
     # tree_file = 'RAxML_Files\\RAxML_bipartitions.0'
-    confidence_threshold = 60
+    confidence_threshold = 20
     # print contraction_threshold(tree_file, confidence_threshold)
 
     internal_nodes_i, internal_nodes_f = bc.internal_nodes_after_contraction(confidence_threshold)
     xlabel = "Window Indices"
     ylabel = "Number of Internal Nodes"
-    name = "ContractedGraph.png"
+    name = "ContractedGraph. png"
 
     bc.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xlabel, ylabel, name, confidence_threshold)
