@@ -338,8 +338,11 @@
                  <layout class="QHBoxLayout" name="horizontalLayout">
                   <item>
                    <layout class="QVBoxLayout" name="verticalLayout_2">
+                    <property name="spacing">
+                     <number>1</number>
+                    </property>
                     <item>
-                     <spacer name="verticalSpacer_8">
+                     <spacer name="verticalSpacer_4">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -375,7 +378,7 @@
                          <enum>Qt::RightToLeft</enum>
                         </property>
                         <property name="text">
-                         <string>Bootstrap Options</string>
+                         <string>Bootstrap</string>
                         </property>
                         <property name="checked">
                          <bool>false</bool>
@@ -399,6 +402,12 @@
                     </item>
                     <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_12">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
                       <item>
                        <widget class="QGroupBox" name="bootstrapGroupBox">
                         <property name="layoutDirection">
@@ -493,55 +502,81 @@
                      </layout>
                     </item>
                     <item>
-                     <widget class="QLabel" name="modelLabel">
-                      <property name="font">
-                       <font>
-                        <pointsize>15</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
+                     <layout class="QHBoxLayout" name="horizontalLayout_16">
+                      <property name="leftMargin">
+                       <number>5</number>
                       </property>
-                      <property name="text">
-                       <string>Model</string>
+                      <property name="topMargin">
+                       <number>5</number>
                       </property>
-                     </widget>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="modelLabel">
+                        <property name="font">
+                         <font>
+                          <pointsize>15</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Model</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </item>
                     <item>
-                     <widget class="QComboBox" name="modelComboBox">
+                     <layout class="QHBoxLayout" name="horizontalLayout_18">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
                       <item>
-                       <property name="text">
-                        <string>GTRGAMMA</string>
-                       </property>
+                       <widget class="QComboBox" name="modelComboBox">
+                        <item>
+                         <property name="text">
+                          <string>GTRGAMMA</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRCAT</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRCATI</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>ASC_GTRCAT</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>ASC_GTRGAMMA</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRGAMMAI</string>
+                         </property>
+                        </item>
+                       </widget>
                       </item>
-                      <item>
-                       <property name="text">
-                        <string>GTRCAT</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>GTRCATI</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>ASC_GTRCAT</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>ASC_GTRGAMMA</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>GTRGAMMAI</string>
-                       </property>
-                      </item>
-                     </widget>
+                     </layout>
                     </item>
                     <item>
-                     <spacer name="verticalSpacer_4">
+                     <spacer name="verticalSpacer_8">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -568,7 +603,23 @@
                      <number>1</number>
                     </property>
                     <item>
+                     <spacer name="verticalSpacer_10">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_10">
+                      <property name="leftMargin">
+                       <number>5</number>
+                      </property>
                       <property name="topMargin">
                        <number>5</number>
                       </property>
@@ -585,7 +636,7 @@
                          </font>
                         </property>
                         <property name="text">
-                         <string>Window Options</string>
+                         <string>Window</string>
                         </property>
                         <property name="margin">
                          <number>0</number>
@@ -599,7 +650,16 @@
                     </item>
                     <item>
                      <layout class="QHBoxLayout" name="windowSizeHL">
-                      <property name="margin">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="bottomMargin">
                        <number>5</number>
                       </property>
                       <item>
@@ -655,7 +715,16 @@
                     </item>
                     <item>
                      <layout class="QHBoxLayout" name="windowOffsetHL">
-                      <property name="margin">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="bottomMargin">
                        <number>5</number>
                       </property>
                       <item>
@@ -711,7 +780,16 @@
                     </item>
                     <item>
                      <layout class="QHBoxLayout" name="numberOfTopTopologiesHL">
-                      <property name="margin">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="bottomMargin">
                        <number>5</number>
                       </property>
                       <item>
@@ -812,29 +890,36 @@
                      </layout>
                     </item>
                     <item>
-                     <widget class="QGroupBox" name="outgroupGroupBox">
-                      <layout class="QHBoxLayout" name="horizontalLayout_11">
-                       <property name="sizeConstraint">
-                        <enum>QLayout::SetDefaultConstraint</enum>
-                       </property>
-                       <property name="topMargin">
-                        <number>0</number>
-                       </property>
-                       <property name="bottomMargin">
-                        <number>0</number>
-                       </property>
-                       <item>
-                        <widget class="QLabel" name="outgroupLabel">
-                         <property name="text">
-                          <string>Outgroup:</string>
+                     <layout class="QHBoxLayout" name="horizontalLayout_15">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <item>
+                       <widget class="QGroupBox" name="outgroupGroupBox">
+                        <layout class="QHBoxLayout" name="horizontalLayout_11">
+                         <property name="sizeConstraint">
+                          <enum>QLayout::SetDefaultConstraint</enum>
                          </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLineEdit" name="outgroupEntry"/>
-                       </item>
-                      </layout>
-                     </widget>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QLabel" name="outgroupLabel">
+                           <property name="text">
+                            <string>Outgroup:</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="outgroupEntry"/>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                     </layout>
                     </item>
                     <item>
                      <spacer name="verticalSpacer_9">
