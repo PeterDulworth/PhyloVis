@@ -262,6 +262,109 @@ class StatisticsCalculations(QtCore.QThread):
         plt.clf()
 
 
+    def calculate_d(self, window_directory, window_offset):
+        """
+        Calculates the D statistic for the given alignment
+        Input:
+        window_directory --- the location of the folder containing the phylip window files
+        window_offset --- the offset that was used to create the windows
+        Output:
+        d_stat --- the D statistic value
+        windows_to_d --- a mapping of window indices to D values
+        """
+
+        # Initialize the site index to 0
+        site_idx = 0
+
+        # Initialize values for the d statistic numerator and denominator
+        d_numerator = 0
+        d_denominator = 0
+
+        windows_to_d = {}
+
+        # Iterate over each folder in the given directory in numerical order
+        for filename in natsorted(os.listdir(window_directory)):
+
+            # If file is a phylip file get the number of the window
+            if filename.endswith(".phylip"):
+                file_number = filename.replace("window", "")
+                file_number = int(file_number.replace(".phylip", ""))
+
+                input_file = os.path.join(window_directory, filename)
+
+                sequence_list = []
+
+                with open(input_file) as f:
+
+                    # Create a list of each line in the file
+                    lines = f.readlines()
+
+                    # First line contains the number and length of the sequences
+                    first_line = lines[0].split()
+                    number_of_sequences = int(first_line[0])
+                    length_of_sequences = int(first_line[1])
+
+                for line in lines[1:]:
+                    # Add each sequence to a list
+                    sequence = line.split()[1]
+                    sequence_list.append(sequence)
+
+                # Initialize values for the d statistic numerator and denominator for each window
+                numerator_window = 0
+                denominator_window = 0
+
+                # Iterate over the indices in each window
+                for window_idx in range(length_of_sequences):
+
+                    site = []
+
+                    # Iterate over each sequence in the alignment
+                    for sequence in sequence_list:
+                        # Add each base in a site to a list
+                        site.append(sequence[window_idx])
+
+                    # site[0], site[1], site[2], site[3] are P1, P2, P3 and O respectively for D statistic algorithm
+                    P1, P2, P3, O = site[0], site[1], site[2], site[3]
+
+                    # Case of ABBA
+                    if P1 == O and P2 == P3 and P1 != P2:
+                        ABBA = 1
+                        BABA = 0
+
+                    # Case of BABA
+                    elif P1 == P3 and P2 == O and P1 != P2:
+                        ABBA = 0
+                        BABA = 1
+
+                    # Neither case
+                    else:
+                        ABBA = 0
+                        BABA = 0
+
+                    numerator_window += (ABBA - BABA)
+                    denominator_window += (ABBA + BABA)
+
+                    # Increment the site index
+                    site_idx += 1
+
+                # Calculate d statistic for the window
+                d_window = numerator_window / float(denominator_window)
+
+                # Map the window index to its D statistic
+                windows_to_d[file_number] = d_window
+
+                # Add the numerator and denominator of each window to the overall numerator and denominator
+                d_numerator += numerator_window
+                d_denominator += denominator_window
+
+                # Account for overlapping windows
+                site_idx += (window_offset - length_of_sequences)
+
+        d_stat = d_numerator/float(d_denominator)
+
+        return d_stat, windows_to_d
+
+
 if __name__ == '__main__':
     # Inputs
     species_tree = "ChillLeo_species_tree.0"
@@ -284,3 +387,8 @@ if __name__ == '__main__':
     #     stat_scatter(windows_to_w_rf, "weightedRF")
     #     stat_scatter(windows_to_uw_rf, "unweightedRF")
 
+    window_directory = "windows"
+    window_offset = 50000
+    d, windows_to_d = sc.calculate_d(window_directory, window_offset)
+    print d
+    sc.stat_scatter(windows_to_d, "winstoD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
