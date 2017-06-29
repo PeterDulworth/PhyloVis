@@ -156,11 +156,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # **************************** MS PAGE ****************************#
 
         self.msCompareBtn.clicked.connect(self.runMSCompare)
-        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openFile(self.msRaxmlDirectoryEntry))
+        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
 
     def runMSCompare(self):
 
+        # run logic
         sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
         sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
         sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map,sites_to_newick_rax_map)
@@ -169,9 +170,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
         self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
 
+        # display window
         self.msComparisonWindow.show()
         self.msComparisonWindow.displayImages()
-
 
     def updateSpeciesTreeProgressBar(self, val):
         self.generateSpeciesTreeProgressBar.setValue(self.generateSpeciesTreeProgressBar.value() + val)
@@ -189,6 +190,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def resizeEvent(self, event):
         print self.size()
+
+    def moveEvent(self, QMoveEvent):
+        print self.pos()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
@@ -377,6 +381,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def openFile(self, textEntry):
         # get name of file
         name = QtGui.QFileDialog.getOpenFileName()
+        # set name of file to text entry
+        textEntry.setText(name)
+
+    def openDirectory(self, textEntry):
+        # get name of file
+        name = QtGui.QFileDialog.getExistingDirectory()
         # set name of file to text entry
         textEntry.setText(name)
 
