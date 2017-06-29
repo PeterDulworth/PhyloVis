@@ -88,8 +88,6 @@ class InformativeSites(QtCore.QThread):
 
                     # Create a list of each line in the file
                     lines = f.readlines()
-                    # line = f.readline()
-                    # line = line.split()
 
                     # First line contains the number and length of the sequences
                     first_line = lines[0].split()
