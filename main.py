@@ -400,8 +400,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.raxmlOperations.raxml_species_tree(self.input_file_name)
 
-    def run(self):
-
+    def raxmlInputErrorHandling(self):
         # Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
@@ -505,6 +504,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                                     "Number of bootstraps needs to be an integer greater than 1.")
             return
 
+    def run(self):
+
+        self.raxmlInputErrorHandling()
 
         self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
         self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
@@ -515,7 +517,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         #####################################################################
 
         self.runComplete = True
-        # self.updatedDisplayWindows()
         self.menuExport.setEnabled(True)
 
 
