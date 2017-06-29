@@ -5,13 +5,13 @@ import sys, os
 from shutil import copyfile
 
 
-class RobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobinsonFoulds):
+class MSRobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobinsonFoulds):
     def __init__(self, parent=None):
-        super(RobinsonFouldsWindow, self).__init__(parent)
+        super(MSRobinsonFouldsWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.unweightedFileName = '../UWRFdifference.png'
-        self.weightedFileName = '../WRFdifference.png'
+        self.unweightedFileName = 'UWRFdifference.png'
+        self.weightedFileName = 'WRFdifference.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -24,23 +24,11 @@ class RobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobins
         self.actionWeightedPDF.triggered.connect(lambda: self.exportFile(self.weightedFileName))
 
 
-    def displayUnweightedImage(self):
-        robinsonFouldsPlotSize = Image.open(self.unweightedFileName).size
-        self.actionWeightedPNG.setEnabled(False)
-        self.actionWeightedPDF.setEnabled(False)
-
-        self.move(1000, 600)
-
-        self.robinsonFouldsUnweightedImage.setScaledContents(True)
-        self.robinsonFouldsUnweightedImage.setPixmap(QtGui.QPixmap(self.unweightedFileName))
-
-        self.tabWidget.removeTab(1)
-        self.resize(int(robinsonFouldsPlotSize[0]), int(robinsonFouldsPlotSize[1]))
-
-    def displayWeightedAndUnweightedImages(self):
+    def displayImages(self):
         robinsonFouldsPlotSize = Image.open(self.weightedFileName).size
 
-        self.move(1000, 600)
+        self.move(900, 150)
+        print self.pos()
 
         self.msRobinsonFouldsUnweightedImage.setScaledContents(True)
         self.msRobinsonFouldsUnweightedImage.setPixmap(QtGui.QPixmap(self.unweightedFileName))
@@ -59,12 +47,15 @@ class RobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobins
         enabled = object.isEnabled()
         object.setEnabled(not enabled)
 
+    def moveEvent(self, QMoveEvent):
+        print self.pos()
+
 # if you want to test LOCALLY change the path to ../topologyDonut.png #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 if __name__ == '__main__':  # if we're running file directly and not importing it
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
 
     # initialize main input window
-    form = RobinsonFouldsWindow()  # We set the form to be our PhyloVisApp (design)
+    form = MSRobinsonFouldsWindow()  # We set the form to be our PhyloVisApp (design)
     form.show()  # Show the form
     form.displayWeightedAndUnweightedImages()
 
