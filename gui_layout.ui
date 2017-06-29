@@ -1875,7 +1875,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="mstFileEntry">
+             <widget class="QLineEdit" name="msFileEntry">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -1912,7 +1912,7 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <item>
-              <widget class="QLabel" name="raxmlDirectoryLabel">
+              <widget class="QLabel" name="msRaxmlDirectoryLabel">
                <property name="font">
                 <font>
                  <pointsize>15</pointsize>
@@ -1926,7 +1926,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="raxmlDirectoryDescriptionLabel">
+              <widget class="QLabel" name="msRaxmlDirectoryDescriptionLabel">
                <property name="font">
                 <font>
                  <italic>true</italic>
@@ -1940,14 +1940,14 @@
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_13">
                <item>
-                <widget class="QLineEdit" name="raxmlDirectoryEntry">
+                <widget class="QLineEdit" name="msRaxmlDirectoryEntry">
                  <property name="text">
                   <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_Files</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="RaxmlDirectoryBtn">
+                <widget class="QToolButton" name="msRaxmlDirectoryBtn">
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -2088,12 +2088,12 @@
               </layout>
              </item>
             </layout>
-            <zorder>raxmlDirectoryEntry</zorder>
+            <zorder>msRaxmlDirectoryEntry</zorder>
             <zorder>layoutWidget_2</zorder>
             <zorder>layoutWidget</zorder>
             <zorder>windowLabel</zorder>
-            <zorder>raxmlDirectoryLabel</zorder>
-            <zorder>raxmlDirectoryDescriptionLabel</zorder>
+            <zorder>msRaxmlDirectoryLabel</zorder>
+            <zorder>msRaxmlDirectoryDescriptionLabel</zorder>
             <zorder>layoutWidget_4</zorder>
            </widget>
           </item>

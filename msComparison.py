@@ -128,7 +128,6 @@ class MsComparison(QtCore.QThread):
                 sites_to_difference_w[i] = w_rf
                 sites_to_difference_uw[i] = uw_rf
 
-
         return sites_to_difference_w, sites_to_difference_uw
 
 

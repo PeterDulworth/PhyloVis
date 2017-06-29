@@ -1,17 +1,17 @@
 from PyQt4 import QtGui, QtCore
-import robinsonFouldsLayout
+import msRobinsonFouldsLayout
 from PIL import Image
 import sys, os
 from shutil import copyfile
 
 
-class RobinsonFouldsWindow(QtGui.QMainWindow, robinsonFouldsLayout.Ui_robinsonFoulds):
+class RobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobinsonFoulds):
     def __init__(self, parent=None):
         super(RobinsonFouldsWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.unweightedFileName = 'UnweightedFouldsPlot.png'
-        self.weightedFileName = 'WeightedFouldsPlot.png'
+        self.unweightedFileName = '../UWRFdifference.png'
+        self.weightedFileName = '../WRFdifference.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -42,11 +42,11 @@ class RobinsonFouldsWindow(QtGui.QMainWindow, robinsonFouldsLayout.Ui_robinsonFo
 
         self.move(1000, 600)
 
-        self.robinsonFouldsUnweightedImage.setScaledContents(True)
-        self.robinsonFouldsUnweightedImage.setPixmap(QtGui.QPixmap(self.unweightedFileName))
+        self.msRobinsonFouldsUnweightedImage.setScaledContents(True)
+        self.msRobinsonFouldsUnweightedImage.setPixmap(QtGui.QPixmap(self.unweightedFileName))
 
-        self.robinsonFouldsWeightedImage.setScaledContents(True)
-        self.robinsonFouldsWeightedImage.setPixmap(QtGui.QPixmap(self.weightedFileName))
+        self.msRobinsonFouldsWeightedImage.setScaledContents(True)
+        self.msRobinsonFouldsWeightedImage.setPixmap(QtGui.QPixmap(self.weightedFileName))
 
         self.resize(int(robinsonFouldsPlotSize[0]), int(robinsonFouldsPlotSize[1]))
 

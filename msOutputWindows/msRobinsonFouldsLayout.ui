@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Robinson Foulds</string>
+   <string>MS Robinson Foulds</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>

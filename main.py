@@ -7,7 +7,8 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 
 # GUI
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+from msOutputWindows import msRobinsonFouldsWindow
 import gui_layout as gui
 
 # logic
@@ -17,6 +18,7 @@ import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
 import bootstrapContraction as bc
+import msComparison as ms
 
 # more important logic
 import tetris, snake
@@ -55,11 +57,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.informativeSites = infSites.InformativeSites()
         # create new instance of BootstrapContraction class
         self.bootstrapContraction = bc.BootstrapContraction()
+        # create new instance of MsComparison class
+        self.msComparison = ms.MsComparison()
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 263}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 306}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
         # mapping from: mode --> menu action
@@ -148,9 +152,28 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
+        # **************************** MS PAGE ****************************#
+
+        self.msCompareBtn.clicked.connect(self.runMSCompare)
+        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openFile(self.msRaxmlDirectoryEntry))
+        self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
+
 
     ################################# Handlers #################################
 
+
+    def runMSCompare(self):
+
+        sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
+        sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
+        sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map,sites_to_newick_rax_map)
+
+        self.msComparison.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png",
+                                               "Difference Between MS and RAxML Output", "Sites Indices",
+                                               "Weighted Robinson-Foulds Distance")
+        self.msComparison.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png",
+                                               "Difference Between MS and RAxML Output", "Sites Indices",
+                                               " Unweighted Robinson-Foulds Distance")
 
     def updateSpeciesTreeProgressBar(self, val):
         self.generateSpeciesTreeProgressBar.setValue(self.generateSpeciesTreeProgressBar.value() + val)
