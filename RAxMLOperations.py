@@ -171,7 +171,7 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-    def raxml_windows(self, numBootstraps, model):
+    def raxml_windows(self, numBootstraps, model, window_directory='windows', output_directory='RAxML_Files'):
         """
         Runs RAxML on files in the directory containing files from
         window_splitter().
@@ -179,9 +179,6 @@ class RAxMLOperations(QtCore.QThread):
         Inputs:
         window_directory ---  the window directory location
         """
-
-        window_directory = 'windows'
-        output_directory = "RAxML_Files"
 
         topology_output_directory = "Topologies"
 

@@ -7,7 +7,8 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 
 # GUI
-from outputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+from msOutputWindows import msRobinsonFouldsWindow
 import gui_layout as gui
 
 # logic
@@ -17,6 +18,7 @@ import statisticCalculations as sc
 import fileConverterController as fcc
 import informativeSites as infSites
 import bootstrapContraction as bc
+import msComparison as ms
 
 # more important logic
 import tetris, snake
@@ -55,15 +57,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.informativeSites = infSites.InformativeSites()
         # create new instance of BootstrapContraction class
         self.bootstrapContraction = bc.BootstrapContraction()
+        # create new instance of MsComparison class
+        self.msComparison = ms.MsComparison()
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageNotRaxB': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageNotRaxB': {'x': 459, 'y': 245}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
-        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'not rax B': 'inputPageNotRaxB', 'not rax C': 'inputPageNotRaxC'}
+        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'not rax C': 'inputPageNotRaxC'}
         # mapping from: mode --> menu action
-        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'not rax B': self.actionNotRaxB, 'not rax C': self.actionNotRaxC}
+        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'not rax C': self.actionNotRaxC}
 
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
@@ -74,6 +78,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
+        self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
 
         # default values
         self.runComplete = False
@@ -101,8 +106,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
         self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
         self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
-        self.actionNotRaxB.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxB))
-        self.actionNotRaxB.triggered.connect(lambda: self.setWindow('inputPageNotRaxB'))
+        self.actionMS.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionMS))
+        self.actionMS.triggered.connect(lambda: self.setWindow('inputPageMS'))
         self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
         self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
 
@@ -148,9 +153,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
+        # **************************** MS PAGE ****************************#
 
-    ################################# Handlers #################################
+        self.msCompareBtn.clicked.connect(self.runMSCompare)
+        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
+        self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
 
+    def runMSCompare(self):
+
+        # run logic
+        sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
+        sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
+        sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map,sites_to_newick_rax_map)
+
+        # generate graphs
+        self.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
+        self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+
+        # display window
+        self.msComparisonWindow.show()
+        self.msComparisonWindow.displayImages()
 
     def updateSpeciesTreeProgressBar(self, val):
         self.generateSpeciesTreeProgressBar.setValue(self.generateSpeciesTreeProgressBar.value() + val)
@@ -168,6 +190,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def resizeEvent(self, event):
         print self.size()
+
+    def moveEvent(self, QMoveEvent):
+        print self.pos()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
@@ -359,6 +384,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # set name of file to text entry
         textEntry.setText(name)
 
+    def openDirectory(self, textEntry):
+        # get name of file
+        name = QtGui.QFileDialog.getExistingDirectory()
+        # set name of file to text entry
+        textEntry.setText(name)
+
     def generateSpeciesTree(self):
         # Error handling for input file
         try:
@@ -377,13 +408,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.raxmlOperations.raxml_species_tree(self.input_file_name)
 
-    def run(self):
-
+    def raxmlInputErrorHandling(self):
         # Error handling for input file
         try:
             self.input_file_name = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+            self.input_file_name = os.path.splitext(self.input_file_name)[1]
 
             if self.input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
@@ -482,6 +512,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                                     "Number of bootstraps needs to be an integer greater than 1.")
             return
 
+    def run(self):
+
+        self.raxmlInputErrorHandling()
 
         self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
         self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
@@ -492,7 +525,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         #####################################################################
 
         self.runComplete = True
-        # self.updatedDisplayWindows()
         self.menuExport.setEnabled(True)
 
 
