@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -130,7 +130,7 @@
               </item>
               <item>
                <property name="text">
-                <string>not rax B</string>
+                <string>MS Comparison</string>
                </property>
               </item>
               <item>
@@ -2309,7 +2309,7 @@
     </property>
     <addaction name="actionRax"/>
     <addaction name="actionConverter"/>
-    <addaction name="actionNotRaxB"/>
+    <addaction name="actionMS"/>
     <addaction name="actionNotRaxC"/>
    </widget>
    <widget class="QMenu" name="menuDisplay">
@@ -2353,12 +2353,12 @@
     <string>Converter</string>
    </property>
   </action>
-  <action name="actionNotRaxB">
+  <action name="actionMS">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Not Rax B</string>
+    <string>MS</string>
    </property>
   </action>
   <action name="actionNotRaxC">
