@@ -11,17 +11,17 @@ import numpy as np
 from PyQt4 import QtCore
 
 """
-Functions for calculating statistics for sequence windows and for
- ~
-comparison to species tree.
+Functions for calculating statistics for sequence windows and for comparison to species tree.
+~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
 """
 
 class StatisticsCalculations(QtCore.QThread):
-    def __init__(self, parent=None):
+    def __init__(self, output_directory='RAxML_Files', parent=None):
         super(StatisticsCalculations, self).__init__(parent)
+        self.output_directory = output_directory
 
     def newick_reformat(self, newick):
         """
@@ -103,14 +103,14 @@ class StatisticsCalculations(QtCore.QThread):
         windows_to_p_gtst = {}
 
         # Iterate over each folder in the given directory
-        for filename in natsorted(os.listdir("RAxML_Files")):
+        for filename in natsorted(os.listdir(self.output_directory)):
 
             # If file is the file with the best tree newick string
             if os.path.splitext(filename)[0] == "RAxML_bestTree":
 
                 window_num = (os.path.splitext(filename)[1]).replace(".","")
 
-                gene_tree_filename = os.path.join("RAxML_Files", filename)
+                gene_tree_filename = os.path.join(self.output_directory, filename)
 
                 p_gtst = self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
@@ -184,14 +184,14 @@ class StatisticsCalculations(QtCore.QThread):
         windows_to_uw_rf = {}
 
         # Iterate over each folder in the given directory
-        for filename in natsorted(os.listdir("RAxML_Files")):
+        for filename in natsorted(os.listdir(self.output_directory)):
 
             # If file is the file with the best tree newick string
             if os.path.splitext(filename)[0] == "RAxML_bestTree":
                 # makes file and calculates rf distance
                 window_num = (os.path.splitext(filename)[1]).replace(".", "")
 
-                gene_tree_filename = os.path.join("RAxML_Files", filename)
+                gene_tree_filename = os.path.join(self.output_directory, filename)
 
                 rf_distance = self.calculate_robinson_foulds(species_tree, gene_tree_filename, weighted)
 
