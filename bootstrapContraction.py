@@ -116,7 +116,7 @@ class BootstrapContraction(QtCore.QThread):
         plt.plot(x, list2, "-", )
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
-        plt.title('Number of Internal Nodes Confidence Threshold: ' + str(confidence_threshold))
+        plt.title('Number of Internal Nodes After Contraction Confidence Threshold: ' + str(confidence_threshold))
         plt.legend(["Before Contraction", "After Contraction"], loc=0)
         # plt.tight_layout()
         # plt.show()
