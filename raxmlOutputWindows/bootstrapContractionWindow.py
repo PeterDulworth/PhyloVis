@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../ContractedGraph.png'
+    fileName = '../plots/ContractedGraph.png'
 else:
-    fileName = 'ContractedGraph.png'
+    fileName = 'plots/ContractedGraph.png'
 
 
 class BootstrapContractionWindow(Window):

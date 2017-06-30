@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../TopTopologies.png'
+    fileName = '../plots/TopTopologies.png'
 else:
-    fileName = 'TopTopologies.png'
+    fileName = 'plots/TopTopologies.png'
 
 
 class AllTreesWindow(Window):

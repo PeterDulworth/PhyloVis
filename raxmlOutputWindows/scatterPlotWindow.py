@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../topologyScatter.png'
+    fileName = '../plots/topologyScatter.png'
 else:
-    fileName = 'topologyScatter.png'
+    fileName = 'plots/topologyScatter.png'
 
 
 class ScatterPlotWindow(Window):

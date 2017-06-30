@@ -21,7 +21,7 @@ import bootstrapContraction as bc
 import msComparison as ms
 
 # more important logic
-import tetris, snake
+from games import tetris, snake
 
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
@@ -324,29 +324,29 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 if self.checkboxHeatMap.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.informativeSites.heat_map_generator(sites_to_informative, "HeatMapself.informativeSites.png")
+                    self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
                 if self.checkboxStatistics.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():
                         if self.checkboxWeighted.isChecked():
                             windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
 
-                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance")
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
+                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "plots/WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance")
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "plots/UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
 
                         else:
                             windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
+                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "plots/UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
 
                     if self.checkboxPGTST.isChecked():
                         # Function calls for calculating statistics
                         windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
-                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "PGTSTPlot.png", "p(gt|st)", "Windows", "Probability")
+                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "plots/PGTSTPlot.png", "p(gt|st)", "Windows", "Probability")
 
                 if self.checkboxBootstrap.isChecked():
                     xLabel = "Window Indices"
                     yLabel = "Number of Internal Nodes"
-                    name = "ContractedGraph.png"
+                    name = "plots/ContractedGraph.png"
                     internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
                     # generate bootstrap confidence graph
                     self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)

@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../genomeAtlas.png'
+    fileName = '../plots/genomeAtlas.png'
 else:
-    fileName = 'genomeAtlas.png'
+    fileName = 'plots/genomeAtlas.png'
 
 
 class CircleGraphWindow(Window):

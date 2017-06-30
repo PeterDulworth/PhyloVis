@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../PGTSTPlot.png'
+    fileName = '../plots/PGTSTPlot.png'
 else:
-    fileName = 'PGTSTPlot.png'
+    fileName = 'plots/PGTSTPlot.png'
 
 
 class PGTSTWindow(Window):

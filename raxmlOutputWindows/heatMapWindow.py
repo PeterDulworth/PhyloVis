@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../HeatMapInfSites.png'
+    fileName = '../plots/HeatMapInfSites.png'
 else:
-    fileName = 'HeatMapInfSites.png'
+    fileName = 'plots/HeatMapInfSites.png'
 
 
 class HeatMapWindow(Window):

@@ -376,7 +376,7 @@ class TopologyPlotter(QtCore.QThread):
         plt.ylabel('Top Newick Strings', fontsize=10)
 
         # save plot
-        plot = "topologyScatter.png"
+        plot = "plots/topologyScatter.png"
         plt.savefig(plot)
         plt.clf()
 
@@ -488,7 +488,7 @@ class TopologyPlotter(QtCore.QThread):
                 else:
                     new_im.paste(im, (x_offset, y_offset), mask=im)
 
-        new_im.save("TopTopologies.png")
+        new_im.save("plots/TopTopologies.png")
 
 
     def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
@@ -572,7 +572,7 @@ class TopologyPlotter(QtCore.QThread):
         ############################# Build Graph #############################
 
         # name of the figure
-        name = "GenomeAtlas"
+        name = "plots/GenomeAtlas"
         graphStyle = 'bar'
 
         # create the diagram -- highest level container for everything
