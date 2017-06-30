@@ -61,9 +61,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msComparison = ms.MsComparison()
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4, 'outputPage': 5}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions 493
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -84,7 +84,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
         self.menuExport.setEnabled(False)
-        self.outgroupEntry.setEnabled(False)
+        self.outgroupComboBox.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
         self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
@@ -135,7 +135,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
-        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
+        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupComboBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))

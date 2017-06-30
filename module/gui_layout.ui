@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>4</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -947,7 +947,14 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="outgroupEntry"/>
+                          <widget class="QComboBox" name="outgroupComboBox">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                          </widget>
                          </item>
                         </layout>
                        </widget>
@@ -976,10 +983,19 @@
                   <string>Advanced</string>
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <property name="spacing">
+                   <number>1</number>
+                  </property>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_9">
                     <item>
                      <widget class="QCheckBox" name="checkBoxCustomRaxml">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
                       <property name="font">
                        <font>
                         <pointsize>14</pointsize>
@@ -1012,6 +1028,9 @@
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_21">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="label_4">
                       <property name="font">
@@ -1028,15 +1047,40 @@
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_22">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLineEdit" name="customRaxmlCommandEntry"/>
                     </item>
                    </layout>
                   </item>
                   <item>
+                   <spacer name="verticalSpacer_10">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_17">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="customRaxmlDirectoryLabel">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>18</height>
+                       </size>
+                      </property>
                       <property name="font">
                        <font>
                         <pointsize>14</pointsize>
@@ -1053,6 +1097,9 @@
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_20">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="customRaxmlDirectoryDescriptionLabel">
                       <property name="font">
@@ -1069,6 +1116,9 @@
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_6">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLineEdit" name="customRaxmlDirectoryEntry"/>
                     </item>
@@ -1082,9 +1132,31 @@
                    </layout>
                   </item>
                   <item>
+                   <spacer name="verticalSpacer_7">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_19">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="generateSpeciesTreeLabel">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>18</height>
+                       </size>
+                      </property>
                       <property name="font">
                        <font>
                         <pointsize>14</pointsize>
@@ -1101,6 +1173,9 @@
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="runRaxmlHL_2">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QPushButton" name="generateSpeciesTreeBtn">
                       <property name="minimumSize">
@@ -1709,7 +1784,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxA">
+        <widget class="QWidget" name="fileConverterPage">
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
            <widget class="QLabel" name="label">
@@ -1877,7 +1952,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxB">
+        <widget class="QWidget" name="msComparisonPage">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QHBoxLayout" name="msFileHL">
@@ -2123,18 +2198,18 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxC">
-         <widget class="QLabel" name="label_3">
+        <widget class="QWidget" name="dStatisticPage">
+         <widget class="QLabel" name="theD">
           <property name="geometry">
            <rect>
             <x>180</x>
             <y>70</y>
-            <width>56</width>
-            <height>13</height>
+            <width>391</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
-           <string>notRaxC</string>
+           <string>the D -- coming soon ~ ft. travis benedict ;)</string>
           </property>
          </widget>
         </widget>
@@ -2145,133 +2220,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QTabWidget" name="outputTabs">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="currentIndex">
-             <number>0</number>
-            </property>
-            <widget class="QWidget" name="standard">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>Standard</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <spacer name="horizontalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="standardImage">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="bootstrap">
-             <attribute name="title">
-              <string>Boostrap</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="bootstrapImage">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="summary">
-             <attribute name="title">
-              <string>Summary</string>
-             </attribute>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_2">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QGridLayout" name="gridLayout_5"/>
         </widget>
        </widget>
       </item>
@@ -2441,10 +2390,6 @@
    </property>
   </action>
  </widget>
- <tabstops>
-  <tabstop>outputTabs</tabstop>
-  <tabstop>pushButton_2</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
