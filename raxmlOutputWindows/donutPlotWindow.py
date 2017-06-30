@@ -4,9 +4,9 @@ import sys
 
 
 if __name__ == '__main__':
-    fileName = '../topologyDonut.png'
+    fileName = '../plots/topologyDonut.png'
 else:
-    fileName = 'topologyDonut.png'
+    fileName = 'plots/topologyDonut.png'
 
 
 class DonutPlotWindow(Window):
