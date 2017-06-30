@@ -268,11 +268,12 @@ class StatisticsCalculations(QtCore.QThread):
         plt.clf()
 
 
-    def calculate_d(self, window_directory, window_offset):
+    def calculate_d(self, alignment, window_size, window_offset):
         """
         Calculates the D statistic for the given alignment
         Input:
-        window_directory --- the location of the folder containing the phylip window files
+        alignment --- a sequence alignment in phylip format
+        window_size --- the size of the desired windows
         window_offset --- the offset that was used to create the windows
         Output:
         d_stat --- the D statistic value
@@ -288,83 +289,90 @@ class StatisticsCalculations(QtCore.QThread):
 
         windows_to_d = {}
 
-        # Iterate over each folder in the given directory in numerical order
-        for filename in natsorted(os.listdir(window_directory)):
+        sequence_list = []
 
-            # If file is a phylip file get the number of the window
-            if filename.endswith(".phylip"):
-                file_number = filename.replace("window", "")
-                file_number = int(file_number.replace(".phylip", ""))
+        with open(alignment) as f:
 
-                input_file = os.path.join(window_directory, filename)
+            # Create a list of each line in the file
+            lines = f.readlines()
 
-                sequence_list = []
+            # First line contains the number and length of the sequences
+            first_line = lines[0].split()
+            number_of_sequences = int(first_line[0])
+            length_of_sequences = int(first_line[1])
 
-                with open(input_file) as f:
+        # Initialize a count for the total number of windows
+        num_windows = 0
 
-                    # Create a list of each line in the file
-                    lines = f.readlines()
+        i = 0
 
-                    # First line contains the number and length of the sequences
-                    first_line = lines[0].split()
-                    number_of_sequences = int(first_line[0])
-                    length_of_sequences = int(first_line[1])
+        # Determine the total number of windows needed
+        while (i + window_size - 1 < length_of_sequences):
+            i += window_size
+            num_windows += 1
 
-                for line in lines[1:]:
-                    # Add each sequence to a list
-                    sequence = line.split()[1]
-                    sequence_list.append(sequence)
+        for line in lines[1:]:
+            # Add each sequence to a list
+            sequence = line.split()[1]
+            sequence_list.append(sequence)
 
-                # Initialize values for the d statistic numerator and denominator for each window
-                numerator_window = 0
-                denominator_window = 0
+        # Initialize values for the d statistic numerator and denominator for each window
+        numerator_window = 0
+        denominator_window = 0
 
-                # Iterate over the indices in each window
-                for window_idx in range(length_of_sequences):
+        # Iterate over each window
+        for window in range(num_windows):
 
-                    site = []
+            # Iterate over the indices in each window
+            for window_idx in range(window_size):
 
-                    # Iterate over each sequence in the alignment
-                    for sequence in sequence_list:
-                        # Add each base in a site to a list
-                        site.append(sequence[window_idx])
+                site = []
 
-                    # site[0], site[1], site[2], site[3] are P1, P2, P3 and O respectively for D statistic algorithm
-                    P1, P2, P3, O = site[0], site[1], site[2], site[3]
+                # Iterate over each sequence in the alignment
+                for sequence in sequence_list:
+                    # Add each base in a site to a list
+                    site.append(sequence[window_idx])
 
-                    # Case of ABBA
-                    if P1 == O and P2 == P3 and P1 != P2:
-                        ABBA = 1
-                        BABA = 0
+                # site[0], site[1], site[2], site[3] are P1, P2, P3 and O respectively for D statistic algorithm
+                P1, P2, P3, O = site[0], site[1], site[2], site[3]
 
-                    # Case of BABA
-                    elif P1 == P3 and P2 == O and P1 != P2:
-                        ABBA = 0
-                        BABA = 1
+                # Case of ABBA
+                if P1 == O and P2 == P3 and P1 != P2:
+                    ABBA = 1
+                    BABA = 0
 
-                    # Neither case
-                    else:
-                        ABBA = 0
-                        BABA = 0
+                # Case of BABA
+                elif P1 == P3 and P2 == O and P1 != P2:
+                    ABBA = 0
+                    BABA = 1
 
-                    numerator_window += (ABBA - BABA)
-                    denominator_window += (ABBA + BABA)
+                # Neither case
+                else:
+                    ABBA = 0
+                    BABA = 0
 
-                    # Increment the site index
-                    site_idx += 1
+                numerator_window += (ABBA - BABA)
+                denominator_window += (ABBA + BABA)
 
-                # Calculate d statistic for the window
-                d_window = numerator_window / float(denominator_window)
+                # Increment the site index
+                site_idx += 1
 
-                # Map the window index to its D statistic
-                windows_to_d[file_number] = d_window
+                # Handle case for when the final window is shorter than the others
+                if site_idx > length_of_sequences:
+                    break
 
-                # Add the numerator and denominator of each window to the overall numerator and denominator
-                d_numerator += numerator_window
-                d_denominator += denominator_window
+            # Calculate d statistic for the window
+            d_window = numerator_window / float(denominator_window)
 
-                # Account for overlapping windows
-                site_idx += (window_offset - length_of_sequences)
+            # Map the window index to its D statistic
+            windows_to_d[window] = d_window
+
+            # Add the numerator and denominator of each window to the overall numerator and denominator
+            d_numerator += numerator_window
+            d_denominator += denominator_window
+
+            # Account for overlapping windows
+            site_idx += (window_offset - length_of_sequences)
 
         d_stat = d_numerator/float(d_denominator)
 
@@ -373,14 +381,13 @@ class StatisticsCalculations(QtCore.QThread):
 
 if __name__ == '__main__':
     # Inputs
-    species_tree = "../RAxML_SpeciesTree/RAxML_ST_bestTree.txt"
-    weighted = True
 
-    sc = StatisticsCalculations()
-    sc.output_directory = '../RAxML_Files'
+    # species_tree = "ChillLeo_species_tree.0"
+    # weighted = True
+
 
     # Run commands
-    windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
+    # windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
     # stat_scatter(windows_to_p_gtst, "PGTST")
 
     # # Unweighted Robinson-Foulds
@@ -394,8 +401,10 @@ if __name__ == '__main__':
     #     stat_scatter(windows_to_w_rf, "weightedRF")
     #     stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-    window_directory = "../windows"
+    alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
+    window_size = 50000
     window_offset = 50000
-    d, windows_to_d = sc.calculate_d(window_directory, window_offset)
+    # d, windows_to_d = sc.calculate_d(window_directory, window_offset)
+    d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset)
     print d
     sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
