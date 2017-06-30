@@ -42,6 +42,7 @@ class StatisticsCalculations(QtCore.QThread):
 
         return newick
 
+
     def calculate_p_of_gt_given_st(self, species_tree, gene_tree):
         """
         Computes the probability that a gene tree occurs given a species tree. If the taxon names between the two trees are not the
@@ -87,6 +88,7 @@ class StatisticsCalculations(QtCore.QThread):
 
         return p_of_gt_given_st
 
+
     def calculate_windows_to_p_gtst(self, species_tree):
         """
         Calculate p(gt|st) for each window and create a mapping
@@ -120,6 +122,7 @@ class StatisticsCalculations(QtCore.QThread):
                 windows_to_p_gtst[window_num] = p_gtst
 
         return windows_to_p_gtst
+
 
     def calculate_robinson_foulds(self, species_tree, gene_tree, weighted):
         """
@@ -164,6 +167,7 @@ class StatisticsCalculations(QtCore.QThread):
         # only unweighted foulds distance
         else:
             return treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
+
 
     def calculate_windows_to_rf(self, species_tree, weighted):
         """
@@ -213,6 +217,7 @@ class StatisticsCalculations(QtCore.QThread):
 
         else:
             return windows_to_uw_rf
+
 
     def stat_scatter(self, stat_map, name, title, xlabel, ylabel):
         """
@@ -391,4 +396,4 @@ if __name__ == '__main__':
     window_offset = 50000
     d, windows_to_d = sc.calculate_d(window_directory, window_offset)
     print d
-    sc.stat_scatter(windows_to_d, "winstoD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
+    sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
