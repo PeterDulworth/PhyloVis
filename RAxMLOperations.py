@@ -27,6 +27,18 @@ class RAxMLOperations(QtCore.QThread):
         self.bootstrap = bootstrap
         self.model = model
 
+    def taxon_names(self, phylip):
+        """
+        Runs RAxML on input PHYLIP file to create a species
+        tree.
+
+        Inputs:
+        phylip -- a file inputted by the user.
+
+        Returns:
+        A list of taxon names
+        """
+
     def raxml_species_tree(self, phylip):
         """
         Runs RAxML on input PHYLIP file to create a species
