@@ -80,6 +80,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
 
+        # remove all files in plots folder
+        fileList = os.listdir('plots')
+        for fileName in fileList:
+            os.remove('plots/' + fileName)
+
         # default values
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -92,7 +97,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
-        self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
@@ -140,6 +144,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
+        # when file entry text is changed
+        self.connect(self.inputFileEntry, QtCore.SIGNAL("editingFinished()"), self.entryEdited)
+        self.connect(self, QtCore.SIGNAL("FILE_SELECTED"), self.entryEdited)
+
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)
         self.generateSpeciesTreeBtn.clicked.connect(self.generateSpeciesTree)
@@ -158,6 +166,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msCompareBtn.clicked.connect(self.runMSCompare)
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
+
+
+    def entryEdited(self):
+        try:
+            taxonNames = self.raxmlOperations.taxon_names_getter(self.inputFileEntry.text())
+            self.outgroupComboBox.clear()
+            for taxon in taxonNames:
+                self.outgroupComboBox.addItem(taxon)
+        except:
+            print 'INVALID FILE'
 
     def runMSCompare(self):
 
@@ -302,13 +320,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outGroup)
+                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(
-                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
+                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
@@ -352,8 +370,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)
 
                 if self.checkboxAllTrees.isChecked():
-                    self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
-                    self.topologyPlotter.top_topology_visualization()
+                    if self.checkboxRooted.isChecked():
+                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees
+                        self.topologyPlotter.top_topology_visualization()
+                    else:
+                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
+                        self.topologyPlotter.top_topology_visualization()
 
                 self.displayResults()
 
@@ -383,6 +405,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
         textEntry.setText(name)
+        self.emit(QtCore.SIGNAL('FILE_SELECTED'))
 
     def openDirectory(self, textEntry):
         # get name of file
@@ -484,7 +507,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # error handling for is rooted checkbox
         try:
             if self.checkboxRooted.isChecked():
-                self.outGroup = str(self.outgroupEntry.text())
                 self.rooted = self.checkboxRooted.isChecked()
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
