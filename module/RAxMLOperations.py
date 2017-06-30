@@ -27,6 +27,30 @@ class RAxMLOperations(QtCore.QThread):
         self.bootstrap = bootstrap
         self.model = model
 
+    def taxon_names_getter(self, phylip):
+        """
+        Creates a list of taxon names from the inputted file
+        Input:
+        phylip --- a file inputted by the user
+        Output:
+        taxon_names --- a list of taxon names from the inputted phylip file
+        """
+
+        # Initialize a list for the taxa
+        taxon_names = []
+
+        with open(phylip) as f:
+            # Create a list of each line in the file
+            lines = f.readlines()
+
+        # Iterate over each line after the first one
+        for line in lines[1:]:
+            # Add each sequence to a list
+            taxon = line.split()[0]
+            taxon_names.append(taxon)
+
+        return taxon_names
+
     def raxml_species_tree(self, phylip):
         """
         Runs RAxML on input PHYLIP file to create a species

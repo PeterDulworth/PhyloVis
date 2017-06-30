@@ -58,11 +58,6 @@ class BootstrapContraction(QtCore.QThread):
         # Get the final number of internal nodes
         num_internal_nodes_f = len(tree.get_nonterminals())
 
-        # plt.title('Confidence Threshold: ' + str(confidence_threshold))
-        Phylo.draw(tree, "TestTree", axes=axes, do_show=False)
-        plt.clf()
-        # plt.show()
-
         return num_internal_nodes_i, num_internal_nodes_f
 
 
