@@ -1,4 +1,3 @@
-<<<<<<< HEAD:RAxMLOperations.py
 from natsort import natsorted
 from sys import platform
 import subprocess
@@ -28,17 +27,30 @@ class RAxMLOperations(QtCore.QThread):
         self.bootstrap = bootstrap
         self.model = model
 
-    def taxon_names(self, phylip):
+    def taxon_names_getter(self, phylip):
         """
-        Runs RAxML on input PHYLIP file to create a species
-        tree.
-
-        Inputs:
-        phylip -- a file inputted by the user.
-
-        Returns:
-        A list of taxon names
+        Creates a list of taxon names from the inputted file
+        Input:
+        phylip --- a file inputted by the user
+        Output:
+        taxon_names --- a list of taxon names from the inputted phylip file
         """
+
+        # Initialize a list for the taxa
+        taxon_names = []
+
+        with open(phylip) as f:
+            # Create a list of each line in the file
+            lines = f.readlines()
+
+        # Iterate over each line after the first one
+        for line in lines[1:]:
+            # Add each sequence to a list
+            taxon = line.split()[0]
+            taxon_names.append(taxon)
+
+        return taxon_names
+
 
     def raxml_species_tree(self, phylip):
         """
@@ -312,12 +324,14 @@ if __name__ == '__main__':
     # window_size = 10
     # window_offset = 10
 
-    inputFile = "testFiles/ChillLeo.phylip"
+    inputFile = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
     windowSize = 500000
     windowOffset = 500000
-
-    ro = RAxMLOperations(inputFile, windowSize, windowOffset)
-
-    windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
-    ro.raxml_windows()
+    numBootstraps = 0
+    #
+    ro = RAxMLOperations(inputFile, windowSize, windowOffset, numBootstraps)
+    #
+    # windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
+    # ro.raxml_windows()
+    print ro.taxon_names_getter(inputFile)
 
