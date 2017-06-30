@@ -8,6 +8,7 @@ Trees
 *.pyc
 *.jpg
 !Luay.jpg
+!tree.png
 *.png
 *.pdf
 Topologies
