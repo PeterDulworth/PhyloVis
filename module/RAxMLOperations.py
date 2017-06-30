@@ -1,3 +1,4 @@
+<<<<<<< HEAD:RAxMLOperations.py
 from natsort import natsorted
 from sys import platform
 import subprocess
@@ -319,3 +320,4 @@ if __name__ == '__main__':
 
     windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
     ro.raxml_windows()
+

@@ -12,13 +12,13 @@ from msOutputWindows import msRobinsonFouldsWindow
 import gui_layout as gui
 
 # logic
-import RAxMLOperations as ro
-import topologyPlots as tp
-import statisticCalculations as sc
-import fileConverterController as fcc
-import informativeSites as infSites
-import bootstrapContraction as bc
-import msComparison as ms
+from module import RAxMLOperations as ro
+from module import topologyPlots as tp
+from module import statisticCalculations as sc
+from module import fileConverterController as fcc
+from module import informativeSites as infSites
+from module import bootstrapContraction as bc
+from module import msComparison as ms
 
 # more important logic
 from games import tetris, snake

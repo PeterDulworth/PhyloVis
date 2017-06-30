@@ -334,7 +334,7 @@ class TopologyPlotter(QtCore.QThread):
 
         # plt.tight_layout()
         # save plot
-        plt.savefig("topologyDonut.png", dpi=250)
+        plt.savefig("plots/topologyDonut.png", dpi=250)
         plt.clf()
 
     def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
@@ -398,7 +398,7 @@ class TopologyPlotter(QtCore.QThread):
 
             if newick != "Other":
                 # Create a unique output file for each topology image
-                output_file = "Topology" + str(count) + ".png"
+                output_file = "plots/Topology" + str(count) + ".png"
 
                 # Create the tree object and assign it to the appropriate color
                 tree = Phylo.read(StringIO(newick), "newick")
@@ -435,11 +435,11 @@ class TopologyPlotter(QtCore.QThread):
         topology_images = []
 
         # Iterate over each folder in the given directory
-        for filename in os.listdir("."):
+        for filename in os.listdir("plots"):
 
             # If file is a Topology image
             if re.match(pattern, (os.path.splitext(filename)[0])):
-                topology_images.append(filename)
+                topology_images.append('plots/' + filename)
 
         # Open the bottom images
         topology_images = map(Image.open, topology_images)

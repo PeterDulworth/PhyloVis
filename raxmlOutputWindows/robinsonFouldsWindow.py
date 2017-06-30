@@ -10,8 +10,8 @@ class RobinsonFouldsWindow(QtGui.QMainWindow, robinsonFouldsLayout.Ui_robinsonFo
         super(RobinsonFouldsWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.unweightedFileName = 'UnweightedFouldsPlot.png'
-        self.weightedFileName = 'WeightedFouldsPlot.png'
+        self.unweightedFileName = 'plots/UnweightedFouldsPlot.png'
+        self.weightedFileName = 'plots/WeightedFouldsPlot.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
