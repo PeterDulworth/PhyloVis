@@ -9,7 +9,7 @@ from shutil import copyfile, copytree
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
 from msOutputWindows import msRobinsonFouldsWindow
-import gui_layout as gui
+from module import gui_layout as gui
 
 # logic
 from module import RAxMLOperations as ro
@@ -61,13 +61,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msComparison = ms.MsComparison()
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
-        # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4, 'outputPage': 5}
+        # mapping from: windows --> dictionary of page dimensions 493
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
-        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'not rax C': 'inputPageNotRaxC'}
+        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
-        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'not rax C': self.actionNotRaxC}
+        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
 
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
@@ -108,8 +108,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
         self.actionMS.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionMS))
         self.actionMS.triggered.connect(lambda: self.setWindow('inputPageMS'))
-        self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
-        self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
+        self.actionDStatistic.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionDStatistic))
+        self.actionDStatistic.triggered.connect(lambda: self.setWindow('inputPageDStatistic'))
 
         # triggers export dialogs
         self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
@@ -146,7 +146,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** WELCOME PAGE ****************************#
 
-        self.launchBtn.clicked.connect(lambda: self.initializeMode())
+        self.launchBtn.clicked.connect(self.initializeMode)
 
         # **************************** CONVERTER PAGE ****************************#
 

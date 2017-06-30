@@ -299,11 +299,12 @@ if __name__ == '__main__':
     # window_size = 10
     # window_offset = 10
 
-    inputFile = "testFiles/ChillLeo.phylip"
+    inputFile = "../RAxML_SpeciesTree/RAxML_ST_bestTree.txt"
     windowSize = 500000
     windowOffset = 500000
+    numBootstraps = 2
 
-    ro = RAxMLOperations(inputFile, windowSize, windowOffset)
+    ro = RAxMLOperations(inputFile, windowSize, windowOffset, numBootstraps=2)
 
     windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
     ro.raxml_windows()

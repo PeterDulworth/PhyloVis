@@ -117,6 +117,7 @@ class StatisticsCalculations(QtCore.QThread):
                 p_gtst = self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
                 # Reformat output
+                print self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
                 p_gtst = float(p_gtst.replace('\r', '').replace('\n', ''))
 
                 windows_to_p_gtst[window_num] = p_gtst
@@ -372,10 +373,11 @@ class StatisticsCalculations(QtCore.QThread):
 
 if __name__ == '__main__':
     # Inputs
-    species_tree = "ChillLeo_species_tree.0"
+    species_tree = "../RAxML_SpeciesTree/RAxML_ST_bestTree.txt"
     weighted = True
 
     sc = StatisticsCalculations()
+    sc.output_directory = '../RAxML_Files'
 
     # Run commands
     windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
@@ -392,7 +394,7 @@ if __name__ == '__main__':
     #     stat_scatter(windows_to_w_rf, "weightedRF")
     #     stat_scatter(windows_to_uw_rf, "unweightedRF")
 
-    window_directory = "windows"
+    window_directory = "../windows"
     window_offset = 50000
     d, windows_to_d = sc.calculate_d(window_directory, window_offset)
     print d
