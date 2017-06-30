@@ -50,7 +50,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -135,7 +135,7 @@
               </item>
               <item>
                <property name="text">
-                <string>not rax C</string>
+                <string>D Statistic</string>
                </property>
               </item>
               <item>
@@ -231,6 +231,20 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
+           <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <pointsize>15</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Select Alignment</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="inputFileHL">
             <item>
              <widget class="QLabel" name="inputFileLabel">
@@ -303,7 +317,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>740</height>
+               <height>717</height>
               </rect>
              </property>
              <attribute name="label">
@@ -323,7 +337,7 @@
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <property name="usesScrollButtons">
                  <bool>false</bool>
@@ -342,280 +356,6 @@
                      <number>1</number>
                     </property>
                     <item>
-                     <spacer name="verticalSpacer_4">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="bootstrapHL">
-                      <item>
-                       <widget class="QCheckBox" name="checkboxBootstrap">
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>21</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>15</pointsize>
-                          <weight>75</weight>
-                          <bold>true</bold>
-                         </font>
-                        </property>
-                        <property name="focusPolicy">
-                         <enum>Qt::NoFocus</enum>
-                        </property>
-                        <property name="layoutDirection">
-                         <enum>Qt::RightToLeft</enum>
-                        </property>
-                        <property name="text">
-                         <string>Bootstrap</string>
-                        </property>
-                        <property name="checked">
-                         <bool>false</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="bootstrapSpacer">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_12">
-                      <property name="leftMargin">
-                       <number>10</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QGroupBox" name="bootstrapGroupBox">
-                        <property name="layoutDirection">
-                         <enum>Qt::LeftToRight</enum>
-                        </property>
-                        <layout class="QVBoxLayout" name="verticalLayout_24">
-                         <property name="margin">
-                          <number>5</number>
-                         </property>
-                         <item>
-                          <widget class="QLabel" name="confidenceLevelLabel">
-                           <property name="layoutDirection">
-                            <enum>Qt::LeftToRight</enum>
-                           </property>
-                           <property name="text">
-                            <string>Confidence Level</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="confidenceLevelEntry">
-                           <property name="minimumSize">
-                            <size>
-                             <width>40</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>120</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>13</pointsize>
-                             <weight>50</weight>
-                             <bold>false</bold>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string/>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLabel" name="numberOfBootstrapsLabel">
-                           <property name="text">
-                            <string>Number of Bootstraps</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="numberOfBootstrapsEntry">
-                           <property name="minimumSize">
-                            <size>
-                             <width>40</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>120</width>
-                             <height>16777215</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>13</pointsize>
-                             <weight>50</weight>
-                             <bold>false</bold>
-                            </font>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_7">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_16">
-                      <property name="leftMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="modelLabel">
-                        <property name="font">
-                         <font>
-                          <pointsize>15</pointsize>
-                          <weight>75</weight>
-                          <bold>true</bold>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Model</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="horizontalLayout_18">
-                      <property name="leftMargin">
-                       <number>10</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QComboBox" name="modelComboBox">
-                        <item>
-                         <property name="text">
-                          <string>GTRGAMMA</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>GTRCAT</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>GTRCATI</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>ASC_GTRCAT</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>ASC_GTRGAMMA</string>
-                         </property>
-                        </item>
-                        <item>
-                         <property name="text">
-                          <string>GTRGAMMAI</string>
-                         </property>
-                        </item>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <spacer name="verticalSpacer_8">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <widget class="Line" name="raxmlOptionsVLine">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_25">
-                    <property name="spacing">
-                     <number>1</number>
-                    </property>
-                    <item>
-                     <spacer name="verticalSpacer_10">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>40</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_10">
                       <property name="leftMargin">
                        <number>5</number>
@@ -630,7 +370,7 @@
                        <widget class="QLabel" name="windowOptionsLabel">
                         <property name="font">
                          <font>
-                          <pointsize>15</pointsize>
+                          <pointsize>14</pointsize>
                           <weight>75</weight>
                           <bold>true</bold>
                          </font>
@@ -841,6 +581,299 @@
                      </layout>
                     </item>
                     <item>
+                     <spacer name="verticalSpacer_5">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>10</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_16">
+                      <property name="leftMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>5</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <widget class="QLabel" name="modelLabel">
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Model</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_18">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <widget class="QComboBox" name="modelComboBox">
+                        <item>
+                         <property name="text">
+                          <string>GTRGAMMA</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRCAT</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRCATI</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>ASC_GTRCAT</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>ASC_GTRGAMMA</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>GTRGAMMAI</string>
+                         </property>
+                        </item>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_6">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_8">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="Line" name="raxmlOptionsVLine">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_25">
+                    <property name="spacing">
+                     <number>1</number>
+                    </property>
+                    <item>
+                     <layout class="QHBoxLayout" name="bootstrapHL">
+                      <item>
+                       <widget class="QCheckBox" name="checkboxBootstrap">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>21</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="focusPolicy">
+                         <enum>Qt::NoFocus</enum>
+                        </property>
+                        <property name="layoutDirection">
+                         <enum>Qt::RightToLeft</enum>
+                        </property>
+                        <property name="text">
+                         <string>Bootstrap</string>
+                        </property>
+                        <property name="checked">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="bootstrapSpacer">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_12">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>5</number>
+                      </property>
+                      <item>
+                       <widget class="QGroupBox" name="bootstrapGroupBox">
+                        <property name="layoutDirection">
+                         <enum>Qt::LeftToRight</enum>
+                        </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_24">
+                         <property name="margin">
+                          <number>5</number>
+                         </property>
+                         <item>
+                          <widget class="QLabel" name="confidenceLevelLabel">
+                           <property name="layoutDirection">
+                            <enum>Qt::LeftToRight</enum>
+                           </property>
+                           <property name="text">
+                            <string>Confidence Level</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="confidenceLevelEntry">
+                           <property name="minimumSize">
+                            <size>
+                             <width>40</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>120</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>13</pointsize>
+                             <weight>50</weight>
+                             <bold>false</bold>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLabel" name="numberOfBootstrapsLabel">
+                           <property name="text">
+                            <string>Number of Bootstraps</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="numberOfBootstrapsEntry">
+                           <property name="minimumSize">
+                            <size>
+                             <width>40</width>
+                             <height>0</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>120</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>13</pointsize>
+                             <weight>50</weight>
+                             <bold>false</bold>
+                            </font>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                      </item>
+                      <item>
+                       <spacer name="horizontalSpacer_7">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>40</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_6">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>10</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,0">
                       <property name="spacing">
                        <number>-1</number>
@@ -861,7 +894,7 @@
                        <widget class="QCheckBox" name="checkboxRooted">
                         <property name="font">
                          <font>
-                          <pointsize>15</pointsize>
+                          <pointsize>14</pointsize>
                           <weight>75</weight>
                           <bold>true</bold>
                          </font>
@@ -914,7 +947,14 @@
                           </widget>
                          </item>
                          <item>
-                          <widget class="QLineEdit" name="outgroupEntry"/>
+                          <widget class="QComboBox" name="outgroupComboBox">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                          </widget>
                          </item>
                         </layout>
                        </widget>
@@ -943,26 +983,22 @@
                   <string>Advanced</string>
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
-                  <item>
-                   <spacer name="verticalSpacer_15">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
+                  <property name="spacing">
+                   <number>1</number>
+                  </property>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_9">
                     <item>
                      <widget class="QCheckBox" name="checkBoxCustomRaxml">
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
                       <property name="font">
                        <font>
-                        <pointsize>15</pointsize>
+                        <pointsize>14</pointsize>
                         <weight>75</weight>
                         <bold>true</bold>
                        </font>
@@ -991,22 +1027,36 @@
                    </layout>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label_4">
-                    <property name="font">
-                     <font>
-                      <italic>true</italic>
-                     </font>
+                   <layout class="QHBoxLayout" name="horizontalLayout_21">
+                    <property name="leftMargin">
+                     <number>5</number>
                     </property>
-                    <property name="text">
-                     <string>The -s and -n flags will be handled internally.</string>
-                    </property>
-                   </widget>
+                    <item>
+                     <widget class="QLabel" name="label_4">
+                      <property name="font">
+                       <font>
+                        <italic>true</italic>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>The -s and -n flags will be handled internally.</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="customRaxmlCommandEntry"/>
+                   <layout class="QHBoxLayout" name="horizontalLayout_22">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <widget class="QLineEdit" name="customRaxmlCommandEntry"/>
+                    </item>
+                   </layout>
                   </item>
                   <item>
-                   <spacer name="verticalSpacer_5">
+                   <spacer name="verticalSpacer_10">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -1019,33 +1069,56 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="customRaxmlDirectoryLabel">
-                    <property name="font">
-                     <font>
-                      <pointsize>15</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
+                   <layout class="QHBoxLayout" name="horizontalLayout_17">
+                    <property name="leftMargin">
+                     <number>5</number>
                     </property>
-                    <property name="text">
-                     <string>Custom RAxML Directory</string>
-                    </property>
-                   </widget>
+                    <item>
+                     <widget class="QLabel" name="customRaxmlDirectoryLabel">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>18</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Custom RAxML Directory</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                   <item>
-                   <widget class="QLabel" name="customRaxmlDirectoryDescriptionLabel">
-                    <property name="font">
-                     <font>
-                      <italic>true</italic>
-                     </font>
+                   <layout class="QHBoxLayout" name="horizontalLayout_20">
+                    <property name="leftMargin">
+                     <number>5</number>
                     </property>
-                    <property name="text">
-                     <string>If you have already run RAxML select the alignment directory below.</string>
-                    </property>
-                   </widget>
+                    <item>
+                     <widget class="QLabel" name="customRaxmlDirectoryDescriptionLabel">
+                      <property name="font">
+                       <font>
+                        <italic>true</italic>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>If you have already run RAxML select the alignment directory below.</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_6">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QLineEdit" name="customRaxmlDirectoryEntry"/>
                     </item>
@@ -1072,21 +1145,37 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QLabel" name="generateSpeciesTreeLabel">
-                    <property name="font">
-                     <font>
-                      <pointsize>15</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
+                   <layout class="QHBoxLayout" name="horizontalLayout_19">
+                    <property name="leftMargin">
+                     <number>5</number>
                     </property>
-                    <property name="text">
-                     <string>Generate Species Tree</string>
-                    </property>
-                   </widget>
+                    <item>
+                     <widget class="QLabel" name="generateSpeciesTreeLabel">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>18</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>14</pointsize>
+                        <weight>75</weight>
+                        <bold>true</bold>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Generate Species Tree</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                   <item>
                    <layout class="QHBoxLayout" name="runRaxmlHL_2">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
                     <item>
                      <widget class="QPushButton" name="generateSpeciesTreeBtn">
                       <property name="minimumSize">
@@ -1116,7 +1205,7 @@
                    </layout>
                   </item>
                   <item>
-                   <spacer name="verticalSpacer_6">
+                   <spacer name="verticalSpacer_4">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -1140,7 +1229,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>740</height>
+               <height>717</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1407,7 +1496,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>740</height>
+               <height>717</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1695,7 +1784,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxA">
+        <widget class="QWidget" name="fileConverterPage">
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
            <widget class="QLabel" name="label">
@@ -1863,7 +1952,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxB">
+        <widget class="QWidget" name="msComparisonPage">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QHBoxLayout" name="msFileHL">
@@ -1977,9 +2066,6 @@
              </item>
              <item>
               <layout class="QHBoxLayout" name="msWindowSizeHL">
-               <property name="margin">
-                <number>0</number>
-               </property>
                <item>
                 <widget class="QLabel" name="msWindowSizeLabel">
                  <property name="text">
@@ -2033,9 +2119,6 @@
              </item>
              <item>
               <layout class="QHBoxLayout" name="msWindowOffsetHL">
-               <property name="margin">
-                <number>0</number>
-               </property>
                <item>
                 <widget class="QLabel" name="msWindowOffsetLabel">
                  <property name="text">
@@ -2088,13 +2171,9 @@
               </layout>
              </item>
             </layout>
-            <zorder>msRaxmlDirectoryEntry</zorder>
-            <zorder>layoutWidget_2</zorder>
-            <zorder>layoutWidget</zorder>
             <zorder>windowLabel</zorder>
             <zorder>msRaxmlDirectoryLabel</zorder>
             <zorder>msRaxmlDirectoryDescriptionLabel</zorder>
-            <zorder>layoutWidget_4</zorder>
            </widget>
           </item>
           <item>
@@ -2119,18 +2198,18 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="inputPageNotRaxC">
-         <widget class="QLabel" name="label_3">
+        <widget class="QWidget" name="dStatisticPage">
+         <widget class="QLabel" name="theD">
           <property name="geometry">
            <rect>
             <x>180</x>
             <y>70</y>
-            <width>56</width>
-            <height>13</height>
+            <width>391</width>
+            <height>16</height>
            </rect>
           </property>
           <property name="text">
-           <string>notRaxC</string>
+           <string>the D -- coming soon ~ ft. travis benedict ;)</string>
           </property>
          </widget>
         </widget>
@@ -2141,133 +2220,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QTabWidget" name="outputTabs">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="currentIndex">
-             <number>0</number>
-            </property>
-            <widget class="QWidget" name="standard">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>Standard</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <spacer name="horizontalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="standardImage">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="bootstrap">
-             <attribute name="title">
-              <string>Boostrap</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="bootstrapImage">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="summary">
-             <attribute name="title">
-              <string>Summary</string>
-             </attribute>
-             <layout class="QGridLayout" name="gridLayout_3">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButton_2">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QGridLayout" name="gridLayout_5"/>
         </widget>
        </widget>
       </item>
@@ -2310,7 +2263,7 @@
     <addaction name="actionRax"/>
     <addaction name="actionConverter"/>
     <addaction name="actionMS"/>
-    <addaction name="actionNotRaxC"/>
+    <addaction name="actionDStatistic"/>
    </widget>
    <widget class="QMenu" name="menuDisplay">
     <property name="title">
@@ -2361,12 +2314,12 @@
     <string>MS</string>
    </property>
   </action>
-  <action name="actionNotRaxC">
+  <action name="actionDStatistic">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Not Rax C</string>
+    <string>D Statistic</string>
    </property>
   </action>
   <action name="actionStandardJPG">
@@ -2437,10 +2390,6 @@
    </property>
   </action>
  </widget>
- <tabstops>
-  <tabstop>outputTabs</tabstop>
-  <tabstop>pushButton_2</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

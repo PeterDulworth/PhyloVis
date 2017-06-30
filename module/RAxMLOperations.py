@@ -51,7 +51,6 @@ class RAxMLOperations(QtCore.QThread):
 
         return taxon_names
 
-
     def raxml_species_tree(self, phylip):
         """
         Runs RAxML on input PHYLIP file to create a species
@@ -324,14 +323,12 @@ if __name__ == '__main__':
     # window_size = 10
     # window_offset = 10
 
-    inputFile = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
+    inputFile = "../RAxML_SpeciesTree/RAxML_ST_bestTree.txt"
     windowSize = 500000
     windowOffset = 500000
-    numBootstraps = 0
-    #
-    ro = RAxMLOperations(inputFile, windowSize, windowOffset, numBootstraps)
-    #
-    # windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
-    # ro.raxml_windows()
-    print ro.taxon_names_getter(inputFile)
+    numBootstraps = 2
 
+    ro = RAxMLOperations(inputFile, windowSize, windowOffset, numBootstraps=2)
+
+    windows_dir = ro.window_splitter(ro.inputFilename, ro.windowSize, ro.windowOffset)
+    ro.raxml_windows()

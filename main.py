@@ -9,7 +9,7 @@ from shutil import copyfile, copytree
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
 from msOutputWindows import msRobinsonFouldsWindow
-import gui_layout as gui
+from module import gui_layout as gui
 
 # logic
 from module import RAxMLOperations as ro
@@ -61,13 +61,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msComparison = ms.MsComparison()
 
         # mapping from: windows --> page index
-        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageNotRaxC': 4, 'outputPage': 5}
-        # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 493, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageNotRaxC': {'x': 459, 'y': 245}, 'outputPage': {'x': 459, 'y': 245}}
+        self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
+        # mapping from: windows --> dictionary of page dimensions 493
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 459, 'y': 245}}
         # mapping from: mode --> page
-        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'not rax C': 'inputPageNotRaxC'}
+        self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
-        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'not rax C': self.actionNotRaxC}
+        self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
 
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
@@ -80,11 +80,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
 
+        # remove all files in plots folder
+        fileList = os.listdir('plots')
+        for fileName in fileList:
+            os.remove('plots/' + fileName)
+
         # default values
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
         self.menuExport.setEnabled(False)
-        self.outgroupEntry.setEnabled(False)
+        self.outgroupComboBox.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
         self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
@@ -92,7 +97,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
-        self.outGroup = ""
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
@@ -108,8 +112,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
         self.actionMS.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionMS))
         self.actionMS.triggered.connect(lambda: self.setWindow('inputPageMS'))
-        self.actionNotRaxC.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionNotRaxC))
-        self.actionNotRaxC.triggered.connect(lambda: self.setWindow('inputPageNotRaxC'))
+        self.actionDStatistic.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionDStatistic))
+        self.actionDStatistic.triggered.connect(lambda: self.setWindow('inputPageDStatistic'))
 
         # triggers export dialogs
         self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
@@ -135,10 +139,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # toggle what inputs are actionable based on checkboxes
         self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
-        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupEntry))
+        self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupComboBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
+
+        # when file entry text is changed
+        self.connect(self.inputFileEntry, QtCore.SIGNAL("editingFinished()"), self.entryEdited)
+        self.connect(self, QtCore.SIGNAL("FILE_SELECTED"), self.entryEdited)
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)
@@ -146,7 +154,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** WELCOME PAGE ****************************#
 
-        self.launchBtn.clicked.connect(lambda: self.initializeMode())
+        self.launchBtn.clicked.connect(self.initializeMode)
 
         # **************************** CONVERTER PAGE ****************************#
 
@@ -158,6 +166,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msCompareBtn.clicked.connect(self.runMSCompare)
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
+
+
+    def entryEdited(self):
+        try:
+            taxonNames = self.raxmlOperations.taxon_names_getter(self.inputFileEntry.text())
+            self.outgroupComboBox.clear()
+            for taxon in taxonNames:
+                self.outgroupComboBox.addItem(taxon)
+        except:
+            print 'INVALID FILE'
 
     def runMSCompare(self):
 
@@ -302,13 +320,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outGroup)
+                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(
-                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outGroup)  # all trees, scatter, circle, donut
+                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
@@ -352,8 +370,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)
 
                 if self.checkboxAllTrees.isChecked():
-                    self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted,outgroup=self.outGroup)  # all trees
-                    self.topologyPlotter.top_topology_visualization()
+                    if self.checkboxRooted.isChecked():
+                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees
+                        self.topologyPlotter.top_topology_visualization()
+                    else:
+                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
+                        self.topologyPlotter.top_topology_visualization()
 
                 self.displayResults()
 
@@ -383,6 +405,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
         textEntry.setText(name)
+        self.emit(QtCore.SIGNAL('FILE_SELECTED'))
 
     def openDirectory(self, textEntry):
         # get name of file
@@ -484,7 +507,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # error handling for is rooted checkbox
         try:
             if self.checkboxRooted.isChecked():
-                self.outGroup = str(self.outgroupEntry.text())
                 self.rooted = self.checkboxRooted.isChecked()
         except ValueError:
             QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")

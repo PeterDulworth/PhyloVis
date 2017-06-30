@@ -34,6 +34,7 @@ class TopologyPlotter(QtCore.QThread):
         # list of colors for plots
         self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
+
     def topology_counter(self, rooted=False, outgroup=None):
         """
         Counts the number of times that each topology appears as outputted by
