@@ -413,7 +413,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             self.input_file_name = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_name = os.path.splitext(self.input_file_name)[1]
+            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+
 
             if self.input_file_name == "":
                 raise ValueError, (1, "Please choose a file")

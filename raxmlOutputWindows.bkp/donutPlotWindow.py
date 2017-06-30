@@ -1,18 +1,17 @@
 from window import Window
-from PyQt4 import QtGui
-import sys
-
-
-if __name__ == '__main__':
-    fileName = '../topologyDonut.png'
-else:
-    fileName = 'topologyDonut.png'
+from PyQt4 import QtGui, QtCore
+import donutPlotLayout
+from PIL import Image
+import sys, os
+from shutil import copyfile
 
 
 class DonutPlotWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=200, y=222, scale=3) #!!! add ../ before file name to test locally
+        Window.__init__(self, '../topologyDonut.png') #!!! add ../ before file name to test locally
 
+    def setImagePosition(self):
+        self.move(600, 600)
 
 if __name__ == '__main__':
     # test window if running locally
