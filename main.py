@@ -63,7 +63,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions 493
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 459, 'y': 245}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 420}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -167,6 +167,43 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
 
+        # **************************** D STATISTIC PAGE ****************************#
+
+        self.imagePixmap = QtGui.QPixmap('tree.png')
+        self.imageLabel.setScaledContents(True)
+        self.imageLabel.setPixmap(self.imagePixmap)
+
+        self.dAlignmentBtn.clicked.connect(lambda: self.openFile(self.dAlignmentEntry))
+
+        # when file entry text is changed
+        self.connect(self.dAlignmentEntry, QtCore.SIGNAL("editingFinished()"), self.entryEdited2)
+        self.connect(self, QtCore.SIGNAL("FILE_SELECTED"), self.entryEdited2)
+
+
+
+    def entryEdited2(self):
+        try:
+            taxonNames = self.raxmlOperations.taxon_names_getter(self.dAlignmentEntry.text())
+            if len(taxonNames) != 4:
+                print 'needs to be 4 bitch do u even d-statistic'
+
+            self.taxon1ComboBox.clear()
+            self.taxon2ComboBox.clear()
+            self.taxon3ComboBox.clear()
+            self.taxon4ComboBox.clear()
+
+            for taxon in taxonNames:
+                self.taxon1ComboBox.addItem(taxon)
+                self.taxon2ComboBox.addItem(taxon)
+                self.taxon3ComboBox.addItem(taxon)
+                self.taxon4ComboBox.addItem(taxon)
+
+            self.taxon1ComboBox.setCurrentIndex(0)
+            self.taxon2ComboBox.setCurrentIndex(1)
+            self.taxon3ComboBox.setCurrentIndex(2)
+            self.taxon4ComboBox.setCurrentIndex(3)
+        except:
+            print 'INVALID FILE'
 
     def entryEdited(self):
         try:
