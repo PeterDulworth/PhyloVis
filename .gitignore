@@ -7,12 +7,14 @@ RAxML_Files
 Trees
 *.pyc
 *.jpg
-!Luay.jpg
-!tree.png
 *.png
 *.pdf
+*.psd
 Topologies
 *.swp
 *.swo
 RAxML_SpeciesTree
 *.bkp
+!Luay.jpg
+!tree.png
+plots/
