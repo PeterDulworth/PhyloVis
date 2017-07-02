@@ -374,10 +374,18 @@ class StatisticsCalculations(QtCore.QThread):
             # Account for overlapping windows
             site_idx += (window_offset - length_of_sequences)
 
+            percent_complete = (float(window + 1) / float(num_windows)) * 100
+            self.emit(QtCore.SIGNAL('D_PER'), percent_complete)
+
         d_stat = d_numerator/float(d_denominator)
+
+        self.emit(QtCore.SIGNAL('D_FINISHED'), (d_stat, windows_to_d))
 
         return d_stat, windows_to_d
 
+
+    def run(self):
+        d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset)
 
 if __name__ == '__main__':
     # Inputs

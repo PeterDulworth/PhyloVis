@@ -218,6 +218,8 @@ class RAxMLOperations(QtCore.QThread):
 
         os.makedirs(topology_output_directory)
 
+        percent_complete = 0
+
         # Iterate over each folder in the given directory in numerical order
         for filename in natsorted(os.listdir(window_directory)):
 
@@ -309,8 +311,8 @@ class RAxMLOperations(QtCore.QThread):
                         os.rename("topology_bestTree." + file_number,
                                   topology_output_directory + "/Topology_bestTree." + file_number)
 
-
-                self.emit(QtCore.SIGNAL('RAX_PER'), 80 / len(os.listdir('windows')))
+                percent_complete += 80 / len(os.listdir(window_directory))
+                self.emit(QtCore.SIGNAL('RAX_PER'), percent_complete)
 
     def run(self):
         self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)

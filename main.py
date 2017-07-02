@@ -1,5 +1,6 @@
 # utilities
 import sip
+
 sip.setapi('QString', 2)
 import sys, os
 from PIL import Image
@@ -7,7 +8,7 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 
 # GUI
-from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow
+from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow
 from msOutputWindows import msRobinsonFouldsWindow
 from module import gui_layout as gui
 
@@ -24,10 +25,18 @@ from module import msComparison as ms
 from games import tetris, snake
 
 
+class ErrorHandling(object):
+    def __init__(self):
+        pass
+
+
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
         self.setupUi(self)
+
+        self.dStatisticTaxonComboBoxes = [self.dTaxonComboBox1, self.dTaxonComboBox2, self.dTaxonComboBox3, self.dTaxonComboBox4]
+        self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
 
         # set UI style
         # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
@@ -43,8 +52,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # create new instance of RaxmlOperations class
         self.raxmlOperations = ro.RAxMLOperations(None, None, None, None)
-        # every time the 'RAX_PER' signal is emitted -> call self.updateProgressBar
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.updateProgressBar)
+        # every time the 'RAX_PER' signal is emitted -> update the progress bar
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
@@ -63,7 +72,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions 493
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 420}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -79,6 +88,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
+        self.dStatisticWindow = dStatisticWindow.DStatisticWindow()
 
         # remove all files in plots folder
         fileList = os.listdir('plots')
@@ -145,8 +155,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
         # when file entry text is changed
-        self.connect(self.inputFileEntry, QtCore.SIGNAL("editingFinished()"), self.entryEdited)
-        self.connect(self, QtCore.SIGNAL("FILE_SELECTED"), self.entryEdited)
+        self.connect(self.inputFileEntry, QtCore.SIGNAL("editingFinished()"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
+        self.connect(self.inputFileEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.run)
@@ -169,57 +179,81 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** D STATISTIC PAGE ****************************#
 
+        # set background image
         self.imagePixmap = QtGui.QPixmap('tree.png')
         self.imageLabel.setScaledContents(True)
         self.imageLabel.setPixmap(self.imagePixmap)
 
+        # run
         self.dAlignmentBtn.clicked.connect(lambda: self.openFile(self.dAlignmentEntry))
 
         # when file entry text is changed
-        self.connect(self.dAlignmentEntry, QtCore.SIGNAL("editingFinished()"), self.entryEdited2)
-        self.connect(self, QtCore.SIGNAL("FILE_SELECTED"), self.entryEdited2)
+        self.connect(self.dAlignmentEntry, QtCore.SIGNAL("editingFinished()"), lambda: self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry, errHandling=True))
+        self.connect(self.dAlignmentEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry, errHandling=True))
+
+        # update progress bar
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('D_PER'), self.dProgressBar.setValue)
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('D_FINISHED'), self.catchD)
+
+        # run
+        self.dRunBtn.clicked.connect(self.runD)
+
+    # **************************** MS PAGE ****************************#
+    # **************************** CONVERTER PAGE ****************************#
+    # **************************** CONVERTER PAGE ****************************#
+    # **************************** ABSTRACT ****************************#
 
 
+    # **************************** D STATISTIC PAGE ****************************#
 
-    def entryEdited2(self):
+    def catchD(self, val):
+        self.D = val[0]
+        self.DStat = val[1]
+        self.statisticsCalculations.stat_scatter(self.DStat, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
+        self.dStatisticWindow.show()
+        self.dStatisticWindow.display_image()
+
+    def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
         try:
-            taxonNames = self.raxmlOperations.taxon_names_getter(self.dAlignmentEntry.text())
-            if len(taxonNames) != 4:
-                print 'needs to be 4 bitch do u even d-statistic'
+            if textEntry.text() == "":
+                return
 
-            self.taxon1ComboBox.clear()
-            self.taxon2ComboBox.clear()
-            self.taxon3ComboBox.clear()
-            self.taxon4ComboBox.clear()
+            # get list of taxon names from file
+            taxonNames = list(self.raxmlOperations.taxon_names_getter(textEntry.text()))
+
+            if errHandling:
+                # if there are not exactly 4 taxons
+                if len(taxonNames) != 4:
+                    QtGui.QMessageBox.about(self, "Species Tree Complete", "NEED EXACTLY 4 TAXONS.")
+                    return
+
+            for comboBox in comboBoxes:
+                comboBox.clear()
 
             for taxon in taxonNames:
-                self.taxon1ComboBox.addItem(taxon)
-                self.taxon2ComboBox.addItem(taxon)
-                self.taxon3ComboBox.addItem(taxon)
-                self.taxon4ComboBox.addItem(taxon)
+                for comboBox in comboBoxes:
+                    comboBox.addItem(taxon)
 
-            self.taxon1ComboBox.setCurrentIndex(0)
-            self.taxon2ComboBox.setCurrentIndex(1)
-            self.taxon3ComboBox.setCurrentIndex(2)
-            self.taxon4ComboBox.setCurrentIndex(3)
-        except:
-            print 'INVALID FILE'
+            for i in range(len(comboBoxes)):
+                comboBoxes[i].setCurrentIndex(i)
 
-    def entryEdited(self):
-        try:
-            taxonNames = self.raxmlOperations.taxon_names_getter(self.inputFileEntry.text())
-            self.outgroupComboBox.clear()
-            for taxon in taxonNames:
-                self.outgroupComboBox.addItem(taxon)
         except:
-            print 'INVALID FILE'
+            QtGui.QMessageBox.about(self, "Species Tree Complete", "Invalid File.")
+            return
+
+    def runD(self):
+        self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
+        self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
+        self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
+
+        self.statisticsCalculations.start()
 
     def runMSCompare(self):
 
         # run logic
         sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
         sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
-        sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map,sites_to_newick_rax_map)
+        sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
 
         # generate graphs
         self.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
@@ -234,20 +268,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.generateSpeciesTreeProgressBar.value() >= 100:
             QtGui.QMessageBox.about(self, "Species Tree Complete", "Species Tree has been generated.")
 
-    def updateProgressBar(self, val):
-        self.progressBar.setValue(self.progressBar.value() + val)
-
-    def runProgressBar(self):
-        self.raxmlOperations.start()
-
     def runRAxML(self):
-        self.runProgressBar()
-
-    def resizeEvent(self, event):
-        print self.size()
-
-    def moveEvent(self, QMoveEvent):
-        print self.pos()
+        self.raxmlOperations.start()
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
@@ -329,15 +351,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.pgtstWindow.show()
                 self.pgtstWindow.display_image()
 
-    def toggleStatisticsOptionsDisplay(self):
-        if self.statisticsOptionsGroupBox.isVisible():
-            self.statisticsOptionsGroupBox.hide()
-            self.resize(435, 245 + 22 + 22)
-        else:
-            self.statisticsOptionsGroupBox.show()
-            self.resize(435, 488 + 22 + 22)
-        print self.inputPage.size()
-
     def toggleEnabled(self, object):
         enabled = object.isEnabled()
         object.setEnabled(not enabled)
@@ -346,7 +359,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         """
         returns the number of checkboxes that are checked
         """
-        return (self.checkboxHeatMap.checkState() + self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+        return (
+               self.checkboxHeatMap.checkState() + self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -357,14 +371,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     num = self.topTopologies
 
                     # Function calls for plotting inputs:
-                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())
+                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())
                     if num > len(topologies_to_counts):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
                     windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(
-                        top_topologies_to_counts,unique_topologies_to_newicks, rooted=self.rooted,outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies,top_topologies_list)  # scatter, circle, (donut?)
+                            top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
+                    topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
 
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
@@ -442,7 +456,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
         textEntry.setText(name)
-        self.emit(QtCore.SIGNAL('FILE_SELECTED'))
+        textEntry.emit(QtCore.SIGNAL('FILE_SELECTED'))
 
     def openDirectory(self, textEntry):
         # get name of file
@@ -474,7 +488,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.input_file_name = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
             self.input_file_extension = os.path.splitext(self.input_file_name)[1]
-
 
             if self.input_file_name == "":
                 raise ValueError, (1, "Please choose a file")
@@ -556,8 +569,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.confidenceLevel < 0 or self.confidenceLevel > 100:
                     raise ValueError, "Please enter an integer between 0 and 100."
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input",
-                                    "Confidence level needs to be an integer between 0 and 100.")
+            QtGui.QMessageBox.about(self, "Invalid Input", "Confidence level needs to be an integer between 0 and 100.")
             return
 
         # Error handling for number of bootstraps
@@ -568,8 +580,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.numBootstraps < 2:
                     raise ValueError, "Please enter an integer greater than 1."
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input",
-                                    "Number of bootstraps needs to be an integer greater than 1.")
+            QtGui.QMessageBox.about(self, "Invalid Input", "Number of bootstraps needs to be an integer greater than 1.")
             return
 
     def run(self):
@@ -580,12 +591,19 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
         self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
         self.raxmlOperations.model = self.modelComboBox.currentText()
+
         self.runRAxML()
 
         #####################################################################
 
         self.runComplete = True
         self.menuExport.setEnabled(True)
+
+    def resizeEvent(self, event):
+        print self.size()
+
+    def moveEvent(self, QMoveEvent):
+        print self.pos()
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
