@@ -159,7 +159,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.inputFileEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
 
         # run RAX_ML and generate graphs
-        self.runBtn.clicked.connect(self.run)
+        self.runBtn.clicked.connect(self.runRAxML)
         self.generateSpeciesTreeBtn.clicked.connect(self.generateSpeciesTree)
 
         # **************************** WELCOME PAGE ****************************#
@@ -193,20 +193,28 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # update progress bar
         self.connect(self.statisticsCalculations, QtCore.SIGNAL('D_PER'), self.dProgressBar.setValue)
-        self.connect(self.statisticsCalculations, QtCore.SIGNAL('D_FINISHED'), self.catchD)
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('D_FINISHED'), self.displayDStatistic)
 
         # run
-        self.dRunBtn.clicked.connect(self.runD)
+        self.dRunBtn.clicked.connect(self.runDStatistic)
 
-    # **************************** MS PAGE ****************************#
-    # **************************** CONVERTER PAGE ****************************#
-    # **************************** CONVERTER PAGE ****************************#
-    # **************************** ABSTRACT ****************************#
+    # **************************** WELCOME PAGE ****************************#
 
+    def initializeMode(self):
+        if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
+            self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
+            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
+        else:
+            if self.modeComboBox.currentText() == "Tetris":
+                self.tetrisWindow = tetris.Tetris()
+                self.tetrisWindow.show()
+            if self.modeComboBox.currentText() == "Snake":
+                self.snakeWindow = snake.Snake()
+                self.snakeWindow.show()
 
     # **************************** D STATISTIC PAGE ****************************#
 
-    def catchD(self, val):
+    def displayDStatistic(self, val):
         self.D = val[0]
         self.DStat = val[1]
         self.statisticsCalculations.stat_scatter(self.DStat, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
@@ -241,12 +249,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Species Tree Complete", "Invalid File.")
             return
 
-    def runD(self):
+    def runDStatistic(self):
         self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
         self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
         self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
 
         self.statisticsCalculations.start()
+
+    # **************************** MS PAGE ****************************#
 
     def runMSCompare(self):
 
@@ -268,20 +278,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         if self.generateSpeciesTreeProgressBar.value() >= 100:
             QtGui.QMessageBox.about(self, "Species Tree Complete", "Species Tree has been generated.")
 
-    def runRAxML(self):
-        self.raxmlOperations.start()
-
-    def initializeMode(self):
-        if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
-            self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
-            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
-        else:
-            if self.modeComboBox.currentText() == "Tetris":
-                self.tetrisWindow = tetris.Tetris()
-                self.tetrisWindow.show()
-            if self.modeComboBox.currentText() == "Snake":
-                self.snakeWindow = snake.Snake()
-                self.snakeWindow.show()
+    # **************************** CONVERTER PAGE ****************************#
 
     def convertFile(self):
         try:
@@ -303,6 +300,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Inputted file type does not match selected file type.")
             return
         QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
+
+    # **************************** RAXML PAGE ****************************#
 
     def displayResults(self, displayTree=False):
         if displayTree:
@@ -351,16 +350,23 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.pgtstWindow.show()
                 self.pgtstWindow.display_image()
 
-    def toggleEnabled(self, object):
-        enabled = object.isEnabled()
-        object.setEnabled(not enabled)
+    def generateSpeciesTree(self):
+        # Error handling for input file
+        try:
+            self.input_file_name = str(self.inputFileEntry.text())
+            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
 
-    def getNumberChecked(self):
-        """
-        returns the number of checkboxes that are checked
-        """
-        return (
-               self.checkboxHeatMap.checkState() + self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+            if self.input_file_name == "":
+                raise ValueError, (1, "Please choose a file")
+            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
+                raise ValueError, (
+                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
+        except ValueError, (ErrorNumber, ErrorMessage):
+            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            return
+
+        self.raxmlOperations.raxml_species_tree(self.input_file_name)
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -429,58 +435,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         self.topologyPlotter.top_topology_visualization()
 
                 self.displayResults()
-
-    def setWindow(self, window):
-        self.stackedWidget.setCurrentIndex(self.windows[window])
-        self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
-
-    def ensureSingleModeSelected(self, mode_selected):
-        for mode in self.menuMode.actions():
-            if mode != mode_selected:
-                mode.setChecked(False)
-
-        mode_selected.setChecked(True)
-
-    def exportFile(self, fileName):
-        extension = os.path.splitext(fileName)[1]
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Export ' + extension[1:]) + extension
-        copyfile(fileName, name)
-
-    def exportDirectory(self, dirName):
-        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
-        print dirName, name
-        copytree(dirName, name)
-
-    def openFile(self, textEntry):
-        # get name of file
-        name = QtGui.QFileDialog.getOpenFileName()
-        # set name of file to text entry
-        textEntry.setText(name)
-        textEntry.emit(QtCore.SIGNAL('FILE_SELECTED'))
-
-    def openDirectory(self, textEntry):
-        # get name of file
-        name = QtGui.QFileDialog.getExistingDirectory()
-        # set name of file to text entry
-        textEntry.setText(name)
-
-    def generateSpeciesTree(self):
-        # Error handling for input file
-        try:
-            self.input_file_name = str(self.inputFileEntry.text())
-            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
-
-            if self.input_file_name == "":
-                raise ValueError, (1, "Please choose a file")
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
-                raise ValueError, (
-                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
-
-        self.raxmlOperations.raxml_species_tree(self.input_file_name)
 
     def raxmlInputErrorHandling(self):
         # Error handling for input file
@@ -583,7 +537,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             QtGui.QMessageBox.about(self, "Invalid Input", "Number of bootstraps needs to be an integer greater than 1.")
             return
 
-    def run(self):
+    def runRAxML(self):
 
         self.raxmlInputErrorHandling()
 
@@ -592,12 +546,58 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
         self.raxmlOperations.model = self.modelComboBox.currentText()
 
-        self.runRAxML()
+        self.raxmlOperations.start()
 
         #####################################################################
 
         self.runComplete = True
         self.menuExport.setEnabled(True)
+
+    # **************************** ABSTRACT ****************************#
+
+    def getNumberChecked(self):
+        """
+        returns the number of checkboxes that are checked
+        """
+        return (self.checkboxHeatMap.checkState() + self.checkboxScatterPlot.checkState() + self.checkboxCircleGraph.checkState() + self.checkboxDonutPlot.checkState() + self.checkboxAllTrees.checkState()) / 2
+
+    def toggleEnabled(self, object):
+        enabled = object.isEnabled()
+        object.setEnabled(not enabled)
+
+    def setWindow(self, window):
+        self.stackedWidget.setCurrentIndex(self.windows[window])
+        self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
+
+    def ensureSingleModeSelected(self, mode_selected):
+        for mode in self.menuMode.actions():
+            if mode != mode_selected:
+                mode.setChecked(False)
+
+        mode_selected.setChecked(True)
+
+    def exportFile(self, fileName):
+        extension = os.path.splitext(fileName)[1]
+        name = QtGui.QFileDialog.getSaveFileName(self, 'Export ' + extension[1:]) + extension
+        copyfile(fileName, name)
+
+    def exportDirectory(self, dirName):
+        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
+        print dirName, name
+        copytree(dirName, name)
+
+    def openFile(self, textEntry):
+        # get name of file
+        name = QtGui.QFileDialog.getOpenFileName()
+        # set name of file to text entry
+        textEntry.setText(name)
+        textEntry.emit(QtCore.SIGNAL('FILE_SELECTED'))
+
+    def openDirectory(self, textEntry):
+        # get name of file
+        name = QtGui.QFileDialog.getExistingDirectory()
+        # set name of file to text entry
+        textEntry.setText(name)
 
     def resizeEvent(self, event):
         print self.size()
