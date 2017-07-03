@@ -70,9 +70,6 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.setImagePosition(self.x, self.y)
         self.setImage(self.lowQualFileName)
 
-    # def moveEvent(self, QMoveEvent):
-    #     print self.fileName, self.pos()
-
     def exportFile(self, fileName):
         """
             input: fileName -- a string representing the name of the file to be saved
@@ -84,6 +81,13 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         windowTitle = 'Export ' + extension[1:]
         name = QtGui.QFileDialog.getSaveFileName(self, windowTitle) + extension
         copyfile(fileName, name)
+
+    def closeEvent(self, QCloseEvent):
+        self.emit(QtCore.SIGNAL("WINDOW_CLOSED"))
+
+    # def moveEvent(self, QMoveEvent):
+    #     print self.fileName, self.pos()
+
 
 if __name__ == '__main__':
     """

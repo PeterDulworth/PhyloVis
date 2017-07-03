@@ -198,6 +198,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # run
         self.dRunBtn.clicked.connect(self.runDStatistic)
 
+        # reset progress bar when window is closed
+        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
+
+
     # **************************** WELCOME PAGE ****************************#
 
     def initializeMode(self):
@@ -213,13 +217,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.snakeWindow.show()
 
     # **************************** D STATISTIC PAGE ****************************#
-
-    def displayDStatistic(self, val):
-        self.D = val[0]
-        self.DStat = val[1]
-        self.statisticsCalculations.stat_scatter(self.DStat, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
-        self.dStatisticWindow.show()
-        self.dStatisticWindow.display_image()
 
     def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
         try:
@@ -250,11 +247,24 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
     def runDStatistic(self):
-        self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
-        self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
-        self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
+        try:
+            if self.dAlignmentEntry.text() == "":
+                raise IOError
+            self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
+            self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
+            self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
+
+        except:
+            QtGui.QMessageBox.about(self, "sadfasdf", "1asdfasdf", "2asdfadsfasfd")
 
         self.statisticsCalculations.start()
+
+    def displayDStatistic(self, val):
+        self.D = val[0]
+        self.DStat = val[1]
+        self.statisticsCalculations.stat_scatter(self.DStat, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
+        self.dStatisticWindow.show()
+        self.dStatisticWindow.display_image()
 
     # **************************** MS PAGE ****************************#
 

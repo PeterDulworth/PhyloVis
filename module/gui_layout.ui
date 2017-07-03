@@ -2199,6 +2199,9 @@
          </layout>
         </widget>
         <widget class="QWidget" name="dStatisticPage">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
            <widget class="QLabel" name="label_3">
