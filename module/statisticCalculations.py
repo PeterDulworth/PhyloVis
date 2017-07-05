@@ -346,7 +346,7 @@ class StatisticsCalculations(QtCore.QThread):
                 # Iterate over each sequence in the alignment
                 for sequence in sequence_list:
                     # Add each base in a site to a list
-                    site.append(sequence[window_idx])
+                    site.append(sequence[site_idx])
 
                 # Get the genetic sites in the correct order
                 P1, P2, P3, O = site[taxon1_idx], site[taxon2_idx], site[taxon3_idx], site[taxon4_idx]
@@ -386,8 +386,12 @@ class StatisticsCalculations(QtCore.QThread):
             d_numerator += numerator_window
             d_denominator += denominator_window
 
+            # Reset numerator and denominator
+            numerator_window = 0
+            denominator_window = 0
+
             # Account for overlapping windows
-            site_idx += (window_offset - length_of_sequences)
+            site_idx += (window_offset - window_size)
 
             percent_complete = (float(window + 1) / float(num_windows)) * 100
             self.emit(QtCore.SIGNAL('D_PER'), percent_complete)
@@ -424,10 +428,15 @@ if __name__ == '__main__':
     #     stat_scatter(windows_to_w_rf, "weightedRF")
     #     stat_scatter(windows_to_uw_rf, "unweightedRF")
 
+    # alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
+    # window_size = 50000
+    # window_offset = 50000
     alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
     window_size = 50000
     window_offset = 50000
+    sc = StatisticsCalculations()
     # d, windows_to_d = sc.calculate_d(window_directory, window_offset)
-    d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset)
+    d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset, "H", "C", "G", "O")
     print d
-    sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
+    print windows_to_d
+    # sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
