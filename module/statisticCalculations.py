@@ -400,14 +400,15 @@ class StatisticsCalculations(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('D_FINISHED'), (d_stat, windows_to_d))
 
-        return d_stat, windows_to_d
-
 
     def run(self):
         try:
-            d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset, self.taxon1, self.taxon2, self.taxon3, self.taxon4)
+            self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset, self.taxon1, self.taxon2, self.taxon3, self.taxon4)
         except IOError:
-            self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid File', 'Invalid alignment file. Please choose another.', self.dAlignment)
+            self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid File.', 'Invalid alignment file. Please choose another.', self.dAlignment)
+        except ZeroDivisionError:
+            self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid Taxon Selection.', 'Please make sure that all taxons are unique.', self.dAlignment)
+        finally:
             return
 
 if __name__ == '__main__':

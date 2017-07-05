@@ -59,6 +59,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
 
         # create new instance of TopologyPlotter class
         self.topologyPlotter = tp.TopologyPlotter()
@@ -103,7 +104,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menuExport.setEnabled(False)
         self.outgroupComboBox.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
-        self.statisticsOptionsPage.setEnabled(False)
+        # self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
         self.outgroupGroupBox.setEnabled(False)
         self.progressBar.reset()
@@ -149,7 +150,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxBootstrap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxBootstrap))
 
         # toggle what inputs are actionable based on checkboxes
-        self.checkboxStatistics.stateChanged.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
+        # self.checkboxRobinsonFoulds.isChecked( or self.checkboxPGTST.isChecked())d.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupComboBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
@@ -157,7 +158,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
         # when file entry text is changed
-        self.connect(self.inputFileEntry, QtCore.SIGNAL("editingFinished()"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
         self.connect(self.inputFileEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
 
         # run RAX_ML and generate graphs
@@ -190,7 +190,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.dAlignmentBtn.clicked.connect(lambda: self.openFile(self.dAlignmentEntry))
 
         # when file entry text is changed
-        self.connect(self.dAlignmentEntry, QtCore.SIGNAL("editingFinished()"), lambda: self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry, errHandling=True))
         self.connect(self.dAlignmentEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry, errHandling=True))
 
         # update progress bar
@@ -199,7 +198,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # run
         self.dRunBtn.clicked.connect(self.runDStatistic)
-        self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='Err'))
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='testType2'))
 
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
@@ -230,11 +229,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
             # get list of taxon names from file
             taxonNames = list(self.raxmlOperations.taxon_names_getter(textEntry.text()))
+            print 'taxonNames:', taxonNames
 
             if errHandling:
                 # if there are not exactly 4 taxons
                 if len(taxonNames) != 4:
-                    QtGui.QMessageBox.about(self, "Species Tree Complete", "NEED EXACTLY 4 TAXONS.")
+                    self.message('Invalid File.', 'Need exactly 4 taxons.', textEntry.text())
                     return
 
             for comboBox in comboBoxes:
@@ -357,7 +357,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.bootstrapContractionWindow.show()
             self.bootstrapContractionWindow.display_image()
 
-        if self.checkboxStatistics.isChecked():
+        if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
                     self.robinsonFouldsWindow.show()
@@ -420,7 +420,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
-                if self.checkboxStatistics.isChecked():
+                if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                     if self.checkboxRobinsonFoulds.isChecked():
                         if self.checkboxWeighted.isChecked():
                             windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
@@ -505,7 +505,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # Error handling for newick file
         try:
-            if self.checkboxStatistics.isChecked():
+            if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                 self.newickFileName = str(self.newickFileEntry.text())
                 self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
                 self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
@@ -587,9 +587,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         errMessage.setInformativeText(description)
         errMessage.setDetailedText(extraInfo)
 
+        # default pixmap for error
+        pixmap = QtGui.QPixmap('warning-128.lowQual.png')
+
         # choose icon based on type
-        if type=='Err':
-            pixmap = QtGui.QPixmap('warning-128.lowQual.png')
+        if type=='testType2':
+            pixmap = 'tree.png'
 
         # set icon
         errMessage.setIconPixmap(pixmap)
@@ -647,6 +650,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def moveEvent(self, QMoveEvent):
         print self.pos()
+
+    def connectionTester(self):
+        print
+        print '*********************************'
+        print '* CONNECTION HAS BEEN TRIGGERED *'
+        print '*********************************'
+        print
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it

@@ -245,6 +245,18 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_7">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Select a file in phylip-sequential form. Use file converter if you dum. THank pls welc ok. god bless</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="inputFileHL">
             <item>
              <widget class="QLabel" name="inputFileLabel">
@@ -272,6 +284,9 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -317,7 +332,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>717</height>
+               <height>696</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1229,7 +1244,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>717</height>
+               <height>696</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1262,7 +1277,7 @@
                         <string>All Trees</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -1302,7 +1317,7 @@
                         <string>Scatter Plot</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -1342,7 +1357,7 @@
                         <string>Donut Plot</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -1393,7 +1408,7 @@
                         <string>Circle Graph</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                       </widget>
                      </item>
@@ -1427,46 +1442,12 @@
                         <string>Heat Map</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <spacer name="heatMapSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="statisticsHL">
-                     <item>
-                      <widget class="QCheckBox" name="checkboxStatistics">
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>Statistics</string>
-                       </property>
-                       <property name="checked">
                         <bool>false</bool>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <spacer name="statisticsSpacer">
+                      <spacer name="heatMapSpacer">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
@@ -1496,7 +1477,7 @@
                <x>0</x>
                <y>0</y>
                <width>727</width>
-               <height>717</height>
+               <height>696</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1558,7 +1539,10 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAx_Files/RAxML_bestTree.0</string>
+                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_Files/RAxML_bestTree.0</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -2222,14 +2206,23 @@
             <item>
              <widget class="QLabel" name="dAlignmentLabel">
               <property name="text">
-               <string>Alignment</string>
+               <string>Alignment:</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLineEdit" name="dAlignmentEntry">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/ChillLeo.phylip</string>
+               <string/>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2274,7 +2267,7 @@
                </size>
               </property>
               <property name="text">
-               <string>50000</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -2311,7 +2304,7 @@
                </size>
               </property>
               <property name="text">
-               <string>50000</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -2503,9 +2496,6 @@
               </layout>
              </item>
             </layout>
-            <zorder>imageLabel</zorder>
-            <zorder>horizontalLayoutWidget_6</zorder>
-            <zorder>horizontalLayoutWidget_6</zorder>
            </widget>
           </item>
           <item>
