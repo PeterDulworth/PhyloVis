@@ -268,13 +268,17 @@ class StatisticsCalculations(QtCore.QThread):
         plt.clf()
 
 
-    def calculate_d(self, alignment, window_size, window_offset):
+    def calculate_d(self, alignment, window_size, window_offset, taxon1, taxon2, taxon3, taxon4):
         """
         Calculates the D statistic for the given alignment
         Input:
         alignment --- a sequence alignment in phylip format
         window_size --- the size of the desired windows
         window_offset --- the offset that was used to create the windows
+        taxon1 --- first taxon for ABBA-BABA test
+        taxon2 --- second taxon for ABBA-BABA test
+        taxon3 --- third taxon for ABBA-BABA test
+        taxon4 --- outgroup for ABBA-BABA test
         Output:
         d_stat --- the D statistic value
         windows_to_d --- a mapping of window indices to D values
@@ -290,6 +294,7 @@ class StatisticsCalculations(QtCore.QThread):
         windows_to_d = {}
 
         sequence_list = []
+        taxon_list =[]
 
         with open(alignment) as f:
 
@@ -316,6 +321,16 @@ class StatisticsCalculations(QtCore.QThread):
             sequence = line.split()[1]
             sequence_list.append(sequence)
 
+            # Add each taxon to a list
+            taxon = line.split()[0]
+            taxon_list.append(taxon)
+
+        # Get the index of each taxon in the inputted order
+        taxon1_idx = taxon_list.index(taxon1)
+        taxon2_idx = taxon_list.index(taxon2)
+        taxon3_idx = taxon_list.index(taxon3)
+        taxon4_idx = taxon_list.index(taxon4)
+
         # Initialize values for the d statistic numerator and denominator for each window
         numerator_window = 0
         denominator_window = 0
@@ -333,8 +348,8 @@ class StatisticsCalculations(QtCore.QThread):
                     # Add each base in a site to a list
                     site.append(sequence[window_idx])
 
-                # site[0], site[1], site[2], site[3] are P1, P2, P3 and O respectively for D statistic algorithm
-                P1, P2, P3, O = site[0], site[1], site[2], site[3]
+                # Get the genetic sites in the correct order
+                P1, P2, P3, O = site[taxon1_idx], site[taxon2_idx], site[taxon3_idx], site[taxon4_idx]
 
                 # Case of ABBA
                 if P1 == O and P2 == P3 and P1 != P2:
@@ -386,7 +401,7 @@ class StatisticsCalculations(QtCore.QThread):
 
     def run(self):
         try:
-            d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset)
+            d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset, self.taxon1, self.taxon2, self.taxon3, self.taxon4)
         except IOError:
             self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid File', 'Invalid alignment file. Please choose another.', self.dAlignment)
             return
