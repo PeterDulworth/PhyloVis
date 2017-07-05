@@ -1,6 +1,5 @@
 # utilities
 import sip
-
 sip.setapi('QString', 2)
 import sys, os
 from PIL import Image
@@ -39,7 +38,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
 
         # set UI style
-        # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
+        # options: [u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)']
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Macintosh (aqua)'))
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -57,6 +57,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
 
         # create new instance of TopologyPlotter class
         self.topologyPlotter = tp.TopologyPlotter()
@@ -201,6 +202,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
 
+        # self.setMenuBar()
+
 
     # **************************** WELCOME PAGE ****************************#
 
@@ -243,7 +246,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 comboBoxes[i].setCurrentIndex(i)
 
         except:
-            QtGui.QMessageBox.about(self, "Species Tree Complete", "Invalid File.")
+            self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err')
             return
 
     def runDStatistic(self):
@@ -253,6 +256,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
             self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
             self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
+            self.statisticsCalculations.taxon1 = self.dTaxonComboBox1.currentText()
+            self.statisticsCalculations.taxon2 = self.dTaxonComboBox2.currentText()
+            self.statisticsCalculations.taxon3 = self.dTaxonComboBox3.currentText()
+            self.statisticsCalculations.taxon4 = self.dTaxonComboBox4.currentText()
 
         except:
             QtGui.QMessageBox.about(self, "sadfasdf", "1asdfasdf", "2asdfadsfasfd")
@@ -565,6 +572,29 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     # **************************** ABSTRACT ****************************#
 
+    def message(self, title, description, extraInfo, type='Err'):
+        """
+            creates and displays and window displaying the message
+        """
+
+        # create object
+        errMessage = QtGui.QMessageBox()
+
+        # set text
+        errMessage.setText(title)
+        errMessage.setInformativeText(description)
+        errMessage.setDetailedText(extraInfo)
+
+        # choose icon based on type
+        if type=='Err':
+            pixmap = QtGui.QPixmap('warning-128.lowQual.png')
+
+        # set icon
+        errMessage.setIconPixmap(pixmap)
+
+        # execute window
+        errMessage.exec_()
+
     def getNumberChecked(self):
         """
         returns the number of checkboxes that are checked
@@ -608,6 +638,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         name = QtGui.QFileDialog.getExistingDirectory()
         # set name of file to text entry
         textEntry.setText(name)
+        textEntry.emit(QtCore.SIGNAL("DIRECTORY_SELECTED"))
 
     def resizeEvent(self, event):
         print self.size()
