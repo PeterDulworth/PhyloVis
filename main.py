@@ -373,19 +373,19 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def generateSpeciesTree(self):
         # Error handling for input file
         try:
-            self.input_file_name = str(self.inputFileEntry.text())
+            self.raxmlInputAlignment = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+            self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
 
-            if self.input_file_name == "":
+            if self.raxmlInputAlignment == "":
                 raise ValueError, ("No File Selected", "Please choose a file")
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
+            elif self.raxmlInputAlignmentExtension != '.txt' and self.input_file_extension != '.phylip':
                 raise ValueError, ("Invalid File Type", "Luay does not approve of your file type.\nPlease enter either a .txt or .phylip file")
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
             return
 
-        self.raxmlOperations.raxml_species_tree(self.input_file_name)
+        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment)
 
     def updatedDisplayWindows(self, btnClicked=None):
 
@@ -414,7 +414,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 if self.checkboxCircleGraph.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.topologyPlotter.generateCircleGraph(self.input_file_name, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
+                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
                 if self.checkboxHeatMap.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
@@ -460,14 +460,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # Error handling for window size, offset and number of top topologies
         try:
             # input alignment for raxml
-            self.input_file_name = str(self.inputFileEntry.text())
-            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
-
-            if self.input_file_name == "":
-                raise ValueError, ("No File Selected", "Please choose a file", None)
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
-                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
+            # self.raxmlInputAlignment = str(self.inputFileEntry.text())
+            # self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+            # self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
+            #
+            # if self.raxmlInputAlignment == "":
+            #     raise ValueError, ("No File Selected", "Please choose a file", None)
+            # elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
+            #     raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
 
             # raxml window size input
             self.window_size = int(self.windowSizeEntry.text())
@@ -486,21 +486,15 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             if self.topTopologies <= 0 or self.topTopologies > 15:
                 raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
 
-        except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
-            self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
-            return False
-
-        # Error handling for newick file
-        try:
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                 self.newickFileName = str(self.newickFileEntry.text())
                 self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
                 self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
 
                 if self.newickFileName == "" and self.newickStringFromEntry == "":
-                    raise ValueError, (1, "Please choose a file or enter a newick string")
+                    raise ValueError, ("Select Species Tree", "You must either enter a newick string or select a file.", "The 'Species Tree File' and the 'Species Tree Newick' inputs are both blank. Please enter one.")
                 elif self.newickFileName != "" and self.newickStringFromEntry != "":
-                    raise ValueError, (2, "You have chosen a file and entered a newick string. Please choose one.")
+                    raise ValueError, ("Too Many Inputs", "You have chosen a file and entered a newick string. Please choose ONLY one.", None)
 
                 # if the newick input is from the file chooser
                 if self.newickFileName != '':
@@ -510,29 +504,18 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 elif self.newickStringFromEntry != '':
                     self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
 
-        except ValueError, (ErrorNumber, ErrorMessage):
-            self.message("Invalid Input", str(ErrorMessage), None)
-            return False
-
-        # Error handling for confidence threshold
-        try:
             if self.checkboxBootstrap.isChecked():
                 self.confidenceLevel = int(self.confidenceLevelEntry.text())
                 if self.confidenceLevel < 0 or self.confidenceLevel > 100:
-                    raise ValueError, "Please enter an integer between 0 and 100."
-        except ValueError:
-            self.message("Invalid Input", "Confidence level needs to be an integer between 0 and 100.", None)
-            return False
+                    raise ValueError, ("Invalid Confidence Level", "Please enter an integer between 0 and 100.", None)
 
-        # Error handling for number of bootstraps
-        try:
-            if self.checkboxBootstrap.isChecked():
                 self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 if self.numBootstraps < 2:
-                    raise ValueError, "Please enter an integer greater than 1."
-        except ValueError:
-            self.message('Invalid Input', 'Number of bootstraps needs to be an integer greater than 1.')
+                    raise ValueError, ("Invalid Number of Bootstraps", "Please enter an integer greater than 1.", None)
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
+            self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
             return False
 
         self.rooted = self.checkboxRooted.isChecked()
