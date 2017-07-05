@@ -11,7 +11,7 @@ class Snake(QtGui.QWidget):
         self.initUI()
 
     def initUI(self):
-        self.highscore = 0
+        self.highscore = 72
         self.newGame()
         self.setStyleSheet("QWidget { background: #A9F5D0 }")
         self.setFixedSize(300, 300)
