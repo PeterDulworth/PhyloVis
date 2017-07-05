@@ -56,7 +56,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -258,7 +258,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Select a file in phylip-sequential form. Use file converter if you dum. THank pls welc ok. god bless</string>
+             <string>Please select a file in phylip-sequential form.</string>
             </property>
            </widget>
           </item>
@@ -292,7 +292,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/phylip.txt</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -333,7 +333,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -461,7 +461,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string>10</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -526,7 +526,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string>10</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -588,7 +588,7 @@
                          </font>
                         </property>
                         <property name="text">
-                         <string>5</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -1974,7 +1974,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/fakeMS.txt</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -2027,7 +2027,7 @@
                <item>
                 <widget class="QLineEdit" name="msRaxmlDirectoryEntry">
                  <property name="text">
-                  <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_Files</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -2094,7 +2094,7 @@
                   <enum>Qt::WheelFocus</enum>
                  </property>
                  <property name="text">
-                  <string>10</string>
+                  <string/>
                  </property>
                 </widget>
                </item>
@@ -2147,7 +2147,7 @@
                   <enum>Qt::WheelFocus</enum>
                  </property>
                  <property name="text">
-                  <string>10</string>
+                  <string/>
                  </property>
                 </widget>
                </item>

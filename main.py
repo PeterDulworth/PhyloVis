@@ -378,12 +378,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.input_file_extension = os.path.splitext(self.input_file_name)[1]
 
             if self.input_file_name == "":
-                raise ValueError, (1, "Please choose a file")
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
-                raise ValueError, (
-                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+                raise ValueError, ("No File Selected", "Please choose a file")
+            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
+                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type.\nPlease enter either a .txt or .phylip file")
+        except ValueError, (ErrorTitle, ErrorMessage):
+            self.message(str(ErrorTitle), str(ErrorMessage), None)
             return
 
         self.raxmlOperations.raxml_species_tree(self.input_file_name)
@@ -458,51 +457,38 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def raxmlInputErrorHandling(self):
         # Error handling for input file
-        try:
-            self.input_file_name = str(self.inputFileEntry.text())
-            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+        # try:
+        #     self.input_file_name = str(self.inputFileEntry.text())
+        #     self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+        #     self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+        #
+        #     if self.input_file_name == "":
+        #         raise ValueError, ("No File Selected", "Please choose a file", None)
+        #     elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
+        #         raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
+        # except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
+        #     self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
+        #     return False
 
-            if self.input_file_name == "":
-                raise ValueError, (1, "Please choose a file")
-            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip' and self.input_file_extension != '.fasta':
-                raise ValueError, (
-                    2, "Luay does not approve of your file type.\nPlease enter either a .txt, .fasta, or .phylip file")
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
-
-        # Error handling for number of top topologies
-        try:
-            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
-            if self.topTopologies <= 0 or self.topTopologies > 15:
-                raise ValueError, "Please enter an integer between 0 and 15."
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input",
-                                    "Number of top topologies needs to be an integer between 0 and 15.")
-            return
-
-        # Error handling for window size
+        # Error handling for window size, offset and number of top topologies
         try:
             self.window_size = int(self.windowSizeEntry.text())
             self.raxmlOperations.windowSize = int(self.windowSizeEntry.text())
-
             if self.window_size <= 0:
-                raise ValueError, "Positive integers only"
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Window size needs to be a positive integer.")
-            return
+                raise ValueError, ("Invalid Window Size", "Window size needs to be a positive integer.", "Please enter a positive integer to the window size field.")
 
-        # Error handling for window offset
-        try:
             self.window_offset = int(self.windowOffsetEntry.text())
             self.raxmlOperations.windowOffset = int(self.windowOffsetEntry.text())
-
             if self.window_offset <= 0:
-                raise ValueError, "Positive integers only"
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Window offset needs to be a positive integer.")
-            return
+                raise ValueError, ("Invalid Window Offset", "Window offset needs to be a positive integer.", "Please enter a positive integer to the window offset field.")
+
+            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
+            if self.topTopologies <= 0 or self.topTopologies > 15:
+                raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
+            self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
+            return False
 
         # Error handling for newick file
         try:
@@ -525,16 +511,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
 
         except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
-            return
-
-        # error handling for is rooted checkbox
-        try:
-            if self.checkboxRooted.isChecked():
-                self.rooted = self.checkboxRooted.isChecked()
-        except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Invalid Input")
-            return
+            self.message("Invalid Input", str(ErrorMessage), None)
+            return False
 
         # Error handling for confidence threshold
         try:
@@ -543,8 +521,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.confidenceLevel < 0 or self.confidenceLevel > 100:
                     raise ValueError, "Please enter an integer between 0 and 100."
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Confidence level needs to be an integer between 0 and 100.")
-            return
+            self.message("Invalid Input", "Confidence level needs to be an integer between 0 and 100.", None)
+            return False
 
         # Error handling for number of bootstraps
         try:
@@ -554,24 +532,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.numBootstraps < 2:
                     raise ValueError, "Please enter an integer greater than 1."
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Number of bootstraps needs to be an integer greater than 1.")
-            return
+            self.message('Invalid Input', 'Number of bootstraps needs to be an integer greater than 1.')
+            return False
+
+        self.rooted = self.checkboxRooted.isChecked()
+        return True
 
     def runRAxML(self):
 
-        self.raxmlInputErrorHandling()
+        if self.raxmlInputErrorHandling():
+            self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
+            self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
+            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
+            self.raxmlOperations.model = self.modelComboBox.currentText()
 
-        self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
-        self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
-        self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
-        self.raxmlOperations.model = self.modelComboBox.currentText()
+            self.raxmlOperations.start()
 
-        self.raxmlOperations.start()
+            #####################################################################
 
-        #####################################################################
-
-        self.runComplete = True
-        self.menuExport.setEnabled(True)
+            self.runComplete = True
+            self.menuExport.setEnabled(True)
 
     # **************************** ABSTRACT ****************************#
 
