@@ -81,6 +81,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: mode --> menu action
         self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
 
+        if sys.platform == 'win32':
+            # mapping from: windows --> dictionary of page dimensions 493
+            self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
