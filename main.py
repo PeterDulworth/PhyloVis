@@ -456,32 +456,32 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.displayResults()
 
     def raxmlInputErrorHandling(self):
-        # Error handling for input file
-        # try:
-        #     self.input_file_name = str(self.inputFileEntry.text())
-        #     self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-        #     self.input_file_extension = os.path.splitext(self.input_file_name)[1]
-        #
-        #     if self.input_file_name == "":
-        #         raise ValueError, ("No File Selected", "Please choose a file", None)
-        #     elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
-        #         raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
-        # except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
-        #     self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
-        #     return False
 
         # Error handling for window size, offset and number of top topologies
         try:
+            # input alignment for raxml
+            self.input_file_name = str(self.inputFileEntry.text())
+            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+            self.input_file_extension = os.path.splitext(self.input_file_name)[1]
+
+            if self.input_file_name == "":
+                raise ValueError, ("No File Selected", "Please choose a file", None)
+            elif self.input_file_extension != '.txt' and self.input_file_extension != '.phylip':
+                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
+
+            # raxml window size input
             self.window_size = int(self.windowSizeEntry.text())
             self.raxmlOperations.windowSize = int(self.windowSizeEntry.text())
             if self.window_size <= 0:
                 raise ValueError, ("Invalid Window Size", "Window size needs to be a positive integer.", "Please enter a positive integer to the window size field.")
 
+            # raxml window offset input
             self.window_offset = int(self.windowOffsetEntry.text())
             self.raxmlOperations.windowOffset = int(self.windowOffsetEntry.text())
             if self.window_offset <= 0:
                 raise ValueError, ("Invalid Window Offset", "Window offset needs to be a positive integer.", "Please enter a positive integer to the window offset field.")
 
+            # raxml number of top topologies input
             self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
             if self.topTopologies <= 0 or self.topTopologies > 15:
                 raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
