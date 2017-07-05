@@ -83,7 +83,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         if sys.platform == 'win32':
             # mapping from: windows --> dictionary of page dimensions 493
-            self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+            self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 275}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
@@ -206,9 +206,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
-
-        # self.raxmlToolBox.setItemText(0, "Hello")
-        # self.raxmlToolBox.setFont( QtGui.QFont("Times", 15, QtGui.QFont.Bold) )
 
     # **************************** WELCOME PAGE ****************************#
 
