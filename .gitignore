@@ -10,6 +10,7 @@ Trees
 *.png
 *.pdf
 *.psd
+*.svg
 Topologies
 *.swp
 *.swo
