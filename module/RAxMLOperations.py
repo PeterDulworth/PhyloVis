@@ -4,7 +4,7 @@ import subprocess
 import shutil
 import os
 import re
-from PyQt4 import QtCore
+from PyQt4 import QtCore, QtGui
 
 """
 Functions for creating sequence windows and running RAxML.
@@ -315,7 +315,12 @@ class RAxMLOperations(QtCore.QThread):
                 self.emit(QtCore.SIGNAL('RAX_PER'), percent_complete)
 
     def run(self):
-        self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
+        try:
+            self.window_splitter(self.inputFilename, self.windowSize, self.windowOffset)
+        except IOError:
+            self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.inputFilename)
+            return
+
         self.raxml_windows(self.numBootstraps, self.model)
         self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 

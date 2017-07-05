@@ -385,7 +385,11 @@ class StatisticsCalculations(QtCore.QThread):
 
 
     def run(self):
-        d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset)
+        try:
+            d_stat, windows_to_d = self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset)
+        except IOError:
+            self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid File', 'Invalid alignment file. Please choose another.', self.dAlignment)
+            return
 
 if __name__ == '__main__':
     # Inputs

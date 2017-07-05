@@ -5,6 +5,7 @@ import sys, os
 from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
+from functools import partial
 
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow
@@ -198,6 +199,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # run
         self.dRunBtn.clicked.connect(self.runDStatistic)
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='Err'))
 
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
