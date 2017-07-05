@@ -338,6 +338,8 @@ class TopologyPlotter(QtCore.QThread):
         plt.savefig("plots/topologyDonut.png", dpi=250)
         plt.clf()
 
+        self.emit(QtCore.SIGNAL('DONUT_COMPLETE'))
+
     def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
         """
         Creates a scatter plot showing the topology as the
@@ -380,6 +382,8 @@ class TopologyPlotter(QtCore.QThread):
         plot = "plots/topologyScatter.png"
         plt.savefig(plot)
         plt.clf()
+
+        self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
 
     def topology_colorizer(self, color_scheme, rooted=False, outgroup=False):
         """
@@ -490,6 +494,7 @@ class TopologyPlotter(QtCore.QThread):
                     new_im.paste(im, (x_offset, y_offset), mask=im)
 
         new_im.save("plots/TopTopologies.png")
+        self.emit(QtCore.SIGNAL("TREES_COMPLETE"))
 
 
     def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
@@ -660,6 +665,13 @@ class TopologyPlotter(QtCore.QThread):
         # diagram.write(name + ".eps", "EPS")
         # diagram.write(name + ".svg", "SVG")
         diagram.write(name + ".png", "PNG")
+
+        self.emit(QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'))
+
+    def run(self):
+        print
+        print 'TOPOLOGIES PLOTS INITIALIZED'
+        print
 
 
 if __name__ == '__main__':

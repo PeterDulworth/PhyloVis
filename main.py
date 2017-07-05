@@ -55,8 +55,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations = ro.RAxMLOperations(None, None, None, None)
         # every time the 'RAX_PER' signal is emitted -> update the progress bar
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
@@ -207,6 +207,24 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
 
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
+
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), self.donutPlotWindow.show)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), self.donutPlotWindow.display_image)
+
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), self.scatterPlotWindow.show)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), self.scatterPlotWindow.display_image)
+
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), self.allTreesWindow.show)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), self.allTreesWindow.display_image)
+
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.heatMapWindow.show)
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.heatMapWindow.display_image)
+
+        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), self.bootstrapContractionWindow.show)
+        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), self.bootstrapContractionWindow.display_image)
+
     # **************************** WELCOME PAGE ****************************#
 
     def initializeMode(self):
@@ -286,8 +304,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
 
         # generate graphs
-        self.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
-        self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+        self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
+        self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
 
         # display window
         self.msComparisonWindow.show()
@@ -323,41 +341,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     # **************************** RAXML PAGE ****************************#
 
-    def displayResults(self, displayTree=False):
-        if displayTree:
-            self.setWindow('outputPage')
-            self.outputTabs.setCurrentIndex(0)
-            standardSize = Image.open("Final.png").size
-            self.resize(int(standardSize[0]), int(standardSize[1]))
-            self.standardImage.setScaledContents(True)
-            self.standardImage.setPixmap(QtGui.QPixmap("Final.png"))
-            self.bootstrapImage.setScaledContents(True)
-            self.bootstrapImage.setPixmap(QtGui.QPixmap("FinalBootstraps.png"))
-
-        if self.checkboxAllTrees.isChecked():
-            self.allTreesWindow.show()
-            self.allTreesWindow.display_image()
-
-        if self.checkboxCircleGraph.isChecked():
-            self.circleGraphWindow.show()
-            self.circleGraphWindow.display_image()
-
-        if self.checkboxDonutPlot.isChecked():
-            self.donutPlotWindow.show()
-            self.donutPlotWindow.display_image()
-
-        if self.checkboxScatterPlot.isChecked():
-            self.scatterPlotWindow.show()
-            self.scatterPlotWindow.display_image()
-
-        if self.checkboxHeatMap.isChecked():
-            self.heatMapWindow.show()
-            self.heatMapWindow.display_image()
-
-        if self.checkboxBootstrap.isChecked():
-            self.bootstrapContractionWindow.show()
-            self.bootstrapContractionWindow.display_image()
-
+    def displayResults(self):
         if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
             if self.checkboxRobinsonFoulds.isChecked():
                 if self.checkboxWeighted.isChecked():
@@ -405,7 +389,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                             top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
 
+                # if self.checkboxDonutPlot.isChecked() or self.checkboxCircleGraph.isChecked():
+                #     self.topologyPlotter.start()
+
                 if self.checkboxDonutPlot.isChecked():
+                    # self.topologyPlotter.start()
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     self.topologyPlotter.topology_donut(labels, sizes, donut_colors)  # donut
 
@@ -413,6 +401,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
+                    # self.topologyPlotter.start()
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
@@ -453,7 +442,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
                         self.topologyPlotter.top_topology_visualization()
 
-                self.displayResults()
+                # self.displayResults()
 
     def raxmlInputErrorHandling(self):
         """

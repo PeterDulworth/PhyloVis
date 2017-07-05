@@ -117,6 +117,7 @@ class BootstrapContraction(QtCore.QThread):
         # plt.show()
         plt.savefig(name, dpi=250)
         plt.clf()
+        self.emit(QtCore.SIGNAL("BOOTSTRAP_COMPLETE"))
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
