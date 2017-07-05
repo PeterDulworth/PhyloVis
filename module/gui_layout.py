@@ -34,7 +34,7 @@ class Ui_PhylogeneticVisualization(object):
         PhylogeneticVisualization.setMinimumSize(QtCore.QSize(459, 245))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Arial"))
-        font.setPointSize(13)
+        font.setPointSize(8)
         PhylogeneticVisualization.setFont(font)
         self.centralwidget = QtGui.QWidget(PhylogeneticVisualization)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
@@ -1209,7 +1209,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menubar.addAction(self.menuDisplay.menuAction())
 
         self.retranslateUi(PhylogeneticVisualization)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(4)
         self.raxmlToolBox.setCurrentIndex(2)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(PhylogeneticVisualization)
