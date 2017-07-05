@@ -203,8 +203,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
 
-        self.raxmlToolBox.setItemText(0, "Hello")
-        self.raxmlToolBox.setFont( QtGui.QFont("Times", 15, QtGui.QFont.Bold) )
+        # self.raxmlToolBox.setItemText(0, "Hello")
+        # self.raxmlToolBox.setFont( QtGui.QFont("Times", 15, QtGui.QFont.Bold) )
 
     # **************************** WELCOME PAGE ****************************#
 
