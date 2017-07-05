@@ -56,7 +56,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # every time the 'RAX_PER' signal is emitted -> update the progress bar
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), lambda: self.progressBar.setValue(100))
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
@@ -456,18 +456,19 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.displayResults()
 
     def raxmlInputErrorHandling(self):
-
-        # Error handling for window size, offset and number of top topologies
+        """
+            returns true if all tests pass otherwise false
+        """
         try:
             # input alignment for raxml
-            # self.raxmlInputAlignment = str(self.inputFileEntry.text())
-            # self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            # self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
-            #
-            # if self.raxmlInputAlignment == "":
-            #     raise ValueError, ("No File Selected", "Please choose a file", None)
-            # elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
-            #     raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
+            self.raxmlInputAlignment = str(self.inputFileEntry.text())
+            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
+            self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
+
+            if self.raxmlInputAlignment == "":
+                raise ValueError, ("No File Selected", "Please choose a file", None)
+            elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
+                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
 
             # raxml window size input
             self.window_size = int(self.windowSizeEntry.text())
@@ -486,6 +487,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             if self.topTopologies <= 0 or self.topTopologies > 15:
                 raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
 
+            # statistics error handling
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                 self.newickFileName = str(self.newickFileEntry.text())
                 self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
@@ -504,6 +506,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 elif self.newickStringFromEntry != '':
                     self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
 
+            # bootstrap error handling
             if self.checkboxBootstrap.isChecked():
                 self.confidenceLevel = int(self.confidenceLevelEntry.text())
                 if self.confidenceLevel < 0 or self.confidenceLevel > 100:
@@ -522,19 +525,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         return True
 
     def runRAxML(self):
-
+        # if all error handling passes run RAxML
         if self.raxmlInputErrorHandling():
             self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
             self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
             self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
             self.raxmlOperations.model = self.modelComboBox.currentText()
 
+            # start raxml operations thread
             self.raxmlOperations.start()
 
-            #####################################################################
-
-            self.runComplete = True
-            self.menuExport.setEnabled(True)
+    def raxmlComplete(self):
+        self.progressBar.setValue(100)
+        self.runComplete = True
+        self.menuExport.setEnabled(True)
 
     # **************************** ABSTRACT ****************************#
 

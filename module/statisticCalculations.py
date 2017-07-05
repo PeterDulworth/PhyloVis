@@ -117,7 +117,6 @@ class StatisticsCalculations(QtCore.QThread):
                 p_gtst = self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
 
                 # Reformat output
-                print self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
                 p_gtst = float(p_gtst.replace('\r', '').replace('\n', ''))
 
                 windows_to_p_gtst[window_num] = p_gtst
