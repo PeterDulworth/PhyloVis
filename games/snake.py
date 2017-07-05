@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys, time
 from random import randrange
+import subprocess
 
 from PyQt4 import QtGui, QtCore
 
@@ -11,7 +12,7 @@ class Snake(QtGui.QWidget):
         self.initUI()
 
     def initUI(self):
-        self.highscore = 72
+        self.highscore = 0
         self.newGame()
         self.setStyleSheet("QWidget { background: #A9F5D0 }")
         self.setFixedSize(300, 300)
@@ -109,6 +110,19 @@ class Snake(QtGui.QWidget):
 
     def gameOver(self, event, qp):
         self.highscore = max(self.highscore, self.score)
+        if self.highscore > self.score:
+            p = subprocess.Popen("git add snake.py",shell=True)
+            # Wait until command line is finished running
+            p.wait()
+
+            p = subprocess.Popen("git commit -m 'NEW HIGHSCORE BISH {0}'".format(self.highscore), shell=True)
+            # Wait until command line is finished running
+            p.wait()
+
+            p = subprocess.Popen("git push origin master", shell=True)
+            # Wait until command line is finished running
+            p.wait()
+
         qp.setPen(QtGui.QColor(0, 34, 3))
         qp.setFont(QtGui.QFont('Decorative', 10))
         qp.drawText(event.rect(), QtCore.Qt.AlignCenter, "GAME OVER")
