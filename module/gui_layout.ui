@@ -56,7 +56,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -440,7 +440,7 @@
                        <widget class="QLineEdit" name="windowSizeEntry">
                         <property name="minimumSize">
                          <size>
-                          <width>40</width>
+                          <width>60</width>
                           <height>21</height>
                          </size>
                         </property>
@@ -505,7 +505,7 @@
                        <widget class="QLineEdit" name="windowOffsetEntry">
                         <property name="minimumSize">
                          <size>
-                          <width>40</width>
+                          <width>60</width>
                           <height>21</height>
                          </size>
                         </property>
@@ -2073,7 +2073,7 @@
                 <widget class="QLineEdit" name="msWindowSizeEntry">
                  <property name="minimumSize">
                   <size>
-                   <width>40</width>
+                   <width>60</width>
                    <height>21</height>
                   </size>
                  </property>
@@ -2126,7 +2126,7 @@
                 <widget class="QLineEdit" name="msWindowOffsetEntry">
                  <property name="minimumSize">
                   <size>
-                   <width>40</width>
+                   <width>60</width>
                    <height>21</height>
                   </size>
                  </property>
