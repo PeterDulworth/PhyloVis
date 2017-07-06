@@ -105,7 +105,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # default values
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
-        self.menuExport.setEnabled(False)
         self.outgroupComboBox.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
@@ -132,17 +131,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionDStatistic.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionDStatistic))
         self.actionDStatistic.triggered.connect(lambda: self.setWindow('inputPageDStatistic'))
 
-        # triggers export dialogs
-        self.actionStandardJPG.triggered.connect(lambda: self.exportFile('Final.jpg'))
-        self.actionBootstrapJPG.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
-        self.actionTextFile.triggered.connect(lambda: self.exportFile('FinalBootstraps.jpg'))
-        self.actionWindowsDirectory.triggered.connect(lambda: self.exportDirectory('windows'))
-        self.actionRAXDirectory.triggered.connect(lambda: self.exportDirectory('RAxML_Files'))
-        self.actionTreesDirectory.triggered.connect(lambda: self.exportDirectory('Trees'))
-
         # triggers select file dialogs
         self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
-        self.actionOpen.triggered.connect(lambda: self.openFile(self.inputFileEntry))
         self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
 
         # regenerates each graph every time checkbox is checked
@@ -154,7 +144,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxBootstrap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxBootstrap))
 
         # toggle what inputs are actionable based on checkboxes
-        # self.checkboxRobinsonFoulds.isChecked( or self.checkboxPGTST.isChecked())d.connect(lambda: self.toggleEnabled(self.statisticsOptionsPage))
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupComboBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
@@ -212,20 +201,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
 
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), self.donutPlotWindow.show)
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), self.donutPlotWindow.display_image)
-
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), self.scatterPlotWindow.show)
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), self.scatterPlotWindow.display_image)
-
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), self.allTreesWindow.show)
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), self.allTreesWindow.display_image)
-
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.heatMapWindow.show)
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.heatMapWindow.display_image)
-
-        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), self.bootstrapContractionWindow.show)
-        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), self.bootstrapContractionWindow.display_image)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), lambda: self.openWindow(self.heatMapWindow))
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.connectionTester)
+        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
     # **************************** WELCOME PAGE ****************************#
 
@@ -439,8 +420,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
                         self.topologyPlotter.top_topology_visualization()
 
-
-
     def raxmlInputErrorHandling(self):
         """
             returns true if all tests pass otherwise false
@@ -598,6 +577,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # set name of file to text entry
         textEntry.setText(name)
         textEntry.emit(QtCore.SIGNAL("DIRECTORY_SELECTED"))
+
+    def openWindow(self, window):
+        window.show()
+        window.display_image()
 
     def resizeEvent(self, event):
         print self.size()

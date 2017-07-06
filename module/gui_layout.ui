@@ -56,7 +56,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -292,7 +292,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string/>
+               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/ChillLeo.phylip</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -464,7 +464,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string>50000</string>
                         </property>
                        </widget>
                       </item>
@@ -529,7 +529,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string>50000</string>
                         </property>
                        </widget>
                       </item>
@@ -591,7 +591,7 @@
                          </font>
                         </property>
                         <property name="text">
-                         <string/>
+                         <string>2</string>
                         </property>
                        </widget>
                       </item>
@@ -835,7 +835,7 @@
                             </font>
                            </property>
                            <property name="text">
-                            <string/>
+                            <string>70</string>
                            </property>
                           </widget>
                          </item>
@@ -866,6 +866,9 @@
                              <weight>50</weight>
                              <bold>false</bold>
                             </font>
+                           </property>
+                           <property name="text">
+                            <string>10</string>
                            </property>
                           </widget>
                          </item>
@@ -2673,25 +2676,6 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <widget class="QMenu" name="menuExport">
-     <property name="title">
-      <string>Export...</string>
-     </property>
-     <addaction name="actionStandardJPG"/>
-     <addaction name="actionBootstrapJPG"/>
-     <addaction name="actionTextFile"/>
-     <addaction name="separator"/>
-     <addaction name="actionWindowsDirectory"/>
-     <addaction name="actionRAXDirectory"/>
-     <addaction name="actionTreesDirectory"/>
-    </widget>
-    <addaction name="actionOpen"/>
-    <addaction name="menuExport"/>
-   </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
      <string>Mode</string>
@@ -2701,28 +2685,8 @@
     <addaction name="actionMS"/>
     <addaction name="actionDStatistic"/>
    </widget>
-   <widget class="QMenu" name="menuDisplay">
-    <property name="title">
-     <string>Display</string>
-    </property>
-    <addaction name="actionAllTrees"/>
-    <addaction name="actionScatterPlot"/>
-    <addaction name="actionDonutPlot"/>
-    <addaction name="actionCircleGraph"/>
-    <addaction name="actionStatistics"/>
-   </widget>
-   <addaction name="menuFile"/>
    <addaction name="menuMode"/>
-   <addaction name="menuDisplay"/>
   </widget>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Open...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
   <action name="actionRax">
    <property name="checkable">
     <bool>true</bool>
@@ -2756,73 +2720,6 @@
    </property>
    <property name="text">
     <string>D Statistic</string>
-   </property>
-  </action>
-  <action name="actionStandardJPG">
-   <property name="text">
-    <string>Standard JPG</string>
-   </property>
-  </action>
-  <action name="actionBootstrapJPG">
-   <property name="text">
-    <string>Bootstrap JPG </string>
-   </property>
-  </action>
-  <action name="actionTextFile">
-   <property name="text">
-    <string>Text File</string>
-   </property>
-  </action>
-  <action name="actionWindowsDirectory">
-   <property name="text">
-    <string>Windows Directory</string>
-   </property>
-  </action>
-  <action name="actionRAXDirectory">
-   <property name="text">
-    <string>RAX Directory</string>
-   </property>
-  </action>
-  <action name="actionTreesDirectory">
-   <property name="text">
-    <string>Trees Directory</string>
-   </property>
-  </action>
-  <action name="actionAllTrees">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>All Trees</string>
-   </property>
-  </action>
-  <action name="actionScatterPlot">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Scatter Plot</string>
-   </property>
-  </action>
-  <action name="actionDonutPlot">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Donut Plot</string>
-   </property>
-  </action>
-  <action name="actionCircleGraph">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Circle Graph</string>
-   </property>
-  </action>
-  <action name="actionStatistics">
-   <property name="text">
-    <string>Statistics</string>
    </property>
   </action>
  </widget>
