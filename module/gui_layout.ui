@@ -56,7 +56,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -292,7 +292,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/phylip.txt</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -464,7 +464,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string>10</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -529,7 +529,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string>10</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -591,7 +591,7 @@
                          </font>
                         </property>
                         <property name="text">
-                         <string>3</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -1575,7 +1575,7 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_Files/RAxML_bestTree.0</string>
+                      <string/>
                      </property>
                      <property name="readOnly">
                       <bool>true</bool>
@@ -2610,6 +2610,40 @@
                <bool>false</bool>
               </property>
              </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QLabel" name="dStatisticLabel">
+              <property name="text">
+               <string>D Statistic:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="dStatisticValueLabel">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="textInteractionFlags">
+               <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_17">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>

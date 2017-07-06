@@ -108,9 +108,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menuExport.setEnabled(False)
         self.outgroupComboBox.setEnabled(False)
         self.outgroupLabel.setEnabled(False)
-        # self.statisticsOptionsPage.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
         self.outgroupGroupBox.setEnabled(False)
+        self.dStatisticLabel.setEnabled(False)
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
@@ -206,6 +206,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
+        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticLabel.setEnabled(False))
+        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticValueLabel.setEnabled(False))
 
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
@@ -294,6 +296,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.dStatisticWindow.show()
         self.dStatisticWindow.display_image()
 
+        self.dStatisticValueLabel.setText(str(self.D))
+        self.dStatisticLabel.setEnabled(True)
+        self.dStatisticValueLabel.setEnabled(True)
+
     # **************************** MS PAGE ****************************#
 
     def runMSCompare(self):
@@ -363,7 +369,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
             if self.raxmlInputAlignment == "":
                 raise ValueError, ("No File Selected", "Please choose a file")
-            elif self.raxmlInputAlignmentExtension != '.txt' and self.input_file_extension != '.phylip':
+            elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
                 raise ValueError, ("Invalid File Type", "Luay does not approve of your file type.\nPlease enter either a .txt or .phylip file")
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
@@ -372,7 +378,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment)
 
     def updatedDisplayWindows(self, btnClicked=None):
-
         if btnClicked == None or btnClicked.isChecked():
             if self.runComplete == True:
                 if self.getNumberChecked() > 0:
@@ -385,15 +390,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         num = len(topologies_to_counts)
                     list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
                     top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
-                    windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(
-                            top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
+                    windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
                     topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
 
-                # if self.checkboxDonutPlot.isChecked() or self.checkboxCircleGraph.isChecked():
-                #     self.topologyPlotter.start()
-
                 if self.checkboxDonutPlot.isChecked():
-                    # self.topologyPlotter.start()
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     self.topologyPlotter.topology_donut(labels, sizes, donut_colors)  # donut
 
@@ -401,7 +401,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 if self.checkboxCircleGraph.isChecked():
-                    # self.topologyPlotter.start()
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
 
@@ -425,14 +424,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         # Function calls for calculating statistics
                         windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
                         self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "plots/PGTSTPlot.png", "p(gt|st)", "Windows", "Probability")
+                    self.displayResults()
 
                 if self.checkboxBootstrap.isChecked():
-                    xLabel = "Window Indices"
-                    yLabel = "Number of Internal Nodes"
-                    name = "plots/ContractedGraph.png"
                     internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
                     # generate bootstrap confidence graph
-                    self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, xLabel, yLabel, name, self.confidenceLevel)
+                    self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, "Window Indices", "Number of Internal Nodes", "plots/ContractedGraph.png", self.confidenceLevel)
 
                 if self.checkboxAllTrees.isChecked():
                     if self.checkboxRooted.isChecked():
@@ -442,7 +439,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                         self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
                         self.topologyPlotter.top_topology_visualization()
 
-                # self.displayResults()
+
 
     def raxmlInputErrorHandling(self):
         """

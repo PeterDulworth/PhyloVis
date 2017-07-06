@@ -10,8 +10,8 @@ class MSRobinsonFouldsWindow(QtGui.QMainWindow, msRobinsonFouldsLayout.Ui_msRobi
         super(MSRobinsonFouldsWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.unweightedFileName = 'UWRFdifference.png'
-        self.weightedFileName = 'WRFdifference.png'
+        self.unweightedFileName = 'plots/UWRFdifference.png'
+        self.weightedFileName = 'plots/WRFdifference.png'
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)

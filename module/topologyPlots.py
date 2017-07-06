@@ -372,7 +372,7 @@ class TopologyPlotter(QtCore.QThread):
             cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
             plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1, edgecolors='#000000')
             plt.grid = True
-        plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
+        # plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
 
         # labels axes
         plt.xlabel('Windows', fontsize=10)
