@@ -50,10 +50,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menubar.setNativeMenuBar(False)
 
         # set GUI icon
-        self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
+        self.setWindowIcon(QtGui.QIcon('imgs/Luay.jpg'))
 
         # self.welcomeLogoImage.setScaledContents(True)
-        self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
+        self.welcomeLogoImage.setPixmap(QtGui.QPixmap('imgs/Luay.jpg'))
 
         # create new instance of RaxmlOperations class
         self.raxmlOperations = ro.RAxMLOperations()
@@ -184,7 +184,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # **************************** D STATISTIC PAGE ****************************#
 
         # set background image
-        self.imagePixmap = QtGui.QPixmap('tree.png')
+        self.imagePixmap = QtGui.QPixmap('imgs/tree.png')
         self.imageLabel.setScaledContents(True)
         self.imageLabel.setPixmap(self.imagePixmap)
 
@@ -502,11 +502,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         errMessage.setDetailedText(extraInfo)
 
         # default pixmap for error
-        pixmap = QtGui.QPixmap('warning.png')
+        pixmap = QtGui.QPixmap('imgs/warning.png')
 
         # choose icon based on type
         if type=='testType2':
-            pixmap = 'tree.png'
+            pixmap = 'imgs/tree.png'
 
         # set icon
         errMessage.setIconPixmap(pixmap)
