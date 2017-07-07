@@ -321,6 +321,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.raxmlOperations.speciesTreeRooted = self.checkboxSpeciesTreeRooted.isChecked()
             if self.raxmlOperations.speciesTreeRooted:
                 self.raxmlOperations.speciesTreeOutGroup = self.speciesTreeComboBox.currentText()
+            else:
+                self.raxmlOperations.speciesTreeOutGroup = None
 
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
@@ -465,6 +467,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.rooted = self.checkboxRooted.isChecked()
             if self.rooted:
                 self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
+            else:
+                self.raxmlOperations.outGroup = None
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
             self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)

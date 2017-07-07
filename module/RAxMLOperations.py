@@ -93,9 +93,9 @@ class RAxMLOperations(QtCore.QThread):
 
         # If rooting is desired root the appropriate files
         if rooted:
-            rooter("RAxML_bestTree." + file_number, outgroup)
-            rooter("RAxML_result." + file_number, outgroup)
-        
+            self.rooter("RAxML_bestTree.txt" , outgroup)
+            # self.rooter("RAxML_result.txt", outgroup)
+
         if platform == "win32":
             # Move RAxML output files into their own destination folder - Windows
             os.rename("RAxML_bestTree.txt", output_directory + "\RAxML_ST_bestTree.txt")
@@ -280,18 +280,23 @@ class RAxMLOperations(QtCore.QThread):
                     topology = ((re.sub(float_pattern, '', topology)).replace(":", "")).replace("\n", "")
 
                     # If rooting desired
-                    if self.rooted:
-                        # Create the tree object and root it
-                        tree = Phylo.read(newick_file, "newick")
-                        tree.rooted = True
-                        tree.root_with_outgroup(outgroup)
-
+                    # if self.rooted:
+                    #     Create the tree object and root it
+                        # tree = Phylo.read(newick_file, "newick")
+                        # tree.rooted = True
+                        # tree.root_with_outgroup(outgroup)
+                        #
                         # Write the newick string to a new file
-                        Phylo.write(tree, topology_output_directory + "\Topology_bestTree." + file_number, "newick")
+                        # Phylo.write(tree, topology_output_directory + "\Topology_bestTree." + file_number, "newick")
 
                     # Otherwise write the topology newick string to a file
-                    else:
+                    # else:
+                    if platform == 'win32':
                         file = open(topology_output_directory + "\Topology_bestTree." + file_number, "w")
+                        file.write(topology)
+                        file.close()
+                    elif platform == 'darwin':
+                        file = open(topology_output_directory + "/Topology_bestTree." + file_number, "w")
                         file.write(topology)
                         file.close()
 
@@ -299,9 +304,9 @@ class RAxMLOperations(QtCore.QThread):
 
                     # If rooting is desired root the appropriate files
                     if rooted:
-                        rooter("RAxML_bestTree." + file_number, outgroup)
-                        rooter("RAxML_bipartitions." + file_number, outgroup)
-                        rooter("RAxML_bipartitionsBranchLabels." + file_number, outgroup)
+                        self.rooter("RAxML_bestTree." + file_number, outgroup)
+                        self.rooter("RAxML_bipartitions." + file_number, outgroup)
+                        self.rooter("RAxML_bipartitionsBranchLabels." + file_number, outgroup)
 
                     if platform == "win32":
                         # Move RAxML output files into their own destination folder - Windows
@@ -331,8 +336,8 @@ class RAxMLOperations(QtCore.QThread):
 
                     # If rooting is desired root the appropriate files
                     if rooted:
-                        rooter("RAxML_bestTree." + file_number, outgroup)
-                        rooter("RAxML_result." + file_number, outgroup)
+                        self.rooter("RAxML_bestTree." + file_number, outgroup)
+                        self.rooter("RAxML_result." + file_number, outgroup)
 
                     if platform == "win32":
                         # Move RAxML output files into their own destination folder - Windows
