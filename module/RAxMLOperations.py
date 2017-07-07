@@ -16,14 +16,10 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, inputFilename, windowSize, windowOffset, numBootstraps, model="GTRGAMMA", bootstrap=False, customRaxmlCommand=False, raxmlCommand="", parent=None):
+    def __init__(self, model="GTRGAMMA", bootstrap=False, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
-        self.inputFilename = inputFilename
-        self.windowSize = windowSize
-        self.windowOffset = windowOffset
-        self.numBootstraps = numBootstraps
-        self.customRaxmlCommand = customRaxmlCommand
+        self.isCustomRaxmlCommand = isCustomRaxmlCommand
         self.bootstrap = bootstrap
         self.model = model
 
@@ -232,13 +228,15 @@ class RAxMLOperations(QtCore.QThread):
                 input_file = os.path.join(window_directory, filename)
 
                 # Run RAxML
-                if not self.customRaxmlCommand:
+                # NOT custom raxml
+                if not self.isCustomRaxmlCommand:
                     if self.bootstrap:
                         p = subprocess.Popen( "raxmlHPC -f a -x12345 -p 12345 -# {2} -m {3} -s {0} -n {1}".format(input_file, file_number, numBootstraps, model), shell=True)
                     else:
                         p = subprocess.Popen("raxmlHPC -d -p 12345 -m {2} -s {0} -n {1}".format(input_file, file_number, model), shell=True)
-                else: # custom raxml command
-                    p = subprocess.Popen(self.raxmlCommand + " -s {0} -n {1}".format(input_file, file_number), shell=True)
+                # custom raxml
+                else:
+                    p = subprocess.Popen(self.customRaxmlCommand + " -s {0} -n {1}".format(input_file, file_number), shell=True)
 
                 # Wait until command line is finished running
                 p.wait()
@@ -324,12 +322,13 @@ class RAxMLOperations(QtCore.QThread):
         self.raxml_windows(self.numBootstraps, self.model)
         self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 
+        print 'Alignment:', self.inputFilename
+        print 'Window Size:', self.windowSize
+        print 'Window Offset:', self.windowOffset
+        print '# Bootstraps:', self.numBootstraps
+
 
 if __name__ == '__main__':
-    # input_file = "testFiles/phylip.txt"
-    # window_size = 10
-    # window_offset = 10
-
     inputFile = "../RAxML_SpeciesTree/RAxML_ST_bestTree.txt"
     windowSize = 500000
     windowOffset = 500000

@@ -1175,7 +1175,7 @@ class Ui_PhylogeneticVisualization(object):
 
     def retranslateUi(self, PhylogeneticVisualization):
         PhylogeneticVisualization.setWindowTitle(_translate("PhylogeneticVisualization", "Phylogenetic Visualization", None))
-        self.welcomeLabel.setText(_translate("PhylogeneticVisualization", "Welcome Daddy", None))
+        self.welcomeLabel.setText(_translate("PhylogeneticVisualization", "Welcome", None))
         self.modeComboBox.setItemText(0, _translate("PhylogeneticVisualization", "RAx_ML", None))
         self.modeComboBox.setItemText(1, _translate("PhylogeneticVisualization", "File Converter", None))
         self.modeComboBox.setItemText(2, _translate("PhylogeneticVisualization", "MS Comparison", None))

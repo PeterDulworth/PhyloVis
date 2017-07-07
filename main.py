@@ -25,42 +25,38 @@ from module import msComparison as ms
 from games import tetris, snake
 
 
-class ErrorHandling(object):
-    def __init__(self):
-        pass
-
-
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
+
+        # if 'plots' folder doesn't exist -> create it
+        if not os.path.isdir('plots'):
+            os.mkdir('plots')
+
+        # remove all files in plots folder
+        for fileName in os.listdir('plots'):
+            os.remove('plots/' + fileName)
+
+        # initialize gui_layout
         self.setupUi(self)
+
+        # set UI style -- options: u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)'
+        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Macintosh (aqua)'))
 
         self.dStatisticTaxonComboBoxes = [self.dTaxonComboBox1, self.dTaxonComboBox2, self.dTaxonComboBox3, self.dTaxonComboBox4]
         self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
 
-        # set UI style
-        # options: [u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)']
-        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Macintosh (aqua)'))
-
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
 
-        # gui icon
+        # set GUI icon
         self.setWindowIcon(QtGui.QIcon('Luay.jpg'))
 
         # self.welcomeLogoImage.setScaledContents(True)
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('Luay.jpg'))
 
         # create new instance of RaxmlOperations class
-        self.raxmlOperations = ro.RAxMLOperations(None, None, None, None)
-        # every time the 'RAX_PER' signal is emitted -> update the progress bar
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
-
+        self.raxmlOperations = ro.RAxMLOperations()
         # create new instance of TopologyPlotter class
         self.topologyPlotter = tp.TopologyPlotter()
         # create new instance of Statistics Calculations class
@@ -80,7 +76,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
         self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
-
+        # if windows
         if sys.platform == 'win32':
             # mapping from: windows --> dictionary of page dimensions 493
             self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
@@ -96,11 +92,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
         self.dStatisticWindow = dStatisticWindow.DStatisticWindow()
-
-        # remove all files in plots folder
-        fileList = os.listdir('plots')
-        for fileName in fileList:
-            os.remove('plots/' + fileName)
 
         # default values
         self.runComplete = False
@@ -150,8 +141,24 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
-        # when file entry text is changed
+        # RAxML Events
         self.connect(self.inputFileEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
+
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
+
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), lambda: self.openWindow(self.heatMapWindow))
+        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.connectionTester)
+        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.runRAxML)
@@ -197,16 +204,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticLabel.setEnabled(False))
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticValueLabel.setEnabled(False))
-
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
-
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), lambda: self.openWindow(self.heatMapWindow))
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.connectionTester)
-        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
     # **************************** WELCOME PAGE ****************************#
 
@@ -481,29 +478,30 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
                 if self.numBootstraps < 2:
                     raise ValueError, ("Invalid Number of Bootstraps", "Please enter an integer greater than 1.", None)
+            else:
+                self.raxmlOperations.numBootstraps = 0
+
+            self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
+            self.raxmlOperations.customRaxmlCommand = self.customRaxmlCommandEntry.text()
+            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
+            self.raxmlOperations.model = self.modelComboBox.currentText()
+            self.rooted = self.checkboxRooted.isChecked()
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
             self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
             return False
 
-        self.rooted = self.checkboxRooted.isChecked()
         return True
 
     def runRAxML(self):
         # if all error handling passes run RAxML
         if self.raxmlInputErrorHandling():
-            self.raxmlOperations.customRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
-            self.raxmlOperations.raxmlCommand = self.customRaxmlCommandEntry.text()
-            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
-            self.raxmlOperations.model = self.modelComboBox.currentText()
-
             # start raxml operations thread
             self.raxmlOperations.start()
 
     def raxmlComplete(self):
         self.progressBar.setValue(100)
         self.runComplete = True
-        self.menuExport.setEnabled(True)
 
     # **************************** ABSTRACT ****************************#
 
