@@ -333,7 +333,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -1275,7 +1275,6 @@
                         <widget class="QComboBox" name="speciesTreeComboBox"/>
                        </item>
                       </layout>
-                      <zorder>checkboxSpeciesTreeRooted</zorder>
                       <zorder>speciesTreeComboBox</zorder>
                       <zorder>label_13</zorder>
                      </widget>
@@ -1342,8 +1341,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>728</width>
-               <height>478</height>
+               <width>278</width>
+               <height>157</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1692,7 +1691,7 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string/>
+                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_SpeciesTree/RAxML_ST_bestTree.txt</string>
                      </property>
                      <property name="readOnly">
                       <bool>true</bool>

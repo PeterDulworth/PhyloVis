@@ -11,7 +11,7 @@ else:
 
 class PGTSTWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=160, y=182, scale=2)
+        Window.__init__(self, fileName, x=160, y=182, scale=1)
 
 if __name__ == '__main__':
     # test window if running locally
