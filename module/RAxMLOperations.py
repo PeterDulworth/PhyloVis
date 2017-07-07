@@ -20,10 +20,6 @@ class RAxMLOperations(QtCore.QThread):
     def __init__(self, model="GTRGAMMA", bootstrap=False, rooted=False, outgroup=None, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
-        self.isCustomRaxmlCommand = isCustomRaxmlCommand
-        self.bootstrap = bootstrap
-        self.model = model
-
     def taxon_names_getter(self, phylip):
         """
         Creates a list of taxon names from the inputted file

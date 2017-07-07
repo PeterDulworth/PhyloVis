@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>robinsonFoulds</class>
- <widget class="QMainWindow" name="robinsonFoulds">
+ <class>tabLayout</class>
+ <widget class="QMainWindow" name="tabLayout">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Robinson Foulds</string>
+   <string>Main Window</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -20,8 +20,11 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="unweightedTab">
        <attribute name="title">
@@ -29,7 +32,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QLabel" name="robinsonFouldsUnweightedImage">
+         <widget class="QLabel" name="unweightedImage">
           <property name="text">
            <string/>
           </property>
@@ -43,7 +46,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="robinsonFouldsWeightedImage">
+         <widget class="QLabel" name="weightedImage">
           <property name="text">
            <string/>
           </property>
