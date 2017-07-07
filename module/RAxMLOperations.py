@@ -5,6 +5,7 @@ import shutil
 import os
 import re
 from PyQt4 import QtCore, QtGui
+from Bio import Phylo
 
 """
 Functions for creating sequence windows and running RAxML.
@@ -116,6 +117,22 @@ class RAxMLOperations(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 20)
 
+    def rooter(self, newick_file, outgroup):
+        """
+        Rewrites tree newick strings to be rooted
+        Inputs:
+        newick_file --- the file containing the newick string
+        outgroup --- the outgroup to root at
+        """
+
+        # Create the tree object and root it
+        tree = Phylo.read(newick_file, "newick")
+        tree.rooted = True
+        tree.root_with_outgroup(outgroup)
+
+        # Write the newick string over the previous one
+        Phylo.write(tree, newick_file, "newick")
+
     def window_splitter(self, filename, window_size, step_size):
         """
         Creates smaller PHYLIP files based on a window size inputted into
@@ -191,13 +208,14 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-    def raxml_windows(self, numBootstraps, model, window_directory='windows', output_directory='RAxML_Files'):
+    def raxml_windows(self, numBootstraps, model, rooted=False, outgroup=None, window_directory='windows', output_directory='RAxML_Files'):
         """
         Runs RAxML on files in the directory containing files from
         window_splitter().
 
         Inputs:
-        window_directory ---  the window directory location
+        numBootstraps --- the number of bootstraps to use
+        model --- the type of model to use in RAxML
         """
 
         topology_output_directory = "Topologies"
@@ -251,11 +269,30 @@ class RAxMLOperations(QtCore.QThread):
 
                     # Delete float branch lengths, ":" and "\n" from newick string
                     topology = ((re.sub(float_pattern, '', topology)).replace(":", "")).replace("\n", "")
-                    file = open("Topology_bestTree." + file_number, "w")
-                    file.write(topology)
-                    file.close()
+
+                    # If rooting desired
+                    if self.rooted:
+                        # Create the tree object and root it
+                        tree = Phylo.read(newick_file, "newick")
+                        tree.rooted = True
+                        tree.root_with_outgroup(outgroup)
+
+                        # Write the newick string to a new file
+                        Phylo.write(tree, topology_output_directory + "\Topology_bestTree." + file_number, "newick")
+
+                    # Otherwise write the topology newick string to a file
+                    else:
+                        file = open(topology_output_directory + "\Topology_bestTree." + file_number, "w")
+                        file.write(topology)
+                        file.close()
 
                 if self.bootstrap:
+
+                    # If rooting is desired root the appropriate files
+                    if rooted:
+                        rooter("RAxML_bestTree." + file_number, outgroup)
+                        rooter("RAxML_bipartitions." + file_number, outgroup)
+                        rooter("RAxML_bipartitionsBranchLabels." + file_number, outgroup)
 
                     if platform == "win32":
                         # Move RAxML output files into their own destination folder - Windows
@@ -266,8 +303,8 @@ class RAxMLOperations(QtCore.QThread):
                                   output_directory + "\RAxML_bipartitionsBranchLabels." + file_number)
                         os.rename("RAxML_bootstrap." + file_number, output_directory + "\RAxML_bootstrap." + file_number)
                         os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
-                        os.rename("topology_bestTree." + file_number,
-                                  topology_output_directory + "\Topology_bestTree." + file_number)
+                        # os.rename("topology_bestTree." + file_number,
+                        #           topology_output_directory + "\Topology_bestTree." + file_number)
 
                     elif platform == "darwin":
                         # Move RAxML output files into their own destination folder - Mac
@@ -278,10 +315,15 @@ class RAxMLOperations(QtCore.QThread):
                                   output_directory + "/RAxML_bipartitionsBranchLabels." + file_number)
                         os.rename("RAxML_bootstrap." + file_number, output_directory + "/RAxML_bootstrap." + file_number)
                         os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
-                        os.rename("topology_bestTree." + file_number,
-                                  topology_output_directory + "/Topology_bestTree." + file_number)
+                        # os.rename("topology_bestTree." + file_number,
+                        #           topology_output_directory + "/Topology_bestTree." + file_number)
 
                 else:
+
+                    # If rooting is desired root the appropriate files
+                    if rooted:
+                        rooter("RAxML_bestTree." + file_number, outgroup)
+                        rooter("RAxML_result." + file_number, outgroup)
 
                     if platform == "win32":
                         # Move RAxML output files into their own destination folder - Windows
@@ -293,8 +335,8 @@ class RAxMLOperations(QtCore.QThread):
                         os.rename("RAxML_result." + file_number,
                                   output_directory + "\RAxML_result." + file_number)
                         os.rename("RAxML_info." + file_number, output_directory + "\RAxML_info." + file_number)
-                        os.rename("topology_bestTree." + file_number,
-                                  topology_output_directory + "\Topology_bestTree." + file_number)
+                        # os.rename("topology_bestTree." + file_number,
+                        #           topology_output_directory + "\Topology_bestTree." + file_number)
 
                     elif platform == "darwin":
                         # Move RAxML output files into their own destination folder - Mac
@@ -306,8 +348,8 @@ class RAxMLOperations(QtCore.QThread):
                         os.rename("RAxML_result." + file_number,
                                   output_directory + "/RAxML_result." + file_number)
                         os.rename("RAxML_info." + file_number, output_directory + "/RAxML_info." + file_number)
-                        os.rename("topology_bestTree." + file_number,
-                                  topology_output_directory + "/Topology_bestTree." + file_number)
+                        # os.rename("topology_bestTree." + file_number,
+                        #           topology_output_directory + "/Topology_bestTree." + file_number)
 
                 percent_complete += 80 / len(os.listdir(window_directory))
                 self.emit(QtCore.SIGNAL('RAX_PER'), percent_complete)
