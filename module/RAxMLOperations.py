@@ -17,7 +17,7 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, model="GTRGAMMA", bootstrap=False, rooted=False, outgroup=None, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
+    def __init__(self, parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
     def taxon_names_getter(self, phylip):
@@ -44,7 +44,7 @@ class RAxMLOperations(QtCore.QThread):
 
         return taxon_names
 
-    def raxml_species_tree(self, phylip):
+    def raxml_species_tree(self, phylip, rooted=False, outgroup=None):
         """
         Runs RAxML on input PHYLIP file to create a species
         tree.
@@ -370,7 +370,7 @@ class RAxMLOperations(QtCore.QThread):
             self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.inputFilename)
             return
 
-        self.raxml_windows(self.numBootstraps, self.model)
+        self.raxml_windows(self.numBootstraps, self.model, rooted=self.rooted, outgroup=self.outGroup)
         self.emit(QtCore.SIGNAL('RAX_COMPLETE'), None)
 
         print 'Alignment:', self.inputFilename

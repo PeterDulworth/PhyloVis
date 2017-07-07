@@ -44,6 +44,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.dStatisticTaxonComboBoxes = [self.dTaxonComboBox1, self.dTaxonComboBox2, self.dTaxonComboBox3, self.dTaxonComboBox4]
         self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
+        self.speciesTreeComboBoxes = [self.speciesTreeComboBox]
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -70,7 +71,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions 493
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 530}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 600}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -99,6 +100,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupLabel.setEnabled(False)
         self.bootstrapGroupBox.setEnabled(False)
         self.outgroupGroupBox.setEnabled(False)
+        self.speciesTreeOutGroupGroupBox.setEnabled(False)
         self.dStatisticLabel.setEnabled(False)
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
@@ -139,20 +141,20 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
+        self.checkboxSpeciesTreeRooted.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeOutGroupGroupBox))
 
         # RAxML Events
         self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
+        self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.generateSpeciesTreeProgressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), partial(self.message, type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
 
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
-
         self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
         self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
         self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
@@ -315,11 +317,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 raise ValueError, ("No File Selected", "Please choose a file")
             elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
                 raise ValueError, ("Invalid File Type", "Luay does not approve of your file type.\nPlease enter either a .txt or .phylip file")
+
+            self.raxmlOperations.speciesTreeRooted = self.checkboxSpeciesTreeRooted.isChecked()
+            if self.raxmlOperations.speciesTreeRooted:
+                self.raxmlOperations.speciesTreeOutGroup = self.speciesTreeComboBox.currentText()
+
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
             return
 
-        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment)
+        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment, rooted=self.raxmlOperations.speciesTreeRooted, outgroup=self.raxmlOperations.speciesTreeOutGroup)
 
     def updatedDisplayWindows(self, btnClicked=None):
         if btnClicked == None or btnClicked.isChecked():
@@ -454,7 +461,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.raxmlOperations.customRaxmlCommand = self.customRaxmlCommandEntry.text()
             self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
             self.raxmlOperations.model = self.modelComboBox.currentText()
+            self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
             self.rooted = self.checkboxRooted.isChecked()
+            if self.rooted:
+                self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
             self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
