@@ -333,7 +333,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -1261,8 +1261,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>278</width>
-               <height>157</height>
+               <width>728</width>
+               <height>478</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1271,6 +1271,13 @@
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
                <widget class="QGroupBox" name="graphOptionsGroupBox">
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
+                </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_30">
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -1494,8 +1501,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>457</width>
-               <height>228</height>
+               <width>728</width>
+               <height>478</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1506,6 +1513,13 @@
                <widget class="QGroupBox" name="statisticsOptionsGroupBox">
                 <property name="enabled">
                  <bool>true</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>13</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
+                 </font>
                 </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
@@ -1533,6 +1547,25 @@
                     <string>Species Tree</string>
                    </property>
                   </widget>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_27">
+                   <item>
+                    <widget class="QLabel" name="label_11">
+                     <property name="font">
+                      <font>
+                       <pointsize>13</pointsize>
+                       <weight>50</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>To generate a species tree navigate to: RAxML Options -&gt; Advanced</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </item>
                  <item>
                   <layout class="QHBoxLayout" name="newickFileHL">
@@ -1740,7 +1773,7 @@
                   </layout>
                  </item>
                  <item>
-                  <spacer name="verticalSpacer_16">
+                  <spacer name="verticalSpacer_12">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
                    </property>
