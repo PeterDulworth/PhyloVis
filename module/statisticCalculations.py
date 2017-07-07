@@ -397,7 +397,7 @@ class StatisticsCalculations(QtCore.QThread):
 
         d_stat = d_numerator/float(d_denominator)
 
-        self.emit(QtCore.SIGNAL('D_FINISHED'), (d_stat, windows_to_d))
+        self.emit(QtCore.SIGNAL('D_FINISHED'), d_stat, windows_to_d)
 
 
     def run(self):
