@@ -333,7 +333,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -891,22 +891,6 @@
                      </layout>
                     </item>
                     <item>
-                     <spacer name="verticalSpacer_6">
-                      <property name="orientation">
-                       <enum>Qt::Vertical</enum>
-                      </property>
-                      <property name="sizeType">
-                       <enum>QSizePolicy::Fixed</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>20</width>
-                        <height>10</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                    <item>
                      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,0">
                       <property name="spacing">
                        <number>-1</number>
@@ -1089,7 +1073,7 @@
                    </layout>
                   </item>
                   <item>
-                   <spacer name="verticalSpacer_10">
+                   <spacer name="verticalSpacer_4">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -1205,6 +1189,39 @@
                    </layout>
                   </item>
                   <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_28">
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="label_12">
+                      <property name="text">
+                       <string>RAxML Command:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_19">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>10</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="speciesTreeRaxmlCommandEntry"/>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
                    <layout class="QHBoxLayout" name="runRaxmlHL_2">
                     <property name="leftMargin">
                      <number>5</number>
@@ -1213,7 +1230,7 @@
                      <widget class="QPushButton" name="generateSpeciesTreeBtn">
                       <property name="minimumSize">
                        <size>
-                        <width>143</width>
+                        <width>0</width>
                         <height>0</height>
                        </size>
                       </property>
@@ -1221,9 +1238,25 @@
                        <enum>Qt::NoFocus</enum>
                       </property>
                       <property name="text">
-                       <string>Generate Species Tree</string>
+                       <string>Generate</string>
                       </property>
                      </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_18">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeType">
+                       <enum>QSizePolicy::Fixed</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>10</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                     <item>
                      <widget class="QProgressBar" name="generateSpeciesTreeProgressBar">
@@ -1238,7 +1271,7 @@
                    </layout>
                   </item>
                   <item>
-                   <spacer name="verticalSpacer_4">
+                   <spacer name="verticalSpacer_10">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -1556,7 +1589,7 @@
                       <font>
                        <pointsize>13</pointsize>
                        <weight>50</weight>
-                       <italic>false</italic>
+                       <italic>true</italic>
                        <bold>false</bold>
                       </font>
                      </property>

@@ -68,7 +68,7 @@ class RAxMLOperations(QtCore.QThread):
 
         os.makedirs(output_directory)
 
-        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 11)
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 10)
 
         # Run RAxML
         p = subprocess.Popen(
@@ -77,7 +77,7 @@ class RAxMLOperations(QtCore.QThread):
         # Wait until command line is finished running
         p.wait()
 
-        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 50)
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 60)
 
         # Regular expression for identifying floats
         float_pattern = "([+-]?\\d*\\.\\d+)(?![-+0-9\\.])"
@@ -93,7 +93,7 @@ class RAxMLOperations(QtCore.QThread):
             file.write(topology)
             file.close()
 
-        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 20)
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 80)
 
         if platform == "win32":
             # Move RAxML output files into their own destination folder - Windows
@@ -115,7 +115,15 @@ class RAxMLOperations(QtCore.QThread):
             os.rename("RAxML_info.txt", output_directory + "/RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "/Topology_ST_bestTree.txt")
 
-        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 20)
+        if platform == 'win32':
+            with open('RAxML_SpeciesTree\RAxML_ST_bestTree.txt', 'r') as f:
+                self.speciesTree = f.read().replace('\n', '')
+        elif platform == 'darwin':
+            with open('RAxML_SpeciesTree/RAxML_ST_bestTree.txt', 'r') as f:
+                self.speciesTree = f.read().replace('\n', '')
+
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 100)
+        self.emit(QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), 'Species Tree Generated', "'Show Details...' to view the species tree newick.", self.speciesTree)
 
     def rooter(self, newick_file, outgroup):
         """
