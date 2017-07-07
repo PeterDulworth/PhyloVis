@@ -16,12 +16,8 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, model="GTRGAMMA", bootstrap=False, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
+    def __init__(self, parent=None):
         super(RAxMLOperations, self).__init__(parent)
-
-        self.isCustomRaxmlCommand = isCustomRaxmlCommand
-        self.bootstrap = bootstrap
-        self.model = model
 
     def taxon_names_getter(self, phylip):
         """
