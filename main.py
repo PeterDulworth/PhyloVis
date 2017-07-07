@@ -142,11 +142,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
 
         # RAxML Events
-        self.connect(self.inputFileEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
+        self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_PER'), self.progressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.raxmlComplete)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('RAX_COMPLETE'), self.updatedDisplayWindows)
-        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.updateSpeciesTreeProgressBar)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.generateSpeciesTreeProgressBar.setValue)
+        self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), partial(self.message, type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), self.connectionTester)
 
@@ -198,7 +199,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # run
         self.dRunBtn.clicked.connect(self.runDStatistic)
-        self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='testType2'))
+        self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='Err'))
 
         # reset progress bar when window is closed
         self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
@@ -265,11 +266,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # display window
         self.msComparisonWindow.show()
         self.msComparisonWindow.displayImages()
-
-    def updateSpeciesTreeProgressBar(self, val):
-        self.generateSpeciesTreeProgressBar.setValue(self.generateSpeciesTreeProgressBar.value() + val)
-        if self.generateSpeciesTreeProgressBar.value() >= 100:
-            QtGui.QMessageBox.about(self, "Species Tree Complete", "Species Tree has been generated.")
 
     # **************************** CONVERTER PAGE ****************************#
 
@@ -490,7 +486,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         errMessage.setDetailedText(extraInfo)
 
         # default pixmap for error
-        pixmap = QtGui.QPixmap('warning-128.lowQual.png')
+        pixmap = QtGui.QPixmap('warning.png')
 
         # choose icon based on type
         if type=='testType2':
