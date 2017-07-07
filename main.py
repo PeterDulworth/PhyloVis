@@ -123,8 +123,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.actionDStatistic.triggered.connect(lambda: self.setWindow('inputPageDStatistic'))
 
         # triggers select file dialogs
-        self.inputFileBtn.clicked.connect(lambda: self.openFile(self.inputFileEntry))
-        self.newickFileBtn.clicked.connect(lambda: self.openFile(self.newickFileEntry))
+        self.inputFileBtn.clicked.connect(lambda: self.getFileName(self.inputFileEntry))
+        self.newickFileBtn.clicked.connect(lambda: self.getFileName(self.newickFileEntry))
 
         # regenerates each graph every time checkbox is checked
         self.checkboxCircleGraph.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxCircleGraph))
@@ -170,14 +170,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # **************************** CONVERTER PAGE ****************************#
 
-        self.fileConverterBtn.clicked.connect(lambda: self.openFile(self.fileConverterEntry))
+        self.fileConverterBtn.clicked.connect(lambda: self.getFileName(self.fileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
         # **************************** MS PAGE ****************************#
 
         self.msCompareBtn.clicked.connect(self.runMSCompare)
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
-        self.msFileBtn.clicked.connect(lambda: self.openFile(self.msFileEntry))
+        self.msFileBtn.clicked.connect(lambda: self.getFileName(self.msFileEntry))
 
         # **************************** D STATISTIC PAGE ****************************#
 
@@ -187,7 +187,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.imageLabel.setPixmap(self.imagePixmap)
 
         # run
-        self.dAlignmentBtn.clicked.connect(lambda: self.openFile(self.dAlignmentEntry))
+        self.dAlignmentBtn.clicked.connect(lambda: self.getFileName(self.dAlignmentEntry))
 
         # when file entry text is changed
         self.connect(self.dAlignmentEntry, QtCore.SIGNAL("FILE_SELECTED"), lambda: self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry, errHandling=True))
@@ -220,35 +220,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.snakeWindow.show()
 
     # **************************** D STATISTIC PAGE ****************************#
-
-    def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
-        try:
-            if textEntry.text() == "":
-                return
-
-            # get list of taxon names from file
-            taxonNames = list(self.raxmlOperations.taxon_names_getter(textEntry.text()))
-            print 'taxonNames:', taxonNames
-
-            if errHandling:
-                # if there are not exactly 4 taxons
-                if len(taxonNames) != 4:
-                    self.message('Invalid File.', 'Need exactly 4 taxons.', textEntry.text())
-                    return
-
-            for comboBox in comboBoxes:
-                comboBox.clear()
-
-            for taxon in taxonNames:
-                for comboBox in comboBoxes:
-                    comboBox.addItem(taxon)
-
-            for i in range(len(comboBoxes)):
-                comboBoxes[i].setCurrentIndex(i)
-
-        except:
-            self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err')
-            return
 
     def runDStatistic(self):
         try:
@@ -531,6 +502,34 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # execute window
         errMessage.exec_()
 
+    def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
+        try:
+            if textEntry.text() == "":
+                return
+
+            # get list of taxon names from file
+            taxonNames = list(self.raxmlOperations.taxon_names_getter(textEntry.text()))
+
+            if errHandling:
+                # if there are not exactly 4 taxons
+                if len(taxonNames) != 4:
+                    self.message('Invalid File.', 'Need exactly 4 taxons.', textEntry.text())
+                    return
+
+            for comboBox in comboBoxes:
+                comboBox.clear()
+
+            for taxon in taxonNames:
+                for comboBox in comboBoxes:
+                    comboBox.addItem(taxon)
+
+            for i in range(len(comboBoxes)):
+                comboBoxes[i].setCurrentIndex(i)
+
+        except:
+            self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err')
+            return
+
     def getNumberChecked(self):
         """
         returns the number of checkboxes that are checked
@@ -559,10 +558,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def exportDirectory(self, dirName):
         name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
-        print dirName, name
         copytree(dirName, name)
 
-    def openFile(self, textEntry):
+    def getFileName(self, textEntry):
         # get name of file
         name = QtGui.QFileDialog.getOpenFileName()
         # set name of file to text entry
