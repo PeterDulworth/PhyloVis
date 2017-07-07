@@ -17,7 +17,7 @@ Peter Dulworth
 
 
 class RAxMLOperations(QtCore.QThread):
-    def __init__(self, model="GTRGAMMA", bootstrap=False, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
+    def __init__(self, model="GTRGAMMA", bootstrap=False, rooted=False, outgroup=None, isCustomRaxmlCommand=False, customRaxmlCommand="", parent=None):
         super(RAxMLOperations, self).__init__(parent)
 
         self.isCustomRaxmlCommand = isCustomRaxmlCommand
@@ -95,6 +95,11 @@ class RAxMLOperations(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 80)
 
+        # If rooting is desired root the appropriate files
+        if rooted:
+            rooter("RAxML_bestTree." + file_number, outgroup)
+            rooter("RAxML_result." + file_number, outgroup)
+        
         if platform == "win32":
             # Move RAxML output files into their own destination folder - Windows
             os.rename("RAxML_bestTree.txt", output_directory + "\RAxML_ST_bestTree.txt")
