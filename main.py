@@ -2,7 +2,6 @@
 import sip
 sip.setapi('QString', 2)
 import sys, os
-from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from functools import partial
@@ -29,12 +28,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
 
-        filesToBeRemoved = ['RAxML_result', 'RAxML_randomTree', 'RAxML_log', 'RAxML_info', 'RAxML_bestTree', 'RAxML_bipartitions', 'RAxML_bipartitionsBranchLabels', 'RAxML_bootstrap']
-
+        # remove any leftover files from previous raxml trials
+        badFileNames = ['RAxML_result', 'RAxML_randomTree', 'RAxML_log', 'RAxML_info', 'RAxML_bestTree', 'RAxML_bipartitions', 'RAxML_bipartitionsBranchLabels', 'RAxML_bootstrap']
         for fileName in os.listdir('.'):
-            name = os.path.splitext(fileName)[0]
-            for file in filesToBeRemoved:
-                if name == file:
+            nameWithoutExtension = os.path.splitext(fileName)[0]
+            for file in badFileNames:
+                if nameWithoutExtension == file:
                     os.remove(fileName)
 
         # if 'plots' folder doesn't exist -> create it
