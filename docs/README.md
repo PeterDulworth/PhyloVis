@@ -1,9 +1,13 @@
 ## Table of Contents
-- [Introduction]()
-	- [Contributors](http://www.peterdulworth.com)
-- [Installation]()
-- [Basic Usage]()
-- [Input/Output]()
+- [Introduction](#introduction)
+	- [Contributors](#contributors)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+	- [Modes](#modes)
+		- [RAxML](#raxml)
+		- [File Converter](#file-converter)
+		- [MS Comparison](#ms-comparison)
+		- [D Statistic](#d-statistic)
 
 ## Introduction
 Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
@@ -19,4 +23,14 @@ Install it
 
 ## Basic Usage
 
-## Input/Output
+### RAxML
+### File Converter
+### MS Comparison
+### D Statistic
+
+## Other
+
+
+```python
+p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n txt".format(phylip), shell=True)
+```

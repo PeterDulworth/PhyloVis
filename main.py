@@ -221,8 +221,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def initializeMode(self):
         if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
-            self.setWindow(self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
-            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()])
+            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()], self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
         else:
             if self.modeComboBox.currentText() == "Tetris":
                 self.tetrisWindow = tetris.Tetris()

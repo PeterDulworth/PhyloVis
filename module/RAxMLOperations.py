@@ -104,8 +104,7 @@ class RAxMLOperations(QtCore.QThread):
             # Move RAxML output files into their own destination folder - Windows
             os.rename("RAxML_bestTree.txt", output_directory + "\RAxML_ST_bestTree.txt")
             os.rename("RAxML_bipartitions.txt", output_directory + "\RAxML_ST_bipartitions.txt")
-            os.rename("RAxML_bipartitionsBranchLabels.txt",
-                      output_directory + "\RAxML_ST_bipartitionsBranchLabels.txt")
+            os.rename("RAxML_bipartitionsBranchLabels.txt", output_directory + "\RAxML_ST_bipartitionsBranchLabels.txt")
             os.rename("RAxML_bootstrap.txt", output_directory + "\RAxML_ST_bootstrap.txt")
             os.rename("RAxML_info.txt", output_directory + "\RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "\Topology_ST_bestTree.txt")
@@ -115,8 +114,7 @@ class RAxMLOperations(QtCore.QThread):
             # Move RAxML output files into their own destination folder - Mac
             os.rename("RAxML_bestTree.txt", output_directory + "/RAxML_ST_bestTree.txt")
             os.rename("RAxML_bipartitions.txt", output_directory + "/RAxML_ST_bipartitions.txt")
-            os.rename("RAxML_bipartitionsBranchLabels.txt",
-                      output_directory + "/RAxML_ST_bipartitionsBranchLabels.txt")
+            os.rename("RAxML_bipartitionsBranchLabels.txt", output_directory + "/RAxML_ST_bipartitionsBranchLabels.txt")
             os.rename("RAxML_bootstrap.txt", output_directory + "/RAxML_ST_bootstrap.txt")
             os.rename("RAxML_info.txt", output_directory + "/RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "/Topology_ST_bestTree.txt")
