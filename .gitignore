@@ -18,5 +18,6 @@ RAxML_SpeciesTree
 *.bkp
 !Luay.jpg
 !tree.png
+!warning.png
 plots/
 !testFiles/phylip.txt

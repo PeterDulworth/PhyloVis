@@ -4,7 +4,7 @@ import subprocess
 import shutil
 import os
 import re
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore
 from Bio import Phylo
 
 """
@@ -26,7 +26,6 @@ Peter Dulworth
 class RAxMLOperations(QtCore.QThread):
     def __init__(self, parent=None):
         super(RAxMLOperations, self).__init__(parent)
-
 
     def taxon_names_getter(self, phylip):
         """
@@ -51,7 +50,6 @@ class RAxMLOperations(QtCore.QThread):
             taxon_names.append(taxon)
 
         return taxon_names
-
 
     def raxml_species_tree(self, phylip, rooted=False, outgroup=None, customRax=False, customRaxCommand='', output_directory="RAxML_SpeciesTree"):
         """
@@ -98,7 +96,7 @@ class RAxMLOperations(QtCore.QThread):
 
         # If rooting is desired root the appropriate files
         if rooted:
-            self.rooter("RAxML_bestTree.txt" , outgroup)
+            self.rooter("RAxML_bestTree.txt", outgroup)
             # self.rooter("RAxML_result.txt", outgroup)
 
         # windows
@@ -133,7 +131,6 @@ class RAxMLOperations(QtCore.QThread):
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 100)
         self.emit(QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), 'Species Tree Generated', "'Show Details...' to view the species tree newick.", self.speciesTree)
 
-
     def rooter(self, newick_file, outgroup):
         """
         Rewrites tree newick strings to be rooted
@@ -149,7 +146,6 @@ class RAxMLOperations(QtCore.QThread):
 
         # Write the newick string over the previous one
         Phylo.write(tree, newick_file, "newick")
-
 
     def window_splitter(self, filename, window_size, step_size):
         """
@@ -226,7 +222,6 @@ class RAxMLOperations(QtCore.QThread):
                     file.write(window + "\n")
                     file.close()
 
-
     def raxml_windows(self, numBootstraps, model, rooted=False, outgroup=None, window_directory='windows', output_directory='RAxML_Files'):
         """
         Runs RAxML on files in the directory containing files from
@@ -268,7 +263,7 @@ class RAxMLOperations(QtCore.QThread):
                 # NOT custom raxml
                 if not self.isCustomRaxmlCommand:
                     if self.bootstrap:
-                        p = subprocess.Popen( "raxmlHPC -f a -x12345 -p 12345 -# {2} -m {3} -s {0} -n {1}".format(input_file, file_number, numBootstraps, model), shell=True)
+                        p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# {2} -m {3} -s {0} -n {1}".format(input_file, file_number, numBootstraps, model), shell=True)
                     else:
                         p = subprocess.Popen("raxmlHPC -d -p 12345 -m {2} -s {0} -n {1}".format(input_file, file_number, model), shell=True)
                 # custom raxml
@@ -292,12 +287,12 @@ class RAxMLOperations(QtCore.QThread):
                     # If rooting desired
                     # if self.rooted:
                     #     Create the tree object and root it
-                        # tree = Phylo.read(newick_file, "newick")
-                        # tree.rooted = True
-                        # tree.root_with_outgroup(outgroup)
-                        #
-                        # Write the newick string to a new file
-                        # Phylo.write(tree, topology_output_directory + "\Topology_bestTree." + file_number, "newick")
+                    # tree = Phylo.read(newick_file, "newick")
+                    # tree.rooted = True
+                    # tree.root_with_outgroup(outgroup)
+                    #
+                    # Write the newick string to a new file
+                    # Phylo.write(tree, topology_output_directory + "\Topology_bestTree." + file_number, "newick")
 
                     # Otherwise write the topology newick string to a file
                     # else:
@@ -377,7 +372,6 @@ class RAxMLOperations(QtCore.QThread):
 
                 percent_complete += 80 / len(os.listdir(window_directory))
                 self.emit(QtCore.SIGNAL('RAX_PER'), percent_complete)
-
 
     def run(self):
         try:
