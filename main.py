@@ -29,6 +29,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
         super(PhyloVisApp, self).__init__(parent)
 
+        filesToBeRemoved = ['RAxML_result', 'RAxML_randomTree', 'RAxML_log', 'RAxML_info', 'RAxML_bestTree', 'RAxML_bipartitions', 'RAxML_bipartitionsBranchLabels', 'RAxML_bootstrap']
+
+        for fileName in os.listdir('.'):
+            name = os.path.splitext(fileName)[0]
+            for file in filesToBeRemoved:
+                if name == file:
+                    os.remove(fileName)
+
         # if 'plots' folder doesn't exist -> create it
         if not os.path.isdir('plots'):
             os.mkdir('plots')
