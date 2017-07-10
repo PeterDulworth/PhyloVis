@@ -119,6 +119,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
+        # delete this eventually
         self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
@@ -127,14 +128,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # selecting a mode in the menu bar -> deselects all other modes first
         # change the input mode based on which mode is selected in the menu bar
-        self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax))
-        self.actionRax.triggered.connect(lambda: self.setWindow('inputPageRax'))
-        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter))
-        self.actionConverter.triggered.connect(lambda: self.setWindow('inputPageFileConverter'))
-        self.actionMS.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionMS))
-        self.actionMS.triggered.connect(lambda: self.setWindow('inputPageMS'))
-        self.actionDStatistic.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionDStatistic))
-        self.actionDStatistic.triggered.connect(lambda: self.setWindow('inputPageDStatistic'))
+        self.actionRax.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionRax, 'inputPageRax'))
+        self.actionConverter.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionConverter, 'inputPageFileConverter'))
+        self.actionMS.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionMS, 'inputPageMS'))
+        self.actionDStatistic.triggered.connect(lambda: self.ensureSingleModeSelected(self.actionDStatistic, 'inputPageDStatistic'))
 
         # triggers select file dialogs
         self.inputFileBtn.clicked.connect(lambda: self.getFileName(self.inputFileEntry))
@@ -168,13 +165,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), partial(self.message, type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
 
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.show)
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), self.circleGraphWindow.display_image)
+        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), lambda: self.openWindow(self.circleGraphWindow))
         self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
         self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
         self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
         self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), lambda: self.openWindow(self.heatMapWindow))
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), self.connectionTester)
         self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
         # run RAX_ML and generate graphs
@@ -582,12 +577,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.stackedWidget.setCurrentIndex(self.windows[window])
         self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
 
-    def ensureSingleModeSelected(self, mode_selected):
+    def ensureSingleModeSelected(self, mode_selected, window):
         for mode in self.menuMode.actions():
             if mode != mode_selected:
                 mode.setChecked(False)
 
         mode_selected.setChecked(True)
+        self.setWindow(window)
 
     def exportFile(self, fileName):
         extension = os.path.splitext(fileName)[1]
@@ -614,7 +610,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def openWindow(self, window):
         window.show()
-        window.display_image()
+        window.displayImage()
 
     def resizeEvent(self, event):
         print self.size()

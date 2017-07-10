@@ -104,9 +104,9 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
 
     # initialize main input window
-    form = TabWindow()
+    form = TabWindow('../imgs/tree.png', '../imgs/tree.png', x=0, y=0, scale=5)
     form.show()
-    form.display_image()
+    form.displayImages()
 
     # and execute the app
     sys.exit(app.exec_())

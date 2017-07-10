@@ -64,7 +64,7 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.image.setScaledContents(False)
         self.image.setPixmap(self.imagePixmap)
 
-    def display_image(self):
+    def displayImage(self):
         self.setBackgroundColor(QtCore.Qt.white)
         self.setImageQuality(self.scale)
         self.setImagePosition(self.x, self.y)
@@ -98,9 +98,9 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
 
     # initialize main input window
-    form = Window()
+    form = Window('../imgs/tree.png', scale=5)
     form.show()
-    form.display_image()
+    form.displayImage()
 
     # and execute the app
     sys.exit(app.exec_())
