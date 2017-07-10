@@ -268,7 +268,8 @@ class Board(QtGui.QFrame):
             self.curPiece.setShape(Tetrominoe.NoShape)
             self.timer.stop()
             self.isStarted = False
-            self.msg2Statusbar.emit("Game over")
+            # self.msg2Statusbar.emit("Game Over")
+            self.msg2Statusbar.emit(str(self.numLinesRemoved))
 
     def tryMove(self, newPiece, newX, newY):
 
