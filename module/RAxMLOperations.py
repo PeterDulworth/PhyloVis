@@ -8,7 +8,14 @@ from PyQt4 import QtCore, QtGui
 from Bio import Phylo
 
 """
-Functions for creating sequence windows and running RAxML.
+Functions:
+    __init__(self, parent=None)
+    taxon_names_getter(self, phylip)
+    raxml_species_tree(self, phylip, rooted=False, outgroup=None, customRax=False, customRaxCommand='', output_directory="RAxML_SpeciesTree")
+    rooter(self, newick_file, outgroup)
+    window_splitter(self, filename, window_size, step_size)
+    raxml_windows(self, numBootstraps, model, rooted=False, outgroup=None, window_directory='windows', output_directory='RAxML_Files')
+    run(self)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -19,6 +26,7 @@ Peter Dulworth
 class RAxMLOperations(QtCore.QThread):
     def __init__(self, parent=None):
         super(RAxMLOperations, self).__init__(parent)
+
 
     def taxon_names_getter(self, phylip):
         """
@@ -43,6 +51,7 @@ class RAxMLOperations(QtCore.QThread):
             taxon_names.append(taxon)
 
         return taxon_names
+
 
     def raxml_species_tree(self, phylip, rooted=False, outgroup=None, customRax=False, customRaxCommand='', output_directory="RAxML_SpeciesTree"):
         """
@@ -124,6 +133,7 @@ class RAxMLOperations(QtCore.QThread):
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 100)
         self.emit(QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), 'Species Tree Generated', "'Show Details...' to view the species tree newick.", self.speciesTree)
 
+
     def rooter(self, newick_file, outgroup):
         """
         Rewrites tree newick strings to be rooted
@@ -139,6 +149,7 @@ class RAxMLOperations(QtCore.QThread):
 
         # Write the newick string over the previous one
         Phylo.write(tree, newick_file, "newick")
+
 
     def window_splitter(self, filename, window_size, step_size):
         """
@@ -214,6 +225,7 @@ class RAxMLOperations(QtCore.QThread):
                     # Writes file to folder
                     file.write(window + "\n")
                     file.close()
+
 
     def raxml_windows(self, numBootstraps, model, rooted=False, outgroup=None, window_directory='windows', output_directory='RAxML_Files'):
         """
@@ -365,6 +377,7 @@ class RAxMLOperations(QtCore.QThread):
 
                 percent_complete += 80 / len(os.listdir(window_directory))
                 self.emit(QtCore.SIGNAL('RAX_PER'), percent_complete)
+
 
     def run(self):
         try:
