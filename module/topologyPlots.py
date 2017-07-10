@@ -20,7 +20,21 @@ import re
 
 
 """
-Functions for creating plots based on the topologies.
+Functions:
+    __init__(self, parent=None)
+    topology_counter(self, rooted=False, outgroup=None)
+    top_freqs(self, num, topologies_to_counts)
+    top_topologies(self, num, topologies)
+    windows_to_newick(self, top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=None)
+    topology_colors(self, wins_to_tops, tops_list)
+    donut_colors(self, top_topologies, tops_to_colors)
+    topology_donut(self, labels, sizes, donut_colors)
+    topology_scatter(self, wins_to_tops, scatter_colors, ylist)
+    topology_colorizer(self, color_scheme, rooted=False, outgroup=False)
+    top_topology_visualization(self)
+    generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative)
+    run(self)
+~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
@@ -99,6 +113,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return topologies_to_counts, unique_topologies_to_newicks
 
+
     def top_freqs(self, num, topologies_to_counts):
         """
         Makes three lists containing the top 'num' topology
@@ -142,6 +157,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return list_of_top_counts, labels, sizes
 
+
     def top_topologies(self, num, topologies):
         """
         Maps the top 'num' topologies to the number of
@@ -166,6 +182,7 @@ class TopologyPlotter(QtCore.QThread):
             top_topologies[tops[i][0]] = tops[i][1]
 
         return top_topologies
+
 
     def windows_to_newick(self, top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=None):
         """
@@ -227,6 +244,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return wins_to_tops, tops_list
 
+
     def topology_colors(self, wins_to_tops, tops_list):
         """
         Maps topologies to colors and makes two lists
@@ -267,6 +285,7 @@ class TopologyPlotter(QtCore.QThread):
 
         return tops_to_colors, scatter_colors, ylist
 
+
     def donut_colors(self, top_topologies, tops_to_colors):
         """
         Makes a color list formatted for use in the donut chart
@@ -297,6 +316,7 @@ class TopologyPlotter(QtCore.QThread):
                 donut_colors.append(color)
 
         return donut_colors
+
 
     def topology_donut(self, labels, sizes, donut_colors):
         """
@@ -339,6 +359,7 @@ class TopologyPlotter(QtCore.QThread):
         plt.clf()
 
         self.emit(QtCore.SIGNAL('DONUT_COMPLETE'))
+
 
     def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
         """
@@ -384,6 +405,7 @@ class TopologyPlotter(QtCore.QThread):
         plt.clf()
 
         self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
+
 
     def topology_colorizer(self, color_scheme, rooted=False, outgroup=False):
         """
@@ -668,6 +690,7 @@ class TopologyPlotter(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'))
 
+
     def run(self):
         print
         print 'TOPOLOGIES PLOTS INITIALIZED'
@@ -717,5 +740,3 @@ if __name__ == '__main__':
     #
     # elif platform == "darwin":
     #     os.system("open " + "GenomeAtlas" + ".png")
-
-

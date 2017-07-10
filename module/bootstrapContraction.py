@@ -5,7 +5,11 @@ import os
 from PyQt4 import QtCore
 
 """
-Functions for creating sequence windows and running RAxML.
+Functions:
+    __init__(self, parent=None)
+    contraction_threshold(self, tree_file, confidence_threshold)
+    internal_nodes_after_contraction(self, confidence_threshold)
+    double_line_graph_generator(self, list1, list2, xlabel, ylabel, name, confidence_threshold)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -15,6 +19,7 @@ Peter Dulworth
 class BootstrapContraction(QtCore.QThread):
     def __init__(self, parent=None):
         super(BootstrapContraction, self).__init__(parent)
+
 
     def contraction_threshold(self, tree_file, confidence_threshold):
         """

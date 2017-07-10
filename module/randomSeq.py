@@ -1,6 +1,16 @@
 ## random sequence generation
 import random
 
+"""
+Functions:
+    phylip(len, num, output_name)
+    fasta(len, num, output_name)
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
+
 # PHYLIP Format
 def phylip(len, num, output_name):
     """
@@ -61,4 +71,3 @@ def fasta(len, num, output_name):
 
 if __name__ == '__main__':
     fasta(100000, 10, "fasta.txt")
-

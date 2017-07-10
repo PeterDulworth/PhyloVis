@@ -7,7 +7,12 @@ from matplotlib.colors import LinearSegmentedColormap
 from PyQt4 import QtCore
 
 """
-Functions for creating sequence windows and running RAxML.
+Functions:
+    __init__(self, parent=None)
+    is_site_informative(self, site)    
+    calculate_informativeness(self, window_directory, window_offset)
+    line_graph_generator(self, dictionary, xlabel, ylabel, name)
+    heat_map_generator(self, dictionary, name)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -18,6 +23,7 @@ Peter Dulworth
 class InformativeSites(QtCore.QThread):
     def __init__(self, parent=None):
         super(InformativeSites, self).__init__(parent)
+
 
     def is_site_informative(self, site):
         """

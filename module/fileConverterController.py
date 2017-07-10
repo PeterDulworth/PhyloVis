@@ -1,5 +1,14 @@
 from Bio import AlignIO
 
+"""
+Functions:
+    file_converter(input_file, input_type, output_type, output_file)
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
+
 def file_converter(input_file, input_type, output_type, output_file):
     input_handle = open(input_file, "rU")
     output_handle = open(output_file, "w")

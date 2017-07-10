@@ -12,7 +12,16 @@ from PyQt4 import QtCore
 from sys import platform
 
 """
-Functions for calculating statistics for sequence windows and for comparison to species tree.
+Functions:
+    __init__(self, output_directory='RAxML_Files', parent=None)
+    newick_reformat(self, newick)
+    calculate_p_of_gt_given_st(self, species_tree, gene_tree)
+    calculate_windows_to_p_gtst(self, species_tree)
+    calculate_robinson_foulds(self, species_tree, gene_tree, weighted)
+    calculate_windows_to_rf(self, species_tree, weighted)
+    stat_scatter(self, stat_map, name, title, xlabel, ylabel)
+    calculate_d(self, alignment, window_size, window_offset, taxon1, taxon2, taxon3, taxon4)
+    run(self)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -23,6 +32,7 @@ class StatisticsCalculations(QtCore.QThread):
     def __init__(self, output_directory='RAxML_Files', parent=None):
         super(StatisticsCalculations, self).__init__(parent)
         self.output_directory = output_directory
+
 
     def newick_reformat(self, newick):
         """
