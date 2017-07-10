@@ -1,3 +1,4 @@
+## Table of Contents
 - [Introduction]()
 	- [Contributors](http://www.peterdulworth.com)
 - [Installation]()
