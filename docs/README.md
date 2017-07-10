@@ -12,23 +12,26 @@
 ## Introduction
 Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 ### Contributors
-Chabrielle Allen
-Travis Benedict
-Peter Dulworth
-Chill Leo
-Luay
+- [Chabrielle Allen]()
+- [Travis Benedict]()
+- [Peter Dulworth]()
+- [Chill Leo]()
+- [Luay]()
 
 ## Installation
-Install it
+Install it. How? We don't know.
 
 ## Basic Usage
 
 ### RAxML
+###### Henlo
 ### File Converter
 ### MS Comparison
 ### D Statistic
 
-## Other
+## More Examples
+
+## Detailed Input Documentation
 
 
 ```python
