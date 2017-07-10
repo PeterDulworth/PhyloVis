@@ -19,11 +19,3 @@ Install it
 ## Basic Usage
 
 ## Input/Output
-<<<<<<< HEAD
-
-
-
-
-
-=======
->>>>>>> edaea64864cbfe8c2429797a828d2f60bc9bbd8f
