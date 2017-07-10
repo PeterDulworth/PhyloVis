@@ -16,8 +16,8 @@ Topologies
 *.swo
 RAxML_SpeciesTree
 *.bkp
+plots/
 !Luay.jpg
 !tree.png
 !warning.png
-plots/
 !testFiles/phylip.txt
