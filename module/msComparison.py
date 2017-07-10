@@ -8,7 +8,7 @@ Functions:
     __init__(self, output_directory='RAxML_Files', parent=None)
     sites_to_newick_ms(self, input_file)
     sites_to_newick_rax(self, rax_dir, window_size, window_offset)
-    ms_rax_difference(self, sites_to_newick_ms_map, sites_to_newick_rax_map)
+    ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -102,18 +102,18 @@ class MsComparison(QtCore.QThread):
         return sites_to_newick
 
 
-    def ms_rax_difference(self, sites_to_newick_ms_map, sites_to_newick_rax_map):
+    def ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2):
         """
         Creates a mapping of sites to both the unweighted and weighted Robinson-Foulds Distance
         between the best tree outputted by MS and the best tree outputted by RAxML
         Input:
         sites_to_newick_ms_map --- a mapping of site indices to their corresponding best tree
-        newick string as outputted by MS
+        newick string
         sites_to_newick_rax_map --- a mapping of site indices to their corresponding best tree
-        newick string as outputted by RAxML
+        newick string
         Output:
-        sites_to_difference_w --- a mapping of sites to the weighted RF distance between the MS and RAxML tree
-        sites_to_difference_uw --- a mapping of sites to the unweighted RF distance between the MS and RAxML tree
+        sites_to_difference_w --- a mapping of sites to the weighted RF distance between the trees
+        sites_to_difference_uw --- a mapping of sites to the unweighted RF distance between the trees
         """
 
         # Initialize the mappings
@@ -121,20 +121,20 @@ class MsComparison(QtCore.QThread):
         sites_to_difference_uw = {}
 
         # The number of total sites in the alignment is the largest site index in either dictionary + 1
-        num_sites = max(max(sites_to_newick_ms_map.keys()), max((sites_to_newick_rax_map.keys()))) + 1
+        num_sites = max(max(sites_to_newick_1.keys()), max((sites_to_newick_2.keys()))) + 1
 
         # Iterate over each index
         for i in range(num_sites):
 
             # If the current site index exists in both mappings
-            if (i in sites_to_newick_ms_map) and (i in sites_to_newick_rax_map):
+            if (i in sites_to_newick_1) and (i in sites_to_newick_):
 
                 # Get the respective newick strings
-                ms_newick = sites_to_newick_ms_map[i]
-                rax_newick = sites_to_newick_rax_map[i]
+                newick_1 = sites_to_newick_1[i]
+                newick_2 = sites_to_newick_2[i]
 
                 # Do both the weighted and unweighted Robinson Foulds calculations
-                w_rf, uw_rf = self.statisticsCalculations.calculate_robinson_foulds(ms_newick, rax_newick, True)
+                w_rf, uw_rf = self.statisticsCalculations.calculate_robinson_foulds(newick_1, newick_2, True)
 
                 # Map the site to those distances
                 sites_to_difference_w[i] = w_rf
