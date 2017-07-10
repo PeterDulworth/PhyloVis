@@ -24,7 +24,8 @@ Install it. How? We don't know.
 ## Basic Usage
 
 ### RAxML
-###### Henlo
+#### Standard
+####Advanced
 ### File Converter
 ### MS Comparison
 ### D Statistic
