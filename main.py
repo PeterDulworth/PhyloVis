@@ -6,6 +6,7 @@ from PIL import Image
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from functools import partial
+import re
 
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow, msRobinsonFouldsWindow
@@ -334,6 +335,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.raxmlOperations.speciesTreeUseCustomRax = self.checkboxSpeciesTreeUseCustomRax.isChecked()
             self.raxmlOperations.speciesTreeCustomRaxmlCommand = self.speciesTreeRaxmlCommandEntry.text()
 
+            if self.checkboxSpeciesTreeUseCustomRax.isChecked() and re.search('([\-][n])|([\-][s])', self.speciesTreeRaxmlCommandEntry.text()):
+                self.message('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
+                return
+
+
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
             return
@@ -468,6 +474,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     raise ValueError, ("Invalid Number of Bootstraps", "Please enter an integer greater than 1.", None)
             else:
                 self.raxmlOperations.numBootstraps = 0
+
+            if self.checkBoxCustomRaxml.isChecked() and re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
+                raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
 
             self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
             self.raxmlOperations.customRaxmlCommand = self.customRaxmlCommandEntry.text()
