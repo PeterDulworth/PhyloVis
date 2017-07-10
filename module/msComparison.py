@@ -3,6 +3,18 @@ from natsort import natsorted
 import statisticCalculations as sc
 from PyQt4 import QtCore
 
+"""
+Functions:
+    __init__(self, output_directory='RAxML_Files', parent=None)
+    sites_to_newick_ms(self, input_file)
+    sites_to_newick_rax(self, rax_dir, window_size, window_offset)
+    ms_rax_difference(self, sites_to_newick_ms_map, sites_to_newick_rax_map)
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
+
 class MsComparison(QtCore.QThread):
     def __init__(self, output_directory='RAxML_Files', parent=None):
         super(MsComparison, self).__init__(parent)
@@ -90,7 +102,7 @@ class MsComparison(QtCore.QThread):
         return sites_to_newick
 
 
-    def ms_rax_difference(self, sites_to_newick_ms_map,  sites_to_newick_rax_map):
+    def ms_rax_difference(self, sites_to_newick_ms_map, sites_to_newick_rax_map):
         """
         Creates a mapping of sites to both the unweighted and weighted Robinson-Foulds Distance
         between the best tree outputted by MS and the best tree outputted by RAxML
@@ -145,7 +157,3 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
 
     ms.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
     ms.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices"," Unweighted Robinson-Foulds Distance")
-
-
-
-
