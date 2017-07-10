@@ -2,6 +2,14 @@ from window import Window
 from PyQt4 import QtGui
 import sys
 
+"""
+Functions:
+    __init__(self)
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
 
 if __name__ == '__main__':
     fileName = '../plots/PGTSTPlot.png'
@@ -12,6 +20,7 @@ else:
 class PGTSTWindow(Window):
     def __init__(self):
         Window.__init__(self, fileName, x=160, y=182, scale=1)
+
 
 if __name__ == '__main__':
     # test window if running locally

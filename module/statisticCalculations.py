@@ -9,6 +9,7 @@ from dendropy.calculate import treecompare
 import matplotlib.pyplot as plt
 import numpy as np
 from PyQt4 import QtCore
+from sys import platform
 
 """
 Functions:
@@ -79,23 +80,30 @@ class StatisticsCalculations(QtCore.QThread):
             with open(gene_tree) as f:
                 gene_tree = f.readline()
 
+
         # Check if the gene tree is formatted correctly for PhyloNet if not reformat it
         if gene_tree[-2] != ")" or gene_tree[-1] != ")":
-            # gene_tree = newick_reformat(gene_tree).replace("\n","")
             gene_tree = gene_tree.replace("\n","")
 
-        # IF YOU COMMENT THIS OUT AGAIN EVERYTHING WILL BREAK
-        # add quotes to the strings
-        species_tree = str(species_tree)
-        species_tree = "'"+ species_tree +"'"
-        gene_tree = "'" + gene_tree + "'"
+        if platform == "darwin":
+            # IF YOU COMMENT THIS OUT AGAIN EVERYTHING WILL BREAK
+            # add quotes to the strings
+            species_tree = str(species_tree)
+            species_tree = "'"+ species_tree +"'"
+            gene_tree = "'" + gene_tree + "'"
 
+        # species_tree = "(" + species_tree[:-1] + ")" + ";"
+        # gene_tree = "(" + gene_tree[:-1] + ")" + ";"
+
+        print "st", species_tree
+        print "gt", gene_tree
         # Run PhyloNet jar file
-        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen("java -jar ../pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
 
         # Read output and convert to float
         p_of_gt_given_st = p.stdout.readline()
 
+        print p_of_gt_given_st
         return p_of_gt_given_st
 
 
@@ -115,16 +123,20 @@ class StatisticsCalculations(QtCore.QThread):
         windows_to_p_gtst = {}
 
         # Iterate over each folder in the given directory
-        for filename in natsorted(os.listdir(self.output_directory)):
+        # for filename in natsorted(os.listdir(self.output_directory)):
+
+        #####################PUT PREVIOUS LINE BACK
+        for filename in natsorted(os.listdir("..\\Topologies")):
 
             # If file is the file with the best tree newick string
-            if os.path.splitext(filename)[0] == "RAxML_bestTree":
+            if os.path.splitext(filename)[0] == "Topology_bestTree":
 
                 window_num = (os.path.splitext(filename)[1]).replace(".","")
 
-                gene_tree_filename = os.path.join(self.output_directory, filename)
+                gene_tree_filename = os.path.join("..\\Topologies", filename)
 
                 p_gtst = self.calculate_p_of_gt_given_st(species_tree, gene_tree_filename)
+                print p_gtst
 
                 # Reformat output
                 p_gtst = float(p_gtst.replace('\r', '').replace('\n', ''))
@@ -445,12 +457,15 @@ if __name__ == '__main__':
     # alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
     # window_size = 50000
     # window_offset = 50000
+    species_tree = "C:\\Users\\travi\Documents\\PhyloVis\\RAxML_Files\\RAxML_bestTree.0"
     alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
     window_size = 50000
     window_offset = 50000
     sc = StatisticsCalculations()
     # d, windows_to_d = sc.calculate_d(window_directory, window_offset)
-    d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset, "H", "C", "G", "O")
-    print d
-    print windows_to_d
+    # d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset, "H", "C", "G", "O")
+    # print d
+    # print windows_to_d
+    windows_to_pgtst = sc.calculate_windows_to_p_gtst(species_tree)
+    print windows_to_pgtst
     # sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
