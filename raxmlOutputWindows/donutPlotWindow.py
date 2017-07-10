@@ -2,6 +2,14 @@ from window import Window
 from PyQt4 import QtGui
 import sys
 
+"""
+Functions:
+    __init__(self)
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
 
 if __name__ == '__main__':
     fileName = '../plots/topologyDonut.png'
@@ -21,4 +29,3 @@ if __name__ == '__main__':
     form.show()
     form.display_image()
     sys.exit(app.exec_())
-
