@@ -19,7 +19,7 @@ else:
 
 class HeatMapWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=120, y=142, scale=3)
+        Window.__init__(self, fileName, x=200, y=738, scale=3)
 
 
 if __name__ == '__main__':

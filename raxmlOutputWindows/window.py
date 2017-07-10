@@ -85,8 +85,8 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
     def closeEvent(self, QCloseEvent):
         self.emit(QtCore.SIGNAL("WINDOW_CLOSED"))
 
-    # def moveEvent(self, QMoveEvent):
-    #     print self.fileName, self.pos()
+    def moveEvent(self, QMoveEvent):
+        print self.fileName, self.pos()
 
 
 if __name__ == '__main__':

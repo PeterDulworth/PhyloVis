@@ -49,6 +49,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # set UI style -- options: u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)'
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Macintosh (aqua)'))
+        # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Motif'))
 
         self.dStatisticTaxonComboBoxes = [self.dTaxonComboBox1, self.dTaxonComboBox2, self.dTaxonComboBox3, self.dTaxonComboBox4]
         self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
@@ -78,15 +79,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
-        # mapping from: windows --> dictionary of page dimensions 493
+        # mapping from: windows --> dictionary of page dimensions
         self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 540}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+        # mapping from: windows --> dictionary of page dimensions
+        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 600, 'y': 300}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
         self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
         # if windows
         if sys.platform == 'win32':
-            # mapping from: windows --> dictionary of page dimensions 493
+            # mapping from: windows --> dictionary of page dimensions
             self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
         # initialize window
@@ -313,7 +316,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.robinsonFouldsWindow.displayUnweightedImage()
             if self.checkboxPGTST.isChecked():
                 self.pgtstWindow.show()
-                self.pgtstWindow.display_image()
+                self.pgtstWindow.displayImage()
 
     def generateSpeciesTree(self):
         # Error handling for input file
@@ -575,6 +578,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def setWindow(self, window):
         self.stackedWidget.setCurrentIndex(self.windows[window])
         self.resize(self.windowSizes[window]['x'], self.windowSizes[window]['y'])
+        self.move(self.windowLocations[window]['x'], self.windowLocations[window]['y'])
 
     def ensureSingleModeSelected(self, mode_selected, window):
         for mode in self.menuMode.actions():
@@ -631,5 +635,6 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     # initialize main input window
     form = PhyloVisApp()  # We set the form to be our PhyloVisApp (design)
     form.show()  # Show the form
+    form.move(600, 300)
 
     sys.exit(app.exec_())  # and execute the app
