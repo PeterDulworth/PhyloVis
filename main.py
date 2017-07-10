@@ -71,7 +71,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions 493
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 600}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 540}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -102,6 +102,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outgroupGroupBox.setEnabled(False)
         self.speciesTreeOutGroupGroupBox.setEnabled(False)
         self.dStatisticLabel.setEnabled(False)
+        self.speciesTreeRaxmlCommandEntry.setEnabled(False)
+        self.customRaxmlCommandEntry.setEnabled(False)
         self.progressBar.reset()
         self.generateSpeciesTreeProgressBar.reset()
         self.rooted = False
@@ -109,6 +111,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
+        self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
+        self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
+        self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
 
         # **************************** RAXML PAGE ****************************#
 
@@ -141,7 +146,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupLabel))
         self.checkboxBootstrap.stateChanged.connect(lambda: self.toggleEnabled(self.bootstrapGroupBox))
         self.checkboxRooted.stateChanged.connect(lambda: self.toggleEnabled(self.outgroupGroupBox))
+        self.checkBoxCustomRaxml.stateChanged.connect(lambda: self.toggleEnabled(self.customRaxmlCommandEntry))
         self.checkboxSpeciesTreeRooted.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeOutGroupGroupBox))
+        self.checkboxSpeciesTreeUseCustomRax.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeRaxmlCommandEntry))
 
         # RAxML Events
         self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
@@ -324,11 +331,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             else:
                 self.raxmlOperations.speciesTreeOutGroup = None
 
+            self.raxmlOperations.speciesTreeUseCustomRax = self.checkboxSpeciesTreeUseCustomRax.isChecked()
+            self.raxmlOperations.speciesTreeCustomRaxmlCommand = self.speciesTreeRaxmlCommandEntry.text()
+
         except ValueError, (ErrorTitle, ErrorMessage):
             self.message(str(ErrorTitle), str(ErrorMessage), None)
             return
 
-        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment, rooted=self.raxmlOperations.speciesTreeRooted, outgroup=self.raxmlOperations.speciesTreeOutGroup)
+        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment, rooted=self.raxmlOperations.speciesTreeRooted, outgroup=self.raxmlOperations.speciesTreeOutGroup, customRax=self.raxmlOperations.speciesTreeUseCustomRax, customRaxCommand=self.raxmlOperations.speciesTreeCustomRaxmlCommand)
 
     def updatedDisplayWindows(self, btnClicked=None):
         if btnClicked == None or btnClicked.isChecked():

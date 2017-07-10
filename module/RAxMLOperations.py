@@ -44,7 +44,7 @@ class RAxMLOperations(QtCore.QThread):
 
         return taxon_names
 
-    def raxml_species_tree(self, phylip, rooted=False, outgroup=None):
+    def raxml_species_tree(self, phylip, rooted=False, outgroup=None, customRax=False, customRaxCommand='', output_directory="RAxML_SpeciesTree"):
         """
         Runs RAxML on input PHYLIP file to create a species
         tree.
@@ -55,23 +55,21 @@ class RAxMLOperations(QtCore.QThread):
         Returns:
         A species tree folder.
         """
-        # Create output directory
-        output_directory = "RAxML_SpeciesTree"
 
         # Delete the folder and remake it if it already exists
         if os.path.exists(output_directory):
             shutil.rmtree(output_directory)
-
         os.makedirs(output_directory)
-
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 10)
 
-        # Run RAxML
-        p = subprocess.Popen(
-            "raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n txt".format(phylip),
-            shell=True)
-        # Wait until command line is finished running
-        p.wait()
+        if customRax:
+            # run RAxML & wait until command line is finished running
+            p = subprocess.Popen(customRaxCommand + " -s {0} -n txt".format(phylip), shell=True)
+            p.wait()
+        else:
+            # run RAxML & wait until command line is finished running
+            p = subprocess.Popen("raxmlHPC -f a -x12345 -p 12345 -# 2 -m GTRGAMMA -s {0} -n txt".format(phylip), shell=True)
+            p.wait()
 
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 60)
 
@@ -82,13 +80,11 @@ class RAxMLOperations(QtCore.QThread):
         with open("RAxML_bestTree.txt") as f:
             # Read newick string from file
             topology = f.readline()
-
             # Delete float branch lengths, ":" and "\n" from newick string
             topology = ((re.sub(float_pattern, '', topology)).replace(":", "")).replace("\n", "")
             file = open("Topology_bestTree.txt", "w")
             file.write(topology)
             file.close()
-
         self.emit(QtCore.SIGNAL('SPECIES_TREE_PER'), 80)
 
         # If rooting is desired root the appropriate files
@@ -96,6 +92,7 @@ class RAxMLOperations(QtCore.QThread):
             self.rooter("RAxML_bestTree.txt" , outgroup)
             # self.rooter("RAxML_result.txt", outgroup)
 
+        # windows
         if platform == "win32":
             # Move RAxML output files into their own destination folder - Windows
             os.rename("RAxML_bestTree.txt", output_directory + "\RAxML_ST_bestTree.txt")
@@ -106,6 +103,7 @@ class RAxMLOperations(QtCore.QThread):
             os.rename("RAxML_info.txt", output_directory + "\RAxML_ST_info.txt")
             os.rename("topology_bestTree.txt", output_directory + "\Topology_ST_bestTree.txt")
 
+        # mac
         elif platform == "darwin":
             # Move RAxML output files into their own destination folder - Mac
             os.rename("RAxML_bestTree.txt", output_directory + "/RAxML_ST_bestTree.txt")

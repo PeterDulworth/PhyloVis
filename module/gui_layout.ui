@@ -49,6 +49,9 @@
      <layout class="QHBoxLayout" name="inputMainHorizontalLayout">
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -56,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -333,7 +336,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -1068,81 +1071,15 @@
                      <number>5</number>
                     </property>
                     <item>
-                     <widget class="QLineEdit" name="customRaxmlCommandEntry"/>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <spacer name="verticalSpacer_6">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_17">
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="customRaxmlDirectoryLabel">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>18</height>
-                       </size>
+                     <widget class="QLineEdit" name="customRaxmlCommandEntry">
+                      <property name="autoFillBackground">
+                       <bool>true</bool>
                       </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>14</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
+                      <property name="styleSheet">
+                       <string notr="true"/>
                       </property>
-                      <property name="text">
-                       <string>Custom RAxML Directory</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_20">
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <widget class="QLabel" name="customRaxmlDirectoryDescriptionLabel">
-                      <property name="font">
-                       <font>
-                        <italic>true</italic>
-                       </font>
-                      </property>
-                      <property name="text">
-                       <string>If you have already run RAxML select the alignment directory below.</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_6">
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <widget class="QLineEdit" name="customRaxmlDirectoryEntry"/>
-                    </item>
-                    <item>
-                     <widget class="QToolButton" name="customRaxmlDirectoryBtn">
-                      <property name="text">
-                       <string>...</string>
+                      <property name="frame">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -1194,9 +1131,9 @@
                      <number>5</number>
                     </property>
                     <item>
-                     <widget class="QLabel" name="label_12">
+                     <widget class="QCheckBox" name="checkboxSpeciesTreeUseCustomRax">
                       <property name="text">
-                       <string>RAxML Command:</string>
+                       <string>Custom RAxML Command</string>
                       </property>
                      </widget>
                     </item>
@@ -1341,7 +1278,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>278</width>
+               <width>451</width>
                <height>157</height>
               </rect>
              </property>
@@ -1379,7 +1316,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>All Trees</string>
+                        <string>Top Topolgies</string>
                        </property>
                        <property name="checked">
                         <bool>false</bool>
@@ -1419,7 +1356,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Scatter Plot</string>
+                        <string>Windows to Top Topologies</string>
                        </property>
                        <property name="checked">
                         <bool>false</bool>
@@ -1459,7 +1396,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Donut Plot</string>
+                        <string>Top Topology Frequency</string>
                        </property>
                        <property name="checked">
                         <bool>false</bool>
@@ -1510,7 +1447,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Circle Graph</string>
+                        <string>Genome Atlas</string>
                        </property>
                        <property name="checked">
                         <bool>false</bool>
@@ -1544,7 +1481,7 @@
                         </font>
                        </property>
                        <property name="text">
-                        <string>Heat Map</string>
+                        <string>Informative Sites Heat Map</string>
                        </property>
                        <property name="checked">
                         <bool>false</bool>
@@ -1581,8 +1518,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>728</width>
-               <height>478</height>
+               <width>457</width>
+               <height>253</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2764,15 +2701,6 @@
            </layout>
           </item>
          </layout>
-        </widget>
-        <widget class="QWidget" name="outputPage">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_5"/>
         </widget>
        </widget>
       </item>
