@@ -80,7 +80,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 459, 'y': 390}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 459, 'y': 415}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
         self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 600, 'y': 300}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
@@ -187,6 +187,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # **************************** CONVERTER PAGE ****************************#
 
         self.fileConverterBtn.clicked.connect(lambda: self.getFileName(self.fileConverterEntry))
+        self.outputFileConverterBtn.clicked.connect(lambda: self.saveFileAs(self.outputFileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
         # **************************** MS PAGE ****************************#
@@ -319,23 +320,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def convertFile(self):
         try:
             self.fileToBeConverted = str(self.fileConverterEntry.text())
+            if self.fileToBeConverted == '':
+                raise ValueError, ('No Input File Selected', 'Please choose an input file.', None)
 
-            if self.fileToBeConverted == "":
-                raise ValueError, (1, "Please choose a file")
-        except ValueError, (ErrorNumber, ErrorMessage):
-            QtGui.QMessageBox.about(self, "Invalid Input", str(ErrorMessage))
+            self.convertedFileName = str(self.outputFileConverterEntry.text())
+            if self.convertedFileName == '':
+                raise ValueError, ('No Output File Selected', 'Please choose an output file.', None)
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
 
-        outputDir = os.path.splitext(self.fileToBeConverted)[0] + '.phylip-sequential.txt'
+        self.convertedFileName = self.convertedFileName + '.' + self.outputFormatComboBox.currentText().lower() +'.txt'
+
         try:
-            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), 'phylip-sequential', outputDir)
-        except IOError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "File does not exist.")
-            return
+            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), self.outputFormatComboBox.currentText().lower(), self.convertedFileName)
         except ValueError:
-            QtGui.QMessageBox.about(self, "Invalid Input", "Inputted file type does not match selected file type.")
+            self.message('Incorrect File Format', 'Selected file does not match selected format.', 'Please check to make sure selected file is of the selected format.')
             return
-        QtGui.QMessageBox.about(self, "File Converted", "Your file has been converted. It lives at " + str(os.path.splitext(self.fileToBeConverted)[0]))
+
+        self.message("File Converted", "Your file has been converted.", "It lives at:\n" + self.convertedFileName)
 
     # **************************** RAXML PAGE ****************************#
 
@@ -621,6 +625,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         mode_selected.setChecked(True)
         self.setWindow(window)
+
+    def saveFileAs(self, textEntry):
+        # extension = os.path.splitext(fileName)[1]
+        textEntry.setText(QtGui.QFileDialog.getSaveFileName(self, 'Export'))
+        # copyfile(fileName, name)
 
     def exportFile(self, fileName):
         extension = os.path.splitext(fileName)[1]

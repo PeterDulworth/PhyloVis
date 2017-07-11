@@ -20,5 +20,5 @@ def file_converter(input_file, input_type, output_type, output_file):
     input_handle.close()
 
 if __name__ == '__main__':
-    file_converter('testFiles/phylip.txt', 'phylip-relaxed', 'fasta', 'testFiles/xxx.txt')
+    file_converter('../testFiles/phylip.txt', 'phylip-relaxed', 'fasta', '../henlo')
     # file_converter("seqfileWF1200m4Formatted2", "fasta", "phylip-sequential", "ChillLeo.phylip")

@@ -1951,6 +1951,9 @@
                 <pointsize>13</pointsize>
                </font>
               </property>
+              <property name="text">
+               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/chillTestFile.fasta</string>
+              </property>
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -1990,17 +1993,17 @@
               </property>
               <item>
                <property name="text">
+                <string>FASTA</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>CLUSTAL</string>
                </property>
               </item>
               <item>
                <property name="text">
                 <string>EMBOSS</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>FASTA</string>
                </property>
               </item>
               <item>
@@ -2087,6 +2090,9 @@
                 <pointsize>13</pointsize>
                </font>
               </property>
+              <property name="text">
+               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/henlo</string>
+              </property>
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -2126,6 +2132,11 @@
               </property>
               <item>
                <property name="text">
+                <string>PHYLIP</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>CLUSTAL</string>
                </property>
               </item>
@@ -2162,11 +2173,6 @@
               <item>
                <property name="text">
                 <string>NEXUS</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PHYLIP</string>
                </property>
               </item>
               <item>
