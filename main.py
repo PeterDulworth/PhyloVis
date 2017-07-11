@@ -15,7 +15,7 @@ from module import gui_layout as gui
 from module import RAxMLOperations as ro
 from module import topologyPlots as tp
 from module import statisticCalculations as sc
-from module import fileConverterController as fcc
+from module import fileConverterController as fc
 from module import informativeSites as infSites
 from module import bootstrapContraction as bc
 from module import msComparison as ms
@@ -76,6 +76,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.bootstrapContraction = bc.BootstrapContraction()
         # create new instance of MsComparison class
         self.msComparison = ms.MsComparison()
+        # create new instance of FileConverter class
+        self.fileConverter = fc.FileConverter()
 
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
@@ -334,7 +336,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.convertedFileName = self.convertedFileName + '.' + self.outputFormatComboBox.currentText().lower() +'.txt'
 
         try:
-            fcc.file_converter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), self.outputFormatComboBox.currentText().lower(), self.convertedFileName)
+            self.fileConverter.fileConverter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), self.outputFormatComboBox.currentText().lower(), self.convertedFileName)
         except ValueError:
             self.message('Incorrect File Format', 'Selected file does not match selected format.', 'Please check to make sure selected file is of the selected format.')
             return
