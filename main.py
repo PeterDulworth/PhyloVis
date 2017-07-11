@@ -80,7 +80,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 540}, 'inputPageFileConverter': {'x': 459, 'y': 245 + 40}, 'inputPageMS': {'x': 459, 'y': 306}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 540}, 'inputPageFileConverter': {'x': 459, 'y': 285}, 'inputPageMS': {'x': 459, 'y': 390}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
         # mapping from: windows --> dictionary of page dimensions
         self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 600, 'y': 300}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
@@ -121,6 +121,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
+        self.msStackedWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
         # delete this eventually
         self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
@@ -193,6 +194,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msCompareBtn.clicked.connect(self.runMSCompare)
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.getFileName(self.msFileEntry))
+        self.msSecondFileBtn.clicked.connect(lambda: self.getFileName(self.msSecondFileEntry))
+
+        self.radioBtnRaxml.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(0))
+        self.radioBtnMs.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(1))
 
         # **************************** D STATISTIC PAGE ****************************#
 
@@ -267,18 +272,32 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def runMSCompare(self):
 
-        # run logic
-        sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
-        sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
-        sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+        try:
+            # ms -> raxml directory comparison
+            if self.radioBtnRaxml.isChecked():
+                sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
+                sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
+                sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
 
-        # generate graphs
-        self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
-        self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+                # generate graphs
+                self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
+                self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+            # ms -> ms comparison
+            else:
+                sites_to_newick_ms_map1 = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
+                sites_to_newick_ms_map2 = self.msComparison.sites_to_newick_ms(self.msSecondFileEntry.text())
+                sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map1, sites_to_newick_ms_map2)
+
+                # generate graphs
+                self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Weighted Robinson-Foulds Distance")
+                self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(ErrorTitle, ErrorMessage, ErrorDescription)
+            return
 
         # display window
-        self.msComparisonWindow.show()
-        self.msComparisonWindow.displayImages()
+        self.openWindow(self.msComparisonWindow, type='tabs')
 
     # **************************** CONVERTER PAGE ****************************#
 
@@ -611,9 +630,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         textEntry.setText(name)
         textEntry.emit(QtCore.SIGNAL("DIRECTORY_SELECTED"))
 
-    def openWindow(self, window):
+    def openWindow(self, window, type='std'):
         window.show()
-        window.displayImage()
+        if type == 'std':
+            window.displayImage()
+        elif type == 'tabs':
+            window.displayImages()
 
     def resizeEvent(self, event):
         print self.size()

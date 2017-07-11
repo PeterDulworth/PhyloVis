@@ -127,7 +127,7 @@ class MsComparison(QtCore.QThread):
         for i in range(num_sites):
 
             # If the current site index exists in both mappings
-            if (i in sites_to_newick_1) and (i in sites_to_newick_):
+            if (i in sites_to_newick_1) and (i in sites_to_newick_2):
 
                 # Get the respective newick strings
                 newick_1 = sites_to_newick_1[i]
