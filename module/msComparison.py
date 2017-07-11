@@ -16,7 +16,7 @@ Peter Dulworth
 """
 
 class MsComparison(QtCore.QThread):
-    def __init__(self, output_directory='RAxML_Files', parent=None):
+    def __init__(self, msToRax=True, output_directory='RAxML_Files', parent=None):
         super(MsComparison, self).__init__(parent)
         self.output_directory = output_directory
 
@@ -123,8 +123,13 @@ class MsComparison(QtCore.QThread):
         # The number of total sites in the alignment is the largest site index in either dictionary + 1
         num_sites = max(max(sites_to_newick_1.keys()), max((sites_to_newick_2.keys()))) + 1
 
+        # initialize percent complete
+        percentComplete = 0
+
         # Iterate over each index
         for i in range(num_sites):
+
+            percentComplete += (float(i) / float(num_sites)) * 100.0
 
             # If the current site index exists in both mappings
             if (i in sites_to_newick_1) and (i in sites_to_newick_2):
@@ -140,15 +145,29 @@ class MsComparison(QtCore.QThread):
                 sites_to_difference_w[i] = w_rf
                 sites_to_difference_uw[i] = uw_rf
 
+            self.emit(QtCore.SIGNAL('MS_PER'), percentComplete)
+
         return sites_to_difference_w, sites_to_difference_uw
 
+    def run(self):
+        # ms -> raxml directory comparison
+        if self.msToRax:
+            sites_to_newick_ms_map = self.sites_to_newick_ms(self.msFile1)
+            sites_to_newick_rax_map = self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset)
+            sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+        # ms -> ms comparison
+        else:
+            sites_to_newick_ms_map1 = self.sites_to_newick_ms(self.msFile1)
+            sites_to_newick_ms_map2 = self.sites_to_newick_ms(self.msFile2)
+            sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map1, sites_to_newick_ms_map2)
+
+        self.emit(QtCore.SIGNAL('MS_COMPLETE'), sites_to_difference_w, sites_to_difference_uw)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     ms = MsComparison()
 
-    # input_file = "treefileWF1200"
-    input_file = "testFiles/fakeMS.txt"
-    sites_to_newick_ms_map = ms.sites_to_newick_ms(input_file)
+    input_file = "../testFiles/fakeMS.txt"
+    sites_to_newick_ms_map = ms.sites_to_newick_ms('../RAxML_Files')
 
     window_size, window_offset = 10, 10
     sites_to_newick_rax_map = ms.sites_to_newick_rax(ms.output_directory, window_size, window_offset)

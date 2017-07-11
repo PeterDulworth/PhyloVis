@@ -2104,7 +2104,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string/>
+               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/fakeMS.txt</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -2390,7 +2390,7 @@
                    <item>
                     <widget class="QLineEdit" name="msSecondFileEntry">
                      <property name="text">
-                      <string/>
+                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/fakeMS2.txt</string>
                      </property>
                      <property name="readOnly">
                       <bool>true</bool>

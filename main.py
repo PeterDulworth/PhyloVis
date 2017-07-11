@@ -199,6 +199,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.radioBtnRaxml.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(0))
         self.radioBtnMs.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(1))
 
+        self.connect(self.msComparison, QtCore.SIGNAL('MS_COMPLETE'), self.plotMSCompare)
+        self.connect(self.msComparison, QtCore.SIGNAL('MS_PER'), self.msProgressBar.setValue)
+
         # **************************** D STATISTIC PAGE ****************************#
 
         # set background image
@@ -275,26 +278,34 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             # ms -> raxml directory comparison
             if self.radioBtnRaxml.isChecked():
-                sites_to_newick_ms_map = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
-                sites_to_newick_rax_map = self.msComparison.sites_to_newick_rax(self.msComparison.output_directory, int(self.msWindowSizeEntry.text()), int(self.msWindowOffsetEntry.text()))
-                sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+                self.msComparison.msToRax=True
+                self.msComparison.msFile1 = self.msFileEntry.text()
+                self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
+                self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
+                self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
 
-                # generate graphs
-                self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
-                self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+                self.msComparison.start()
+
             # ms -> ms comparison
             else:
-                sites_to_newick_ms_map1 = self.msComparison.sites_to_newick_ms(self.msFileEntry.text())
-                sites_to_newick_ms_map2 = self.msComparison.sites_to_newick_ms(self.msSecondFileEntry.text())
-                sites_to_difference_w, sites_to_difference_uw = self.msComparison.ms_rax_difference(sites_to_newick_ms_map1, sites_to_newick_ms_map2)
+                self.msComparison.msToRax = False
+                self.msComparison.msFile1 = self.msFileEntry.text()
+                self.msComparison.msFile2 = self.msSecondFileEntry.text()
 
-                # generate graphs
-                self.statisticsCalculations.stat_scatter(sites_to_difference_w, "plots/WRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Weighted Robinson-Foulds Distance")
-                self.statisticsCalculations.stat_scatter(sites_to_difference_uw, "plots/UWRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+                self.msComparison.start()
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
+
+    def plotMSCompare(self, gw, guw):
+        # generate graphs
+        if self.msComparison.msToRax:
+            self.statisticsCalculations.stat_scatter(gw, "plots/WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
+            self.statisticsCalculations.stat_scatter(guw, "plots/UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Unweighted Robinson-Foulds Distance")
+        else:
+            self.statisticsCalculations.stat_scatter(gw, "plots/WRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Weighted Robinson-Foulds Distance")
+            self.statisticsCalculations.stat_scatter(guw, "plots/UWRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Unweighted Robinson-Foulds Distance")
 
         # display window
         self.openWindow(self.msComparisonWindow, type='tabs')
