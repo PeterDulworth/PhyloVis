@@ -192,6 +192,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outputFileConverterBtn.clicked.connect(lambda: self.saveFileAs(self.outputFileConverterEntry))
         self.runFileConverterBtn.clicked.connect(lambda: self.convertFile())
 
+        self.connect(self.fileConverter, QtCore.SIGNAL('FILE_CONVERTER_COMPLETE'), lambda: self.fileConverterProgressBar.setValue(100))
+        self.connect(self.fileConverter, QtCore.SIGNAL('FILE_CONVERTER_COMPLETE'), self.message)
+        self.connect(self.fileConverter, QtCore.SIGNAL('FILE_CONVERTER_ERR'), self.message)
+
         # **************************** MS PAGE ****************************#
 
         self.msCompareBtn.clicked.connect(self.runMSCompare)
@@ -335,13 +339,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.convertedFileName = self.convertedFileName + '.' + self.outputFormatComboBox.currentText().lower() +'.txt'
 
-        try:
-            self.fileConverter.fileConverter(self.fileToBeConverted, self.inputFormatComboBox.currentText().lower(), self.outputFormatComboBox.currentText().lower(), self.convertedFileName)
-        except ValueError:
-            self.message('Incorrect File Format', 'Selected file does not match selected format.', 'Please check to make sure selected file is of the selected format.')
-            return
-
-        self.message("File Converted", "Your file has been converted.", "It lives at:\n" + self.convertedFileName)
+        self.fileConverter.inputFileName = self.fileToBeConverted
+        self.fileConverter.outputFileName = self.convertedFileName
+        self.fileConverter.inputFormat = self.inputFormatComboBox.currentText().lower()
+        self.fileConverter.outputFormat = self.outputFormatComboBox.currentText().lower()
+        self.fileConverter.start()
 
     # **************************** RAXML PAGE ****************************#
 
