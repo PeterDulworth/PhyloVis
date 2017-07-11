@@ -224,9 +224,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.statisticsCalculations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), partial(self.message, type='Err'))
 
         # reset progress bar when window is closed
-        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dProgressBar.setValue(0))
-        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticLabel.setEnabled(False))
-        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), lambda: self.dStatisticValueLabel.setEnabled(False))
+        self.connect(self.dStatisticWindow, QtCore.SIGNAL('WINDOW_CLOSED'), self.dStatisticPlotClosed)
 
     # **************************** WELCOME PAGE ****************************#
 
@@ -270,6 +268,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.dStatisticValueLabel.setText(str(self.dVal))
         self.dStatisticLabel.setEnabled(True)
         self.dStatisticValueLabel.setEnabled(True)
+
+    def dStatisticPlotClosed(self):
+        self.dProgressBar.setValue(0)
+        self.dStatisticLabel.setEnabled(False)
+        self.dStatisticValueLabel.setEnabled(False)
 
     # **************************** MS PAGE ****************************#
 

@@ -23,7 +23,6 @@ class MsComparison(QtCore.QThread):
         # create new instance of Statistics Calculations class
         self.statisticsCalculations = sc.StatisticsCalculations(output_directory=output_directory)
 
-
     def sites_to_newick_ms(self, input_file):
         """
         Creates a mapping of sites to their corresponding best tree newick string as outputted by MS
@@ -61,7 +60,6 @@ class MsComparison(QtCore.QThread):
 
 
             return sites_to_newick
-
 
     def sites_to_newick_rax(self, rax_dir, window_size, window_offset):
         """
@@ -101,7 +99,6 @@ class MsComparison(QtCore.QThread):
 
         return sites_to_newick
 
-
     def ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2):
         """
         Creates a mapping of sites to both the unweighted and weighted Robinson-Foulds Distance
@@ -123,13 +120,13 @@ class MsComparison(QtCore.QThread):
         # The number of total sites in the alignment is the largest site index in either dictionary + 1
         num_sites = max(max(sites_to_newick_1.keys()), max((sites_to_newick_2.keys()))) + 1
 
-        # initialize percent complete
+        # initialize percentComplete
         percentComplete = 0
 
         # Iterate over each index
         for i in range(num_sites):
 
-            percentComplete += (float(i) / float(num_sites)) * 100.0
+            percentComplete += (1.0 / float(num_sites)) * 100
 
             # If the current site index exists in both mappings
             if (i in sites_to_newick_1) and (i in sites_to_newick_2):
