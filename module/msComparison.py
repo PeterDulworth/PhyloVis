@@ -151,7 +151,11 @@ class MsComparison(QtCore.QThread):
         if self.msToRax:
             sites_to_newick_ms_map = self.sites_to_newick_ms(self.msFile1)
             sites_to_newick_rax_map = self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset)
-            sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+            try:
+                sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+            except ValueError:
+                self.emit(QtCore.SIGNAL('MS_ERR'), 'Invalid Directory', 'Please choose another RAxML Directory', None)
+                return
         # ms -> ms comparison
         else:
             sites_to_newick_ms_map1 = self.sites_to_newick_ms(self.msFile1)

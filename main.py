@@ -201,6 +201,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.connect(self.msComparison, QtCore.SIGNAL('MS_COMPLETE'), self.plotMSCompare)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_PER'), self.msProgressBar.setValue)
+        self.connect(self.msComparison, QtCore.SIGNAL('MS_ERR'), self.message)
 
         # **************************** D STATISTIC PAGE ****************************#
 
@@ -281,7 +282,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             # ms -> raxml directory comparison
             if self.radioBtnRaxml.isChecked():
-                self.msComparison.msToRax=True
+                self.msComparison.msToRax = True
                 self.msComparison.msFile1 = self.msFileEntry.text()
                 self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
                 self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
