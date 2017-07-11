@@ -1,4 +1,5 @@
 from Bio import AlignIO
+from PyQt4 import QtCore
 
 """
 Functions:
@@ -9,16 +10,23 @@ Travis Benedict
 Peter Dulworth
 """
 
-def file_converter(input_file, input_type, output_type, output_file):
-    input_handle = open(input_file, "rU")
-    output_handle = open(output_file, "w")
+class FileConverter(QtCore.QThread):
+    def __init__(self, parent=None):
+        super(FileConverter, self).__init__(parent)
 
-    alignments = AlignIO.parse(input_handle, input_type)
-    AlignIO.write(alignments, output_handle, output_type)
+    def fileConverter(self, input_file, input_type, output_type, output_file):
+        input_handle = open(input_file, "rU")
+        output_handle = open(output_file, "w")
 
-    output_handle.close()
-    input_handle.close()
+        alignments = AlignIO.parse(input_handle, input_type)
+        AlignIO.write(alignments, output_handle, output_type)
 
+        output_handle.close()
+        input_handle.close()
+
+# local tests
 if __name__ == '__main__':
-    file_converter('../testFiles/phylip.txt', 'phylip-relaxed', 'fasta', '../henlo')
-    # file_converter("seqfileWF1200m4Formatted2", "fasta", "phylip-sequential", "ChillLeo.phylip")
+    # create new instance of class
+    fcc = FileConverter()
+    # test converter function
+    fcc.fileConverter('../testFiles/phylip.txt', 'phylip-relaxed', 'fasta', '../henlo')
