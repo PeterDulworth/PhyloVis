@@ -1,6 +1,7 @@
 ## Table of Contents
 - [Introduction](#introduction)
 	- [Contributors](#contributors)
+	- [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 	- [Modes](#modes)
@@ -17,6 +18,11 @@ Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 - [Peter Dulworth]()
 - [Chill Leo]()
 - [Luay]()
+
+### Dependencies
+- [BioPython]()
+- [PyQt4]()
+- [etc...]()
 
 ## Installation
 Install it. How? We don't know.
