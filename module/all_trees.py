@@ -10,6 +10,7 @@ from Bio import Phylo
 from cStringIO import StringIO
 from ete3 import Tree
 
+
 def calculate_num_trees(n):
     """
     Calculate the number of unique topologies on n taxa
@@ -19,8 +20,8 @@ def calculate_num_trees(n):
     num_trees --- the number of trees
     """
 
-    numerator = math.factorial((2*n - 5))
-    denominator = math.factorial((n - 3)) * 2**(n - 3)
+    numerator = math.factorial((2 * n - 5))
+    denominator = math.factorial((n - 3)) * 2 ** (n - 3)
     num_trees = numerator / denominator
 
     return num_trees
@@ -28,25 +29,41 @@ def calculate_num_trees(n):
 
 def gendistinct(n):
     """
-    Generate all full binary trees with n nodes
+    Generate all full binary trees with n leaves
     Input:
     n --- the number of leaves
     Output:
     dp[-1] --- the set of all full binary trees with n nodes
     """
+
     leafnode = '(.)'
     dp = []
     newset = set()
     newset.add(leafnode)
     dp.append(newset)
-    for i in range(1,n):
+
+    for i in range(1, n):
         newset = set()
         for j in range(i):
             for leftchild in dp[j]:
-                for rightchild in dp[i-j-1]:
+                for rightchild in dp[i - j - 1]:
                     newset.add('(' + '.' + leftchild + rightchild + ')')
         dp.append(newset)
+
+    # newdpbish = []
+    #
+    # for i in dp[-1]:
+    #     i = i.replace(')(', '),(')
+    #     i = i.replace('(.)','*')
+    #     i = i.replace('.','')
+    #     newdpbish.append(i)
+    #
+    # return newdpbish
+    #
     return dp[-1]
+
+print gendistinct(4)
+print len(gendistinct(4))
 
 
 def generate_all_trees(taxa):
@@ -66,21 +83,25 @@ def generate_all_trees(taxa):
 
     # Get all possible permutations of the taxa
     taxa_orders = itertools.permutations(taxa)
+    taxa_orders = list(taxa_orders)
+
 
     all_trees = []
 
     # Iterate over each tree in the set
     for tree in trees:
+        # print 'tree', tree
         # Reformat the tree
-        tree = tree.replace(".", "")
+        tree = tree.replace('.', '')
 
         # Iterate over each permutation of taxa
         for taxa_perm in taxa_orders:
+            # print 'perm', taxa_perm
 
             # Create a copy of the tree
             bi_tree = tree
 
-            # Replae the leaves with taxons and reformat string
+            # replace the leaves with taxons and reformat string
             for i in range(len(taxa_perm)):
                 taxon = taxa_perm[i] + ","
                 bi_tree = bi_tree.replace("()", taxon, 1)
@@ -96,11 +117,13 @@ def generate_all_trees(taxa):
             bi_tree = bi_tree + ";"
             all_trees.append(bi_tree)
 
+            # print bi_tree
+
     return all_trees
 
+# generate_all_trees(['A','B','C','O'])
 
 def generate_unique_trees(taxa, outgroup):
-
     # Create a set for unique trees
     unique_trees = set([])
 
@@ -131,21 +154,15 @@ def generate_unique_trees(taxa, outgroup):
 
             # If rf distance is 0 the tree is not unique
             if rf_distance == 0:
-
                 is_unique = False
 
         if is_unique:
-
             unique_trees.add(tree.write())
 
     return unique_trees
 
 
-
-
-
-
-taxa = ["H","C","G","O","P","B","Q"]
+taxa = ["H", "C", "O", "P", "X", "Q"]
 outgroup = "O"
 n = len(taxa)
 print calculate_num_trees(n), "Actual"
