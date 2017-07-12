@@ -127,6 +127,8 @@ def generate_unique_trees(taxa, outgroup):
     # Create a set for unique trees
     unique_trees = set([])
 
+    unique_newicks = set([])
+
     all_trees = generate_all_trees(taxa)
 
     # t1 = Tree('(((a,b),c), ((e, f), g));')
@@ -146,7 +148,7 @@ def generate_unique_trees(taxa, outgroup):
         # Iterate the unique trees for comparison
         for unique_tree in unique_trees:
 
-            unique_tree = Tree(unique_tree)
+            # unique_tree = Tree(unique_tree)
             # unique_tree.set_outgroup(outgroup)
 
             # Compute robinson-foulds distance
@@ -157,12 +159,15 @@ def generate_unique_trees(taxa, outgroup):
                 is_unique = False
 
         if is_unique:
-            unique_trees.add(tree.write())
+            unique_trees.add(tree)
 
-    return unique_trees
+    for tree in unique_trees:
+        unique_newicks.add(tree.write())
+        
+    return unique_newicks
 
 
-taxa = ["H", "C", "O", "P", "X", "Q"]
+taxa = ["H", "C", "O", "P", "X"]
 outgroup = "O"
 n = len(taxa)
 print calculate_num_trees(n), "Actual"
