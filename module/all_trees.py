@@ -151,3 +151,73 @@ all = generate_all_trees(taxa)
 print len(all), "All"
 unique = generate_unique_trees(taxa, outgroup)
 print len(unique), "Unique"
+
+
+def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
+    """
+    Compute p(g|S) and p(g|N) for each g in unique_trees and 
+    map the tree newick string to those values
+    Inputs:
+    species_tree --- the species tree newick string for the taxa
+    species_network --- the network newick string derived from adding a branch to the species tree between the interested taxa
+    unique_trees --- the set of all unique topologies over n taxa
+    Output:
+    trees_to_pgS--- a mapping of tree newick strings to their p(g|S) values 
+    trees_to_pgN--- a mapping of tree newick strings to their p(g|N) values
+    """
+
+    trees_to_pgS = {}
+    trees_to_pgN = {}
+
+    # Iterate over the trees
+    for tree in unique_trees:
+
+        # Run PhyloNet p(g|S) jar file
+        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
+                             shell=True)
+
+        # Read output and convert to float
+        p_of_g_given_s = p.stdout.readline()
+
+        # Run PhyloNet p(g|N) jar file
+        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
+                             shell=True)
+
+        # Read output and convert to float
+        p_of_g_given_n = p.stdout.readline()
+
+        trees_to_pgS[tree] = p_of_g_given_s
+        trees_to_pgN[tree] = p_of_g_given_n
+
+    return trees_to_pgS, trees_to_pgN
+
+
+def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
+    """
+    Get the subset of trees whose position changes when ordering based on p(g|S) and p(g|N)
+    Input:
+    trees_to_pgS--- a mapping of tree newick strings to their p(g|S) values 
+    trees_to_pgN--- a mapping of tree newick strings to their p(g|N) values
+    Output:
+    interesting_trees --- the subset of tree topologies to look at for determining introgression
+    """
+
+    interesting_trees = set({})
+
+    # Create lists of tuples with newicks strings and their probability values
+    # Sort the lists by their probability values
+    pgS_list = sorted(trees_to_pgS.items(), key=lambda x: x[1])
+    pgN_list = sorted(trees_to_pgN.items(), key=lambda x: x[1])
+
+    # Iterate over indices in the lists
+    for i in range(len(pgN_list)):
+
+        # If the newick strings are not the same at each index add them to a set
+        if pgS_list[i][0] != pgN_list[i][0]:
+            interesting_trees.add(pgS_list[i][0])
+            interesting_trees.add(pgN_list[i][0])
+
+
+    return interesting_trees
+
+
