@@ -131,12 +131,6 @@ def generate_unique_trees(taxa, outgroup):
 
     all_trees = generate_all_trees(taxa)
 
-    # t1 = Tree('(((a,b),c), ((e, f), g));')
-    # t2 = Tree('(((a,b),c), ((e, f), g));')
-    # # rf, max_rf, common_leaves, parts_t1, parts_t2 = \
-    # print type(t1)
-    # print t1.robinson_foulds(t2)[0]
-
     # Iterate over each tree in all_trees
     for tree in all_trees:
 
