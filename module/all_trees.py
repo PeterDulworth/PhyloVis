@@ -1,13 +1,7 @@
 import re
-import dendropy
 from dendropy import Tree
-import copy
-from dendropy.calculate import treecompare
 import itertools
 import math
-from collections import defaultdict
-from Bio import Phylo
-from cStringIO import StringIO
 from ete3 import Tree
 
 
@@ -161,7 +155,7 @@ def generate_unique_trees(taxa, outgroup):
     return unique_newicks
 
 
-taxa = ["H", "C", "O", "P", "X",]
+taxa = ["H", "C", "O", "P", "X"]
 outgroup = "O"
 n = len(taxa)
 print calculate_num_trees(n), "Actual"
