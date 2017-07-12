@@ -167,7 +167,7 @@ def generate_unique_trees(taxa, outgroup):
     return unique_newicks
 
 
-taxa = ["H", "C", "O", "P", "X","B",'D']
+taxa = ["H", "C", "O", "P", "X",]
 outgroup = "O"
 n = len(taxa)
 print calculate_num_trees(n), "Actual"
@@ -178,4 +178,3 @@ print len(all), "All"
 unique = generate_unique_trees(taxa, outgroup)
 print len(unique), "Unique"
 print unique
-
