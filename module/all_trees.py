@@ -44,20 +44,7 @@ def gendistinct(n):
                     newset.add('(' + '.' + leftchild + rightchild + ')')
         dp.append(newset)
 
-    # newdpbish = []
-    #
-    # for i in dp[-1]:
-    #     i = i.replace(')(', '),(')
-    #     i = i.replace('(.)','*')
-    #     i = i.replace('.','')
-    #     newdpbish.append(i)
-    #
-    # return newdpbish
-    #
     return dp[-1]
-
-print gendistinct(4)
-print len(gendistinct(4))
 
 
 def generate_all_trees(taxa):
@@ -115,7 +102,6 @@ def generate_all_trees(taxa):
 
     return all_trees
 
-# generate_all_trees(['A','B','C','O'])
 
 def generate_unique_trees(taxa, outgroup):
     # Create a set for unique trees
