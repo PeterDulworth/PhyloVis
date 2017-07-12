@@ -20,8 +20,8 @@ def calculate_num_trees(n):
     """
 
     numerator = math.factorial((2*n - 5))
-    denominator = (math.factorial((n - 3)) * 2**(n - 3))
-    num_trees = numerator/denominator
+    denominator = math.factorial((n - 3)) * 2**(n - 3)
+    num_trees = numerator / denominator
 
     return num_trees
 

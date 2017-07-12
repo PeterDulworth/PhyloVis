@@ -22,7 +22,8 @@ Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 ### Dependencies
 - [BioPython]()
 - [PyQt4]()
-- [etc...]()
+- [DendroPy](https://www.dendropy.org/)
+- [MatPlotLib]()
 
 ## Installation
 Install it. How? We don't know.
