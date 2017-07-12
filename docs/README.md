@@ -20,10 +20,10 @@ Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 - [Luay]()
 
 ### Dependencies
-- [BioPython]()
-- [PyQt4]()
+- [BioPython](http://biopython.org/wiki/Documentation)
+- [PyQt4](http://pyqt.sourceforge.net/Docs/PyQt4/)
 - [DendroPy](https://www.dendropy.org/)
-- [MatPlotLib]()
+- [MatPlotLib](https://matplotlib.org/)
 
 ## Installation
 Install it. How? We don't know.
