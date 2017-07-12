@@ -178,5 +178,3 @@ print len(all), "All"
 unique = generate_unique_trees(taxa, outgroup)
 print len(unique), "Unique"
 print unique
-
-
