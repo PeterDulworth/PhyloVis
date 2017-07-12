@@ -162,7 +162,7 @@ def generate_unique_trees(taxa, outgroup):
     return unique_trees
 
 
-taxa = ["H", "C", "O", "P", "X", "Q"]
+taxa = ["H", "C", "O", "P", "X","B",'D']
 outgroup = "O"
 n = len(taxa)
 print calculate_num_trees(n), "Actual"
