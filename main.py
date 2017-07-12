@@ -129,6 +129,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
+        self.outputFileConverterEntry.setText(os.getcwd() + '/convertedFile')
 
         # **************************** RAXML PAGE ****************************#
 

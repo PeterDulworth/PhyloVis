@@ -2075,6 +2075,18 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_23">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>RAxML uses phylip-sequential form.</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_32">
             <item>
              <widget class="QLabel" name="label_21">
@@ -2132,6 +2144,11 @@
               </property>
               <item>
                <property name="text">
+                <string>PHYLIP-sequential</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
                 <string>PHYLIP</string>
                </property>
               </item>
@@ -2173,11 +2190,6 @@
               <item>
                <property name="text">
                 <string>NEXUS</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PHYLIP-sequential</string>
                </property>
               </item>
               <item>
