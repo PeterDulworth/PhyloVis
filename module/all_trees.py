@@ -157,7 +157,7 @@ def generate_unique_trees(taxa, outgroup):
 
     for tree in unique_trees:
         unique_newicks.add(tree.write())
-        
+
     return unique_newicks
 
 
@@ -171,4 +171,3 @@ all = generate_all_trees(taxa)
 print len(all), "All"
 unique = generate_unique_trees(taxa, outgroup)
 print len(unique), "Unique"
-print unique
