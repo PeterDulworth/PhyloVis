@@ -66,11 +66,11 @@ def network_tree(species_tree, network_map):
     for j in range(len(taxon)):
         # add 'start' node to network
         if taxon[j] in network_map.keys():
-            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1', network)
+            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1:0::0.5', network)
 
         # add 'end' node to network
         elif taxon[j] in network_map.values():
-            network = re.sub(taxon[j], '(#H1,' + taxon[j] + ')', network)
+            network = re.sub(taxon[j], '(#H1:0::0.5,' + taxon[j] + ')', network)
 
     # regular expression for labels in network tree
     labels = ', n\d- '
@@ -258,14 +258,14 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
     for tree in unique_trees:
 
         # Run PhyloNet p(g|S) jar file
-        p = subprocess.Popen("java -jar ../pstgt.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
+        p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
         p_of_g_given_s = p.stdout.readline()
 
         # Run PhyloNet p(g|N) jar file
-        p = subprocess.Popen("java -jar ../pstgt.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
+        p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
@@ -305,7 +305,8 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
 
     return interesting_trees
 
-species_tree = "((((H:0.8,C:0.8):0.8,G:0.8):0.8,B):0.8,O);"
+# species_tree = "((((H:0.8,C:0.8):0.8,G:0.8):0.8,B):0.8,O);"
+species_tree = ""
 network_map = {"G":"H"}
 taxa = ["H", "C", "O", "G", "B"]
 outgroup = "O"
