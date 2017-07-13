@@ -13,9 +13,9 @@
 ## Introduction
 Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 ### Contributors
-- [Chabrielle Allen]()
-- [Travis Benedict]()
-- [Peter Dulworth]()
+- [Chabrielle Allen](https://github.com/chaballen)
+- [Travis Benedict](https://github.com/travisbenedict)
+- [Peter Dulworth](https://github.com/PeterDulworth)
 - [Chill Leo]()
 - [Luay]()
 
