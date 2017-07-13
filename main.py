@@ -82,9 +82,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 459, 'y': 415}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 585}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 600, 'y': 300}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
+        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 180}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -123,7 +123,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
-        self.msStackedWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
         self.outputFileConverterEntry.setText(os.getcwd() + '/convertedFile')
 
@@ -201,16 +200,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # **************************** MS PAGE ****************************#
 
         self.msCompareBtn.clicked.connect(self.runMSCompare)
-        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.getFileName(self.msFileEntry))
         self.msSecondFileBtn.clicked.connect(lambda: self.getFileName(self.msSecondFileEntry))
-
-        self.radioBtnRaxml.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(0))
-        self.radioBtnMs.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(1))
 
         self.connect(self.msComparison, QtCore.SIGNAL('MS_COMPLETE'), self.plotMSCompare)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_PER'), self.msProgressBar.setValue)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_ERR'), self.message)
+
+        self.checkboxCompareAgainstMS.clicked.connect(lambda: self.toggleEnabled(self.msMSCompareGroupBox))
+        self.checkboxCompareAgainstRaxml.clicked.connect(lambda: self.toggleEnabled(self.msRaxmlCompareGroupBox))
+
+        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
 
         self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('HL1', 'entryName', 'btnName'))
 
@@ -325,25 +325,31 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # display window
         self.openWindow(self.msComparisonWindow, type='tabs')
 
+    additionalFileCounter = 0
+
     def addFileEntry(self, horizontalLayoutName, entryName, btnName):
+        self.additionalFileCounter += 1
+
         # create horizontal layout
         HL = QtGui.QHBoxLayout()
-        HL.setObjectName(horizontalLayoutName)
+        HL.setObjectName(horizontalLayoutName + str(self.additionalFileCounter))
 
         # create text entry and add to horizontal layout
         entry = QtGui.QLineEdit(self.groupBox_3)
         entry.setReadOnly(True)
-        entry.setObjectName(entryName)
+        entry.setObjectName(entryName + str(self.additionalFileCounter))
         HL.addWidget(entry)
 
         # create btn and add to horizontal layout
         btn = QtGui.QToolButton(self.groupBox_3)
-        btn.setObjectName(btnName)
+        btn.setObjectName(btnName + str(self.additionalFileCounter))
         btn.setText('...')
         HL.addWidget(btn)
 
-        self.resize(self.width(), self.height() + 21)
+        self.resize(self.width(), self.height() + 30)
         self.msFileUploadMasterVL.addLayout(HL)
+
+        btn.clicked.connect(lambda: self.getFileName(entry))
 
     # **************************** CONVERTER PAGE ****************************#
 
