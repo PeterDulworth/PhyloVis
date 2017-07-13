@@ -66,11 +66,11 @@ def network_tree(species_tree, network_map):
     for j in range(len(taxon)):
         # add 'start' node to network
         if taxon[j] in network_map.keys():
-            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1', network)
+            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1:0::0.5', network)
 
         # add 'end' node to network
         elif taxon[j] in network_map.values():
-            network = re.sub(taxon[j], '(#H1,' + taxon[j] + ')', network)
+            network = re.sub(taxon[j], '(#H1:0::0.5,' + taxon[j] + ')', network)
 
     # regular expression for labels in network tree
     labels = ', n\d- '
