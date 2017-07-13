@@ -1,8 +1,73 @@
 import re
+import os
 from dendropy import Tree
 import itertools
 import math
 from ete3 import Tree
+
+"""
+Functions:
+    
+~
+Chabrielle Allen
+Travis Benedict
+Peter Dulworth
+"""
+
+def network_tree(species_tree, network_map):
+    """
+    Takes
+    """
+    # check for a species tree file
+    if os.path.isfile(species_tree):
+        with open(species_tree) as f:
+            s_tree = f.readline()
+
+    # check for a species tree string
+    else:
+        s_tree = species_tree
+
+    # regular expression for commas in species tree
+    commas = '[,]'
+
+    # split species tree into parts for labeling
+    parts = re.split(commas, s_tree)
+
+    # initialize network tree
+    network = ''
+
+    for i in range(len(parts) - 1):
+        # label each node in tree
+        part = parts[i] + ', n' + str(i) + '- '
+
+        # add part to network
+        network += part
+
+    # add last part to network
+    network += parts[len(parts) - 1]
+
+    # regular expression for taxa
+    taxa = '[A-Z]'
+
+    # get list of taxa in network tree
+    taxon = re.findall(taxa, network)
+
+    for j in range(len(taxon)):
+        # add 'start' node to network
+        if taxon[j] in network_map.keys():
+            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1', network)
+
+        # add 'end' node to network
+        elif taxon[j] in network_map.values():
+            network = re.sub(taxon[j], '(#H1,' + taxon[j] + ')', network)
+
+    # regular expression for labels in network tree
+    labels = ', n\d- '
+
+    # remove node labels at beginning of node
+    network = re.sub(labels, ',', network)
+
+    return network
 
 
 def calculate_num_trees(n):
