@@ -61,7 +61,7 @@ class Snake(QtGui.QWidget):
         self.lastKeyPress = 'RIGHT'
         self.timer = QtCore.QBasicTimer()
         self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y]]
-        self.initialLength = 1
+        self.initialLength = 100
         for i in range(1, self.initialLength + 1):
             self.snakeArray.append([self.x - (i * 12), self.y])
         self.score = self.initialLength
