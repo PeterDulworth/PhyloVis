@@ -62,8 +62,8 @@ class Snake(QtGui.QWidget):
         self.lastKeyPress = 'RIGHT'
         self.timer = QtCore.QBasicTimer()
         self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y]]
-        for i in range(1, 11):
-            self.snakeArray.append([self.x, self.y - (i * 12)])
+        for i in range(1, 101):
+            self.snakeArray.append([self.x - (i * 12), self.y])
         # self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y], [self.x - 36, self.y], [self.x - 48, self.y], [self.x - 60, self.y], [self.x - 72, self.y], [self.x - 84, self.y], [self.x - 96, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y], [self.x - 24, self.y]]
         self.foodx = 0
         self.foody = 0
