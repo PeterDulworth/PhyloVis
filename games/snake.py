@@ -12,7 +12,7 @@ class Snake(QtGui.QWidget):
         self.initUI()
 
     def initUI(self):
-        self.highscore = 72
+        self.highscore = 80
         self.newGame()
         self.setStyleSheet("QWidget { background: #A9F5D0 }")
         self.setFixedSize(300, 300)
@@ -32,6 +32,7 @@ class Snake(QtGui.QWidget):
 
     def keyPressEvent(self, e):
         if not self.isPaused:
+            print self.snakeArray
             # print "inflection point: ", self.x, " ", self.y
             if e.key() == QtCore.Qt.Key_Up and self.lastKeyPress != 'UP' and self.lastKeyPress != 'DOWN':
                 self.direction("UP")
@@ -55,12 +56,15 @@ class Snake(QtGui.QWidget):
             self.close()
 
     def newGame(self):
-        self.score = 0
         self.x = 12
         self.y = 36
         self.lastKeyPress = 'RIGHT'
         self.timer = QtCore.QBasicTimer()
         self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y]]
+        self.initialLength = 100
+        for i in range(1, self.initialLength + 1):
+            self.snakeArray.append([self.x - (i * 12), self.y])
+        self.score = self.initialLength
         self.foodx = 0
         self.foody = 0
         self.isPaused = False

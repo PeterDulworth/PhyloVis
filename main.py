@@ -212,6 +212,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.msComparison, QtCore.SIGNAL('MS_PER'), self.msProgressBar.setValue)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_ERR'), self.message)
 
+        self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('HL1', 'entryName', 'btnName'))
+
         # **************************** D STATISTIC PAGE ****************************#
 
         # set background image
@@ -322,6 +324,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # display window
         self.openWindow(self.msComparisonWindow, type='tabs')
+
+    def addFileEntry(self, horizontalLayoutName, entryName, btnName):
+        # create horizontal layout
+        HL = QtGui.QHBoxLayout()
+        HL.setObjectName(horizontalLayoutName)
+
+        # create text entry and add to horizontal layout
+        entry = QtGui.QLineEdit(self.groupBox_3)
+        entry.setReadOnly(True)
+        entry.setObjectName(entryName)
+        HL.addWidget(entry)
+
+        # create btn and add to horizontal layout
+        btn = QtGui.QToolButton(self.groupBox_3)
+        btn.setObjectName(btnName)
+        btn.setText('...')
+        HL.addWidget(btn)
+
+        self.resize(self.width(), self.height() + 21)
+        self.msFileUploadMasterVL.addLayout(HL)
 
     # **************************** CONVERTER PAGE ****************************#
 
