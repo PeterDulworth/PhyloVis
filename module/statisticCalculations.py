@@ -91,7 +91,7 @@ class StatisticsCalculations(QtCore.QThread):
         gene_tree = "'" + gene_tree + "'"
 
         # Run PhyloNet jar file
-        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
+        p = subprocess.Popen("java -jar ./unstable.jar {0} {1}".format(species_tree, gene_tree), stdout=subprocess.PIPE, shell=True)
 
         # Read output and convert to float
         p_of_gt_given_st = p.stdout.readline()
