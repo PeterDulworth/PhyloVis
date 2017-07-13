@@ -16,7 +16,17 @@ Peter Dulworth
 
 def network_tree(species_tree, network_map):
     """
-    Takes
+    Creates a network tree based on the species tree
+    and the two leaves to be connected.
+
+    Inputs:
+    species_tree -- generated or inputted file or newick
+                    string
+    network_map  -- inputted mapping of leaves where nodes
+                    will be added
+
+    Returns:
+    A newick string network with the added nodes.
     """
     # check for a species tree file
     if os.path.isfile(species_tree):
