@@ -4,6 +4,7 @@ from dendropy import Tree
 import itertools
 import math
 from ete3 import Tree
+import subprocess
 
 """
 Functions:
@@ -179,6 +180,20 @@ def generate_all_trees(taxa):
 
 
 def generate_unique_trees(taxa, outgroup):
+    """
+    Generate the set of unique trees over a set of taxa with an outgroup
+    Inputs:
+    taxa --- a list of taxa to be used as the leaves of trees
+    outgroup --- the outgroup to root at
+    Output:
+    unique_newicks --- a set of all unique topologies over the given taxa
+    """
+
+    # Regular expression for identifying floats
+    float_pattern = "([+-]?\\d*\\.\\d+)(?![-+0-9\\.])"
+    # Regular expression for removing branch lengths and confidence values
+    pattern2 = "(([\\d][\:][\\d]|[\\d][\:])|[\:][\\d])"
+
     # Create a set for unique trees
     unique_trees = set([])
 
@@ -197,9 +212,6 @@ def generate_unique_trees(taxa, outgroup):
         # Iterate the unique trees for comparison
         for unique_tree in unique_trees:
 
-            # unique_tree = Tree(unique_tree)
-            # unique_tree.set_outgroup(outgroup)
-
             # Compute robinson-foulds distance
             rf_distance = tree.robinson_foulds(unique_tree)[0]
 
@@ -210,22 +222,20 @@ def generate_unique_trees(taxa, outgroup):
         if is_unique:
             unique_trees.add(tree)
 
+    # Iterate over the trees
     for tree in unique_trees:
-        unique_newicks.add(tree.write())
+
+        # Get newick strings from the tree objects
+        tree = tree.write()
+
+        # Get rid of branch lengths in the newick strings
+        tree = (re.sub(float_pattern, '', tree))
+        tree = (re.sub(pattern2, '', tree)).replace(":", "")
+
+        # Add the newick strings to the set of unique newick strings
+        unique_newicks.add(tree)
 
     return unique_newicks
-
-
-taxa = ["H", "C", "O", "P", "X"]
-outgroup = "O"
-n = len(taxa)
-print calculate_num_trees(n), "Actual"
-# print gendistinct(n)
-all = generate_all_trees(taxa)
-# print all
-print len(all), "All"
-unique = generate_unique_trees(taxa, outgroup)
-print len(unique), "Unique"
 
 
 def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
@@ -248,14 +258,14 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
     for tree in unique_trees:
 
         # Run PhyloNet p(g|S) jar file
-        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
+        p = subprocess.Popen("java -jar ../pstgt.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
         p_of_g_given_s = p.stdout.readline()
 
         # Run PhyloNet p(g|N) jar file
-        p = subprocess.Popen("java -jar ./pstgt.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
+        p = subprocess.Popen("java -jar ../pstgt.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
@@ -294,5 +304,29 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
 
 
     return interesting_trees
+
+species_tree = "((((H:0.8,C:0.8):0.8,G:0.8):0.8,B):0.8,O);"
+network_map = {"G":"H"}
+taxa = ["H", "C", "O", "G", "B"]
+outgroup = "O"
+
+network_tree = network_tree(species_tree, network_map)
+print network_tree
+unique = generate_unique_trees(taxa, outgroup)
+trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
+print trees_to_pgS
+print trees_to_pgN
+print determine_interesting_trees(trees_to_pgS, trees_to_pgN)
+
+
+# n = len(taxa)
+# print calculate_num_trees(n), "Actual"
+# # print gendistinct(n)
+# all = generate_all_trees(taxa)
+# # print all
+# print len(all), "All"
+# unique = generate_unique_trees(taxa, outgroup)
+# print len(unique), "Unique"
+# all = generate_all_trees(taxa)
 
 
