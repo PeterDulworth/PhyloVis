@@ -56,12 +56,12 @@ class Snake(QtGui.QWidget):
             self.close()
 
     def newGame(self):
-        self.x = 12
-        self.y = 36
+        self.x = 0
+        self.y = 24
         self.lastKeyPress = 'RIGHT'
         self.timer = QtCore.QBasicTimer()
         self.snakeArray = [[self.x, self.y], [self.x - 12, self.y], [self.x - 24, self.y]]
-        self.initialLength = 100
+        self.initialLength = 60
         for i in range(1, self.initialLength + 1):
             self.snakeArray.append([self.x - (i * 12), self.y])
         self.score = self.initialLength
