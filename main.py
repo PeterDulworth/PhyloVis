@@ -82,9 +82,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 459, 'y': 415}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 585}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 600, 'y': 300}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
+        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 180}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -123,7 +123,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.stackedWidget.setCurrentIndex(0)
         self.raxmlToolBox.setCurrentIndex(0)
         self.raxmlOptionsTabWidget.setCurrentIndex(0)
-        self.msStackedWidget.setCurrentIndex(0)
         self.resize(self.windowSizes['welcomePage']['x'], self.windowSizes['welcomePage']['y'])
         self.outputFileConverterEntry.setText(os.getcwd() + '/convertedFile')
 
@@ -201,18 +200,19 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # **************************** MS PAGE ****************************#
 
         self.msCompareBtn.clicked.connect(self.runMSCompare)
-        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
         self.msFileBtn.clicked.connect(lambda: self.getFileName(self.msFileEntry))
         self.msSecondFileBtn.clicked.connect(lambda: self.getFileName(self.msSecondFileEntry))
-
-        self.radioBtnRaxml.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(0))
-        self.radioBtnMs.clicked.connect(lambda: self.msStackedWidget.setCurrentIndex(1))
 
         self.connect(self.msComparison, QtCore.SIGNAL('MS_COMPLETE'), self.plotMSCompare)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_PER'), self.msProgressBar.setValue)
         self.connect(self.msComparison, QtCore.SIGNAL('MS_ERR'), self.message)
 
-        self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('HL1', 'entryName', 'btnName'))
+        self.checkboxCompareAgainstMS.clicked.connect(lambda: self.toggleEnabled(self.msMSCompareGroupBox))
+        self.checkboxCompareAgainstRaxml.clicked.connect(lambda: self.toggleEnabled(self.msRaxmlCompareGroupBox))
+
+        self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
+
+        self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('msAdditionalFileHorizontalLayout', 'msAdditionalFileEntry', 'msAdditionalFileBtn', 'msRemoveFileBtn'))
 
         # **************************** D STATISTIC PAGE ****************************#
 
@@ -289,25 +289,30 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     # **************************** MS PAGE ****************************#
 
     def runMSCompare(self):
-
         try:
-            # ms -> raxml directory comparison
-            if self.radioBtnRaxml.isChecked():
+            self.msComparison.msToRax = False
+            self.msComparison.msFiles = []
+            self.msComparison.msFiles.append(self.checkEntryPopulated(self.msFileEntry, errorTitle='Missing MS Truth File', errorMessage='Please select an MS Truth file.'))
+
+            if self.checkboxCompareAgainstMS.isChecked():
+                self.msComparison.msFiles.append(self.msSecondFileEntry.text())
+
+                for i in range(len(self.additionalFileEntryNames)):
+                    entry = self.findChild(QtGui.QLineEdit, self.additionalFileEntryNames[i])
+                    self.msComparison.msFiles.append(self.checkEntryPopulated(entry, errorTitle='Blank Field', errorMessage='Field ' + str(i + 1) + ' is blank. Please select a file.'))
+
+            if self.checkboxCompareAgainstRaxml.isChecked():
                 self.msComparison.msToRax = True
-                self.msComparison.msFile1 = self.msFileEntry.text()
-                self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
-                self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
-                self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
 
+                self.msComparison.raxmlDir = self.checkEntryPopulated(self.msRaxmlDirectoryEntry)
+                self.msComparison.windowSize = self.checkEntryPopulated(self.msWindowSizeEntry)
+                self.msComparison.windowOffset = self.checkEntryPopulated(self.msWindowOffsetEntry)
+
+
+            if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.start()
-
-            # ms -> ms comparison
             else:
-                self.msComparison.msToRax = False
-                self.msComparison.msFile1 = self.msFileEntry.text()
-                self.msComparison.msFile2 = self.msSecondFileEntry.text()
-
-                self.msComparison.start()
+                raise ValueError('Nothing to Compare Against','Please compare against a raxml directory and/or additional MS files.','n/a')
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
@@ -325,38 +330,56 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # display window
         self.openWindow(self.msComparisonWindow, type='tabs')
 
-    def addFileEntry(self, horizontalLayoutName, entryName, btnName):
+    additionalFileCounter = 0
+    additionalFileEntryNames = []
+
+    def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
+        self.additionalFileCounter += 1
+        self.additionalFileEntryNames.append(entryName + str(self.additionalFileCounter))
+
         # create horizontal layout
         HL = QtGui.QHBoxLayout()
-        HL.setObjectName(horizontalLayoutName)
+        HL.setObjectName(horizontalLayoutName + str(self.additionalFileCounter))
+
+        # create btn and add to horizontal layout
+        btn2 = QtGui.QToolButton(self.groupBox_3)
+        btn2.setObjectName(btn2Name + str(self.additionalFileCounter))
+        btn2.setText('-')
+        btn2.setFixedHeight(21)
+        btn2.setFixedWidth(23)
+        HL.addWidget(btn2)
 
         # create text entry and add to horizontal layout
         entry = QtGui.QLineEdit(self.groupBox_3)
         entry.setReadOnly(True)
-        entry.setObjectName(entryName)
+        entry.setObjectName(entryName + str(self.additionalFileCounter))
         HL.addWidget(entry)
 
         # create btn and add to horizontal layout
         btn = QtGui.QToolButton(self.groupBox_3)
-        btn.setObjectName(btnName)
+        btn.setObjectName(btnName + str(self.additionalFileCounter))
         btn.setText('...')
         HL.addWidget(btn)
 
-        self.resize(self.width(), self.height() + 21)
+        self.resize(self.width(), self.height() + 30)
         self.msFileUploadMasterVL.addLayout(HL)
+
+        btn.clicked.connect(lambda: self.getFileName(entry))
+        btn2.clicked.connect(lambda: self.removeFileEntry(HL, entry, btn, btn2))
+
+    def removeFileEntry(self, HL, entry, btn, btn2):
+        HL.deleteLater()
+        entry.deleteLater()
+        btn.deleteLater()
+        btn2.deleteLater()
+        self.additionalFileEntryNames.remove(entry.objectName())
 
     # **************************** CONVERTER PAGE ****************************#
 
     def convertFile(self):
         try:
-            self.fileToBeConverted = str(self.fileConverterEntry.text())
-            if self.fileToBeConverted == '':
-                raise ValueError, ('No Input File Selected', 'Please choose an input file.', None)
-
-            self.convertedFileName = str(self.outputFileConverterEntry.text())
-            if self.convertedFileName == '':
-                raise ValueError, ('No Output File Selected', 'Please choose an output file.', None)
-
+            self.fileToBeConverted = self.checkEntryPopulated(self.fileConverterEntry, errorTitle='No Input File Selected', errorMessage='Please choose an input file.')
+            self.convertedFileName = self.checkEntryPopulated(self.outputFileConverterEntry, errorTitle='No Output File Selected', errorMessage='Please choose an output file.')
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
@@ -460,11 +483,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
+                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
 
                 # generate heatmap graph
                 if self.checkboxHeatMap.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
                     self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
                 # generate bootstrap graph
@@ -489,29 +512,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             # input alignment for raxml
             self.raxmlInputAlignment = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
 
-            if self.raxmlInputAlignment == "":
-                raise ValueError, ("No File Selected", "Please choose a file", None)
-            elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
-                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
-
-            # raxml window size input
-            self.window_size = int(self.windowSizeEntry.text())
-            self.raxmlOperations.windowSize = int(self.windowSizeEntry.text())
-            if self.window_size <= 0:
-                raise ValueError, ("Invalid Window Size", "Window size needs to be a positive integer.", "Please enter a positive integer to the window size field.")
-
-            # raxml window offset input
-            self.window_offset = int(self.windowOffsetEntry.text())
-            self.raxmlOperations.windowOffset = int(self.windowOffsetEntry.text())
-            if self.window_offset <= 0:
-                raise ValueError, ("Invalid Window Offset", "Window offset needs to be a positive integer.", "Please enter a positive integer to the window offset field.")
-
-            # raxml number of top topologies input
-            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
-            if self.topTopologies <= 0 or self.topTopologies > 15:
-                raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
+            self.raxmlInputAlignment = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
+            self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
+            self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
+            self.topTopologies = self.checkEntryInRange(self.numberOfTopTopologiesEntry, min=0, max=16, inclusive=False, errorTitle='Invalid Number of Top Topologies', errorMessage='Please enter an integer between 0 and 15.')
 
             # statistics error handling
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
@@ -533,34 +538,30 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
 
             # bootstrap error handling
+            self.raxmlOperations.numBootstraps = 0
             if self.checkboxBootstrap.isChecked():
-                self.confidenceLevel = int(self.confidenceLevelEntry.text())
-                if self.confidenceLevel < 0 or self.confidenceLevel > 100:
-                    raise ValueError, ("Invalid Confidence Level", "Please enter an integer between 0 and 100.", None)
+                self.confidenceLevel = self.checkEntryInRange(self.confidenceLevelEntry, min=0, max=100, errorTitle='Invalid Confidence Level', errorMessage='Please enter an integer between 0 and 100.')
+                self.raxmlOperations.numBootstraps = self.checkEntryInRange(self.numberOfBootstrapsEntry, min=2, errorTitle='Invalid Number of Bootstraps', errorMessage='Please enter an integer greater than 1.')
 
-                self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-                self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-                if self.numBootstraps < 2:
-                    raise ValueError, ("Invalid Number of Bootstraps", "Please enter an integer greater than 1.", None)
-            else:
-                self.raxmlOperations.numBootstraps = 0
+            # custom raxml error handling
+            if self.checkBoxCustomRaxml.isChecked():
+                if re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
+                    raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
+                self.raxmlOperations.customRaxmlCommand = self.checkEntryPopulated(self.customRaxmlCommandEntry, errorTitle='No RAxML Command', errorMessage='Please enter a custom raxml command or uncheck the box.')
 
-            if self.checkBoxCustomRaxml.isChecked() and re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
-                raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
-
-            self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
-            self.raxmlOperations.customRaxmlCommand = self.customRaxmlCommandEntry.text()
-            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
-            self.raxmlOperations.model = self.modelComboBox.currentText()
-            self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
-            self.rooted = self.checkboxRooted.isChecked()
+            # rooted error handling
+            self.raxmlOperations.outGroup = None
             if self.rooted:
                 self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
-            else:
-                self.raxmlOperations.outGroup = None
 
-        except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
-            self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
+            self.raxmlOperations.model = self.modelComboBox.currentText()
+            self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
+            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
+            self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
+            self.rooted = self.checkboxRooted.isChecked()
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(str(ErrorTitle), str(ErrorMessage), str(ErrorDescription))
             return False
 
         return True
@@ -602,6 +603,33 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # execute window
         errMessage.exec_()
+
+    def checkEntryPopulated(self, entry, errorTitle='Field Not Populated', errorMessage='Please populate field.', errorDescription='n/a'):
+        """
+            checks if given entry is empty or not.
+                (i) if entry is populated returns text
+                (ii) otherwise raises value error
+        """
+        if entry.text() == '':
+            raise ValueError(errorTitle, errorMessage, errorDescription)
+        return entry.text()
+
+    def checkEntryInRange(self, entry, min=(-1.0 * float('inf')), max=float('inf'), inclusive=True, errorTitle='rip', errorMessage='rip', errorDescription='n/a'):
+        """
+            checks if given entry is in range.
+                (i) if entry is in given range return it
+                (ii) otherwise raises value error
+        """
+        val = float(int(float(entry.text())))
+
+        if inclusive:
+            if val < min or val > max:
+                raise ValueError, (errorTitle, errorMessage, errorDescription)
+        else:
+            if val <= min or val >= max:
+                raise ValueError, (errorTitle, errorMessage, errorDescription)
+
+        return int(val)
 
     def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
         try:
@@ -689,11 +717,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         elif type == 'tabs':
             window.displayImages()
 
-    def resizeEvent(self, event):
-        print self.size()
+    # def resizeEvent(self, event):
+    #     print self.size()
 
-    def moveEvent(self, QMoveEvent):
-        print self.pos()
+    # def moveEvent(self, QMoveEvent):
+    #     print self.pos()
 
     def connectionTester(self):
         print
