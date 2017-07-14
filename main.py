@@ -289,22 +289,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     # **************************** MS PAGE ****************************#
 
     def runMSCompare(self):
-
-
-        # try:
-            # ms -> raxml directory comparison
-            # if self.radioBtnRaxml.isChecked():
-            #     self.msComparison.msToRax = True
-            #     self.msComparison.msFile1 = self.msFileEntry.text()
-            #     self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
-            #     self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
-            #     self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
-            #
-            #     self.msComparison.start()
-
-            # ms -> ms comparison
-            # else:
-
         try:
             self.msComparison.msToRax = False
             self.msComparison.msFiles = []
@@ -323,6 +307,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
             if self.checkboxCompareAgainstRaxml.isChecked():
                 self.msComparison.msToRax = True
+                if self.msRaxmlDirectoryEntry.text() == '':
+                    raise ValueError('Missing RAxML Directory', 'Please select RAxML directory.', 'n/a')
+                self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
+                if self.msWindowSizeEntry.text() == '':
+                    raise ValueError('Missing Window Size', 'Please enter window size.', 'n/a')
+                self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
+                if self.msWindowOffsetEntry.text() == '':
+                    raise ValueError('Missing Window Offset', 'Please enter window offset.', 'n/a')
+                self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
+
 
             if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.start()
