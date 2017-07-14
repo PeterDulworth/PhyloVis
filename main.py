@@ -1,5 +1,6 @@
 # utilities
 import sip
+
 sip.setapi('QString', 2)
 import sys, os
 from PyQt4 import QtGui, QtCore
@@ -308,11 +309,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.msComparison.windowSize = self.checkEntryPopulated(self.msWindowSizeEntry)
                 self.msComparison.windowOffset = self.checkEntryPopulated(self.msWindowOffsetEntry)
 
-
             if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.start()
             else:
-                raise ValueError('Nothing to Compare Against','Please compare against a raxml directory and/or additional MS files.','n/a')
+                raise ValueError('Nothing to Compare Against', 'Please compare against a raxml directory and/or additional MS files.', 'n/a')
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
@@ -384,7 +384,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
 
-        self.convertedFileName = self.convertedFileName + '.' + self.outputFormatComboBox.currentText().lower() +'.txt'
+        self.convertedFileName = self.convertedFileName + '.' + self.outputFormatComboBox.currentText().lower() + '.txt'
 
         self.fileConverter.inputFileName = self.fileToBeConverted
         self.fileConverter.outputFileName = self.convertedFileName
@@ -410,34 +410,24 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def generateSpeciesTree(self):
         # Error handling for input file
         try:
-            self.raxmlInputAlignment = str(self.inputFileEntry.text())
-            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
-
-            if self.raxmlInputAlignment == "":
-                raise ValueError, ("No File Selected", "Please choose a file")
-            elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
-                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type.\nPlease enter either a .txt or .phylip file")
+            self.raxmlOperations.inputFilename = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
+            self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
+            self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
 
             self.raxmlOperations.speciesTreeRooted = self.checkboxSpeciesTreeRooted.isChecked()
-            if self.raxmlOperations.speciesTreeRooted:
-                self.raxmlOperations.speciesTreeOutGroup = self.speciesTreeComboBox.currentText()
-            else:
-                self.raxmlOperations.speciesTreeOutGroup = None
-
+            self.raxmlOperations.speciesTreeOutGroup = self.speciesTreeComboBox.currentText()
             self.raxmlOperations.speciesTreeUseCustomRax = self.checkboxSpeciesTreeUseCustomRax.isChecked()
-            self.raxmlOperations.speciesTreeCustomRaxmlCommand = self.speciesTreeRaxmlCommandEntry.text()
 
-            if self.checkboxSpeciesTreeUseCustomRax.isChecked() and re.search('([\-][n])|([\-][s])', self.speciesTreeRaxmlCommandEntry.text()):
-                self.message('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
-                return
+            if self.checkboxSpeciesTreeUseCustomRax.isChecked():
+                self.raxmlOperations.speciesTreeCustomRaxmlCommand = self.checkEntryPopulated(self.speciesTreeRaxmlCommandEntry, errorTitle='No RAxML Command', errorMessage='Please enter a custom raxml command or uncheck the box.')
+                if re.search('([\-][n])|([\-][s])', self.speciesTreeRaxmlCommandEntry.text()):
+                    raise ValueError('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
 
-
-        except ValueError, (ErrorTitle, ErrorMessage):
-            self.message(str(ErrorTitle), str(ErrorMessage), None)
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(str(ErrorTitle), str(ErrorMessage), str(ErrorDescription))
             return
 
-        self.raxmlOperations.raxml_species_tree(self.raxmlInputAlignment, rooted=self.raxmlOperations.speciesTreeRooted, outgroup=self.raxmlOperations.speciesTreeOutGroup, customRax=self.raxmlOperations.speciesTreeUseCustomRax, customRaxCommand=self.raxmlOperations.speciesTreeCustomRaxmlCommand)
+        self.raxmlOperations.raxml_species_tree(self.raxmlOperations.inputFilename, rooted=self.raxmlOperations.speciesTreeRooted, outgroup=self.raxmlOperations.speciesTreeOutGroup, customRax=self.raxmlOperations.speciesTreeUseCustomRax, customRaxCommand=self.raxmlOperations.speciesTreeCustomRaxmlCommand)
 
     def updatedDisplayWindows(self, btnClicked=None):
         if btnClicked == None or btnClicked.isChecked():
@@ -483,7 +473,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
+                    self.topologyPlotter.generateCircleGraph(self.raxmlOperations.inputFilename, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
 
                 # generate heatmap graph
                 if self.checkboxHeatMap.isChecked():
@@ -510,10 +500,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         """
         try:
             # input alignment for raxml
-            self.raxmlInputAlignment = str(self.inputFileEntry.text())
-            self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-
-            self.raxmlInputAlignment = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
+            self.raxmlOperations.inputFilename = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
             self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
             self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
             self.topTopologies = self.checkEntryInRange(self.numberOfTopTopologiesEntry, min=0, max=16, inclusive=False, errorTitle='Invalid Number of Top Topologies', errorMessage='Please enter an integer between 0 and 15.')
@@ -521,7 +508,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             # statistics error handling
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                 self.newickFileName = str(self.newickFileEntry.text())
-                self.newickFileExtension = os.path.splitext(self.newickFileName)[1]
                 self.newickStringFromEntry = str(self.speciesTreeNewickStringsEntry.text())
 
                 if self.newickFileName == "" and self.newickStringFromEntry == "":
@@ -549,11 +535,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
                 self.raxmlOperations.customRaxmlCommand = self.checkEntryPopulated(self.customRaxmlCommandEntry, errorTitle='No RAxML Command', errorMessage='Please enter a custom raxml command or uncheck the box.')
 
-            # rooted error handling
-            self.raxmlOperations.outGroup = None
-            if self.rooted:
-                self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
-
+            self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
             self.raxmlOperations.model = self.modelComboBox.currentText()
             self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
             self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
@@ -595,7 +577,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         pixmap = QtGui.QPixmap('imgs/warning.png')
 
         # choose icon based on type
-        if type=='testType2':
+        if type == 'testType2':
             pixmap = 'imgs/tree.png'
 
         # set icon
@@ -610,9 +592,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 (i) if entry is populated returns text
                 (ii) otherwise raises value error
         """
-        if entry.text() == '':
+        text = entry.text()
+        print 'poop'
+        if text == '':
+            print 'poop2'
             raise ValueError(errorTitle, errorMessage, errorDescription)
-        return entry.text()
+            print 'poop3'
+        return text
 
     def checkEntryInRange(self, entry, min=(-1.0 * float('inf')), max=float('inf'), inclusive=True, errorTitle='rip', errorMessage='rip', errorDescription='n/a'):
         """
