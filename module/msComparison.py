@@ -148,19 +148,24 @@ class MsComparison(QtCore.QThread):
 
     def run(self):
         # ms -> raxml directory comparison
-        if self.msToRax:
-            sites_to_newick_ms_map = self.sites_to_newick_ms(self.msFile1)
-            sites_to_newick_rax_map = self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset)
-            try:
-                sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
-            except ValueError:
-                self.emit(QtCore.SIGNAL('MS_ERR'), 'Invalid Directory', 'Please choose another RAxML Directory', None)
-                return
+        # if self.msToRax:
+        #     sites_to_newick_ms_map = self.sites_to_newick_ms(self.msTruth)
+        #     sites_to_newick_rax_map = self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset)
+        #     try:
+        #         sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
+        #     except ValueError:
+        #         self.emit(QtCore.SIGNAL('MS_ERR'), 'Invalid Directory', 'Please choose another RAxML Directory', None)
+        #         return
         # ms -> ms comparison
-        else:
-            sites_to_newick_ms_map1 = self.sites_to_newick_ms(self.msFile1)
-            sites_to_newick_ms_map2 = self.sites_to_newick_ms(self.msFile2)
-            sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map1, sites_to_newick_ms_map2)
+        # else:
+
+        # initialize sites
+        sitesToNewickMsMaps = []
+
+        sitesToNewickMsMaps.append(self.sites_to_newick_ms(self.msFiles[0]))
+        sitesToNewickMsMaps.append(self.sites_to_newick_ms(self.msFiles[1]))
+
+        sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sitesToNewickMsMaps[0], sitesToNewickMsMaps[1])
 
         self.emit(QtCore.SIGNAL('MS_COMPLETE'), sites_to_difference_w, sites_to_difference_uw)
 

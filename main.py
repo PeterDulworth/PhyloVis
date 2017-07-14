@@ -212,7 +212,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         self.msRaxmlDirectoryBtn.clicked.connect(lambda: self.openDirectory(self.msRaxmlDirectoryEntry))
 
-        self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('HL1', 'entryName', 'btnName'))
+        self.msUploadAnother.clicked.connect(lambda: self.addFileEntry('msAdditionalFileHorizontalLayout', 'msAdditionalFileEntry', 'msAdditionalFileBtn', 'msRemoveFileBtn'))
 
         # **************************** D STATISTIC PAGE ****************************#
 
@@ -290,24 +290,44 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def runMSCompare(self):
 
-        try:
-            # ms -> raxml directory comparison
-            if self.radioBtnRaxml.isChecked():
-                self.msComparison.msToRax = True
-                self.msComparison.msFile1 = self.msFileEntry.text()
-                self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
-                self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
-                self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
 
-                self.msComparison.start()
+        # try:
+            # ms -> raxml directory comparison
+            # if self.radioBtnRaxml.isChecked():
+            #     self.msComparison.msToRax = True
+            #     self.msComparison.msFile1 = self.msFileEntry.text()
+            #     self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
+            #     self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
+            #     self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
+            #
+            #     self.msComparison.start()
 
             # ms -> ms comparison
-            else:
-                self.msComparison.msToRax = False
-                self.msComparison.msFile1 = self.msFileEntry.text()
-                self.msComparison.msFile2 = self.msSecondFileEntry.text()
+            # else:
 
+        try:
+            self.msComparison.msToRax = False
+            self.msComparison.msFiles = []
+            if self.msFileEntry.text() == '':
+                raise ValueError('Missing MS Truth File', 'Please select an MS Truth file.', 'n/a')
+            self.msComparison.msFiles.append(self.msFileEntry.text())
+
+            if self.checkboxCompareAgainstMS.isChecked():
+                self.msComparison.msFiles.append(self.msSecondFileEntry.text())
+
+                for i in range(len(self.additionalFileEntryNames)):
+                    entry = self.findChild(QtGui.QLineEdit, self.additionalFileEntryNames[i])
+                    if entry.text() == '':
+                        raise ValueError, ('Blank Field', 'Field ' + str(i + 1) + ' is blank. Please select a file.', 'Please select a file.')
+                    self.msComparison.msFiles.append(entry.text())
+
+            if self.checkboxCompareAgainstRaxml.isChecked():
+                self.msComparison.msToRax = True
+
+            if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.start()
+            else:
+                raise ValueError('Nothing to Compare Against','Please compare against a raxml directory and/or additional MS files.','n/a')
 
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
@@ -326,13 +346,23 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.openWindow(self.msComparisonWindow, type='tabs')
 
     additionalFileCounter = 0
+    additionalFileEntryNames = []
 
-    def addFileEntry(self, horizontalLayoutName, entryName, btnName):
+    def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
         self.additionalFileCounter += 1
+        self.additionalFileEntryNames.append(entryName + str(self.additionalFileCounter))
 
         # create horizontal layout
         HL = QtGui.QHBoxLayout()
         HL.setObjectName(horizontalLayoutName + str(self.additionalFileCounter))
+
+        # create btn and add to horizontal layout
+        btn2 = QtGui.QToolButton(self.groupBox_3)
+        btn2.setObjectName(btn2Name + str(self.additionalFileCounter))
+        btn2.setText('-')
+        btn2.setFixedHeight(21)
+        btn2.setFixedWidth(23)
+        HL.addWidget(btn2)
 
         # create text entry and add to horizontal layout
         entry = QtGui.QLineEdit(self.groupBox_3)
@@ -350,6 +380,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.msFileUploadMasterVL.addLayout(HL)
 
         btn.clicked.connect(lambda: self.getFileName(entry))
+        btn2.clicked.connect(lambda: self.removeFileEntry(HL, entry, btn, btn2))
+
+    def removeFileEntry(self, HL, entry, btn, btn2):
+        HL.deleteLater()
+        entry.deleteLater()
+        btn.deleteLater()
+        btn2.deleteLater()
+        self.additionalFileEntryNames.remove(entry.objectName())
 
     # **************************** CONVERTER PAGE ****************************#
 
@@ -695,8 +733,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         elif type == 'tabs':
             window.displayImages()
 
-    def resizeEvent(self, event):
-        print self.size()
+    # def resizeEvent(self, event):
+    #     print self.size()
 
     def moveEvent(self, QMoveEvent):
         print self.pos()
