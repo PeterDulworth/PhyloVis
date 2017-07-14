@@ -256,18 +256,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def runDStatistic(self):
         try:
-            if self.dAlignmentEntry.text() == "":
-                raise IOError
-            self.statisticsCalculations.dAlignment = str(self.dAlignmentEntry.text())
-            self.statisticsCalculations.dWindowSize = int(self.dWindowSizeEntry.text())
-            self.statisticsCalculations.dWindowOffset = int(self.dWindowOffsetEntry.text())
-            self.statisticsCalculations.taxon1 = self.dTaxonComboBox1.currentText()
-            self.statisticsCalculations.taxon2 = self.dTaxonComboBox2.currentText()
-            self.statisticsCalculations.taxon3 = self.dTaxonComboBox3.currentText()
-            self.statisticsCalculations.taxon4 = self.dTaxonComboBox4.currentText()
+            self.statisticsCalculations.dAlignment = self.checkEntryPopulated(self.dAlignmentEntry, errorTitle='Missing Alignment', errorMessage='Please select and alignment.')
+            self.statisticsCalculations.dWindowSize = self.checkEntryInRange(self.dWindowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
+            self.statisticsCalculations.dWindowOffset = self.checkEntryInRange(self.dWindowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
+            self.statisticsCalculations.taxons = [self.dTaxonComboBox1.currentText(), self.dTaxonComboBox2.currentText(), self.dTaxonComboBox3.currentText(), self.dTaxonComboBox4.currentText()]
 
-        except:
-            QtGui.QMessageBox.about(self, "sadfasdf", "1asdfasdf", "2asdfadsfasfd")
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(str(ErrorTitle), str(ErrorMessage), str(ErrorDescription))
+            return
 
         self.statisticsCalculations.start()
 
@@ -410,7 +406,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def generateSpeciesTree(self):
         try:
             # get values from gui -- ensure that no fields are blank
-            self.raxmlOperations.inputFilename = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
+            self.raxmlOperations.inputFilename = self.checkEntryPopulated(self.inputFileEntry, errorTitle='Missing Alignment', errorMessage='Please select an alignment.')
             self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
             self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
             self.raxmlOperations.speciesTreeRooted = self.checkboxSpeciesTreeRooted.isChecked()
@@ -523,7 +519,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
                     raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
 
-            # statistics error handling
+            # if the user selects either statistic plot -- open the inputted newick and read it into memory as a string on a single line
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
                 self.newickFileName = self.checkEntryPopulated(self.newickFileEntry)
                 with open(self.newickFileEntry.text(), 'r') as f:
