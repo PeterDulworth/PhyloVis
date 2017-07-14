@@ -292,18 +292,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         try:
             self.msComparison.msToRax = False
             self.msComparison.msFiles = []
-            if self.msFileEntry.text() == '':
-                raise ValueError('Missing MS Truth File', 'Please select an MS Truth file.', 'n/a')
-            self.msComparison.msFiles.append(self.msFileEntry.text())
+            self.msComparison.msFiles.append(self.checkEntryPopulated(self.msFileEntry, errorTitle='Missing MS Truth File', errorMessage='Please select an MS Truth file.'))
 
             if self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.msFiles.append(self.msSecondFileEntry.text())
 
                 for i in range(len(self.additionalFileEntryNames)):
                     entry = self.findChild(QtGui.QLineEdit, self.additionalFileEntryNames[i])
-                    if entry.text() == '':
-                        raise ValueError, ('Blank Field', 'Field ' + str(i + 1) + ' is blank. Please select a file.', 'Please select a file.')
-                    self.msComparison.msFiles.append(entry.text())
+                    self.msComparison.msFiles.append(self.checkEntryPopulated(entry, errorTitle='Blank Field', errorMessage='Field ' + str(i + 1) + ' is blank. Please select a file.'))
 
             if self.checkboxCompareAgainstRaxml.isChecked():
                 self.msComparison.msToRax = True
@@ -382,14 +378,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def convertFile(self):
         try:
-            self.fileToBeConverted = str(self.fileConverterEntry.text())
-            if self.fileToBeConverted == '':
-                raise ValueError, ('No Input File Selected', 'Please choose an input file.', None)
-
-            self.convertedFileName = str(self.outputFileConverterEntry.text())
-            if self.convertedFileName == '':
-                raise ValueError, ('No Output File Selected', 'Please choose an output file.', None)
-
+            self.fileToBeConverted = self.checkEntryPopulated(self.fileConverterEntry, errorTitle='No Input File Selected', errorMessage='Please choose an input file.')
+            self.convertedFileName = self.checkEntryPopulated(self.outputFileConverterEntry, errorTitle='No Output File Selected', errorMessage='Please choose an output file.')
         except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
