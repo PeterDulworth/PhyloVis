@@ -483,11 +483,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.window_size, self.window_offset, sites_to_informative)
+                    self.topologyPlotter.generateCircleGraph(self.raxmlInputAlignment, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
 
                 # generate heatmap graph
                 if self.checkboxHeatMap.isChecked():
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
+                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
                     self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
                 # generate bootstrap graph
@@ -512,29 +512,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             # input alignment for raxml
             self.raxmlInputAlignment = str(self.inputFileEntry.text())
             self.raxmlOperations.inputFilename = str(self.inputFileEntry.text())
-            self.raxmlInputAlignmentExtension = os.path.splitext(self.raxmlInputAlignment)[1]
 
-            if self.raxmlInputAlignment == "":
-                raise ValueError, ("No File Selected", "Please choose a file", None)
-            elif self.raxmlInputAlignmentExtension != '.txt' and self.raxmlInputAlignmentExtension != '.phylip':
-                raise ValueError, ("Invalid File Type", "Luay does not approve of your file type. Please enter either a .txt or .phylip file", 'please enter a file phylip-sequential form.')
-
-            # raxml window size input
-            self.window_size = int(self.windowSizeEntry.text())
-            self.raxmlOperations.windowSize = int(self.windowSizeEntry.text())
-            if self.window_size <= 0:
-                raise ValueError, ("Invalid Window Size", "Window size needs to be a positive integer.", "Please enter a positive integer to the window size field.")
-
-            # raxml window offset input
-            self.window_offset = int(self.windowOffsetEntry.text())
-            self.raxmlOperations.windowOffset = int(self.windowOffsetEntry.text())
-            if self.window_offset <= 0:
-                raise ValueError, ("Invalid Window Offset", "Window offset needs to be a positive integer.", "Please enter a positive integer to the window offset field.")
-
-            # raxml number of top topologies input
-            self.topTopologies = int(self.numberOfTopTopologiesEntry.text())
-            if self.topTopologies <= 0 or self.topTopologies > 15:
-                raise ValueError, ("Invalid Number of Top Topologies", "Please enter an integer between 0 and 15.", "Number of top topologies needs to be an integer between 0 and 15.")
+            self.raxmlInputAlignment = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
+            self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
+            self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
+            self.topTopologies = self.checkEntryInRange(self.numberOfTopTopologiesEntry, min=0, max=16, inclusive=False, errorTitle='Invalid Number of Top Topologies', errorMessage='Please enter an integer between 0 and 15.')
 
             # statistics error handling
             if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
@@ -556,34 +538,30 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     self.speciesTree = str(self.speciesTreeNewickStringsEntry.text())
 
             # bootstrap error handling
+            self.raxmlOperations.numBootstraps = 0
             if self.checkboxBootstrap.isChecked():
-                self.confidenceLevel = int(self.confidenceLevelEntry.text())
-                if self.confidenceLevel < 0 or self.confidenceLevel > 100:
-                    raise ValueError, ("Invalid Confidence Level", "Please enter an integer between 0 and 100.", None)
+                self.confidenceLevel = self.checkEntryInRange(self.confidenceLevelEntry, min=0, max=100, errorTitle='Invalid Confidence Level', errorMessage='Please enter an integer between 0 and 100.')
+                self.raxmlOperations.numBootstraps = self.checkEntryInRange(self.numberOfBootstrapsEntry, min=2, errorTitle='Invalid Number of Bootstraps', errorMessage='Please enter an integer greater than 1.')
 
-                self.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-                self.raxmlOperations.numBootstraps = int(self.numberOfBootstrapsEntry.text())
-                if self.numBootstraps < 2:
-                    raise ValueError, ("Invalid Number of Bootstraps", "Please enter an integer greater than 1.", None)
-            else:
-                self.raxmlOperations.numBootstraps = 0
+            # custom raxml error handling
+            if self.checkBoxCustomRaxml.isChecked():
+                if re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
+                    raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
+                self.raxmlOperations.customRaxmlCommand = self.checkEntryPopulated(self.customRaxmlCommandEntry, errorTitle='No RAxML Command', errorMessage='Please enter a custom raxml command or uncheck the box.')
 
-            if self.checkBoxCustomRaxml.isChecked() and re.search('([\-][n])|([\-][s])', self.customRaxmlCommandEntry.text()):
-                raise ValueError, ('Invalid RAxML Command', 'Please do not specify the -s or -n flags.', 'the -s and -n flags will be handled internally based on the alignment you input.')
-
-            self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
-            self.raxmlOperations.customRaxmlCommand = self.customRaxmlCommandEntry.text()
-            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
-            self.raxmlOperations.model = self.modelComboBox.currentText()
-            self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
-            self.rooted = self.checkboxRooted.isChecked()
+            # rooted error handling
+            self.raxmlOperations.outGroup = None
             if self.rooted:
                 self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
-            else:
-                self.raxmlOperations.outGroup = None
 
-        except ValueError, (ErrorTitle, ErrorMessage, ErrorInfo):
-            self.message(str(ErrorTitle), str(ErrorMessage), ErrorInfo)
+            self.raxmlOperations.model = self.modelComboBox.currentText()
+            self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
+            self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
+            self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
+            self.rooted = self.checkboxRooted.isChecked()
+
+        except ValueError, (ErrorTitle, ErrorMessage, ErrorDescription):
+            self.message(str(ErrorTitle), str(ErrorMessage), str(ErrorDescription))
             return False
 
         return True
@@ -626,15 +604,32 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # execute window
         errMessage.exec_()
 
-    def checkEntryPopulated(self, field, errorTitle='Field Not Populated', errorMessage='Please populate field.', errorDescription='n/a'):
+    def checkEntryPopulated(self, entry, errorTitle='Field Not Populated', errorMessage='Please populate field.', errorDescription='n/a'):
         """
             checks if given entry is empty or not.
                 (i) if entry is populated returns text
                 (ii) otherwise raises value error
         """
-        if field.text() == '':
+        if entry.text() == '':
             raise ValueError(errorTitle, errorMessage, errorDescription)
-        return field.text()
+        return entry.text()
+
+    def checkEntryInRange(self, entry, min=(-1.0 * float('inf')), max=float('inf'), inclusive=True, errorTitle='rip', errorMessage='rip', errorDescription='n/a'):
+        """
+            checks if given entry is in range.
+                (i) if entry is in given range return it
+                (ii) otherwise raises value error
+        """
+        val = float(int(float(entry.text())))
+
+        if inclusive:
+            if val < min or val > max:
+                raise ValueError, (errorTitle, errorMessage, errorDescription)
+        else:
+            if val <= min or val >= max:
+                raise ValueError, (errorTitle, errorMessage, errorDescription)
+
+        return int(val)
 
     def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
         try:
@@ -725,8 +720,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     # def resizeEvent(self, event):
     #     print self.size()
 
-    def moveEvent(self, QMoveEvent):
-        print self.pos()
+    # def moveEvent(self, QMoveEvent):
+    #     print self.pos()
 
     def connectionTester(self):
         print
