@@ -307,15 +307,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
             if self.checkboxCompareAgainstRaxml.isChecked():
                 self.msComparison.msToRax = True
-                if self.msRaxmlDirectoryEntry.text() == '':
-                    raise ValueError('Missing RAxML Directory', 'Please select RAxML directory.', 'n/a')
-                self.msComparison.raxmlDir = self.msRaxmlDirectoryEntry.text()
-                if self.msWindowSizeEntry.text() == '':
-                    raise ValueError('Missing Window Size', 'Please enter window size.', 'n/a')
-                self.msComparison.windowSize = int(self.msWindowSizeEntry.text())
-                if self.msWindowOffsetEntry.text() == '':
-                    raise ValueError('Missing Window Offset', 'Please enter window offset.', 'n/a')
-                self.msComparison.windowOffset = int(self.msWindowOffsetEntry.text())
+
+                self.msComparison.raxmlDir = self.checkEntryPopulated(self.msRaxmlDirectoryEntry)
+                self.msComparison.windowSize = self.checkEntryPopulated(self.msWindowSizeEntry)
+                self.msComparison.windowOffset = self.checkEntryPopulated(self.msWindowOffsetEntry)
 
 
             if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
@@ -640,6 +635,16 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # execute window
         errMessage.exec_()
+
+    def checkEntryPopulated(self, field, errorTitle='Field Not Populated', errorMessage='Please populate field.', errorDescription='n/a'):
+        """
+            checks if given entry is empty or not.
+                (i) if entry is populated returns text
+                (ii) otherwise raises value error
+        """
+        if field.text() == '':
+            raise ValueError(errorTitle, errorMessage, errorDescription)
+        return field.text()
 
     def updateTaxonComboBoxes(self, comboBoxes, textEntry, errHandling=False):
         try:
