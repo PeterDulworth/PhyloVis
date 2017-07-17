@@ -17,12 +17,14 @@ Travis Benedict
 Peter Dulworth
 """
 
-def network_tree(species_tree, network_map):
+def network_tree(inheritance, species_tree, network_map):
     """
     Creates a network tree based on the species tree
     and the two leaves to be connected.
 
     Inputs:
+    inheritance  -- inputted tuple containing inheritance
+                    probability ex. (0.7, 0.3)
     species_tree -- generated or inputted file or newick
                     string
     network_map  -- inputted mapping of leaves where nodes
@@ -40,12 +42,13 @@ def network_tree(species_tree, network_map):
     else:
         s_tree = species_tree
 
-    # Get the taxons for the edge in the network
+    # get taxa for the edge in the network
     start = network_map.keys()[0]
     end = network_map[start]
 
-    network = s_tree.replace(start, '((' + start + ')#H1:0::0.7)')
-    network = network.replace(end, '(#H1:0::0.3,' + end + ')')
+    # add nodes into tree in proper format
+    network = s_tree.replace(start, '((' + start + ')#H1:0::' + str(inheritance[0]) + ')')
+    network = network.replace(end, '(#H1:0::' + str(inheritance[1]) + ',' + end + ')')
 
     return network
 
