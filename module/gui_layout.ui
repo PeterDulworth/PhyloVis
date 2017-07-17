@@ -59,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -357,7 +357,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -1302,8 +1302,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>451</width>
-               <height>157</height>
+               <width>854</width>
+               <height>643</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1542,8 +1542,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>457</width>
-               <height>253</height>
+               <width>854</width>
+               <height>643</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1670,62 +1670,6 @@
                      </property>
                      <property name="text">
                       <string>...</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="newickStringHL">
-                   <item>
-                    <widget class="QLabel" name="speciesTreeNewickStringsLabel">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>13</pointsize>
-                       <weight>50</weight>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Species Tree Newick:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QLineEdit" name="speciesTreeNewickStringsEntry">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>250</width>
-                       <height>21</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>21</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <pointsize>13</pointsize>
-                       <weight>50</weight>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string/>
                      </property>
                     </widget>
                    </item>

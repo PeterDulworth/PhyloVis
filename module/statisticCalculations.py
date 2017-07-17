@@ -412,7 +412,7 @@ class StatisticsCalculations(QtCore.QThread):
 
     def run(self):
         try:
-            self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset, self.taxon1, self.taxon2, self.taxon3, self.taxon4)
+            self.calculate_d(self.dAlignment, self.dWindowSize, self.dWindowOffset, self.taxons[0], self.taxons[1], self.taxons[2], self.taxons[3])
         except IOError:
             self.emit(QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), 'Invalid File.', 'Invalid alignment file. Please choose another.', self.dAlignment)
         except ZeroDivisionError:
