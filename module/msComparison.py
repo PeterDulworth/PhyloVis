@@ -2,13 +2,18 @@ import os
 from natsort import natsorted
 import statisticCalculations as sc
 from PyQt4 import QtCore
+from ete3 import TreeNode
+from ete3 import Tree
+import matplotlib.pyplot as plt
+import re
 
 """
 Functions:
     __init__(self, output_directory='RAxML_Files', parent=None)
     sites_to_newick_ms(self, input_file)
     sites_to_newick_rax(self, rax_dir, window_size, window_offset)
-    ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2)
+    ms_rax_difference(self, sites_to_newick_1, sites_to_newick_2)
+    def  tmrca_graph(sites_to_newick_mappings)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -22,6 +27,13 @@ class MsComparison(QtCore.QThread):
 
         # create new instance of Statistics Calculations class
         self.statisticsCalculations = sc.StatisticsCalculations(output_directory=output_directory)
+
+        # list of colors for plots
+        self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
+                  '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
+
+        # list of patterns for line styles
+        self.PATTERNS = ['-', '--', ':', '-.']
 
     def sites_to_newick_ms(self, input_file):
         """
@@ -145,6 +157,71 @@ class MsComparison(QtCore.QThread):
             self.emit(QtCore.SIGNAL('MS_PER'), percentComplete)
 
         return sites_to_difference_w, sites_to_difference_uw
+
+    def tmrca_graph(self, sites_to_newick_mappings):
+        """
+        Plots a line graph comparing tree heights from different MS
+        files.
+
+        Inputs:
+        sites_to_newick_mappings -- a list of the mappings outputted by
+                                    sites_to_newick_ms()
+
+        Returns:
+        A line graph with the tree height as the y-axis and the site
+        number as the x-axis.
+        """
+        # initialize lists
+        trees = []
+        roots = []
+        leaves = []
+        dist = []
+        heights = []
+
+        # iterate over each mapping in list
+        for i in range(len(sites_to_newick_mappings)):
+            mapping = sites_to_newick_mappings[i]
+            for tree in mapping:
+                # iterate over mapping to get trees
+                trees.append(mapping[tree])
+
+            for j in range(len(trees)):
+                # get tree roots
+                roots.append(Tree.get_tree_root(Tree(trees[j])))
+
+                # get distance from roots to farthest leaves
+                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only=False, is_leaf_fn=None))
+
+            for k in range(len(leaves)):
+                # regular expression to get height values from list of farthest leaves
+                dist.append(re.findall(', \d{1,}.\d{1,}', str(leaves[k])))
+
+                # format with regular expression to remove unnecessary tokens
+                heights.append(re.sub("\[', |']", '', str(dist[k])))
+
+            # resets ind to prevent index error in linestyle pattern
+            if i > 3:
+                ind = 0
+            else:
+                ind = i
+
+            # plot line graph
+            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=COLORS[i], linestyle=PATTERNS[ind])
+
+            # clear lists
+            trees = []
+            roots = []
+            leaves = []
+            dist = []
+            heights = []
+
+        # label x and y-axes
+        plt.xlabel('SNP Site Number')
+        plt.ylabel('TMRCA')
+
+        # save plot
+        plt.savefig("plots/TMRCA.png")
+        plt.clf()
 
     def run(self):
         # ms -> raxml directory comparison
