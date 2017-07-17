@@ -3,6 +3,7 @@ import os
 from dendropy import Tree
 import itertools
 import math
+import ete3
 from ete3 import Tree
 import copy
 import subprocess
@@ -81,6 +82,8 @@ def network_tree(species_tree, network_map):
 
     return network
 
+
+##### Generate all unique trees functions
 
 def calculate_num_trees(n):
     """
@@ -192,8 +195,10 @@ def generate_unique_trees(taxa, outgroup):
 
     # Regular expression for identifying floats
     float_pattern = "([+-]?\\d*\\.\\d+)(?![-+0-9\\.])"
-    # Regular expression for removing branch lengths and confidence values
-    pattern2 = "(([\\d][\:][\\d]|[\\d][\:])|[\:][\\d])"
+    # Regular expressions for removing branch lengths and confidence values
+    pattern2 = "([\:][\\d])"
+    pattern3 = "([\)][\\d])"
+
 
     # Create a set for unique trees
     unique_trees = set([])
@@ -232,12 +237,17 @@ def generate_unique_trees(taxa, outgroup):
         # Get rid of branch lengths in the newick strings
         tree = (re.sub(float_pattern, '', tree))
         tree = (re.sub(pattern2, '', tree)).replace(":", "")
+        tree = (re.sub(pattern3, ')', tree))
+
+        tree = outgroup_reformat(tree, outgroup)
 
         # Add the newick strings to the set of unique newick strings
         unique_newicks.add(tree)
 
     return unique_newicks
 
+
+###### Statistics Calculations Functions
 
 def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
     """
@@ -307,6 +317,8 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
     return interesting_trees
 
 
+##### Site Pattern Functions
+
 def pattern_inverter(patterns):
     """
     Switches "A"s to "B"s and "B"s to "A" in a site pattern excluding the outgroup
@@ -321,6 +333,9 @@ def pattern_inverter(patterns):
     # Iterate over the patterns
     for pattern in patterns:
 
+        a_count = 0
+        b_count = 0
+
         inverted_pattern = []
 
         # Iterate over each site in the pattern
@@ -328,32 +343,36 @@ def pattern_inverter(patterns):
 
             if site == "A":
                 inverted_pattern.append("B")
+                b_count += 1
 
             elif site == "B":
                 inverted_pattern.append("A")
+                a_count += 1
 
-        # Change the last site to an "A"
-        inverted_pattern[-1] = "A"
-        inverted.append(inverted_pattern)
+        if inverted_pattern[-1] != "A":
+            # Change the last site to an "A"
+            inverted_pattern[-1] = "A"
+            b_count -= 1
+            a_count += 1
+
+        if a_count > 1 and b_count > 1:
+            inverted.append(inverted_pattern)
 
     return inverted
 
 
-def site_pattern_generator(taxa_order, newick):
+def site_pattern_generator(taxa_order, newick, outgroup):
     """
     Generate the appropriate AB list patterns
     Inputs:
     taxa_order --- the desired order of the taxa
     newick --- the newick string to generate site patterns for
+    outgroup --- the outgroup of the tree
     Output:
     finished_patterns --- the list of site patterns generated for the newick string
     """
-
     # Create a tree object
     tree = ete3.Tree(newick, format=1)
-
-    # Determine the outgroup of the tree
-    outgroup = taxa_order[-1]
 
     # Initialize containers for the final patterns and patterns being altered
     final_site_patterns = []
@@ -369,14 +388,14 @@ def site_pattern_generator(taxa_order, newick):
 
     # Create list of nodes in order of appearance
     nodes = []
-    for node in tree.traverse("postorder"):
+    for node in tree.traverse("preorder"):
         # Add node name to list of nodes
         nodes.append(node.name)
 
+    nodes = list(reversed(nodes))
     # Keep track of visited leaves
     seen_leaves = []
 
-    nodes = list(reversed(nodes))
     # Iterate over the order that the nodes occur beginning at the root
     for node_idx in range(len(nodes)):
 
@@ -517,11 +536,24 @@ def site_pattern_generator(taxa_order, newick):
     # Convert the site pattern lists to strings
     pattern_strings = []
     while finished_patterns:
+
+        a_count = 0
+        b_count = 0
         pattern_str = ""
         pattern = finished_patterns.pop()
+
         for site in pattern:
+
+            if site == "A":
+                b_count += 1
+
+            elif site == "B":
+                a_count += 1
+
             pattern_str += site
-        pattern_strings.append(pattern_str)
+
+        if a_count > 1 and b_count > 1:
+            pattern_strings.append(pattern_str)
 
     return pattern_strings
 
@@ -536,22 +568,70 @@ def newicks_to_patterns_generator(taxa_order, newicks):
     newicks_to_patterns --- a mapping of newick strings to their site patterns
     """
 
+    # Determine the outgroup of the tree
+    outgroup = taxa_order[-1]
+
     newicks_to_patterns = {}
 
     # Iterate over the newick strings
     for newick in newicks:
-        newicks_to_patterns[newick] = site_pattern_generator(taxa_order, newicks)
+
+        newicks_to_patterns[newick] = site_pattern_generator(taxa_order, newick, outgroup)
 
     return newicks_to_patterns
 
 
-print newicks_to_patterns_generator(taxa, newicks)
+def outgroup_reformat(newick, outgroup):
+    """
+    Move the location of the outgroup in a newick string to be at the end of the string
+    Inputs:
+    newick --- a newick string to be reformatted
+    outgroup --- the outgroup
+    """
 
+    # Replace the outgroup and comma with an empty string
+    newick = newick.replace(outgroup + ",", "")
 
-taxa = ["H", "C", "O", "G", "B"]
+    newick = newick[:-2] + "," + outgroup + ");"
+
+    return newick
+
+# print outgroup_reformat('(O,(((P1,P2),(P3,P4)),P5));', "O")
+
+# taxa = ["A", "B", "C", "D", "O"]
+# taxa = ["P1", "P2", "P3","O"]
+# taxa = ["P1", "P2", "P3", "P4", "O"]
+taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
-print unique
+# print unique
+newick_patterns = newicks_to_patterns_generator(taxa, unique)
+# print newick_patterns
+
+# newicks = ['(O,(P5,((P1,P2),(P3,P4))));']
+# newick_patterns = newicks_to_patterns_generator(taxa, newicks)
+# print newick_patterns
+
+# species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
+# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,O);"
+species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
+network_map = {"P3":"P1"}
+network_tree = network_tree(species_tree, network_map)
+trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
+# print trees_to_pgS
+#
+# Create a mapping of newicks to their probability and site pattern
+newick_to_pat_n_stat = {}
+for newick in newick_patterns:
+    for tree in trees_to_pgS:
+        if newick == tree:
+            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[newick])
+
+# print newick_to_pat_n_stat
+for i in newick_to_pat_n_stat.items():
+    print i
+
+
 
 
 
