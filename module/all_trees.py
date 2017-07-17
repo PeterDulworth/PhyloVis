@@ -216,7 +216,23 @@ def generate_unique_trees(taxa, outgroup):
 
 ###### Statistics Calculations Functions
 
-def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
+def outgroup_removal(newick, outgroup):
+    """
+    Move the location of the outgroup in a newick string to be at the end of the string
+    Inputs:
+    newick --- a newick string to be reformatted
+    outgroup --- the outgroup
+    """
+
+    # Replace the outgroup and comma with an empty string
+    newick = newick.replace("," + outgroup, "")
+
+    newick = newick[1:-2] + ";"
+
+    return newick
+
+
+def calculate_newicks_to_stats(species_tree, species_network, unique_trees, outgroup):
     """
     Compute p(g|S) and p(g|N) for each g in unique_trees and 
     map the tree newick string to those values
@@ -224,6 +240,7 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
     species_tree --- the species tree newick string for the taxa
     species_network --- the network newick string derived from adding a branch to the species tree between the interested taxa
     unique_trees --- the set of all unique topologies over n taxa
+    outgroup --- the outgroup
     Output:
     trees_to_pgS--- a mapping of tree newick strings to their p(g|S) values 
     trees_to_pgN--- a mapping of tree newick strings to their p(g|N) values
@@ -232,8 +249,13 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees):
     trees_to_pgS = {}
     trees_to_pgN = {}
 
+    species_tree = outgroup_removal(species_tree, outgroup)
+    species_network = outgroup_removal(species_network, outgroup)
+
     # Iterate over the trees
     for tree in unique_trees:
+
+        tree = outgroup_removal(tree, outgroup)
 
         # Run PhyloNet p(g|S) jar file
         p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
@@ -363,21 +385,24 @@ def site_pattern_generator(taxa_order, newick, outgroup):
     # Keep a count of clades in the tree that contain 2 leaves
     clade_count = 0
 
-    # Number of possible patterns is number of taxa - 3
-    num_patterns = len(taxa_order) - 3
+    # Number of possible patterns is number of taxa - 2 + the number of clades
+    num_patterns = len(taxa_order) - 2
 
     # Initialize pattern to be a list of strings
     pattern = ["B" for x in range(len(taxa_order))]
 
     # Create list of nodes in order of appearance
     nodes = []
-    for node in tree.traverse("preorder"):
+    for node in tree.traverse("postorder"):
         # Add node name to list of nodes
         nodes.append(node.name)
 
     nodes = list(reversed(nodes))
     # Keep track of visited leaves
     seen_leaves = []
+
+    # Create a list of patterns that are duplicates
+    duplicates = []
 
     # Iterate over the order that the nodes occur beginning at the root
     for node_idx in range(len(nodes)):
@@ -409,6 +434,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
 
                 # If there is a clade besides the first one then duplicate it in the list
                 final_site_patterns.append(pattern)
+                duplicates.append(pattern)
 
                 seen_leaves.append(node)
                 seen_leaves.append(node2)
@@ -431,6 +457,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
                 end_idx = node_idx
                 break
 
+    num_patterns = num_patterns + clade_count
     # All patterns can be derived from the pattern with the most B's
     working_patterns = [pattern for x in range(num_patterns)]
 
@@ -447,7 +474,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
         for node_idx in range(end_idx + 1, len(nodes)):
 
             # If the last clade is reached break
-            if node_idx == len(nodes) - 3:
+            if node_idx == len(nodes)-1:
                 break
 
             node = nodes[node_idx]
@@ -468,6 +495,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
 
                 # If there is a clade besides the first one then duplicate it in the list
                 final_site_patterns.append(pattern)
+                duplicates.append(pattern)
 
                 # Get the index that final clade occurs at
                 end_idx = node_idx + 1
@@ -487,6 +515,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
 
         # Add the altered pattern to the final site patterns
         final_site_patterns.append(pattern)
+        duplicates.append(pattern)
 
         # Update the working patterns to be the same as the most recent pattern
         working_patterns = [pattern for x in range(num_patterns - len(final_site_patterns))]
@@ -494,8 +523,6 @@ def site_pattern_generator(taxa_order, newick, outgroup):
     idx_offset = 0
     # Create a list of patterns without duplicates
     finished_patterns = []
-    # Create a list of patterns that are duplicates
-    duplicates = []
 
     # Iterate over each pattern and determine which ones are duplicates
     for pattern_idx in range(len(final_site_patterns) - idx_offset):
@@ -565,18 +592,22 @@ def newicks_to_patterns_generator(taxa_order, newicks):
 
 
 
-
 # print outgroup_reformat('(O,(((P1,P2),(P3,P4)),P5));', "O")
 
 # taxa = ["A", "B", "C", "D", "O"]
-# taxa = ["P1", "P2", "P3","O"]
+taxa = ["P1", "P2", "P3","O"]
 # taxa = ["P1", "P2", "P3", "P4", "O"]
-taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
+# taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
 # print unique
 newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
+
+# newick = '(((P2,P3),(P4,(P1,P5))),O);'
+# newick = "((((P1,P2),(P3,P4)),P5),O);"
+#
+# print site_pattern_generator(taxa, newick, outgroup)
 
 # newicks = ['(O,(P5,((P1,P2),(P3,P4))));']
 # newick_patterns = newicks_to_patterns_generator(taxa, newicks)
@@ -587,16 +618,17 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
 network_map = {"P3":"P2"}
 network_tree = network_tree(species_tree, network_map)
-print network_tree
-trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
+# print network_tree
+trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 # print trees_to_pgS
-#
+# '(((P2,P3),(P4,(P1,P5))),O);'
 # Create a mapping of newicks to their probability and site pattern
 newick_to_pat_n_stat = {}
 for newick in newick_patterns:
+    tree1 = outgroup_removal(newick, outgroup)
     for tree in trees_to_pgS:
-        if newick == tree:
-            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[newick],trees_to_pgN[newick])
+        if tree1 == tree:
+            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree])
 
 # print newick_to_pat_n_stat
 for i in newick_to_pat_n_stat.items():
