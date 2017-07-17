@@ -285,6 +285,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     # **************************** MS PAGE ****************************#
 
+    additionalFileCounter = 0
+    additionalFileEntryNames = []
+
     def runMSCompare(self):
         try:
             self.msComparison.msToRax = False
@@ -325,9 +328,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # display window
         self.openWindow(self.msComparisonWindow, type='tabs')
-
-    additionalFileCounter = 0
-    additionalFileEntryNames = []
 
     def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
         self.additionalFileCounter += 1
