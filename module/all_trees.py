@@ -282,7 +282,7 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees, outg
 
 def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
     """
-    Get the subset of trees whose position changes when ordering based on p(g|S) and p(g|N)
+    Get the subset of trees who are initially equal based on p(g|S) but unequal based on p(g|N)
     Input:
     trees_to_pgS--- a mapping of tree newick strings to their p(g|S) values 
     trees_to_pgN--- a mapping of tree newick strings to their p(g|N) values
@@ -290,21 +290,48 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
     interesting_trees --- the subset of tree topologies to look at for determining introgression
     """
 
-    interesting_trees = set({})
+    # Initialize a set to contain all tree that are equal based on p(g|S)
+    possible_trees = []
 
-    # Create lists of tuples with newicks strings and their probability values
-    # Sort the lists by their probability values
-    pgS_list = sorted(trees_to_pgS.items(), key=lambda x: x[1])
-    pgN_list = sorted(trees_to_pgN.items(), key=lambda x: x[1])
+    # Compare the probability of each tree to the probability of every other tree
+    for tree1 in trees_to_pgS:
 
-    # Iterate over indices in the lists
-    for i in range(len(pgN_list)):
+        equal_trees = set([])
 
-        # If the newick strings are not the same at each index add them to a set
-        if pgS_list[i][0] != pgN_list[i][0]:
-            interesting_trees.add(pgS_list[i][0])
-            interesting_trees.add(pgN_list[i][0])
+        for tree2 in trees_to_pgS:
 
+            if trees_to_pgS[tree1] == trees_to_pgS[tree2]:
+                equal_trees.add(tree2)
+
+        if len(equal_trees) > 1:
+            # Add the equal trees to the set of possible trees
+            possible_trees.append(equal_trees)
+
+    valuable_trees = []
+
+    # Iterate over each set of equal trees
+    for equal_trees in possible_trees:
+
+        unequal_trees = set([])
+
+        # Compare the p(g|N) values
+        for tree1 in equal_trees:
+
+            for tree2 in equal_trees:
+
+                if trees_to_pgN[tree1] != trees_to_pgN[tree2]:
+                    unequal_trees.add(tree1)
+                    unequal_trees.add(tree2)
+
+        valuable_trees.append(unequal_trees)
+
+    minimal_size = float("inf")
+
+    # Get the minimal subset of interesting trees
+    for trees in valuable_trees:
+        if len(trees) < minimal_size:
+            minimal_size = len(trees)
+            interesting_trees = trees
 
     return interesting_trees
 
@@ -598,8 +625,8 @@ def newicks_to_patterns_generator(taxa_order, newicks):
 # print outgroup_reformat('(O,(((P1,P2),(P3,P4)),P5));', "O")
 
 # taxa = ["A", "B", "C", "D", "O"]
-taxa = ["P1", "P2", "P3","O"]
-# taxa = ["P1", "P2", "P3", "P4", "O"]
+# taxa = ["P1", "P2", "P3","O"]
+taxa = ["P1", "P2", "P3", "P4", "O"]
 # taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
@@ -617,10 +644,10 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
 
 # species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-# species_tree = "((((P1:0.8,P2:0.8):0.8,P3:0.8):0.8,P4:0.8),O);"
-species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
-network_map = {"P3":"P2"}
-network_tree = network_tree(species_tree, network_map)
+species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
+# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
+network_map = {"P3":"P1"}
+network_tree = network_tree((0.7, 0.3), species_tree, network_map)
 # print network_tree
 trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 # print trees_to_pgS
@@ -633,8 +660,8 @@ for newick in newick_patterns:
         if tree1 == tree:
             newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree])
 
-# print newick_to_pat_n_stat
-for i in newick_to_pat_n_stat.items():
+results = sorted(newick_to_pat_n_stat.items(), key=lambda tup: tup[1][1], reverse=True)
+for i in results:
     print i
 
 
@@ -644,8 +671,8 @@ for i in newick_to_pat_n_stat.items():
 
 
 # species_tree = "((((H:0.8,C:0.8):0.8,G:0.8):0.8,B):0.8,O);"
-species_tree = ""
-network_map = {"G":"H"}
+# species_tree = ""
+# network_map = {"G":"H"}
 
 # network_tree = network_tree(species_tree, network_map)
 # print network_tree
@@ -653,7 +680,7 @@ network_map = {"G":"H"}
 # trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
 # print trees_to_pgS
 # print trees_to_pgN
-# print determine_interesting_trees(trees_to_pgS, trees_to_pgN)
+print determine_interesting_trees(trees_to_pgS, trees_to_pgN)
 
 
 # n = len(taxa)
