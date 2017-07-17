@@ -40,45 +40,12 @@ def network_tree(species_tree, network_map):
     else:
         s_tree = species_tree
 
-    # regular expression for commas in species tree
-    commas = '[,]'
+    # Get the taxons for the edge in the network
+    start = network_map.keys()[0]
+    end = network_map[start]
 
-    # split species tree into parts for labeling
-    parts = re.split(commas, s_tree)
-
-    # initialize network tree
-    network = ''
-
-    for i in range(len(parts) - 1):
-        # label each node in tree
-        part = parts[i] + ', n' + str(i) + '- '
-
-        # add part to network
-        network += part
-
-    # add last part to network
-    network += parts[len(parts) - 1]
-
-    # regular expression for taxa
-    taxa = '[A-Z]'
-
-    # get list of taxa in network tree
-    taxon = re.findall(taxa, network)
-
-    for j in range(len(taxon)):
-        # add 'start' node to network
-        if taxon[j] in network_map.keys():
-            network = re.sub(taxon[j], '(' + taxon[j] + ')#H1:0::0.5', network)
-
-        # add 'end' node to network
-        elif taxon[j] in network_map.values():
-            network = re.sub(taxon[j], '(#H1:0::0.5,' + taxon[j] + ')', network)
-
-    # regular expression for labels in network tree
-    labels = ', n\d- '
-
-    # remove node labels at beginning of node
-    network = re.sub(labels, ',', network)
+    network = s_tree.replace(start, '((' + start + ')#H1:0::0.7)')
+    network = network.replace(end, '(#H1:0::0.3,' + end + ')')
 
     return network
 
@@ -318,6 +285,22 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
 
 
 ##### Site Pattern Functions
+
+def outgroup_reformat(newick, outgroup):
+    """
+    Move the location of the outgroup in a newick string to be at the end of the string
+    Inputs:
+    newick --- a newick string to be reformatted
+    outgroup --- the outgroup
+    """
+
+    # Replace the outgroup and comma with an empty string
+    newick = newick.replace(outgroup + ",", "")
+
+    newick = newick[:-2] + "," + outgroup + ");"
+
+    return newick
+
 
 def pattern_inverter(patterns):
     """
@@ -581,20 +564,7 @@ def newicks_to_patterns_generator(taxa_order, newicks):
     return newicks_to_patterns
 
 
-def outgroup_reformat(newick, outgroup):
-    """
-    Move the location of the outgroup in a newick string to be at the end of the string
-    Inputs:
-    newick --- a newick string to be reformatted
-    outgroup --- the outgroup
-    """
 
-    # Replace the outgroup and comma with an empty string
-    newick = newick.replace(outgroup + ",", "")
-
-    newick = newick[:-2] + "," + outgroup + ");"
-
-    return newick
 
 # print outgroup_reformat('(O,(((P1,P2),(P3,P4)),P5));', "O")
 
@@ -613,10 +583,11 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
 
 # species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,O);"
+# species_tree = "((((P1:0.8,P2:0.8):0.8,P3:0.8):0.8,P4:0.8),O);"
 species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
-network_map = {"P3":"P1"}
+network_map = {"P3":"P2"}
 network_tree = network_tree(species_tree, network_map)
+print network_tree
 trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
 # print trees_to_pgS
 #
@@ -625,7 +596,7 @@ newick_to_pat_n_stat = {}
 for newick in newick_patterns:
     for tree in trees_to_pgS:
         if newick == tree:
-            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[newick])
+            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[newick],trees_to_pgN[newick])
 
 # print newick_to_pat_n_stat
 for i in newick_to_pat_n_stat.items():
