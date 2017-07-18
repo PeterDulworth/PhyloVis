@@ -33,6 +33,10 @@ class Ui_mainWindow(object):
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.pushButton = QtGui.QPushButton(self.centralwidget)
+        self.pushButton.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.verticalLayout.addWidget(self.pushButton)
         self.image = QtGui.QLabel(self.centralwidget)
         self.image.setText(_fromUtf8(""))
         self.image.setObjectName(_fromUtf8("image"))
@@ -61,6 +65,7 @@ class Ui_mainWindow(object):
 
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(_translate("mainWindow", "Main Window", None))
+        self.pushButton.setText(_translate("mainWindow", "PushButton", None))
         self.menuFile.setTitle(_translate("mainWindow", "File", None))
         self.menuExport.setTitle(_translate("mainWindow", "Export...", None))
         self.actionPNG.setText(_translate("mainWindow", "PNG", None))

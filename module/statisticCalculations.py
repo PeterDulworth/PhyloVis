@@ -318,7 +318,7 @@ class StatisticsCalculations(QtCore.QThread):
         plt.ylabel(yLabel, fontsize=10)
 
         plt.title(title, fontsize=15)
-        plt.tight_layout()
+        # plt.tight_layout()
         plt.savefig(name)
 
         # plt.clf()
