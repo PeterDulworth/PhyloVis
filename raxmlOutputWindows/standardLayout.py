@@ -33,14 +33,6 @@ class Ui_mainWindow(object):
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.pushButton = QtGui.QPushButton(self.centralwidget)
-        self.pushButton.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.verticalLayout.addWidget(self.pushButton)
-        self.image = QtGui.QLabel(self.centralwidget)
-        self.image.setText(_fromUtf8(""))
-        self.image.setObjectName(_fromUtf8("image"))
-        self.verticalLayout.addWidget(self.image)
         self.verticalLayout_3.addLayout(self.verticalLayout)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(mainWindow)
@@ -48,16 +40,14 @@ class Ui_mainWindow(object):
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
-        self.menuExport = QtGui.QMenu(self.menuFile)
-        self.menuExport.setObjectName(_fromUtf8("menuExport"))
         mainWindow.setMenuBar(self.menubar)
         self.actionPNG = QtGui.QAction(mainWindow)
         self.actionPNG.setObjectName(_fromUtf8("actionPNG"))
         self.actionPDF = QtGui.QAction(mainWindow)
         self.actionPDF.setObjectName(_fromUtf8("actionPDF"))
-        self.menuExport.addAction(self.actionPNG)
-        self.menuExport.addAction(self.actionPDF)
-        self.menuFile.addAction(self.menuExport.menuAction())
+        self.actionSaveAs = QtGui.QAction(mainWindow)
+        self.actionSaveAs.setObjectName(_fromUtf8("actionSaveAs"))
+        self.menuFile.addAction(self.actionSaveAs)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(mainWindow)
@@ -65,11 +55,10 @@ class Ui_mainWindow(object):
 
     def retranslateUi(self, mainWindow):
         mainWindow.setWindowTitle(_translate("mainWindow", "Main Window", None))
-        self.pushButton.setText(_translate("mainWindow", "PushButton", None))
         self.menuFile.setTitle(_translate("mainWindow", "File", None))
-        self.menuExport.setTitle(_translate("mainWindow", "Export...", None))
         self.actionPNG.setText(_translate("mainWindow", "PNG", None))
         self.actionPDF.setText(_translate("mainWindow", "PDF", None))
+        self.actionSaveAs.setText(_translate("mainWindow", "Save As...", None))
 
 
 if __name__ == "__main__":

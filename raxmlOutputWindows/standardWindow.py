@@ -45,7 +45,6 @@ import random
 #         self.set_message(self.mode)
 
 
-
 class MplCanvas(FigureCanvas):
     def __init__(self, figure):
         self.fig = figure
@@ -53,6 +52,7 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.__init__(self, self.fig)
         FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
+
 
 class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
     def __init__(self, fileName, x=0, y=0, scale=1, parent=None):
@@ -83,16 +83,6 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
 
         self.pushButton.clicked.connect(self.figureBarPlot)
 
-        # fig = plt.figure()
-        # fig.subplots_adjust(top=0.8)
-        # ax1 = fig.add_subplot(211)
-        # ax1.set_ylabel('volts')
-        # ax1.set_title('a sine wave')
-
-        # t = np.arange(0.0, 1.0, 0.01)
-        # s = np.sin(2 * np.pi * t)
-        # line, = ax1.plot(t, s, color='blue', lw=2)
-
         self.figureBarPlot([1, 2, 3, 4], 'henlo', 'henlo')
 
         # self.canvas = MplCanvas()
@@ -101,8 +91,7 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.verticalLayout.addWidget(self.toolbar)
 
         # bind export actions
-        self.actionPNG.triggered.connect(lambda: self.exportFile(self.fileName))
-        self.actionPDF.triggered.connect(lambda: self.exportFile(self.fileName))
+        self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
 
     def box(self):
         dia = SubplotToolQt(self.canvas.figure, self.parent)
@@ -165,18 +154,6 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
             sets size of window
         """
         self.resize(x, y)
-
-    def exportFile(self, fileName):
-        """
-            input: fileName -- a string representing the name of the file to be saved
-            * pops up a window asking for an output path
-            output: saves file 'fileName' to new location inputted by the user
-        """
-
-        extension = os.path.splitext(fileName)[1]
-        windowTitle = 'Export ' + extension[1:]
-        name = QtGui.QFileDialog.getSaveFileName(self, windowTitle) + extension
-        copyfile(fileName, name)
 
     def closeEvent(self, QCloseEvent):
         self.emit(QtCore.SIGNAL("WINDOW_CLOSED"))
