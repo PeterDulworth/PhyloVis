@@ -3,10 +3,20 @@ import standardLayout
 from PIL import Image
 import sys, os
 from shutil import copyfile
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
 
+
+class MplCanvas(FigureCanvas):
+    def __init__(self):
+        self.fig = Figure()
+        self.ax = self.fig.add_subplot(111)
+        FigureCanvas.__init__(self, self.fig)
+        FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
 
 class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
-    counter = 0
     def __init__(self, fileName, x=0, y=0, scale=1, parent=None):
         super(Window, self).__init__(parent)
         self.setupUi(self)
@@ -23,14 +33,15 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         # set window title
         self.setWindowTitle(self.fileName)
 
+        self.canvas = MplCanvas()
+        self.toolBar = NavigationToolbar(self.canvas, self)
+        self.verticalLayout.addWidget(self.canvas)
+        self.verticalLayout.addWidget(self.toolBar)
+
         # bind export actions
         self.actionPNG.triggered.connect(lambda: self.exportFile(self.fileName))
         self.actionPDF.triggered.connect(lambda: self.exportFile(self.fileName))
 
-        type(self).counter += 1
-
-    def __del__(self):
-        type(self).counter -= 1
 
 
     def setBackgroundColor(self, color):

@@ -8,7 +8,7 @@ Functions:
     __init__(self, output_directory='RAxML_Files', parent=None)
     sites_to_newick_ms(self, input_file)
     sites_to_newick_rax(self, rax_dir, window_size, window_offset)
-    ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2)
+    sitesToRobinsonFouldsDistance(self, sites_to_newick_1,  sites_to_newick_2)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -25,11 +25,12 @@ class MsComparison(QtCore.QThread):
 
     def sites_to_newick_ms(self, input_file):
         """
-        Creates a mapping of sites to their corresponding best tree newick string as outputted by MS
-        Input:
-        input_file --- an MS output file
-        Output:
-        sites_to_newick --- a mapping of site indices to their corresponding best tree newick string
+            Creates a mapping of sites to their corresponding best tree newick string as outputted by MS
+
+            Input:
+                input_file --- an MS output file
+            Output:
+                sites_to_newick --- a mapping of site indices to their corresponding best tree newick string
         """
 
         sites_to_newick = {}
@@ -64,12 +65,13 @@ class MsComparison(QtCore.QThread):
     def sites_to_newick_rax(self, rax_dir, window_size, window_offset):
         """
         Creates a mapping of sites to their corresponding best tree newick string as outputted by RAxML
+
         Input:
-        rax_dir --- the directory containing RAxML output file
-        window_size --- the number of bases included in each window
-        window_offset --- the number of bases between the beginning of each window
+            rax_dir --- the directory containing RAxML output file
+            window_size --- the number of bases included in each window
+            window_offset --- the number of bases between the beginning of each window
         Output:
-        sites_to_newick --- a mapping of site indices to their corresponding best tree newick string
+            sites_to_newick --- a mapping of site indices to their corresponding best tree newick string
         """
 
         sites_to_newick = {}
@@ -99,18 +101,18 @@ class MsComparison(QtCore.QThread):
 
         return sites_to_newick
 
-    def ms_rax_difference(self, sites_to_newick_1,  sites_to_newick_2):
+    def sitesToRobinsonFouldsDistance(self, sites_to_newick_1,  sites_to_newick_2):
         """
-        Creates a mapping of sites to both the unweighted and weighted Robinson-Foulds Distance
-        between the best tree outputted by MS and the best tree outputted by RAxML
-        Input:
-        sites_to_newick_ms_map --- a mapping of site indices to their corresponding best tree
-        newick string
-        sites_to_newick_rax_map --- a mapping of site indices to their corresponding best tree
-        newick string
-        Output:
-        sites_to_difference_w --- a mapping of sites to the weighted RF distance between the trees
-        sites_to_difference_uw --- a mapping of sites to the unweighted RF distance between the trees
+            Creates a mapping of sites to both the unweighted and weighted Robinson-Foulds Distance
+            between the best tree outputted by MS and the best tree outputted by RAxML
+
+            Input:
+                sites_to_newick_ms_map --- a mapping of site indices to their corresponding best tree newick string
+                sites_to_newick_rax_map --- a mapping of site indices to their corresponding best tree newick string
+
+            Output:
+                sites_to_difference_w --- a mapping of sites to the weighted RF distance between the trees
+                sites_to_difference_uw --- a mapping of sites to the unweighted RF distance between the trees
         """
 
         # Initialize the mappings
@@ -147,38 +149,72 @@ class MsComparison(QtCore.QThread):
         return sites_to_difference_w, sites_to_difference_uw
 
     def run(self):
-        # ms -> raxml directory comparison
-        # if self.msToRax:
-        #     sites_to_newick_ms_map = self.sites_to_newick_ms(self.msTruth)
-        #     sites_to_newick_rax_map = self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset)
-        #     try:
-        #         sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sites_to_newick_ms_map, sites_to_newick_rax_map)
-        #     except ValueError:
-        #         self.emit(QtCore.SIGNAL('MS_ERR'), 'Invalid Directory', 'Please choose another RAxML Directory', None)
-        #         return
-        # ms -> ms comparison
-        # else:
-
-        # initialize sites
+        graphLabels = []
         sitesToNewickMsMaps = []
+        weightedRobinsonFouldsSums = []
+        unweightedRobinsonFouldsSums = []
+        percentMatchingSitesWeighted = []
+        percentMatchingSitesUnweighted = []
 
-        sitesToNewickMsMaps.append(self.sites_to_newick_ms(self.msFiles[0]))
-        sitesToNewickMsMaps.append(self.sites_to_newick_ms(self.msFiles[1]))
+        # create sites to newick map for MS truth file
+        sitesToNewickMsTruth = self.sites_to_newick_ms(self.msTruth)
 
-        sites_to_difference_w, sites_to_difference_uw = self.ms_rax_difference(sitesToNewickMsMaps[0], sitesToNewickMsMaps[1])
+        # create sites to newick map for each MS file
+        for msFile in self.msFiles:
+            sitesToNewickMsMaps.append(self.sites_to_newick_ms(msFile))
+            graphLabels.append(os.path.basename(msFile))
 
-        self.emit(QtCore.SIGNAL('MS_COMPLETE'), sites_to_difference_w, sites_to_difference_uw)
+        for sitesToNewickMsMap in sitesToNewickMsMaps:
+            sitesToRFDWeighted, sitesToRFDUnweighted = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
+
+            # total robinson foulds distances
+            weightedRobinsonFouldsSums.append(sum(sitesToRFDWeighted.values()))
+            unweightedRobinsonFouldsSums.append(sum(sitesToRFDUnweighted.values()))
+
+            matchingSites = 0
+            for site in sitesToRFDWeighted:
+                if sitesToRFDWeighted[site] == 0:
+                    matchingSites += 1.0
+            percentMatchingSitesWeighted.append(100.0 * matchingSites / len(sitesToRFDWeighted))
+
+            matchingSites = 0
+            for site in sitesToRFDUnweighted:
+                if sitesToRFDUnweighted[site] == 0:
+                    matchingSites += 1.0
+            percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
+
+
+
+        # sites_to_difference_w, sites_to_difference_uw = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMaps[0])
+
+        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted,  graphLabels)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
+
     ms = MsComparison()
+    ms.statisticsCalculations.output_directory = '../RAxML_Files'
 
-    input_file = "../testFiles/fakeMS.txt"
-    sites_to_newick_ms_map = ms.sites_to_newick_ms('../RAxML_Files')
+    ms.msTruth = '../testFiles/fakeMS.txt'
+    ms.msFiles = []
+    ms.msFiles.append('../testFiles/fakeMS2.txt')
+    ms.msFiles.append('../testFiles/fakeMS5.txt')
+    ms.msFiles.append('../testFiles/fakeMS6.txt')
 
-    window_size, window_offset = 10, 10
-    sites_to_newick_rax_map = ms.sites_to_newick_rax(ms.output_directory, window_size, window_offset)
+    def plot(weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, msFiles):
+        # ms.statisticsCalculations.barPlot(weightedData, '../plots/WRFdifference.png', 'Weighted', '', 'IDK', groupLabels=msFiles, xTicks=True)
+        # ms.statisticsCalculations.barPlot(unweightedData, '../plots/UWRFdifference.png', 'Unweighted', '', 'IDK', groupLabels=msFiles)
+        ms.statisticsCalculations.barPlot(percentMatchingSitesWeighted, '../plots/percentMatchingSitesWeighted', 'Percent Matching Sites Weighted', '', '% Matching Sites Weighted')
+        ms.statisticsCalculations.barPlot(percentMatchingSitesUnweighted, '../plots/percentMatchingSitesUnweighted', 'Percent Matching Sites Unweighted', '', '% Matching Sites Unweighted')
+        # ms.statisticsCalculations.plt.show()
 
-    sites_to_difference_w, sites_to_difference_uw = ms.ms_rax_difference(sites_to_newick_ms_map,  sites_to_newick_rax_map)
+    ms.connect(ms, QtCore.SIGNAL('MS_COMPLETE'), plot)
+    ms.run()
 
-    ms.statisticsCalculations.stat_scatter(sites_to_difference_w, "WRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices", "Weighted Robinson-Foulds Distance")
-    ms.statisticsCalculations.stat_scatter(sites_to_difference_uw, "UWRFdifference.png", "Difference Between MS and RAxML Output", "Sites Indices"," Unweighted Robinson-Foulds Distance")
+
+
+    # for sitesToNewickMsMap in sitesToNewickMsMaps:
+    #     weightedData, unweightedData = ms.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
+
+        # ms.statisticsCalculations.barPlot(weightedData.values(), 'name', 'title', 'x', '% Accuracy')
+        # ms.statisticsCalculations.stat_scatter(weightedData, "../plots/WRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Weighted Robinson-Foulds Distance")
+        # ms.statisticsCalculations.stat_scatter(unweightedData, "../plots/UWRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Unweighted Robinson-Foulds Distance")

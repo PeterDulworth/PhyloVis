@@ -27,11 +27,11 @@ Travis Benedict
 Peter Dulworth
 """
 
+
 class StatisticsCalculations(QtCore.QThread):
     def __init__(self, output_directory='RAxML_Files', parent=None):
         super(StatisticsCalculations, self).__init__(parent)
         self.output_directory = output_directory
-
 
     def newick_reformat(self, newick):
         """
@@ -52,7 +52,6 @@ class StatisticsCalculations(QtCore.QThread):
 
         return newick
 
-
     def calculate_p_of_gt_given_st(self, species_tree, gene_tree):
         """
         Computes the probability that a gene tree occurs given a species tree. If the taxon names between the two trees are not the
@@ -72,7 +71,7 @@ class StatisticsCalculations(QtCore.QThread):
         # Check if the species tree is formatted correctly for PhyloNet if not reformat it
         if species_tree[-2] != ")" or species_tree[-1] != ")":
             # species_tree = newick_reformat(species_tree).replace("\n","")
-            species_tree = species_tree.replace("\n","")
+            species_tree = species_tree.replace("\n", "")
 
         # If gene_tree input is a file read in the newick string
         if os.path.isfile(gene_tree):
@@ -82,12 +81,12 @@ class StatisticsCalculations(QtCore.QThread):
         # Check if the gene tree is formatted correctly for PhyloNet if not reformat it
         if gene_tree[-2] != ")" or gene_tree[-1] != ")":
             # gene_tree = newick_reformat(gene_tree).replace("\n","")
-            gene_tree = gene_tree.replace("\n","")
+            gene_tree = gene_tree.replace("\n", "")
 
         # IF YOU COMMENT THIS OUT AGAIN EVERYTHING WILL BREAK
         # add quotes to the strings
         species_tree = str(species_tree)
-        species_tree = "'"+ species_tree +"'"
+        species_tree = "'" + species_tree + "'"
         gene_tree = "'" + gene_tree + "'"
 
         # Run PhyloNet jar file
@@ -97,7 +96,6 @@ class StatisticsCalculations(QtCore.QThread):
         p_of_gt_given_st = p.stdout.readline()
 
         return p_of_gt_given_st
-
 
     def calculate_windows_to_p_gtst(self, species_tree):
         """
@@ -119,8 +117,7 @@ class StatisticsCalculations(QtCore.QThread):
 
             # If file is the file with the best tree newick string
             if os.path.splitext(filename)[0] == "RAxML_bestTree":
-
-                window_num = (os.path.splitext(filename)[1]).replace(".","")
+                window_num = (os.path.splitext(filename)[1]).replace(".", "")
 
                 gene_tree_filename = os.path.join(self.output_directory, filename)
 
@@ -132,7 +129,6 @@ class StatisticsCalculations(QtCore.QThread):
                 windows_to_p_gtst[window_num] = p_gtst
 
         return windows_to_p_gtst
-
 
     def calculate_robinson_foulds(self, species_tree, gene_tree, weighted):
         """
@@ -177,7 +173,6 @@ class StatisticsCalculations(QtCore.QThread):
         # only unweighted foulds distance
         else:
             return treecompare.unweighted_robinson_foulds_distance(species_tree, gene_tree)
-
 
     def calculate_windows_to_rf(self, species_tree, weighted):
         """
@@ -228,7 +223,6 @@ class StatisticsCalculations(QtCore.QThread):
         else:
             return windows_to_uw_rf
 
-
     def stat_scatter(self, stat_map, name, title, xlabel, ylabel):
         """
         Creates a scatter plot with the x-axis being the
@@ -276,6 +270,129 @@ class StatisticsCalculations(QtCore.QThread):
 
         plt.clf()
 
+    def barPlot(self, data, name, title, xLabel, yLabel, labelHeights=False, legend=False, legendNames=(), xTicks=False, groupLabels=()):
+        """
+            generates bar chart
+        """
+
+        def autoLabel(rects, ax):
+            """
+            Attach a text label above each bar displaying its height
+            """
+            for rect in rects:
+                height = rect.get_height()
+                ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height, '%d' % int(height), ha='center', va='bottom')
+
+
+        plt.figure()
+
+        numberOfBars = len(data)
+        ind = np.arange(numberOfBars)  # the x locations for the groups
+        width = .667  # the width of the bars
+        fig, ax = plt.subplots()
+        colors = [(43.0/255.0, 130.0/255.0, 188.0/255.0), (141.0/255.0, 186.0/255.0, 87.0/255.0), (26.0/255.0, 168.0/255.0, 192.0/255.0), (83.5/255.0, 116.5/255.0, 44.5/255.0)]
+        bars = []
+
+        bars.append(ax.bar(ind, data, width, color=colors))
+
+        ax.set_xticks([])
+        if xTicks:
+            ax.set_xticks(ind)
+
+        if len(groupLabels) > 0:
+            ax.set_xticks(ind)
+            ax.set_xticklabels(groupLabels)
+
+        if legend:
+            legendBoxes = []
+            for bar in bars:
+                legendBoxes.append(bar[0])
+            ax.legend(legendBoxes, legendNames)
+
+        if labelHeights:
+            autoLabel(bars[0], ax)
+            autoLabel(bars[1], ax)
+
+        # label the axes
+        plt.xlabel(xLabel, fontsize=10)
+        plt.ylabel(yLabel, fontsize=10)
+
+        plt.title(title, fontsize=15)
+        plt.tight_layout()
+        plt.savefig(name)
+
+        # plt.clf()
+
+    def groupedBarPlot(self, data, name, title, xLabel, yLabel, labelHeights=False, legend=False, legendNames=(), xTicks=False, groupLabels=()):
+        """
+                    generates bar chart
+                """
+
+        def autoLabel(rects, ax):
+            """
+            Attach a text label above each bar displaying its height
+            """
+            for rect in rects:
+                height = rect.get_height()
+                ax.text(rect.get_x() + rect.get_width() / 2., 1.05 * height, '%d' % int(height), ha='center', va='bottom')
+
+        useGroups = True
+
+        print data
+
+        if type(data[0]) == list:
+            if len(data[0]) == 1:
+                useGroups = False
+        else:
+            newData = []
+            for el in data:
+                newData.append([el])
+            data = newData
+            useGroups = False
+
+        numberOfBarGroups = len(data[0])
+        ind = np.arange(numberOfBarGroups)  # the x locations for the groups
+        width = (0.6667) / float(len(data))  # the width of the bars
+        offset = 0.0
+        fig, ax = plt.subplots()
+        colors = [(43.0 / 255.0, 130.0 / 255.0, 188.0 / 255.0), (141.0 / 255.0, 186.0 / 255.0, 87.0 / 255.0), (26.0 / 255.0, 168.0 / 255.0, 192.0 / 255.0), (83.5 / 255.0, 116.5 / 255.0, 44.5 / 255.0)]
+        groups = []
+        padding = 0
+
+        if not useGroups:
+            padding = 0.25
+
+        for i in range(len(data)):
+            groups.append(ax.bar(ind + offset, data[i], width, color=colors[i % 4]))
+            offset += width + padding
+
+        ax.set_xticks([])
+        if xTicks:
+            ax.set_xticks(ind + ((numberOfBarGroups - 1.0)) * width / 2.0)
+
+        if len(groupLabels) > 0:
+            ax.set_xticklabels(groupLabels)
+
+        if legend:
+            legendBoxes = []
+            for group in groups:
+                legendBoxes.append(group[0])
+            ax.legend(legendBoxes, legendNames)
+
+        if labelHeights:
+            autoLabel(groups[0], ax)
+            autoLabel(groups[1], ax)
+
+        # label the axes
+        plt.xlabel(xLabel, fontsize=10)
+        plt.ylabel(yLabel, fontsize=10)
+
+        plt.title(title, fontsize=15)
+        plt.tight_layout()
+        plt.savefig(name)
+        # plt.show()
+
+        plt.clf()
 
     def calculate_d(self, alignment, window_size, window_offset, taxon1, taxon2, taxon3, taxon4):
         """
@@ -303,7 +420,7 @@ class StatisticsCalculations(QtCore.QThread):
         windows_to_d = {}
 
         sequence_list = []
-        taxon_list =[]
+        taxon_list = []
 
         with open(alignment) as f:
 
@@ -405,10 +522,9 @@ class StatisticsCalculations(QtCore.QThread):
             percent_complete = (float(window + 1) / float(num_windows)) * 100
             self.emit(QtCore.SIGNAL('D_PER'), percent_complete)
 
-        d_stat = d_numerator/float(d_denominator)
+        d_stat = d_numerator / float(d_denominator)
 
         self.emit(QtCore.SIGNAL('D_FINISHED'), d_stat, windows_to_d)
-
 
     def run(self):
         try:
@@ -420,37 +536,11 @@ class StatisticsCalculations(QtCore.QThread):
         finally:
             return
 
+
 if __name__ == '__main__':
-    # Inputs
 
-    # species_tree = "ChillLeo_species_tree.0"
-    # weighted = True
-
-
-    # Run commands
-    # windows_to_p_gtst = sc.calculate_windows_to_p_gtst(species_tree)
-    # stat_scatter(windows_to_p_gtst, "PGTST")
-
-    # # Unweighted Robinson-Foulds
-    # if not weighted:
-    #     windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-    #     stat_scatter(windows_to_uw_rf, "unweightedRF")
-    #
-    # # Weighted Robinson-Foulds
-    # if weighted:
-    #     windows_to_w_rf, windows_to_uw_rf = calculate_windows_to_rf(species_tree, weighted)
-    #     stat_scatter(windows_to_w_rf, "weightedRF")
-    #     stat_scatter(windows_to_uw_rf, "unweightedRF")
-
-    # alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
-    # window_size = 50000
-    # window_offset = 50000
-    alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo.phylip"
-    window_size = 50000
-    window_offset = 50000
     sc = StatisticsCalculations()
-    # d, windows_to_d = sc.calculate_d(window_directory, window_offset)
-    d, windows_to_d = sc.calculate_d(alignment, window_size, window_offset, "H", "C", "G", "O")
-    print d
-    print windows_to_d
-    # sc.stat_scatter(windows_to_d, "WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
+
+    sc.barPlot([1,2,3,4,5], 'name', 'title', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
+    sc.barPlot([3,2,1,4,2], 'name2', 'title2', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
+    plt.show()
