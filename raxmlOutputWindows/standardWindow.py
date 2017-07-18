@@ -60,7 +60,6 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.setupUi(self)
 
         self.fileName = fileName
-        self.lowQualFileName = os.path.splitext(self.fileName)[0] + '.lowQual.png'
         self.x = x
         self.y = y
         self.scale = scale
@@ -147,7 +146,6 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         # refresh canvas
         self.canvas.draw()
 
-
     def setBackgroundColor(self, color):
         """
             change background color to white
@@ -156,34 +154,17 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         p.setColor(self.backgroundRole(), color)
         self.setPalette(p)
 
-    def setImagePosition(self, x, y):
+    def setWindowPosition(self, x, y):
         """
             positions the window relative to the top left corner of the screen (px)
         """
         self.move(x, y)
 
-    def setImageQuality(self, scale):
+    def setWindowSize(self, x, y):
         """
-            creates a lower quality version of the image to display
+            sets size of window
         """
-        image = Image.open(self.fileName)
-        size = image.size
-        image = image.resize((int(size[0] / scale), int(size[1] / scale)), Image.ANTIALIAS)
-        image.save(os.path.splitext(self.fileName)[0] + '.lowQual.png', 'PNG', quality=200)
-
-    def setImage(self, fileName):
-        """
-            displays the lower quality version of the image
-        """
-        self.imagePixmap = QtGui.QPixmap(fileName)
-        self.image.setScaledContents(False)
-        self.image.setPixmap(self.imagePixmap)
-
-    def displayImage(self):
-        self.setBackgroundColor(QtCore.Qt.white)
-        self.setImageQuality(self.scale)
-        self.setImagePosition(self.x, self.y)
-        self.setImage(self.lowQualFileName)
+        self.resize(x, y)
 
     def exportFile(self, fileName):
         """
@@ -215,7 +196,7 @@ if __name__ == '__main__':
     # initialize main input window
     form = Window('../imgs/tree.png', scale=5)
     form.show()
-    # form.displayImage()
+    form.setWindowSize(600,600)
 
     # and execute the app
     sys.exit(app.exec_())
