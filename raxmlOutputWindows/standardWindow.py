@@ -1,8 +1,6 @@
 from PyQt4 import QtGui, QtCore
 import standardLayout
-from PIL import Image
 import sys, os
-from shutil import copyfile
 import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
@@ -11,7 +9,6 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 import numpy as np
-import random
 
 
 # class CustomToolbar(NavigationToolbar):
@@ -45,15 +42,6 @@ import random
 #         self.set_message(self.mode)
 
 
-class MplCanvas(FigureCanvas):
-    def __init__(self, figure):
-        self.fig = figure
-        self.ax = self.fig.add_subplot(222)
-        FigureCanvas.__init__(self, self.fig)
-        FigureCanvas.setSizePolicy(self, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(self)
-
-
 class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
     def __init__(self, fileName, x=0, y=0, scale=1, parent=None):
         super(Window, self).__init__(parent)
@@ -65,28 +53,15 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.scale = scale
 
         # moves menu bar into application -- mac only windows sux
-        self.menubar.setNativeMenuBar(False)
+        # self.menubar.setNativeMenuBar(False)
 
         # set window title
         self.setWindowTitle(self.fileName)
 
-        # a figure instance to plot on
         self.figure = plt.figure()
-
-        # this is the Canvas Widget that displays the `figure`
-        # it takes the `figure` instance as a parameter to __init__
         self.canvas = FigureCanvas(self.figure)
-
-        # this is the Navigation widget
-        # it takes the Canvas widget and a parent
         self.toolbar = NavigationToolbar(self.canvas, self)
 
-        self.pushButton.clicked.connect(self.figureBarPlot)
-
-        self.figureBarPlot([1, 2, 3, 4], 'henlo', 'henlo')
-
-        # self.canvas = MplCanvas()
-        # self.toolBar = NavigationToolbar(self.canvas, self)
         self.verticalLayout.addWidget(self.canvas)
         self.verticalLayout.addWidget(self.toolbar)
 
@@ -174,6 +149,8 @@ if __name__ == '__main__':
     form = Window('../imgs/tree.png', scale=5)
     form.show()
     form.setWindowSize(600,600)
+    form.figureBarPlot([1, 2, 3, 4], 'henlo', 'henlo')
+    form.setBackgroundColor(QtCore.Qt.white)
 
     # and execute the app
     sys.exit(app.exec_())

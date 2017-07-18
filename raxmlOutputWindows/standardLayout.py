@@ -30,6 +30,7 @@ class Ui_mainWindow(object):
         self.centralwidget = QtGui.QWidget(mainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.centralwidget)
+        self.verticalLayout_3.setMargin(0)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
