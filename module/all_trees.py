@@ -251,33 +251,52 @@ def calculate_newicks_to_stats(species_tree, species_network, unique_trees, outg
 
     trees_to_pgS = {}
     trees_to_pgN = {}
+    trees_to_pgS_noO = {}
+    trees_to_pgN_noO = {}
 
-    species_tree = outgroup_removal(species_tree, outgroup)
-    species_network = outgroup_removal(species_network, outgroup)
+    species_tree_noO = outgroup_removal(species_tree, outgroup)
+    species_network_noO = outgroup_removal(species_network, outgroup)
 
     # Iterate over the trees
     for tree in unique_trees:
-
-        tree = outgroup_removal(tree, outgroup)
 
         # Run PhyloNet p(g|S) jar file
         p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_tree, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
-        p_of_g_given_s = p.stdout.readline()
+        p_of_g_given_s = float(p.stdout.readline())
 
         # Run PhyloNet p(g|N) jar file
         p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_network, tree), stdout=subprocess.PIPE,
                              shell=True)
 
         # Read output and convert to float
-        p_of_g_given_n = p.stdout.readline()
+        p_of_g_given_n = float(p.stdout.readline())
+
+        # Calculate for trees without outgroup
+        tree_noO = outgroup_removal(tree, outgroup)
+
+        # Run PhyloNet p(g|S) jar file
+        p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_tree_noO, tree_noO), stdout=subprocess.PIPE,
+                             shell=True)
+
+        # Read output and convert to float
+        p_of_g_given_s_noO = float(p.stdout.readline())
+
+        # Run PhyloNet p(g|N) jar file
+        p = subprocess.Popen("java -jar ../unstable.jar {0} {1}".format(species_network_noO, tree_noO), stdout=subprocess.PIPE,
+                             shell=True)
+
+        # Read output and convert to float
+        p_of_g_given_n_noO = float(p.stdout.readline())
 
         trees_to_pgS[tree] = p_of_g_given_s
         trees_to_pgN[tree] = p_of_g_given_n
+        trees_to_pgS_noO[tree] = p_of_g_given_s_noO
+        trees_to_pgN_noO[tree] = p_of_g_given_n_noO
 
-    return trees_to_pgS, trees_to_pgN
+    return trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO
 
 
 def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
@@ -323,7 +342,8 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
                     unequal_trees.add(tree1)
                     unequal_trees.add(tree2)
 
-        valuable_trees.append(unequal_trees)
+        if len(unequal_trees) > 0:
+            valuable_trees.append(unequal_trees)
 
     minimal_size = float("inf")
 
@@ -564,6 +584,9 @@ def site_pattern_generator(taxa_order, newick, outgroup):
         else:
             duplicates.append(pattern)
 
+    # This may need to change double check with Chill Leo on this
+    # if clade_count > 1:
+
     # Invert all duplicate patterns
     inverted_patterns = pattern_inverter(duplicates)
 
@@ -626,8 +649,8 @@ def newicks_to_patterns_generator(taxa_order, newicks):
 
 # taxa = ["A", "B", "C", "D", "O"]
 # taxa = ["P1", "P2", "P3","O"]
-taxa = ["P1", "P2", "P3", "P4", "O"]
-# taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
+# taxa = ["P1", "P2", "P3", "P4", "O"]
+taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
 # print unique
@@ -644,21 +667,20 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
 
 # species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
-# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
-network_map = {"P3":"P1"}
+# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
+species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
+network_map = {"P5":"P1"}
 network_tree = network_tree((0.7, 0.3), species_tree, network_map)
 # print network_tree
-trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
+trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 # print trees_to_pgS
 # '(((P2,P3),(P4,(P1,P5))),O);'
 # Create a mapping of newicks to their probability and site pattern
 newick_to_pat_n_stat = {}
 for newick in newick_patterns:
-    tree1 = outgroup_removal(newick, outgroup)
     for tree in trees_to_pgS:
-        if tree1 == tree:
-            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree])
+        if newick == tree:
+            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree], trees_to_pgS_noO[tree], trees_to_pgN_noO[tree])
 
 results = sorted(newick_to_pat_n_stat.items(), key=lambda tup: tup[1][1], reverse=True)
 for i in results:
