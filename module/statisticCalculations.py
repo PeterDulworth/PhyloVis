@@ -270,6 +270,27 @@ class StatisticsCalculations(QtCore.QThread):
 
         plt.clf()
 
+    def figureBarPlot(self, data, name, title, labelHeights=False, legend=False, legendNames=(), xTicks=False, groupLabels=()):
+        """
+            generates bar chart
+        """
+
+        figure = plt.figure()
+
+        numberOfBars = len(data)
+        ind = np.arange(numberOfBars)  # the x locations for the groups
+        width = .667  # the width of the bars
+        ax = figure.add_subplot(111)
+        colors = [(43.0/255.0, 130.0/255.0, 188.0/255.0), (141.0/255.0, 186.0/255.0, 87.0/255.0), (26.0/255.0, 168.0/255.0, 192.0/255.0), (83.5/255.0, 116.5/255.0, 44.5/255.0)]
+
+        ax.bar(ind, data, width, color=colors)
+
+        plt.title(title, fontsize=15)
+        plt.savefig(name)
+        plt.show()
+
+        # plt.clf()
+
     def barPlot(self, data, name, title, xLabel, yLabel, labelHeights=False, legend=False, legendNames=(), xTicks=False, groupLabels=()):
         """
             generates bar chart
@@ -541,6 +562,8 @@ if __name__ == '__main__':
 
     sc = StatisticsCalculations()
 
-    sc.barPlot([1,2,3,4,5], 'name', 'title', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
-    sc.barPlot([3,2,1,4,2], 'name2', 'title2', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
-    plt.show()
+    sc.figureBarPlot([1,2,3,4], 'henlo', 'henlo')
+
+    # sc.barPlot([1,2,3,4,5], 'name', 'title', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
+    # sc.barPlot([3,2,1,4,2], 'name2', 'title2', 'x', '% Accuracy', groupLabels=(1,2,3,4,5))
+    # plt.show()
