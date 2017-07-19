@@ -42,10 +42,44 @@ import numpy as np
 #         self.set_message(self.mode)
 
 
-class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
+class Window(QtGui.QMainWindow):
     def __init__(self, fileName, x=0, y=0, scale=1, parent=None):
         super(Window, self).__init__(parent)
-        self.setupUi(self)
+
+        # self.setObjectName("self")
+        self.resize(340, 286)
+        self.setAutoFillBackground(True)
+        self.centralwidget = QtGui.QWidget(self)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout_3 = QtGui.QVBoxLayout(self.centralwidget)
+        self.verticalLayout_3.setMargin(0)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.verticalLayout = QtGui.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.verticalLayout_3.addLayout(self.verticalLayout)
+        self.setCentralWidget(self.centralwidget)
+
+        # menubar
+        self.menubar = QtGui.QMenuBar(self)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 340, 22))
+        self.menubar.setObjectName("menubar")
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        self.setMenuBar(self.menubar)
+        self.actionPNG = QtGui.QAction(self)
+        self.actionPNG.setObjectName("actionPNG")
+        self.actionPDF = QtGui.QAction(self)
+        self.actionPDF.setObjectName("actionPDF")
+        self.actionSaveAs = QtGui.QAction(self)
+        self.actionSaveAs.setObjectName("actionSaveAs")
+        self.menuFile.addAction(self.actionSaveAs)
+        self.menubar.addAction(self.menuFile.menuAction())
+
+        self.setWindowTitle("Main Window")
+        self.menuFile.setTitle("File")
+        self.actionSaveAs.setText("Save As...")
+
+        QtCore.QMetaObject.connectSlotsByName(self)
 
         self.fileName = fileName
         self.x = x
@@ -53,7 +87,7 @@ class Window(QtGui.QMainWindow, standardLayout.Ui_mainWindow):
         self.scale = scale
 
         # moves menu bar into application -- mac only windows sux
-        # self.menubar.setNativeMenuBar(False)
+        self.menubar.setNativeMenuBar(False)
 
         # set window title
         self.setWindowTitle(self.fileName)
