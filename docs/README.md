@@ -24,6 +24,7 @@ Analytic/Visual Tool For Evolutionary Diversity Across Genomes.
 - [PyQt4](http://pyqt.sourceforge.net/Docs/PyQt4/)
 - [DendroPy](https://www.dendropy.org/)
 - [MatPlotLib](https://matplotlib.org/)
+- [ETE](http://etetoolkit.org/)
 
 ## Installation
 Install it. How? We don't know.
