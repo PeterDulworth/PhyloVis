@@ -1,5 +1,4 @@
-from matplotlib.backends.backend_qt5 import SubplotToolQt
-from matplotlib.backends.backend_qt5 import UiSubplotTool
+from matplotlib.backends.backend_qt5 import SubplotToolQt, UiSubplotTool
 from matplotlib.backends.qt_compat import QtCore, QtGui, QtWidgets
 
 class CustomUiSubplotTool(UiSubplotTool):
@@ -221,7 +220,7 @@ class CustomUiSubplotTool(UiSubplotTool):
         self.donebutton.clicked.connect(self.accept)
 
 
-class CustomSubplotToolQt(SubplotToolQt, CustomUiSubplotTool):
+class CustomSubplotTool(SubplotToolQt, CustomUiSubplotTool):
     def __init__(self, targetfig, parent):
         # UiSubplotTool.__init__(self, None)
         CustomUiSubplotTool.__init__(self, None)
