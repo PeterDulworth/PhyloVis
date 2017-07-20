@@ -18,7 +18,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider top
         self.hboxtop = QtWidgets.QHBoxLayout()
-        self.labeltop = QtWidgets.QLabel('Top', self)
+        self.labeltop = QtWidgets.QLabel('Top ', self)
         self.labeltop.setMinimumSize(QtCore.QSize(50, 0))
         self.labeltop.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -48,7 +48,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider bottom
         hboxbottom = QtWidgets.QHBoxLayout()
-        labelbottom = QtWidgets.QLabel('Bottom', self)
+        labelbottom = QtWidgets.QLabel('Bottom ', self)
         labelbottom.setMinimumSize(QtCore.QSize(50, 0))
         labelbottom.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -78,7 +78,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider left
         hboxleft = QtWidgets.QHBoxLayout()
-        labelleft = QtWidgets.QLabel('Left', self)
+        labelleft = QtWidgets.QLabel('Left ', self)
         labelleft.setMinimumSize(QtCore.QSize(50, 0))
         labelleft.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -108,7 +108,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider right
         hboxright = QtWidgets.QHBoxLayout()
-        self.labelright = QtWidgets.QLabel('Right', self)
+        self.labelright = QtWidgets.QLabel('Right ', self)
         self.labelright.setMinimumSize(QtCore.QSize(50, 0))
         self.labelright.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -144,7 +144,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider hspace
         hboxhspace = QtWidgets.QHBoxLayout()
-        self.labelhspace = QtWidgets.QLabel('hspace', self)
+        self.labelhspace = QtWidgets.QLabel('hspace ', self)
         self.labelhspace.setMinimumSize(QtCore.QSize(50, 0))
         self.labelhspace.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -174,7 +174,7 @@ class CustomUiSubplotTool(UiSubplotTool):
 
         # slider wspace
         hboxwspace = QtWidgets.QHBoxLayout()
-        self.labelwspace = QtWidgets.QLabel('wspace', self)
+        self.labelwspace = QtWidgets.QLabel('wspace ', self)
         self.labelwspace.setMinimumSize(QtCore.QSize(50, 0))
         self.labelwspace.setAlignment(
                 QtCore.Qt.AlignRight |
@@ -211,7 +211,8 @@ class CustomUiSubplotTool(UiSubplotTool):
                 QtWidgets.QSizePolicy.Minimum)
         self.resetbutton = QtWidgets.QPushButton('Reset', self)
         self.donebutton = QtWidgets.QPushButton('Close', self)
-        self.donebutton.setFocus()
+        self.setTabOrder(self.donebutton, self.resetbutton)
+        self.setTabOrder(self.resetbutton, self.tightlayout)
         hbox2.addWidget(self.tightlayout)
         hbox2.addItem(spacer)
         hbox2.addWidget(self.resetbutton)
