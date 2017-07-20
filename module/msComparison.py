@@ -13,7 +13,7 @@ Functions:
     sites_to_newick_ms(self, input_file)
     sites_to_newick_rax(self, rax_dir, window_size, window_offset)
     ms_rax_difference(self, sites_to_newick_1, sites_to_newick_2)
-    def  tmrca_graph(sites_to_newick_mappings)
+    tmrca_graph(sites_to_newick_mappings)
 ~
 Chabrielle Allen
 Travis Benedict
@@ -158,7 +158,7 @@ class MsComparison(QtCore.QThread):
 
         return sites_to_difference_w, sites_to_difference_uw
 
-    def tmrca_graph(self, sites_to_newick_mappings):
+    def tmrca_graph(self, sites_to_newick_mappings, topology_only):
         """
         Plots a line graph comparing tree heights from different MS
         files.
@@ -190,7 +190,7 @@ class MsComparison(QtCore.QThread):
                 roots.append(Tree.get_tree_root(Tree(trees[j])))
 
                 # get distance from roots to farthest leaves
-                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only=False, is_leaf_fn=None))
+                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only, is_leaf_fn=None))
 
             for k in range(len(leaves)):
                 # regular expression to get height values from list of farthest leaves
