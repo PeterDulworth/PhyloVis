@@ -4,7 +4,8 @@ import matplotlib
 
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
-from matplotlibCustomBackend.customSubplotToolUi import CustomSubplotTool, CustomUiSubplotTool
+from matplotlibCustomBackend.customSubplotToolUi import CustomSubplotTool
+from matplotlibCustomBackend.customToolbar import CustomToolbar
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.backends.qt_compat import QtCore, QtGui, QtWidgets
@@ -51,7 +52,7 @@ class Window(QtGui.QMainWindow):
 
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
-        self.toolbar = NavigationToolbar(self.canvas, self)
+        self.toolbar = CustomToolbar(self.canvas, self)
 
         self.verticalLayout.addWidget(self.canvas)
         self.verticalLayout.addWidget(self.toolbar)
