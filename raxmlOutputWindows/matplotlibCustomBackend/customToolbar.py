@@ -31,3 +31,5 @@ class CustomToolbar(NavigationToolbar):
         NavigationToolbar.pan(self)
         self.mode = "henlo!"  # <--- whatever you want to replace "pan/zoom" goes here
         self.set_message(self.mode)
+
+    def configure_toolbar
