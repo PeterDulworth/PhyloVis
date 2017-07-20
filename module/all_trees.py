@@ -1,6 +1,5 @@
 import re
 import os
-from dendropy import Tree
 import itertools
 import math
 import ete3
@@ -54,6 +53,7 @@ def network_tree(inheritance, species_tree, network_map):
 
 
 ##### Generate all unique trees functions
+
 
 def calculate_num_trees(n):
     """
@@ -219,6 +219,7 @@ def generate_unique_trees(taxa, outgroup):
 
 ###### Statistics Calculations Functions
 
+
 def outgroup_removal(newick, outgroup):
     """
     Move the location of the outgroup in a newick string to be at the end of the string
@@ -358,6 +359,7 @@ def determine_interesting_trees(trees_to_pgS, trees_to_pgN):
 
 ##### Site Pattern Functions
 
+
 def outgroup_reformat(newick, outgroup):
     """
     Move the location of the outgroup in a newick string to be at the end of the string
@@ -410,7 +412,7 @@ def pattern_inverter(patterns):
             b_count -= 1
             a_count += 1
 
-        if a_count > 1 and b_count > 1:
+        if a_count > 1 and b_count > 0:
             inverted.append(inverted_pattern)
 
     return inverted
@@ -447,7 +449,17 @@ def site_pattern_generator(taxa_order, newick, outgroup):
         # Add node name to list of nodes
         nodes.append(node.name)
 
+
     nodes = list(reversed(nodes))
+
+    if nodes[2] == "" and nodes[3] == "":
+        nodes = []
+        for node in tree.traverse("preorder"):
+            # Add node name to list of nodes
+            nodes.append(node.name)
+
+        nodes = list(reversed(nodes))
+
     # Keep track of visited leaves
     seen_leaves = []
 
@@ -525,7 +537,20 @@ def site_pattern_generator(taxa_order, newick, outgroup):
 
             # If the last clade is reached break
             if node_idx == len(nodes)-1:
-                break
+
+                if node != "":
+                    # Get the index of the leaf in the pattern
+                    pat_idx1 = taxa_order.index(node)
+
+                    # Set those pattern indices to "A"
+                    pattern[pat_idx1] = "A"
+
+                    # Get the index that final leaf occurs at
+                    end_idx = node_idx
+                    break
+
+                else:
+                    break
 
             node = nodes[node_idx]
 
@@ -587,6 +612,8 @@ def site_pattern_generator(taxa_order, newick, outgroup):
     # This may need to change double check with Chill Leo on this
     # if clade_count > 1:
 
+    duplicates = finished_patterns
+
     # Invert all duplicate patterns
     inverted_patterns = pattern_inverter(duplicates)
 
@@ -615,7 +642,7 @@ def site_pattern_generator(taxa_order, newick, outgroup):
 
             pattern_str += site
 
-        if a_count > 1 and b_count > 1:
+        if a_count > 0 and b_count > 0:
             pattern_strings.append(pattern_str)
 
     return pattern_strings
@@ -651,6 +678,7 @@ def newicks_to_patterns_generator(taxa_order, newicks):
 # taxa = ["P1", "P2", "P3","O"]
 # taxa = ["P1", "P2", "P3", "P4", "O"]
 taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
+# taxa = ["P1", "P2", "P3", "P4", "P5", "P6", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
 # print unique
@@ -667,10 +695,12 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
 
 # species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
+# species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
 # species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
 species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
-network_map = {"P5":"P1"}
-network_tree = network_tree((0.7, 0.3), species_tree, network_map)
+# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,(P5:0.8,P6:0.8):0.8),O);"
+network_map = {"P3":"P1"}
+network_tree = network_tree((0.3, 0.7), species_tree, network_map)
 # print network_tree
 trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 # print trees_to_pgS
@@ -686,33 +716,19 @@ results = sorted(newick_to_pat_n_stat.items(), key=lambda tup: tup[1][1], revers
 for i in results:
     print i
 
+print
 
+trees = determine_interesting_trees(trees_to_pgS, trees_to_pgN)
+trees = list(trees)
+print trees
+print
+print newick_to_pat_n_stat[trees[1]][0] , "-" , newick_to_pat_n_stat[trees[0]][0]
 
-
-
-
-
-# species_tree = "((((H:0.8,C:0.8):0.8,G:0.8):0.8,B):0.8,O);"
-# species_tree = ""
-# network_map = {"G":"H"}
-
-# network_tree = network_tree(species_tree, network_map)
-# print network_tree
-
-# trees_to_pgS, trees_to_pgN = calculate_newicks_to_stats(species_tree, network_tree, unique)
-# print trees_to_pgS
-# print trees_to_pgN
-print determine_interesting_trees(trees_to_pgS, trees_to_pgN)
-
-
-# n = len(taxa)
-# print calculate_num_trees(n), "Actual"
-# # print gendistinct(n)
-# all = generate_all_trees(taxa)
-# # print all
-# print len(all), "All"
-# unique = generate_unique_trees(taxa, outgroup)
-# print len(unique), "Unique"
-# all = generate_all_trees(taxa)
-
-
+# two_clade = '(((P3,P4),(P2,P1)),O);'
+# right = '((P3,(P4,(P2,P1))),O);'
+# left = '((((P3,P4),P1),P2),O);'
+#
+#
+# print site_pattern_generator(taxa, two_clade, outgroup)
+# print site_pattern_generator(taxa, right, outgroup), right
+# print site_pattern_generator(taxa, left, outgroup), left
