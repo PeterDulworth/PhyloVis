@@ -6,6 +6,7 @@ import ete3
 from ete3 import Tree
 import copy
 import subprocess
+from collections import defaultdict
 
 """
 Functions:
@@ -16,7 +17,7 @@ Travis Benedict
 Peter Dulworth
 """
 
-def network_tree(inheritance, species_tree, network_map):
+def generate_network_tree(inheritance, species_tree, network_map):
     """
     Creates a network tree based on the species tree
     and the two leaves to be connected.
@@ -671,13 +672,86 @@ def newicks_to_patterns_generator(taxa_order, newicks):
     return newicks_to_patterns
 
 
+##### Interesting sites functions
 
-# print outgroup_reformat('(O,(((P1,P2),(P3,P4)),P5));', "O")
 
-# taxa = ["A", "B", "C", "D", "O"]
+def calculate_pattern_probabilities(newicks_to_patterns, newicks_to_pgS, newicks_to_pgN):
+    """
+    Creates a mapping of site patterns to their total p(g|S) values across all gene trees and 
+    a mapping of site patterns to their total p(g|N) values across all gene trees
+    Inputs:
+    newicks_to_patterns --- a mapping of tree newick strings to their site patterns
+    newicks_to_pgS--- a mapping of tree newick strings to their p(g|S) values 
+    newicks_to_pgN--- a mapping of tree newick strings to their p(g|N) values
+    Outputs:
+    patterns_to_pgS --- a mapping of site patterns to their total p(g|S) value
+    patterns_to_pgN --- a mapping of site patterns to their total p(g|N) value
+    """
+
+    patterns_to_pgS = {}
+    patterns_to_pgN = {}
+
+    # Iterate over each newick string
+    for newick in newicks_to_patterns:
+        # Iterate over each site pattern of a tree
+        for pattern in newicks_to_patterns[newick]:
+
+
+            # Initialize a probability for each pattern if it does not have one
+            if pattern not in patterns_to_pgS:
+                patterns_to_pgS[pattern] = newicks_to_pgS[newick]
+                patterns_to_pgN[pattern] = newicks_to_pgN[newick]
+
+            # Otherwise add to the existing probability
+            else:
+                patterns_to_pgS[pattern] += newicks_to_pgS[newick]
+                patterns_to_pgN[pattern] += newicks_to_pgN[newick]
+
+    return patterns_to_pgS, patterns_to_pgN
+
+
+def determine_patterns(patterns_to_pgS, patterns_to_pgN1, patterns_to_pgN2):
+    """
+    Determine which patterns are useful in determining introgression
+    Inputs:
+    patterns_to_pgS --- a mapping of site patterns to their total p(g|S) value
+    patterns_to_pgN1 --- a mapping of site patterns to their total p(g|N) value for a network
+    patterns_to_pgN2 --- a mapping of site patterns to their total p(g|N) value for a different network
+    Outputs:
+    terms1 --- a set of patterns to count and add to each other to determine introgression
+    terms2 --- a set of other patterns to count and add to each other to determine introgression
+    """
+
+    # Initialize sets for the patterns of interest
+    interesting_patterns = set([])
+    terms1 = set([])
+    terms2 = set([])
+
+    # Iterate over each pattern to determine the patterns of interest
+    for pattern in patterns_pgS:
+
+        tree_probability = patterns_to_pgS[pattern]
+
+        # If either network probability is greater than the tree probability the pattern is of interest
+        if patterns_to_pgN1[pattern] > tree_probability or patterns_to_pgN2[pattern] > tree_probability:
+
+            interesting_patterns.add(pattern)
+
+    # Iterate over each interesting pattern and determine which set of terms to add the pattern to
+    for pattern in interesting_patterns:
+
+        if patterns_to_pgN1[pattern] > patterns_to_pgN2[pattern]:
+            terms1.add(pattern)
+
+        elif patterns_to_pgN2[pattern] > patterns_to_pgN1[pattern]:
+            terms2.add(pattern)
+
+    return terms1, terms2
+
+
 # taxa = ["P1", "P2", "P3","O"]
-# taxa = ["P1", "P2", "P3", "P4", "O"]
-taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
+taxa = ["P1", "P2", "P3", "P4", "O"]
+# taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 # taxa = ["P1", "P2", "P3", "P4", "P5", "P6", "O"]
 outgroup = "O"
 unique = generate_unique_trees(taxa, outgroup)
@@ -685,50 +759,58 @@ unique = generate_unique_trees(taxa, outgroup)
 newick_patterns = newicks_to_patterns_generator(taxa, unique)
 # print newick_patterns
 
-# newick = '(((P2,P3),(P4,(P1,P5))),O);'
-# newick = "((((P1,P2),(P3,P4)),P5),O);"
-#
-# print site_pattern_generator(taxa, newick, outgroup)
-
-# newicks = ['(O,(P5,((P1,P2),(P3,P4))));']
-# newick_patterns = newicks_to_patterns_generator(taxa, newicks)
-# print newick_patterns
+# species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
 
 # species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-# species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
-# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
-species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
+species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
+# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
 # species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,(P5:0.8,P6:0.8):0.8),O);"
-network_map = {"P3":"P1"}
-network_tree = network_tree((0.3, 0.7), species_tree, network_map)
-# print network_tree
+network_map = {"P4":"P1"}
+network_tree = generate_network_tree((0.7, 0.3), species_tree, network_map)
+
 trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
-# print trees_to_pgS
-# '(((P2,P3),(P4,(P1,P5))),O);'
+
+patterns_pgS, patterns_pgN1 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+# patterns_pgS, patterns_pgN = calculate_pattern_probabilities(newick_patterns, trees_to_pgS_noO, trees_to_pgN_noO)
+
+# network_map = {"P4":"P1"}
+# network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
+#
+# trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
+#
+# patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+#
+# print determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+
+print "Site Pattern probabilities before reticulation from P3 to P1"
+for pattern in patterns_pgS:
+    print pattern, ":", patterns_pgS[pattern]
+
+print
+
+print "Site Pattern probabilities after reticulation from P3 to P1"
+for pattern in patterns_pgN1:
+    print pattern, ":", patterns_pgN1[pattern]
+
+# print patterns_pgS
+# print patterns_pgN
+
+
 # Create a mapping of newicks to their probability and site pattern
-newick_to_pat_n_stat = {}
-for newick in newick_patterns:
-    for tree in trees_to_pgS:
-        if newick == tree:
-            newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree], trees_to_pgS_noO[tree], trees_to_pgN_noO[tree])
-
-results = sorted(newick_to_pat_n_stat.items(), key=lambda tup: tup[1][1], reverse=True)
-for i in results:
-    print i
-
-print
-
-trees = determine_interesting_trees(trees_to_pgS, trees_to_pgN)
-trees = list(trees)
-print trees
-print
-print newick_to_pat_n_stat[trees[1]][0] , "-" , newick_to_pat_n_stat[trees[0]][0]
-
-# two_clade = '(((P3,P4),(P2,P1)),O);'
-# right = '((P3,(P4,(P2,P1))),O);'
-# left = '((((P3,P4),P1),P2),O);'
+# newick_to_pat_n_stat = {}
+# for newick in newick_patterns:
+#     for tree in trees_to_pgS:
+#         if newick == tree:
+#             newick_to_pat_n_stat[newick] = (newick_patterns[newick],trees_to_pgS[tree],trees_to_pgN[tree], trees_to_pgS_noO[tree], trees_to_pgN_noO[tree])
 #
+# results = sorted(newick_to_pat_n_stat.items(), key=lambda tup: tup[1][1], reverse=True)
+# for i in results:
+#     print i
 #
-# print site_pattern_generator(taxa, two_clade, outgroup)
-# print site_pattern_generator(taxa, right, outgroup), right
-# print site_pattern_generator(taxa, left, outgroup), left
+# print
+#
+# trees = determine_interesting_trees(trees_to_pgS, trees_to_pgN)
+# trees = list(trees)
+# print trees
+# print
+# print newick_to_pat_n_stat[trees[1]][0] , "-" , newick_to_pat_n_stat[trees[0]][0]
