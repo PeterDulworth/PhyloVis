@@ -732,8 +732,8 @@ def determine_patterns(patterns_to_pgS, patterns_to_pgN1, patterns_to_pgN2):
 
         tree_probability = patterns_to_pgS[pattern]
 
-        # If either network probability is greater than the tree probability the pattern is of interest
-        if patterns_to_pgN1[pattern] > tree_probability or patterns_to_pgN2[pattern] > tree_probability:
+        # If either network probability is not equal to the tree probability and the network probabilities are not equal the pattern is of interest
+        if (patterns_to_pgN1[pattern] != tree_probability or patterns_to_pgN2[pattern] != tree_probability) and patterns_to_pgN1[pattern] != patterns_to_pgN2[pattern]:
 
             interesting_patterns.add(pattern)
 
@@ -746,11 +746,38 @@ def determine_patterns(patterns_to_pgS, patterns_to_pgN1, patterns_to_pgN2):
         elif patterns_to_pgN2[pattern] > patterns_to_pgN1[pattern]:
             terms2.add(pattern)
 
-    return terms1, terms2
+    return (terms1, terms2)
 
 
-# taxa = ["P1", "P2", "P3","O"]
-taxa = ["P1", "P2", "P3", "P4", "O"]
+def generate_statistic_string(patterns_of_interest):
+    """
+    Create a string representing the statistic for determining introgression like "(ABBA - BABA)/(ABBA + BABA)"
+    Input:
+    patterns_of_interest --- a tuple containing the sets of patterns used for determining a statistic
+    Output:
+    L_statistic --- a string representation of the statistic
+    """
+
+    calculation = []
+
+    # Iterate over each set of patterns
+    for pattern_set in patterns_of_interest:
+        term = "("
+
+        # Combine each term with a "+"
+        for pattern in pattern_set:
+            term = term + pattern + " + "
+        term = term[:-3] + ")"
+        calculation.append(term)
+
+    L_statistic = "({0} - {1}) / ({0} + {1})".format(calculation[0], calculation[1])
+
+    return L_statistic
+
+
+
+taxa = ["P1", "P2", "P3","O"]
+# taxa = ["P1", "P2", "P3", "P4", "O"]
 # taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
 # taxa = ["P1", "P2", "P3", "P4", "P5", "P6", "O"]
 outgroup = "O"
@@ -761,36 +788,47 @@ newick_patterns = newicks_to_patterns_generator(taxa, unique)
 
 # species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
 
-# species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
+species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
+# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
 # species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
 # species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,(P5:0.8,P6:0.8):0.8),O);"
-network_map = {"P4":"P1"}
-network_tree = generate_network_tree((0.7, 0.3), species_tree, network_map)
+network_map = {"P3":"P2"}
+print network_map
+network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
 
 trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 
 patterns_pgS, patterns_pgN1 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
 # patterns_pgS, patterns_pgN = calculate_pattern_probabilities(newick_patterns, trees_to_pgS_noO, trees_to_pgN_noO)
 
-# network_map = {"P4":"P1"}
-# network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
-#
-# trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
-#
-# patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
-#
-# print determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+network_map = {"P3":"P1"}
+print network_map
+network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
 
-print "Site Pattern probabilities before reticulation from P3 to P1"
-for pattern in patterns_pgS:
-    print pattern, ":", patterns_pgS[pattern]
+trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
 
+patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+
+patterns_of_interest = determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+
+
+print species_tree
 print
+for pattern in patterns_pgS:
+    print pattern, ":", patterns_pgS[pattern], ":", patterns_pgN1[pattern], ":", patterns_pgN2[pattern]
+print
+print generate_statistic_string(patterns_of_interest)
 
-print "Site Pattern probabilities after reticulation from P3 to P1"
-for pattern in patterns_pgN1:
-    print pattern, ":", patterns_pgN1[pattern]
+
+# print "Site Pattern probabilities before reticulation from P3 to P2"
+# for pattern in patterns_pgS:
+#     print pattern, ":", patterns_pgS[pattern]
+#
+# print
+#
+# print "Site Pattern probabilities after reticulation from P3 to P2"
+# for pattern in patterns_pgN:
+#     print pattern, ":", patterns_pgN1[pattern]
 
 # print patterns_pgS
 # print patterns_pgN
