@@ -56,22 +56,6 @@ def generate_network_tree(inheritance, species_tree, network_map):
 ##### Generate all unique trees functions
 
 
-def calculate_num_trees(n):
-    """
-    Calculate the number of unique topologies on n taxa
-    Input:
-    n --- the number of taxa
-    Output:
-    num_trees --- the number of trees
-    """
-
-    numerator = math.factorial((2 * n - 5))
-    denominator = math.factorial((n - 3)) * 2 ** (n - 3)
-    num_trees = numerator / denominator
-
-    return num_trees
-
-
 def gendistinct(n):
     """
     Generate all full binary trees with n leaves
