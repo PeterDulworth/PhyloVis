@@ -1,19 +1,15 @@
-from PyQt4 import QtGui, QtCore
 import sys, os
+import numpy as np
 import matplotlib
-
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
-from matplotlibCustomBackend.customSubplotToolUi import CustomSubplotTool
 from matplotlibCustomBackend.customToolbar import CustomToolbar
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
-from matplotlib.backends.qt_compat import QtCore, QtGui, QtWidgets
-import numpy as np
+from matplotlib.backends.qt_compat import QtCore, QtGui
 
 
 class Window(QtGui.QMainWindow):
-    def __init__(self, fileName, x=0, y=0, scale=1, parent=None):
+    def __init__(self, windowTitle='Window', x=0, y=0, scale=1, parent=None):
         super(Window, self).__init__(parent)
 
         self.setAutoFillBackground(True)
@@ -33,13 +29,12 @@ class Window(QtGui.QMainWindow):
         self.menuFile.addAction(self.actionSaveAs)
         self.menubar.addAction(self.menuFile.menuAction())
 
-        self.setWindowTitle("Main Window")
         self.menuFile.setTitle("File")
         self.actionSaveAs.setText("Save As...")
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        self.fileName = fileName
+        self.windowTitle = windowTitle
         self.x = x
         self.y = y
         self.scale = scale
@@ -48,60 +43,41 @@ class Window(QtGui.QMainWindow):
         self.menubar.setNativeMenuBar(False)
 
         # set window title
-        self.setWindowTitle(self.fileName)
+        self.setWindowTitle(self.windowTitle)
 
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
+        self.initCanvas()
+
         self.toolbar = CustomToolbar(self.canvas, self)
-
-        self.verticalLayout.addWidget(self.canvas)
         self.verticalLayout.addWidget(self.toolbar)
 
         # bind export actions
-        # self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
-        self.actionSaveAs.triggered.connect(self.box)
+        self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
 
-    def box(self):
-        # dia = SubplotToolQt(self.canvas.figure, self.parent)
-        dia = CustomSubplotTool(self.canvas.figure, self.parent)
-        # dia.setWindowIcon(QtGui.QIcon(image))
-        dia.exec_()
+    def initCanvas(self):
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.verticalLayout.addWidget(self.canvas)
+
+        self.figure.suptitle('asdf')
+
 
     def figureBarPlot(self, data, name, title):
         """
             generates bar chart
         """
 
+        # create a new subplot in a 1x1 coordinate system at position 1
+        ax = plt.subplot(111)
+        ax.set_title(title)
         numberOfBars = len(data)
         ind = np.arange(numberOfBars)  # the x locations for the groups
         width = .667  # the width of the bars
-        ax = self.figure.add_subplot(111)
         colors = [(43.0 / 255.0, 130.0 / 255.0, 188.0 / 255.0), (141.0 / 255.0, 186.0 / 255.0, 87.0 / 255.0), (26.0 / 255.0, 168.0 / 255.0, 192.0 / 255.0), (83.5 / 255.0, 116.5 / 255.0, 44.5 / 255.0)]
 
         ax.bar(ind, data, width, color=colors)
 
-        plt.title(title, fontsize=15)
-        # plt.savefig(name)
-        # plt.show()
-
-        self.canvas.draw()
-
     def plot(self):
-        ''' plot some random stuff '''
-        # random data
-        # data = [random.random() for i in range(10)]
-
-        # create an axis
-        # ax = self.figure.add_subplot(111)
-
-        # discards the old graph
-        # ax.hold(False)
-
-        # plot data
-        # ax.plot(data, '*-')
-
-        # refresh canvas
-        self.canvas.draw()
+        pass
 
     def setBackgroundColor(self, color):
         """
@@ -139,7 +115,7 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
 
     # initialize main input window
-    form = Window('../imgs/tree.png', scale=5)
+    form = Window(windowTitle='Standard Window', scale=5)
     form.show()
     form.setWindowSize(600, 600)
     form.figureBarPlot([1, 2, 3, 4], 'henlo', 'henlo')
