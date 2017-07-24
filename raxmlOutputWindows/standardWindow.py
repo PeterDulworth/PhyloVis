@@ -18,6 +18,7 @@ class Window(QtGui.QMainWindow):
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setMargin(0)
         self.setCentralWidget(self.centralwidget)
+        self.setBackgroundColor(QtCore.Qt.white)
 
         # menubar
         self.menubar = QtGui.QMenuBar(self)
@@ -102,7 +103,6 @@ if __name__ == '__main__':
     form = Window(windowTitle='Standard Window', scale=5)
     form.show()
     form.setWindowSize(600, 600)
-    form.setBackgroundColor(QtCore.Qt.white)
 
     # and execute the app
     sys.exit(app.exec_())
