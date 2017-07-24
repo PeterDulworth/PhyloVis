@@ -3,12 +3,11 @@ from standardWindow import Window
 from PyQt4 import QtGui
 
 """
-Functions:
-    __init__(self)
-~
-Chabrielle Allen
-Travis Benedict
-Peter Dulworth
+    Scatter Plot Window
+    ~
+    Chabrielle Allen
+    Travis Benedict
+    Peter Dulworth
 """
 
 
