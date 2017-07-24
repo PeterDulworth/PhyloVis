@@ -31,7 +31,7 @@ if __name__ == '__main__': # only runs if not imported
     c = ['#ff0000', '#0000ff']
 
     # create window and plot
-    form = DonutPlotWindow(a, b, c)
+    form = DonutPlotWindow('title', a, b, c)
     form.show()
     form.plot()
 

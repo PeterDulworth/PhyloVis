@@ -170,10 +170,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
 
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), lambda: self.openWindow(self.circleGraphWindow))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('DONUT_COMPLETE'), lambda: self.openWindow(self.donutPlotWindow))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('SCATTER_COMPLETE'), lambda: self.openWindow(self.scatterPlotWindow))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('TREES_COMPLETE'), lambda: self.openWindow(self.allTreesWindow))
-        self.connect(self.informativeSites, QtCore.SIGNAL('HEATMAP_COMPLETE'), lambda: self.openWindow(self.heatMapWindow))
         self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
         # run RAX_ML and generate graphs
@@ -458,7 +454,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate donut plot
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('title', labels, sizes, donut_colors)
+                    self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('Frequency of Top Topologies', labels, sizes, donut_colors)
 
                 # generate scatter plot
                 if self.checkboxScatterPlot.isChecked():

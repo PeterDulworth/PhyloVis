@@ -201,7 +201,6 @@ class Plotter(QtCore.QThread):
                     order = [None, 1,3,5,7,9]
                     ax = plt.subplot(3, 3, order[count])
                 elif numTopTopologies >= 4:
-                    print int(round(numTopTopologies / 2))
                     ax = plt.subplot(int(round(numTopTopologies / 2.0)), 2, count)
 
                 # Create the tree object and assign it to the appropriate color
