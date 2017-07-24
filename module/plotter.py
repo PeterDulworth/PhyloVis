@@ -124,8 +124,8 @@ class Plotter(QtCore.QThread):
         ax.scatter(x, y, s=circleArea, c='#000000', alpha=1)
 
         # label the axes
-        ax.set_xlabel('x', fontsize=10)
-        ax.set_ylabel('y', fontsize=10)
+        ax.set_xlabel(xLabel, fontsize=10)
+        ax.set_ylabel(yLabel, fontsize=10)
 
         return ax
 

@@ -63,9 +63,6 @@ class Window(QtGui.QMainWindow):
         self.canvas = FigureCanvas(self.figure)
         self.verticalLayout.addWidget(self.canvas)
 
-    def plot(self):
-        pass
-
     def setBackgroundColor(self, color):
         """
             change background color to white

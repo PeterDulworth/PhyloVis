@@ -97,7 +97,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # initialize window
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
-        self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
@@ -436,9 +435,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                             self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "plots/UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
 
                     if self.checkboxPGTST.isChecked():
-                        windows_to_p_gtst = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
-                        self.statisticsCalculations.stat_scatter(windows_to_p_gtst, "plots/PGTSTPlot.png", "p(gt|st)", "Windows", "Probability")
-                    self.displayResults()
+                        windowsToPGTST = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
+                        self.pgtstWindow = pgtstWindow.PGTSTWindow(windowsToPGTST, "p(gt|st)", xLabel="Windows", yLabel="Probability")
 
                 # run commands that are shared by all functions
                 if self.getNumberChecked() > 0:

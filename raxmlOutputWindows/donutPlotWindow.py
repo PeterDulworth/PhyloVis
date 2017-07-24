@@ -14,7 +14,7 @@ Peter Dulworth
 
 class DonutPlotWindow(Window):
     def __init__(self, title, labels, sizes, donutColors):
-        Window.__init__(self, windowTitle='Top Topology Frequency Donut', x=0, y=0)
+        Window.__init__(self, windowTitle='Top Topology Frequency Donut', x=600, y=600)
 
         # plot
         self.plotter.topologyDonut(title, labels, sizes, donutColors)
