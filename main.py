@@ -97,7 +97,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
-        self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
@@ -466,7 +465,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 # generate scatter plot
                 if self.checkboxScatterPlot.isChecked():
-                    self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
+                    self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
+                    self.scatterPlotWindow.show()
+                    self.scatterPlotWindow.plot()
+                    self.scatterPlotWindow.setBackgroundColor(QtCore.Qt.white)
+                    # self.openWindow(self.scatterPlotWindow)
+                    # self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
@@ -679,7 +683,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def openWindow(self, window, type='std'):
         window.show()
         if type == 'std':
-            window.displayImage()
+            window.plot()
+            print window
         elif type == 'tabs':
             window.displayImages()
 

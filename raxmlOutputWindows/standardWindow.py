@@ -12,6 +12,7 @@ class Window(QtGui.QMainWindow):
     def __init__(self, windowTitle='Window', x=0, y=0, scale=1, parent=None):
         super(Window, self).__init__(parent)
 
+        # layout
         self.setAutoFillBackground(True)
         self.centralwidget = QtGui.QWidget(self)
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
@@ -34,6 +35,7 @@ class Window(QtGui.QMainWindow):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
+        # get arguments
         self.windowTitle = windowTitle
         self.x = x
         self.y = y

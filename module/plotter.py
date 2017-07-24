@@ -12,7 +12,6 @@ class Plotter(QtCore.QThread):
         # list of colors for plots
         self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
-
     def topology_donut(self, labels, sizes, donut_colors):
         """
             Creates a donut chart showing the breakdown of the top 'num' topologies.
@@ -50,51 +49,50 @@ class Plotter(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('DONUT_COMPLETE'))
 
-
-    def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
+    def topology_scatter(self, title, wins_to_tops, scatter_colors, y, subplotPosition=111):
         """
             Creates a scatter plot showing the topology as the y-axis and the window as the x-axis.
 
             Input:
                 i. wins_to_tops   -- window to topology mapping outputted by windows_to_newick()[0]
                 ii. scatter_colors -- list of colors outputted by topology_colors()[1]
-                iii. ylist          -- list of y-axis values outputted by topology_colors()[2]
+                iii. y          -- list of y-axis values outputted by topology_colors()[2]
 
             Returns:
                 A scatter plot with topologies as the x-axis and windows as the y-axis.
         """
 
+        print wins_to_tops
+        print scatter_colors
+        print y
+
+        ax = plt.subplot(subplotPosition)
+        ax.set_title(title, fontsize=15)
+
         # area of plotted circles
-        area = math.pi * (3) ** 2
+        circleArea = math.pi * (3) ** 2
 
         # size y-axis on plot
-        plt.yticks(np.arange(len(wins_to_tops) + 1, 0))
+        ax.set_yticks(np.arange(len(wins_to_tops) + 1, 0))
 
         # x-axis is window numbers
         x = wins_to_tops.keys()
 
-        x = np.array(x)
-        y = np.array(ylist)
-
-        # create legend
-        for (i, cla) in enumerate(set(wins_to_tops.values())):
-            xc = [p for (j, p) in enumerate(x) if wins_to_tops.values()[j] == cla]
-            yc = [p for (j, p) in enumerate(y) if wins_to_tops.values()[j] == cla]
-            cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == cla]
-            plt.scatter(xc, yc, s=area, c=cols, label=cla, alpha=1, edgecolors='#000000')
-            plt.grid = True
-        # plt.legend(bbox_to_anchor=(1.01, 1), loc=2, scatterpoints=1)
+        # for each index, and unique topology
+        for (i, topology) in enumerate(set(wins_to_tops.values())):
+            xc = [top for (j, top) in enumerate(x) if wins_to_tops.values()[j] == topology]
+            yc = [top for (j, top) in enumerate(y) if wins_to_tops.values()[j] == topology]
+            cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == topology]
+            ax.scatter(xc, yc, s=circleArea, c=cols, alpha=1, edgecolors='#000000')
+            ax.grid = True
 
         # labels axes
-        plt.xlabel('Windows', fontsize=10)
-        plt.ylabel('Top Newick Strings', fontsize=10)
-
-        # save plot
-        plot = "plots/topologyScatter.png"
-        plt.savefig(plot)
-        plt.clf()
+        ax.set_xlabel('Windows', fontsize=10)
+        ax.set_ylabel('Top Newick Strings', fontsize=10)
 
         self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
+
+        return ax
 
     def stat_scatter(self, dataMap, title, xLabel, yLabel, subplotPosition=111):
         """
@@ -159,5 +157,9 @@ class Plotter(QtCore.QThread):
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
-    p.figureBarPlot([1,2,3,4], 'name')
+    # p.figureBarPlot([1,2,3,4], 'name')
+    a = {0: '(C,(G,O),H);', 1: '((C,G),O,H);', 2: '(C,(G,O),H);', 3: '(C,(G,O),H);', 4: '(C,(G,O),H);', 5: '(C,(G,O),H);', 6: '(C,(G,O),H);', 7: '(C,(G,O),H);', 8: '((C,G),O,H);', 9: '(C,(G,O),H);'}
+    b = ['#ff0000', '#0000ff', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#0000ff', '#ff0000']
+    c = [1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
+    p.topology_scatter('henlo', a, b, c)
     plt.show()

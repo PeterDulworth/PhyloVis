@@ -34,16 +34,15 @@ class CustomToolbar(NavigationToolbar):
         NavigationToolbar.__init__(self, canvas_, parent_)
 
     def _icon(self, name):
-        print name
         pm = QtGui.QPixmap(os.path.join(self.basedir, name))
         if hasattr(pm, 'setDevicePixelRatio'):
             pm.setDevicePixelRatio(self.canvas._dpi_ratio)
         return QtGui.QIcon(pm)
 
-    def pan(self):
-        NavigationToolbar.pan(self)
-        self.mode = "henlo!"  # <--- whatever you want to replace "pan/zoom" goes here
-        self.set_message(self.mode)
+    # def pan(self):
+    #     NavigationToolbar.pan(self)
+    #     self.mode = "henlo!"  # <--- whatever you want to replace "pan/zoom" goes here
+    #     self.set_message(self.mode)
 
     def configure_subplots(self):
         image = os.path.join(matplotlib.rcParams['datapath'], 'images', 'matplotlib.png')

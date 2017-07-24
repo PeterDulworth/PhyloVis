@@ -28,10 +28,11 @@ class ScatterPlotWindow(Window):
         Window.__init__(self, 'asdf', x=240, y=262, scale=1)
 
     def plot(self):
+        print 'henlo'
         windows_to_w_rf = {0:0, 1:1, 2:2, 3:3, 4:4}
         self.plotter = plotter.Plotter()
-        self.plotter.stat_scatter(windows_to_w_rf, "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
-        self.plotter.figureBarPlot([1,2,3,4,5], 'bar plot', 211)
+        # self.plotter.stat_scatter(windows_to_w_rf, "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
+        self.plotter.figureBarPlot([1,2,3,4,5], 'bar plot', 111)
 
 
 if __name__ == '__main__': # test window if running locally
@@ -42,7 +43,6 @@ if __name__ == '__main__': # test window if running locally
     # initialize main input window
     form = ScatterPlotWindow()
     form.show()
-    form.setWindowSize(600, 600)
     form.plot()
     form.setBackgroundColor(QtCore.Qt.white)
 
