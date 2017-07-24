@@ -9,7 +9,7 @@ from matplotlib.backends.qt_compat import QtCore, QtGui
 
 
 class Window(QtGui.QMainWindow):
-    def __init__(self, windowTitle='Window', parent=None):
+    def __init__(self, windowTitle='Window', x=0, y=0, parent=None):
         super(Window, self).__init__(parent)
 
         # layout
@@ -49,6 +49,8 @@ class Window(QtGui.QMainWindow):
 
         self.toolbar = CustomToolbar(self.canvas, self)
         self.verticalLayout.addWidget(self.toolbar)
+
+        self.setWindowPosition(x, y)
 
         # bind export actions
         self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
