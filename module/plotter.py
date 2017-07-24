@@ -158,23 +158,15 @@ class Plotter(QtCore.QThread):
         # Create custom color map
         colors = [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0),(0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 0.0, 0.0)]
         color_name = "Chab's Colors"
-
         blue_green = LinearSegmentedColormap.from_list(color_name, colors)
         plt.register_cmap(cmap=blue_green)
 
-        # plt.figure(figsize=(15, 2))
-
         array = np.array(mapping.values())
+        xValues = np.empty([5, array.shape[0]])
+        xValues[:, :] = array
 
-        x_vals = np.empty([5, array.shape[0]])
-
-        x_vals[:, :] = array
-
-
-        plt.contourf(x_vals, cmap=blue_green)
-        # ax.contourf(x_vals, cmap=blue_green)
+        plt.contourf(xValues, cmap=blue_green)
         plt.colorbar()
-        # ax.colorbar()
         ax.set_yticks([])
 
         return ax

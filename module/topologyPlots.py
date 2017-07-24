@@ -400,12 +400,12 @@ class TopologyPlotter(QtCore.QThread):
 
     def topology_colorizer(self, color_scheme, rooted=False, outgroup=False):
         """
-        Create colored tree topology images based on a color scheme where
-        the color of a tree is determined by the frequency that it occurs.
-        Inputs:
-        color scheme --- a dictionary mapping newick strings to colors
-        rooted --- a boolean parameter corresponding to the tree being rooted
-        outgroup --- a string of the desired taxon to root at
+            Create colored tree topology images based on a color scheme where the color of a tree is determined by the frequency that it occurs.
+
+            Inputs:
+                i. color scheme --- a dictionary mapping newick strings to colors
+                ii. rooted --- a boolean parameter corresponding to the tree being rooted
+                iii. outgroup --- a string of the desired taxon to root at
         """
 
         # Create a count for the number of the topologies
@@ -422,7 +422,7 @@ class TopologyPlotter(QtCore.QThread):
                 tree = Phylo.read(StringIO(newick), "newick")
                 tree.rooted = rooted
 
-                if outgroup:
+                if rooted:
                     tree.root_with_outgroup(outgroup)
 
                 tree.root.color = color_scheme[newick]

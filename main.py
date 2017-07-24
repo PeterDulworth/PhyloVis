@@ -473,7 +473,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate heatmap graph
                 if self.checkboxHeatMap.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
-                    print sites_to_informative
                     self.heatMapWindow = heatMapWindow.HeatMapWindow('Heat Map', sites_to_informative)
                     # self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
@@ -484,12 +483,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 # generate all trees graph
                 if self.checkboxAllTrees.isChecked():
-                    if self.checkboxRooted.isChecked():
-                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees
-                        self.topologyPlotter.top_topology_visualization()
-                    else:
-                        self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=False, outgroup="")  # all trees
-                        self.topologyPlotter.top_topology_visualization()
+                    self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outgroup=self.outgroupComboBox.currentText())
+                    # self.topologyPlotter.top_topology_visualization()
 
     def raxmlInputErrorHandling(self):
         """

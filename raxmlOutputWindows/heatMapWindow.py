@@ -1,6 +1,10 @@
 from standardWindow import Window
 from PyQt4 import QtGui
 import sys
+import matplotlib
+matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 """
 Informative Sites Heatmap
@@ -18,15 +22,20 @@ class HeatMapWindow(Window):
         self.plotter.heatMap(title, sitesToInformative)
         self.show()
 
+    def initCanvas(self):
+        self.figure = plt.figure(figsize=(15, 2))
+        self.canvas = FigureCanvas(self.figure)
+        self.verticalLayout.addWidget(self.canvas)
+
 if __name__ == '__main__': # only runs if not imported
 
     # create a new instance of QApplication
     app = QtGui.QApplication(sys.argv)
 
-    a = {0: '(C,(G,O),H);', 1: '((C,G),O,H);', 2: '(C,(G,O),H);', 3: '(C,(G,O),H);', 4: '(C,(G,O),H);', 5: '(C,(G,O),H);', 6: '(C,(G,O),H);', 7: '(C,(G,O),H);', 8: '((C,G),O,H);', 9: '(C,(G,O),H);'}
+    a = {0:0, 2:2, 4:3}
 
     # create window and plot
-    form = HeatMapWindow()
+    form = HeatMapWindow('Heat Map', a)
     form.show()
 
     # execute the app
