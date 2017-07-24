@@ -419,6 +419,40 @@ def pattern_inverter(patterns):
     return inverted
 
 
+def pattern_string_generator(patterns):
+    """
+    Creates a list of viable pattern strings that are easier to read
+    Input:
+    patterns --- a list of lists of individual characters e.g. [["A","B","B","A"],["B","A","B","A"]]
+    Output:
+    pattern_strings --- a list of lists of strings e.g. [["ABBA"],["BABA"]]
+    """
+
+    # Convert the site pattern lists to strings
+    pattern_strings = []
+    while patterns:
+
+        a_count = 0
+        b_count = 0
+        pattern_str = ""
+        pattern = patterns.pop()
+
+        for site in pattern:
+
+            if site == "A":
+                b_count += 1
+
+            elif site == "B":
+                a_count += 1
+
+            pattern_str += site
+
+        if a_count > 0 and b_count > 0:
+            pattern_strings.append(pattern_str)
+
+    return pattern_strings
+
+
 def site_pattern_generator(taxa_order, newick, outgroup):
     """
     Generate the appropriate AB list patterns
@@ -596,13 +630,11 @@ def site_pattern_generator(taxa_order, newick, outgroup):
         # Update the working patterns to be the same as the most recent pattern
         working_patterns = [pattern for x in range(num_patterns - len(final_site_patterns))]
 
-    idx_offset = 0
     # Create a list of patterns without duplicates
     finished_patterns = []
 
     # Iterate over each pattern and determine which ones are duplicates
-    for pattern_idx in range(len(final_site_patterns) - idx_offset):
-        pattern = final_site_patterns[pattern_idx]
+    for pattern in final_site_patterns:
 
         if pattern not in finished_patterns:
             finished_patterns.append(pattern)
@@ -624,29 +656,9 @@ def site_pattern_generator(taxa_order, newick, outgroup):
         if pattern not in finished_patterns:
             finished_patterns.append(pattern)
 
-    # Convert the site pattern lists to strings
-    pattern_strings = []
-    while finished_patterns:
+    finished_patterns = pattern_string_generator(finished_patterns)
 
-        a_count = 0
-        b_count = 0
-        pattern_str = ""
-        pattern = finished_patterns.pop()
-
-        for site in pattern:
-
-            if site == "A":
-                b_count += 1
-
-            elif site == "B":
-                a_count += 1
-
-            pattern_str += site
-
-        if a_count > 0 and b_count > 0:
-            pattern_strings.append(pattern_str)
-
-    return pattern_strings
+    return finished_patterns
 
 
 def newicks_to_patterns_generator(taxa_order, newicks):
@@ -728,7 +740,7 @@ def determine_patterns(patterns_to_pgS, patterns_to_pgN1, patterns_to_pgN2):
     terms2 = set([])
 
     # Iterate over each pattern to determine the patterns of interest
-    for pattern in patterns_pgS:
+    for pattern in patterns_to_pgS:
 
         tree_probability = patterns_to_pgS[pattern]
 
@@ -775,49 +787,201 @@ def generate_statistic_string(patterns_of_interest):
     return L_statistic
 
 
+##### Function for calculating statistic
 
-taxa = ["P1", "P2", "P3","O"]
-# taxa = ["P1", "P2", "P3", "P4", "O"]
-# taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
-# taxa = ["P1", "P2", "P3", "P4", "P5", "P6", "O"]
-outgroup = "O"
-unique = generate_unique_trees(taxa, outgroup)
-# print unique
-newick_patterns = newicks_to_patterns_generator(taxa, unique)
-# print newick_patterns
 
-# species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
+def calculate_L(alignment, taxa_order, patterns_of_interest):
+    """
+    Calculates the L statistic for the given alignment
+    Input:
+    alignment --- a sequence alignment in phylip format
+    taxa_order --- the desired order of the taxa
+    patterns_of_interest --- a tuple containing the sets of patterns used for determining a statistic
+    Output:
+    l_stat --- the L statistic value
+    """
 
+    # Separate the patterns of interest into their two terms
+    terms1 = patterns_of_interest[0]
+    terms2 = patterns_of_interest[1]
+
+    terms1_counts = defaultdict(int)
+    terms2_counts = defaultdict(int)
+
+    sequence_list = []
+    taxon_list =[]
+
+    with open(alignment) as f:
+
+        # Create a list of each line in the file
+        lines = f.readlines()
+
+        # First line contains the number and length of the sequences
+        first_line = lines[0].split()
+        length_of_sequences = int(first_line[1])
+
+    for line in lines[1:]:
+        # Add each sequence to a list
+        sequence = line.split()[1]
+        sequence_list.append(sequence)
+
+        # Add each taxon to a list
+        taxon = line.split()[0]
+        taxon_list.append(taxon)
+
+    # The outgroup is the last taxa in taxa order
+    outgroup = taxa_order[-1]
+
+    # Iterate over the site indices
+    for site_idx in range(length_of_sequences):
+
+        # Map each taxa to the base at a given site
+        taxa_to_site = {}
+
+        # Create a set of the bases at a given site to determine if the site is biallelic
+        bases = set([])
+
+        # Iterate over each sequence in the alignment
+        for sequence, taxon in zip(sequence_list, taxon_list):
+            # Map each taxon to the corresponding base at the site
+            base = sequence[site_idx]
+            taxa_to_site[taxon] = base
+            bases.add(base)
+
+        if len(bases) == 2:
+
+            # Create the pattern that each site has
+            site_pattern = []
+
+            # The ancestral gene is always the same as the outgroup
+            ancestral = taxa_to_site[outgroup]
+
+            # Iterate over each taxon
+            for taxon in taxa_order:
+                nucleotide = taxa_to_site[taxon]
+
+                # Determine if the correct derived/ancestral status of each nucleotide
+                if nucleotide == ancestral:
+                    site_pattern.append("A")
+                else:
+                    site_pattern.append("B")
+
+            # Convert the site pattern to a string
+            site_string = pattern_string_generator([site_pattern])[0]
+
+            # If the site string is a pattern of interest add to its count for one of the terms
+            if site_string in terms1:
+                terms1_counts[site_string] += 1
+
+            elif site_string in terms2:
+                terms2_counts[site_string] += 1
+
+    terms1_total = sum(terms1_counts.values())
+    terms2_total = sum(terms2_counts.values())
+
+    numerator = terms1_total - terms2_total
+    denominator = terms1_total + terms2_total
+
+    l_stat = numerator/float(denominator)
+
+    return l_stat
+
+
+def L_statistic(alignment, taxa, species_tree, reticulations):
+    """
+    Calculates the L statistic for the given alignment
+    Input:
+    alignment --- a sequence alignment in phylip format
+    taxa --- a list of the taxa in the desired order
+    species_tree --- the inputted species tree over the given taxa
+    reticulations a tuple containing two dictionaries mapping the start leaves to end leaves
+    Output:
+    l_stat --- the L statistic value
+    """
+
+    # The outgroup is the last taxon in the list of taxa
+    outgroup = taxa[-1]
+
+    # Generate all unique trees over the given topology
+    unique = generate_unique_trees(taxa, outgroup)
+
+    # Map the tree newick strings to their site patterns
+    newick_patterns = newicks_to_patterns_generator(taxa, unique)
+
+    # Create species networks
+    network_map1, network_map2 = reticulations[0], reticulations[1]
+    network1 = generate_network_tree((0.3, 0.7), species_tree, network_map1)
+    network2 = generate_network_tree((0.3, 0.7), species_tree, network_map2)
+
+
+    trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network1, unique, outgroup)
+    patterns_pgS, patterns_pgN1 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+
+    trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network2, unique, outgroup)
+    patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+
+    patterns_of_interest = determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+
+    l_stat = calculate_L(alignment, taxa, patterns_of_interest)
+
+    return l_stat
+
+
+alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo-Copy.phylip"
+taxa = ["P1", "P2", "P3", "O"]
 species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
-# species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
-# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
-# species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,(P5:0.8,P6:0.8):0.8),O);"
-network_map = {"P3":"P2"}
-print network_map
-network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
+reticulations = ({"P3":"P2"},{"P3":"P1"})
 
-trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
-
-patterns_pgS, patterns_pgN1 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
-# patterns_pgS, patterns_pgN = calculate_pattern_probabilities(newick_patterns, trees_to_pgS_noO, trees_to_pgN_noO)
-
-network_map = {"P3":"P1"}
-print network_map
-network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
-
-trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
-
-patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
-
-patterns_of_interest = determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+print L_statistic(alignment,taxa,species_tree,reticulations)
 
 
-print species_tree
-print
-for pattern in patterns_pgS:
-    print pattern, ":", patterns_pgS[pattern], ":", patterns_pgN1[pattern], ":", patterns_pgN2[pattern]
-print
-print generate_statistic_string(patterns_of_interest)
+
+# taxa = ["P1", "P2", "P3","O"]
+# # taxa = ["P1", "P2", "P3", "P4", "O"]
+# # taxa = ["P1", "P2", "P3", "P4", "P5", "O"]
+# # taxa = ["P1", "P2", "P3", "P4", "P5", "P6", "O"]
+# outgroup = "O"
+# unique = generate_unique_trees(taxa, outgroup)
+# # print unique
+# newick_patterns = newicks_to_patterns_generator(taxa, unique)
+# # print newick_patterns
+#
+# # species_tree = "(((P1:0.6,P2:0.65):0.4,(P3:0.7,P4:0.75):0.8),O);"
+#
+# species_tree = "(((P1:0.8,P2:0.8):0.8,P3:0.8),O);"
+# # species_tree = "(((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8),O);"
+# # species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,P5),O);"
+# # species_tree = "((((P1:0.8,P2:0.8):0.8,(P3:0.8,P4:0.8):0.8):0.8,(P5:0.8,P6:0.8):0.8),O);"
+# network_map = {"P3":"P2"}
+# print network_map
+# network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
+#
+# trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
+#
+# patterns_pgS, patterns_pgN1 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+# # patterns_pgS, patterns_pgN = calculate_pattern_probabilities(newick_patterns, trees_to_pgS_noO, trees_to_pgN_noO)
+#
+# network_map = {"P3":"P1"}
+# print network_map
+# network_tree = generate_network_tree((0.3, 0.7), species_tree, network_map)
+#
+# trees_to_pgS, trees_to_pgN, trees_to_pgS_noO, trees_to_pgN_noO = calculate_newicks_to_stats(species_tree, network_tree, unique, outgroup)
+#
+# patterns_pgS, patterns_pgN2 = calculate_pattern_probabilities(newick_patterns, trees_to_pgS, trees_to_pgN)
+#
+# patterns_of_interest = determine_patterns(patterns_pgS, patterns_pgN1, patterns_pgN2)
+#
+#
+# print species_tree
+# print
+# for pattern in patterns_pgS:
+#     print pattern, ":", patterns_pgS[pattern], ":", patterns_pgN1[pattern], ":", patterns_pgN2[pattern]
+# print
+# print generate_statistic_string(patterns_of_interest)
+#
+# print
+# alignment = "C:\\Users\\travi\\Documents\\PhyloVis\\testFiles\\ChillLeo-Copy.phylip"
+# print "L statistic =", calculate_L(alignment, taxa, patterns_of_interest)
 
 
 # print "Site Pattern probabilities before reticulation from P3 to P2"
