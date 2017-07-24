@@ -320,10 +320,14 @@ class StatisticsCalculations(QtCore.QThread):
 
         i = 0
 
-        # Determine the total number of windows needed
-        while (i + window_size - 1 < length_of_sequences):
-            i += window_size
-            num_windows += 1
+        if window_size > length_of_sequences:
+            num_windows = 1
+            window_size = length_of_sequences
+        else:
+            # Determine the total number of windows needed
+            while (i + window_size - 1 < length_of_sequences):
+                i += window_size
+                num_windows += 1
 
         for line in lines[1:]:
             # Add each sequence to a list
