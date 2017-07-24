@@ -58,21 +58,6 @@ class Window(QtGui.QMainWindow):
         self.canvas = FigureCanvas(self.figure)
         self.verticalLayout.addWidget(self.canvas)
 
-    def figureBarPlot(self, data, name, title):
-        """
-            generates bar chart
-        """
-
-        # create a new subplot in a 1x1 coordinate system at position 1
-        ax = plt.subplot(111)
-        ax.set_title(title)
-        numberOfBars = len(data)
-        ind = np.arange(numberOfBars)  # the x locations for the groups
-        width = .667  # the width of the bars
-        colors = [(43.0 / 255.0, 130.0 / 255.0, 188.0 / 255.0), (141.0 / 255.0, 186.0 / 255.0, 87.0 / 255.0), (26.0 / 255.0, 168.0 / 255.0, 192.0 / 255.0), (83.5 / 255.0, 116.5 / 255.0, 44.5 / 255.0)]
-
-        ax.bar(ind, data, width, color=colors)
-
     def plot(self):
         pass
 
@@ -115,7 +100,6 @@ if __name__ == '__main__':
     form = Window(windowTitle='Standard Window', scale=5)
     form.show()
     form.setWindowSize(600, 600)
-    form.figureBarPlot([1, 2, 3, 4], 'henlo', 'henlo')
     form.setBackgroundColor(QtCore.Qt.white)
 
     # and execute the app

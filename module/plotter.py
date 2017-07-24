@@ -15,18 +15,16 @@ class Plotter(QtCore.QThread):
 
     def topology_donut(self, labels, sizes, donut_colors):
         """
-        Creates a donut chart showing the breakdown of the top 'num'
-        topologies.
-        Inputs:
-        labels -- a list of labels outputted by top_freqs()[1]
-        sizes  -- a list of sizes outputted by top_freqs()[2]
-        donut_colors -- a list of colors outputted by
-                        donut_colors()
-        Returns:
-        A donut chart with the number of times a topology occurs and
-        'Other Topologies' for topologies that occur less than the
-        most frequent 'num' topologies as the labels, and a list tops
-        of the top 'num' scores.
+            Creates a donut chart showing the breakdown of the top 'num' topologies.
+
+            Inputs:
+            i. labels -- a list of labels outputted by top_freqs()[1]
+            ii. sizes  -- a list of sizes outputted by top_freqs()[2]
+            iii. donut_colors -- a list of colors outputted by donut_colors()
+
+            Returns:
+                A donut chart with the number of times a topology occurs and 'Other Topologies' for topologies that occur less than the
+                most frequent 'num' topologies as the labels, and a list tops of the top 'num' scores.
         """
 
         # plots pie chart
@@ -55,15 +53,15 @@ class Plotter(QtCore.QThread):
 
     def topology_scatter(self, wins_to_tops, scatter_colors, ylist):
         """
-        Creates a scatter plot showing the topology as the
-        y-axis and the window as the x-axis.
-        Input:
-        wins_to_tops   -- window to topology mapping outputted by windows_to_newick()[0]
-        scatter_colors -- list of colors outputted by topology_colors()[1]
-        ylist          -- list of y-axis values outputted by topology_colors()[2]
-        Returns:
-        A scatter plot with topologies as the x-axis and
-        windows as the y-axis.
+            Creates a scatter plot showing the topology as the y-axis and the window as the x-axis.
+
+            Input:
+                i. wins_to_tops   -- window to topology mapping outputted by windows_to_newick()[0]
+                ii. scatter_colors -- list of colors outputted by topology_colors()[1]
+                iii. ylist          -- list of y-axis values outputted by topology_colors()[2]
+
+            Returns:
+                A scatter plot with topologies as the x-axis and windows as the y-axis.
         """
 
         # area of plotted circles
@@ -161,4 +159,5 @@ class Plotter(QtCore.QThread):
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
-    p.figureBarPlot([1,2,3,4], 'name', 'title')
+    p.figureBarPlot([1,2,3,4], 'name')
+    plt.show()
