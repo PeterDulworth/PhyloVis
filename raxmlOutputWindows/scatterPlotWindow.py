@@ -34,7 +34,7 @@ if __name__ == '__main__': # only runs if not imported
     c = [1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
 
     # create window and plot
-    form = ScatterPlotWindow('Title', a, b, c)
+    form = ScatterPlotWindow('', a, b, c)
     form.show()
     form.plot()
 

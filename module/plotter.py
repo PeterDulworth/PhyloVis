@@ -26,25 +26,19 @@ class Plotter(QtCore.QThread):
                 most frequent 'num' topologies as the labels, and a list tops of the top 'num' scores.
         """
 
-        ax = plt.subplot(subplotPosition)
+        ax = plt.subplot(subplotPosition, aspect='equal')
         ax.set_title(title, fontsize=15)
 
-        # changes rcParams for only following block
-        with plt.rc_context({'patch.edgecolor': '#000000'}):
-            plt.pie(sizes, explode=None, labels=labels, colors=donut_colors, autopct=None, shadow=False)
+        ax.pie(sizes, explode=None, labels=labels, colors=donut_colors, autopct=None, shadow=False)
 
-            # create circle behind pie chart to outline it
-            outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False, linewidth=1.25)
+        # create circle behind pie chart to outline it
+        outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False, linewidth=1.25)
 
-            # impose circle over pie chart to make a donut chart
-            inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff', linewidth=1.25)
+        # impose circle over pie chart to make a donut chart
+        inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff', linewidth=1.25)
 
-            fig = plt.gcf()
-            fig.gca().add_artist(inner_circle)
-            fig.gca().add_artist(outer_circle)
-
-            # set axes equal
-            plt.axis('equal')
+        ax.add_artist(inner_circle)
+        ax.add_artist(outer_circle)
 
         return ax
 
