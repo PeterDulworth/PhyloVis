@@ -474,7 +474,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 if self.checkboxHeatMap.isChecked():
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
                     self.heatMapWindow = heatMapWindow.HeatMapWindow('Heat Map', sites_to_informative)
-                    # self.informativeSites.heat_map_generator(sites_to_informative, "plots/HeatMapInfSites.png")
 
                 # generate bootstrap graph
                 if self.checkboxBootstrap.isChecked():
@@ -674,7 +673,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         window.show()
         if type == 'std':
             window.plot()
-            print window
         elif type == 'tabs':
             window.displayImages()
 

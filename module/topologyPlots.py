@@ -410,6 +410,8 @@ class TopologyPlotter(QtCore.QThread):
 
         # Create a count for the number of the topologies
         count = 0
+        fig = plt.figure()
+        print color_scheme
 
         # Iterate over each newick string in color_scheme
         for newick in color_scheme:
@@ -427,9 +429,7 @@ class TopologyPlotter(QtCore.QThread):
 
                 tree.root.color = color_scheme[newick]
 
-                # Create the figure
-                fig = plt.figure()
-                axes = fig.add_subplot(1, 1, 1)
+                axes = fig.add_subplot(2, 1, count + 1)
 
                 # Create the tree image
                 Phylo.draw(tree, output_file, axes=axes, do_show=False)
@@ -438,9 +438,10 @@ class TopologyPlotter(QtCore.QThread):
                 im = Image.open(output_file)
                 im.rotate(-90).save(output_file)
 
-                plt.clf()
+                # plt.clf()
 
                 count += 1
+        plt.show()
 
     def top_topology_visualization(self):
         """
@@ -686,40 +687,49 @@ class TopologyPlotter(QtCore.QThread):
 
 
 if __name__ == '__main__':
-
-    # User inputs:
-    num = 5
-    # file = 'phylip.txt'
-    file = "testFiles/ChillLeo.phylip"
-    windowSize = 10000
-    windowOffset = 10000
-    rooted = False
-    outgroup = "seq5"
-
+    num = 2
     tp = TopologyPlotter()
-
-    # Function calls for plotting inputs:
-    # topologies_to_counts, unique_topologies_to_newicks = topology_counter()
-    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted, outgroup)
-
+    topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted=False, outgroup=False)
     if num > len(topologies_to_counts):
         num = len(topologies_to_counts)
-
-    list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
-
     top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
+    windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=False, outgroup=False)  # all trees, scatter, circle, donut
+    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
+    tp.topology_colorizer(topologies_to_colors, rooted=False, outgroup=False)
 
-    windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted, outgroup)
-
-    topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies, top_topologies_list)
-
-    donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)
-
-    # Functions for creating plots
-    tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
-    tp.topology_donut(labels, sizes, donut_colors)
-    tp.topology_colorizer(topologies_to_colors, rooted, outgroup)
-    tp.top_topology_visualization()
+    # User inputs:
+    # num = 5
+    # # file = 'phylip.txt'
+    # file = "testFiles/ChillLeo.phylip"
+    # windowSize = 10000
+    # windowOffset = 10000
+    # rooted = False
+    # outgroup = "seq5"
+    #
+    # tp = TopologyPlotter()
+    #
+    # # Function calls for plotting inputs:
+    # # topologies_to_counts, unique_topologies_to_newicks = topology_counter()
+    # topologies_to_counts, unique_topologies_to_newicks = tp.topology_counter(rooted, outgroup)
+    #
+    # if num > len(topologies_to_counts):
+    #     num = len(topologies_to_counts)
+    #
+    # list_of_top_counts, labels, sizes = tp.top_freqs(num, topologies_to_counts)
+    #
+    # top_topologies_to_counts = tp.top_topologies(num, topologies_to_counts)
+    #
+    # windows_to_top_topologies, top_topologies_list = tp.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted, outgroup)
+    #
+    # topologies_to_colors, scatter_colors, ylist = tp.topology_colors(windows_to_top_topologies, top_topologies_list)
+    #
+    # donut_colors = tp.donut_colors(top_topologies_to_counts, topologies_to_colors)
+    #
+    # # Functions for creating plots
+    # tp.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)
+    # tp.topology_donut(labels, sizes, donut_colors)
+    # tp.topology_colorizer(topologies_to_colors, rooted, outgroup)
+    # tp.top_topology_visualization()
 
     # generateCircleGraph(file, windows_to_top_topologies, topologies_to_colors, windowSize, windowOffset)
     #
