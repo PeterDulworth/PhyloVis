@@ -1,6 +1,7 @@
 import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from PyQt4 import QtCore
 import math
 import numpy as np
@@ -142,11 +143,47 @@ class Plotter(QtCore.QThread):
 
         return ax
 
+    def heatMap(self, title, mapping, subplotPosition=111):
+        """
+            Create a heat map based on the inputted dictionary
+
+            Input:
+                i. mapping --- a dictionary mapping integers to floats or integers
+                ii. name --- a string for the image name
+        """
+
+        ax = plt.subplot(subplotPosition)
+        ax.set_title(title, fontsize=15)
+
+        # Create custom color map
+        colors = [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0),(0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 0.0, 0.0)]
+        color_name = "Chab's Colors"
+
+        blue_green = LinearSegmentedColormap.from_list(color_name, colors)
+        plt.register_cmap(cmap=blue_green)
+
+        # plt.figure(figsize=(15, 2))
+
+        array = np.array(mapping.values())
+
+        x_vals = np.empty([5, array.shape[0]])
+
+        x_vals[:, :] = array
+
+
+        plt.contourf(x_vals, cmap=blue_green)
+        # ax.contourf(x_vals, cmap=blue_green)
+        plt.colorbar()
+        # ax.colorbar()
+        ax.set_yticks([])
+
+        return ax
+
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
     # p.figureBarPlot([1,2,3,4], 'name')
     a = {0: '(C,(G,O),H);', 1: '((C,G),O,H);', 2: '(C,(G,O),H);', 3: '(C,(G,O),H);', 4: '(C,(G,O),H);', 5: '(C,(G,O),H);', 6: '(C,(G,O),H);', 7: '(C,(G,O),H);', 8: '((C,G),O,H);', 9: '(C,(G,O),H);'}
     b = ['#ff0000', '#0000ff', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#0000ff', '#ff0000']
     c = [1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
-    p.topology_scatter('henlo', a, b, c)
+    p.heatMap('title', )
     plt.show()
