@@ -272,7 +272,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.dWindows = dWindows
         self.statisticsCalculations.stat_scatter(self.dWindows, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
         self.dStatisticWindow.show()
-        self.dStatisticWindow.display_image()
+        self.dStatisticWindow.displayImage()
 
         self.dStatisticValueLabel.setText(str(self.dVal))
         self.dStatisticLabel.setEnabled(True)
