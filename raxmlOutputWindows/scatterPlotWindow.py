@@ -27,34 +27,12 @@ class ScatterPlotWindow(Window):
     def __init__(self):
         Window.__init__(self, 'asdf', x=240, y=262, scale=1)
 
-
     def plot(self):
         windows_to_w_rf = {0:0, 1:1, 2:2, 3:3, 4:4}
         self.plotter = plotter.Plotter()
-        plot = self.plotter.stat_scatter(windows_to_w_rf, "plots/WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance")
-        plot = self.plotter.figureBarPlot([1,2,3,4,5], '', '')
-        print plot
+        self.plotter.stat_scatter(windows_to_w_rf, "plots/WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
+        self.plotter.figureBarPlot([1,2,3,4,5], '', '', 211)
 
-
-
-    def figureBarPlot(self, data, name, title):
-        """
-            generates bar chart
-        """
-
-        numberOfBars = len(data)
-        ind = np.arange(numberOfBars)  # the x locations for the groups
-        width = .667  # the width of the bars
-        ax = self.figure.add_subplot(111)
-        colors = [(43.0 / 255.0, 130.0 / 255.0, 188.0 / 255.0), (141.0 / 255.0, 186.0 / 255.0, 87.0 / 255.0), (26.0 / 255.0, 168.0 / 255.0, 192.0 / 255.0), (83.5 / 255.0, 116.5 / 255.0, 44.5 / 255.0)]
-
-        ax.bar(ind, data, width, color=colors)
-
-        plt.title(title, fontsize=15)
-        # plt.savefig(name)
-        # plt.show()
-
-        self.canvas.draw()
 
 if __name__ == '__main__': # test window if running locally
 

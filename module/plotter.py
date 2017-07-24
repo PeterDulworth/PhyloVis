@@ -98,7 +98,7 @@ class Plotter(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
 
-    def stat_scatter(self, stat_map, name, title, xLabel, yLabel):
+    def stat_scatter(self, stat_map, name, title, xLabel, yLabel, subplotPosition=111):
         """
             Creates a scatter plot with the x-axis being the
             windows and the y-axis being the statistic to
@@ -115,7 +115,7 @@ class Plotter(QtCore.QThread):
                 A scatter plot with windows as the x-axis and a statistic as the y-axis.
         """
 
-        ax = plt.subplot(111)
+        ax = plt.subplot(subplotPosition)
         ax.set_title(title, fontsize=15)
 
         # sizes plot circles
@@ -149,12 +149,12 @@ class Plotter(QtCore.QThread):
         # plt.clf()
 
 
-    def figureBarPlot(self, data, name, title, labelHeights=False, legend=False, legendNames=(), xTicks=False, groupLabels=()):
+    def figureBarPlot(self, data, name, title, subplotPosition=111):
         """
             generates bar chart
         """
 
-        ax = plt.subplot(111)
+        ax = plt.subplot(subplotPosition)
         ax.set_title(title)
         numberOfBars = len(data)
         ind = np.arange(numberOfBars)  # the x locations for the groups

@@ -58,9 +58,6 @@ class Window(QtGui.QMainWindow):
         self.canvas = FigureCanvas(self.figure)
         self.verticalLayout.addWidget(self.canvas)
 
-        self.figure.suptitle('asdf')
-
-
     def figureBarPlot(self, data, name, title):
         """
             generates bar chart
