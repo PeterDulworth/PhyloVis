@@ -1,5 +1,6 @@
 import sys, os
 import numpy as np
+from module import plotter
 import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
@@ -56,6 +57,9 @@ class Window(QtGui.QMainWindow):
         # bind export actions
         self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
 
+        # create instance of Plotter class
+        self.plotter = plotter.Plotter()
+
     def initCanvas(self):
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
@@ -87,8 +91,8 @@ class Window(QtGui.QMainWindow):
     def closeEvent(self, QCloseEvent):
         self.emit(QtCore.SIGNAL("WINDOW_CLOSED"))
 
-        # def moveEvent(self, QMoveEvent):
-        #     print self.fileName, self.pos()
+    # def moveEvent(self, QMoveEvent):
+    #     print self.fileName, self.pos()
 
 
 if __name__ == '__main__':

@@ -5,7 +5,6 @@ import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
 from matplotlib import pyplot as plt
 from PyQt4 import QtGui, QtCore
-from module import plotter
 import numpy as np
 
 """
@@ -25,13 +24,9 @@ else:
 
 class ScatterPlotWindow(Window):
     def __init__(self):
-        Window.__init__(self, 'asdf', x=240, y=262, scale=1)
+        Window.__init__(self, windowTitle='Windows to Top Topologies', x=240, y=262, scale=1)
 
     def plot(self):
-        print 'henlo'
-        windows_to_w_rf = {0:0, 1:1, 2:2, 3:3, 4:4}
-        self.plotter = plotter.Plotter()
-        # self.plotter.stat_scatter(windows_to_w_rf, "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
         self.plotter.figureBarPlot([1,2,3,4,5], 'bar plot', 111)
 
 
