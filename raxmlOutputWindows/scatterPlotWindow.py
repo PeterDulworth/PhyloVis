@@ -30,8 +30,8 @@ class ScatterPlotWindow(Window):
     def plot(self):
         windows_to_w_rf = {0:0, 1:1, 2:2, 3:3, 4:4}
         self.plotter = plotter.Plotter()
-        self.plotter.stat_scatter(windows_to_w_rf, "plots/WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
-        self.plotter.figureBarPlot([1,2,3,4,5], '', '', 211)
+        self.plotter.stat_scatter(windows_to_w_rf, "Weighted Robinson-Foulds Distance", "Windows", "RF Distance", subplotPosition=212)
+        self.plotter.figureBarPlot([1,2,3,4,5], 'bar plot', 211)
 
 
 if __name__ == '__main__': # test window if running locally

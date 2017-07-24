@@ -98,14 +98,14 @@ class Plotter(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
 
-    def stat_scatter(self, stat_map, name, title, xLabel, yLabel, subplotPosition=111):
+    def stat_scatter(self, dataMap, title, xLabel, yLabel, subplotPosition=111):
         """
             Creates a scatter plot with the x-axis being the
             windows and the y-axis being the statistic to
             be graphed.
 
             Input:
-                i. stat_map -- a mapping outputted by either calculate_windows_to_p_gtst or calculate_windows_to_rf ([0] or [1])
+                i. dataMap -- a mapping
                 ii. name -- the name of the save file
                 iii. title -- the title of the plot
                 iv. xLabel -- the label for the x axis
@@ -119,37 +119,31 @@ class Plotter(QtCore.QThread):
         ax.set_title(title, fontsize=15)
 
         # sizes plot circles
-        area = math.pi * (3) ** 2
-
-        x_list = []
+        circleArea = math.pi * (3) ** 2
 
         # makes x values integers
-        xList = stat_map.keys()
-        for j in range(len(xList)):
-            x_list.append(int(xList[j]))
+        xValues = dataMap.keys()
+        xIntegerValues = []
 
-        x = np.array(x_list)
+        for x in xValues:
+            xIntegerValues.append(int(x))
 
-        # gets y values from dictionary
-        yList = stat_map.values()
-        y = np.array(yList)
+        x = np.array(xIntegerValues)
 
+        # get y values from dictionary and convert to an np array
+        yValues = dataMap.values()
+        y = np.array(yValues)
 
-        ax.scatter(x, y, s=area, c='#000000', alpha=1)
+        # create scatter plot
+        ax.scatter(x, y, s=circleArea, c='#000000', alpha=1)
 
         # label the axes
-        # sp.xlabel(xlabel, fontsize=10)
-        # sp.ylabel(ylabel, fontsize=10)
-
-        # plt.tight_layout()
-        # plt.savefig(name)
+        ax.set_xlabel('x', fontsize=10)
+        ax.set_ylabel('y', fontsize=10)
 
         return ax
 
-        # plt.clf()
-
-
-    def figureBarPlot(self, data, name, title, subplotPosition=111):
+    def figureBarPlot(self, data, title, subplotPosition=111):
         """
             generates bar chart
         """
