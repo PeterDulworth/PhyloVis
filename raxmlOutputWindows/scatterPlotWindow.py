@@ -1,11 +1,6 @@
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # add parent dir to path
+import sys
 from standardWindow import Window
-import matplotlib
-matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
-from matplotlib import pyplot as plt
-from PyQt4 import QtGui, QtCore
-import numpy as np
+from PyQt4 import QtGui
 
 """
 Functions:
@@ -16,11 +11,6 @@ Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/topologyScatter.png'
-else:
-    fileName = 'plots/topologyScatter.png'
-
 
 class ScatterPlotWindow(Window):
     def __init__(self):
@@ -30,17 +20,16 @@ class ScatterPlotWindow(Window):
         self.plotter.figureBarPlot([1,2,3,4,5], 'bar plot', 111)
 
 
-if __name__ == '__main__': # test window if running locally
+if __name__ == '__main__': # only runs if not imported
 
-    # A new instance of QApplication
+    # create a new instance of QApplication
     app = QtGui.QApplication(sys.argv)
 
-    # initialize main input window
+    # create window and plot
     form = ScatterPlotWindow()
     form.show()
     form.plot()
-    form.setBackgroundColor(QtCore.Qt.white)
 
-    # and execute the app
+    # execute the app
     sys.exit(app.exec_())
 
