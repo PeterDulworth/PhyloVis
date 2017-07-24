@@ -68,6 +68,7 @@ class Window(QtGui.QMainWindow):
         """
             change background color to white
         """
+
         p = self.palette()
         p.setColor(self.backgroundRole(), color)
         self.setPalette(p)
@@ -76,6 +77,7 @@ class Window(QtGui.QMainWindow):
         """
             positions the window relative to the top left corner of the screen (px)
         """
+
         self.move(x, y)
 
     def setWindowSize(self, x, y):

@@ -12,7 +12,7 @@ class Plotter(QtCore.QThread):
         # list of colors for plots
         self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
-    def topology_donut(self, labels, sizes, donut_colors):
+    def topologyDonut(self, title, labels, sizes, donut_colors, subplotPosition=111):
         """
             Creates a donut chart showing the breakdown of the top 'num' topologies.
 
@@ -26,28 +26,27 @@ class Plotter(QtCore.QThread):
                 most frequent 'num' topologies as the labels, and a list tops of the top 'num' scores.
         """
 
-        # plots pie chart
-        plt.rcParams['patch.edgecolor'] = '#000000'
-        plt.pie(sizes, explode=None, labels=labels,
-                colors=donut_colors, autopct=None, shadow=False)
+        ax = plt.subplot(subplotPosition)
+        ax.set_title(title, fontsize=15)
 
-        # create circle behind pie chart to outline it
-        outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False, linewidth=1.25)
+        # changes rcParams for only following block
+        with plt.rc_context({'patch.edgecolor': '#000000'}):
+            plt.pie(sizes, explode=None, labels=labels, colors=donut_colors, autopct=None, shadow=False)
 
-        # impose circle over pie chart to make a donut chart
-        inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff', linewidth=1.25)
-        fig = plt.gcf()
-        fig.gca().add_artist(inner_circle)
-        fig.gca().add_artist(outer_circle)
+            # create circle behind pie chart to outline it
+            outer_circle = plt.Circle((0, 0), 1, color='#000000', fill=False, linewidth=1.25)
 
-        # set axes equal
-        plt.axis('equal')
+            # impose circle over pie chart to make a donut chart
+            inner_circle = plt.Circle((0, 0), 0.65, color='#000000', fc='#ffffff', linewidth=1.25)
 
-        # save plot
-        plt.savefig("plots/topologyDonut.png", dpi=250)
-        plt.clf()
+            fig = plt.gcf()
+            fig.gca().add_artist(inner_circle)
+            fig.gca().add_artist(outer_circle)
 
-        self.emit(QtCore.SIGNAL('DONUT_COMPLETE'))
+            # set axes equal
+            plt.axis('equal')
+
+        return ax
 
     def topologyScatter(self, title, wins_to_tops, scatter_colors, y, subplotPosition=111):
         """
@@ -61,10 +60,6 @@ class Plotter(QtCore.QThread):
             Returns:
                 A scatter plot with topologies as the x-axis and windows as the y-axis.
         """
-
-        print wins_to_tops
-        print scatter_colors
-        print y
 
         ax = plt.subplot(subplotPosition)
         ax.set_title(title, fontsize=15)

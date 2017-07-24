@@ -14,6 +14,7 @@ from PyQt4 import QtGui
 class ScatterPlotWindow(Window):
     def __init__(self, title, windowsToTopologies, colors, heights):
         Window.__init__(self, windowTitle='Windows to Top Topologies')
+
         self.title = title
         self.windowsToTopologies = windowsToTopologies
         self.colors = colors
@@ -33,9 +34,9 @@ if __name__ == '__main__': # only runs if not imported
     c = [1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
 
     # create window and plot
-    form = ScatterPlotWindow()
+    form = ScatterPlotWindow('Title', a, b, c)
     form.show()
-    form.plot('', a, b, c)
+    form.plot()
 
     # execute the app
     sys.exit(app.exec_())
