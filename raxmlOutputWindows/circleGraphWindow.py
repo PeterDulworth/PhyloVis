@@ -11,15 +11,10 @@ Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/genomeAtlas.png'
-else:
-    fileName = 'plots/genomeAtlas.png'
-
 
 class CircleGraphWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=80, y=102, scale=1)
+        Window.__init__(self, windowTitle='Genome Atlas Window')
 
 
 if __name__ == '__main__':

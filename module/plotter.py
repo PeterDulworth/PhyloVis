@@ -49,7 +49,7 @@ class Plotter(QtCore.QThread):
 
         self.emit(QtCore.SIGNAL('DONUT_COMPLETE'))
 
-    def topology_scatter(self, title, wins_to_tops, scatter_colors, y, subplotPosition=111):
+    def topologyScatter(self, title, wins_to_tops, scatter_colors, y, subplotPosition=111):
         """
             Creates a scatter plot showing the topology as the y-axis and the window as the x-axis.
 
@@ -76,11 +76,11 @@ class Plotter(QtCore.QThread):
         ax.set_yticks(np.arange(len(wins_to_tops) + 1, 0))
 
         # x-axis is window numbers
-        x = wins_to_tops.keys()
+        windows = wins_to_tops.keys()
 
         # for each index, and unique topology
         for (i, topology) in enumerate(set(wins_to_tops.values())):
-            xc = [top for (j, top) in enumerate(x) if wins_to_tops.values()[j] == topology]
+            xc = [top for (j, top) in enumerate(windows) if wins_to_tops.values()[j] == topology]
             yc = [top for (j, top) in enumerate(y) if wins_to_tops.values()[j] == topology]
             cols = [c for (j, c) in enumerate(scatter_colors) if wins_to_tops.values()[j] == topology]
             ax.scatter(xc, yc, s=circleArea, c=cols, alpha=1, edgecolors='#000000')
@@ -89,8 +89,6 @@ class Plotter(QtCore.QThread):
         # labels axes
         ax.set_xlabel('Windows', fontsize=10)
         ax.set_ylabel('Top Newick Strings', fontsize=10)
-
-        self.emit(QtCore.SIGNAL("SCATTER_COMPLETE"))
 
         return ax
 

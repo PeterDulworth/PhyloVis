@@ -3,23 +3,17 @@ from PyQt4 import QtGui
 import sys
 
 """
-Functions:
-    __init__(self)
+Bootstrap Contraction Window
 ~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/ContractedGraph.png'
-else:
-    fileName = 'plots/ContractedGraph.png'
-
 
 class BootstrapContractionWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=40, y=62, scale=3)
+        Window.__init__(self, windowTitle='Bootstrap Contraction Window')
 
 
 if __name__ == '__main__':

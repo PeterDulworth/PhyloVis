@@ -1,5 +1,4 @@
 import sys, os
-import numpy as np
 from module import plotter
 import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
@@ -10,7 +9,7 @@ from matplotlib.backends.qt_compat import QtCore, QtGui
 
 
 class Window(QtGui.QMainWindow):
-    def __init__(self, windowTitle='Window', x=0, y=0, scale=1, parent=None):
+    def __init__(self, windowTitle='Window', parent=None):
         super(Window, self).__init__(parent)
 
         # layout
@@ -39,9 +38,6 @@ class Window(QtGui.QMainWindow):
 
         # get arguments
         self.windowTitle = windowTitle
-        self.x = x
-        self.y = y
-        self.scale = scale
 
         # moves menu bar into application -- mac only windows sux
         self.menubar.setNativeMenuBar(False)
@@ -104,7 +100,7 @@ if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
 
     # initialize main input window
-    form = Window(windowTitle='Standard Window', scale=5)
+    form = Window(windowTitle='Standard Window')
     form.show()
     form.setWindowSize(600, 600)
 

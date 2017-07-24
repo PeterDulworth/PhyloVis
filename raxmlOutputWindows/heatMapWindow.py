@@ -3,23 +3,17 @@ from PyQt4 import QtGui
 import sys
 
 """
-Functions:
-    __init__(self)
+Informative Sites Heatmap
 ~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/HeatMapInfSites.png'
-else:
-    fileName = 'plots/HeatMapInfSites.png'
-
 
 class HeatMapWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=200, y=738, scale=3)
+        Window.__init__(self, windowTitle='Informative Sites Heatmap')
 
 
 if __name__ == '__main__':

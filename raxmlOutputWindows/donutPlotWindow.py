@@ -11,15 +11,10 @@ Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/topologyDonut.png'
-else:
-    fileName = 'plots/topologyDonut.png'
-
 
 class DonutPlotWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=200, y=222, scale=3) #!!! add ../ before file name to test locally
+        Window.__init__(self, windowTitle='Top Topology Frequency Donut')
 
 
 if __name__ == '__main__':

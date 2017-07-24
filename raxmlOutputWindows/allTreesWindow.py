@@ -11,15 +11,10 @@ Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    fileName = '../plots/TopTopologies.png'
-else:
-    fileName = 'plots/TopTopologies.png'
-
 
 class AllTreesWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=0, y=22, scale=3)
+        Window.__init__(self, windowTitle='All Trees Window')
 
 
 if __name__ == '__main__':

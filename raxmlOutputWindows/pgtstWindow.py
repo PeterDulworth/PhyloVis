@@ -3,23 +3,17 @@ from PyQt4 import QtGui
 import sys
 
 """
-Functions:
-    __init__(self)
-~
-Chabrielle Allen
-Travis Benedict
+    P(gene tree | species tree)
+    ~
+    Chabrielle Allen
+    Travis Benedict
 Peter Dulworth
 """
-
-if __name__ == '__main__':
-    fileName = '../plots/PGTSTPlot.png'
-else:
-    fileName = 'plots/PGTSTPlot.png'
 
 
 class PGTSTWindow(Window):
     def __init__(self):
-        Window.__init__(self, fileName, x=160, y=182, scale=1)
+        Window.__init__(self, windowTitle='P(gene tree | species tree)')
 
 
 if __name__ == '__main__':

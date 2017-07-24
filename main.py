@@ -465,9 +465,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 # generate scatter plot
                 if self.checkboxScatterPlot.isChecked():
-                    self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow()
+                    self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow('Windows to Top Topologies', windows_to_top_topologies, scatter_colors, ylist)
                     self.openWindow(self.scatterPlotWindow)
-                    # self.topologyPlotter.topology_scatter(windows_to_top_topologies, scatter_colors, ylist)  # scatter
 
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
