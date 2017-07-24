@@ -13,15 +13,13 @@ Peter Dulworth
 
 
 class DonutPlotWindow(Window):
-    def __init__(self, labels, sizes, donutColors):
+    def __init__(self, title, labels, sizes, donutColors):
         Window.__init__(self, windowTitle='Top Topology Frequency Donut')
 
-        self.labels = labels
-        self.sizes = sizes
-        self.donutColors = donutColors
+        # plot
+        self.plotter.topologyDonut(title, labels, sizes, donutColors)
+        self.show()
 
-    def plot(self):
-        self.plotter.topologyDonut('title', self.labels, self.sizes, self.donutColors)
 
 if __name__ == '__main__': # only runs if not imported
 

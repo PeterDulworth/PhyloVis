@@ -15,13 +15,9 @@ class ScatterPlotWindow(Window):
     def __init__(self, title, windowsToTopologies, colors, heights):
         Window.__init__(self, windowTitle='Windows to Top Topologies')
 
-        self.title = title
-        self.windowsToTopologies = windowsToTopologies
-        self.colors = colors
-        self.heights = heights
-
-    def plot(self):
-        self.plotter.topologyScatter(self.title, self.windowsToTopologies, self.colors, self.heights, subplotPosition=111)
+        # plot
+        self.plotter.topologyScatter(title, windowsToTopologies, colors, heights)
+        self.show()
 
 
 if __name__ == '__main__': # only runs if not imported

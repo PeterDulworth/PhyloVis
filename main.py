@@ -98,7 +98,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # initialize window
         self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
-        self.donutPlotWindow = donutPlotWindow.DonutPlotWindow()
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.heatMapWindow = heatMapWindow.HeatMapWindow()
@@ -461,15 +460,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate donut plot
                 if self.checkboxDonutPlot.isChecked():
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    print labels
-                    print sizes
-                    print donut_colors
-                    self.topologyPlotter.topology_donut(labels, sizes, donut_colors)  # donut
+                    self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('title', labels, sizes, donut_colors)
 
                 # generate scatter plot
                 if self.checkboxScatterPlot.isChecked():
                     self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow('Windows to Top Topologies', windows_to_top_topologies, scatter_colors, ylist)
-                    self.openWindow(self.scatterPlotWindow)
 
                 # generate circle graph
                 if self.checkboxCircleGraph.isChecked():
