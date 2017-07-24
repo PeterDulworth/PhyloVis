@@ -5,6 +5,8 @@ from matplotlib.colors import LinearSegmentedColormap
 from PyQt4 import QtCore
 import math
 import numpy as np
+from Bio import Phylo
+from cStringIO import StringIO
 
 class Plotter(QtCore.QThread):
     def __init__(self, parent=None):
@@ -170,6 +172,52 @@ class Plotter(QtCore.QThread):
         ax.set_yticks([])
 
         return ax
+
+    def topologyColorizer(self, title, newicksToColors, rooted=False, outgroup=False):
+        """
+            Create colored tree topology images based on a color scheme where the color of a tree is determined by the frequency that it occurs.
+
+            Inputs:
+                i. color scheme --- a dictionary mapping newick strings to colors
+                ii. rooted --- a boolean parameter corresponding to the tree being rooted
+                iii. outgroup --- a string of the desired taxon to root at
+        """
+
+        # count number of top topologies
+        numTopTopologies = 0
+        for newick in newicksToColors:
+            if newick != "Other":
+                numTopTopologies += 1
+
+        # create a count for the number of the topologies
+        count = 1
+        # Iterate over each newick string in color_scheme
+        for newick in newicksToColors:
+            if newick != "Other":
+
+                if numTopTopologies < 4:
+                    ax = plt.subplot(numTopTopologies, 1, count)
+                elif numTopTopologies == 5:
+                    order = [None, 1,3,5,7,9]
+                    ax = plt.subplot(3, 3, order[count])
+                elif numTopTopologies >= 4:
+                    print int(round(numTopTopologies / 2))
+                    ax = plt.subplot(int(round(numTopTopologies / 2.0)), 2, count)
+
+                # Create the tree object and assign it to the appropriate color
+                tree = Phylo.read(StringIO(newick), "newick")
+                tree.rooted = rooted
+
+                if rooted:
+                    tree.root_with_outgroup(outgroup)
+
+                tree.root.color = newicksToColors[newick]
+
+                # Create the tree image
+                Phylo.draw(tree, axes=ax, do_show=False)
+
+                count += 1
+
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()

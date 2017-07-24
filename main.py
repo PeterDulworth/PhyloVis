@@ -96,7 +96,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
         # initialize window
-        self.allTreesWindow = allTreesWindow.AllTreesWindow()
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.pgtstWindow = pgtstWindow.PGTSTWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
@@ -482,8 +481,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
                 # generate all trees graph
                 if self.checkboxAllTrees.isChecked():
-                    self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outgroup=self.outgroupComboBox.currentText())
-                    # self.topologyPlotter.top_topology_visualization()
+                    # self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outgroup=self.outgroupComboBox.currentText())
+                    self.allTreesWindow = allTreesWindow.AllTreesWindow('', topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outGroup=self.outgroupComboBox.currentText())
 
     def raxmlInputErrorHandling(self):
         """
