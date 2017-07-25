@@ -28,7 +28,7 @@ Avoid special characters, such as diacritics, spaces, and punctuation other than
 
 ## Analysis
 
-# File Converter
+### File Converter
 File Converter mode allows the user to select a file containing DNA alignments in one of eleven popular formats and convert them to a different file format. After selecting the input file and its format, the user must specify the output file’s name and location along with the desired format.
 
 For more information regarding file types see: http://biopython.org/wiki/AlignIO
