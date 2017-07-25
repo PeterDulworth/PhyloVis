@@ -59,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -367,8 +367,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>854</width>
-               <height>643</height>
+               <width>531</width>
+               <height>294</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1302,8 +1302,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>854</width>
-               <height>643</height>
+               <width>451</width>
+               <height>157</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1542,8 +1542,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>854</width>
-               <height>643</height>
+               <width>457</width>
+               <height>220</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2505,10 +2505,6 @@
                <zorder></zorder>
                <zorder></zorder>
                <zorder></zorder>
-               <zorder></zorder>
-               <zorder></zorder>
-               <zorder></zorder>
-               <zorder></zorder>
               </widget>
              </item>
              <item>
@@ -2638,26 +2634,52 @@
                <zorder></zorder>
                <zorder></zorder>
                <zorder></zorder>
-               <zorder></zorder>
-               <zorder></zorder>
-               <zorder></zorder>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_33">
+               <item>
+                <widget class="QLabel" name="label_24">
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>15</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Graphs</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox">
+               <property name="font">
+                <font>
+                 <pointsize>15</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="title">
+                <string>Graphs</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_13">
+                <item>
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="text">
+                   <string>PushButton</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>
            </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_17">

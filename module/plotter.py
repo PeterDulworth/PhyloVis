@@ -5,7 +5,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from PyQt4 import QtCore
 import math, re, numpy as np
 from Bio import Phylo
-from ete3 import Tree
+from ete3 import Tree, TreeNode
 from cStringIO import StringIO
 
 class Plotter(QtCore.QThread):
@@ -14,6 +14,9 @@ class Plotter(QtCore.QThread):
 
         # list of colors for plots
         self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
+
+        # list of patterns for line styles
+        self.PATTERNS = ['-', '--', ':', '-.']
 
     def topologyDonut(self, title, labels, sizes, donut_colors, subplotPosition=111):
         """
@@ -261,7 +264,7 @@ class Plotter(QtCore.QThread):
         ax.set_xlabel(xLabel)
         ax.set_ylabel(yLabel)
 
-    def tmrca_graph(self, sites_to_newick_mappings, topology_only):
+    def tmrca_graph(self, title, sites_to_newick_mappings, topology_only):
         """
             Plots a line graph comparing tree heights from different MS files.
 
@@ -273,11 +276,12 @@ class Plotter(QtCore.QThread):
                 i. A line graph with the tree height as the y-axis and the site number as the x-axis.
         """
 
-        trees = []
-        roots = []
-        leaves = []
-        dist = []
-        heights = []
+        ax = plt.subplot(111)
+        ax.set_title(title, fontsize=15)
+        ax.set_xlabel('SNP Site Number')
+        ax.set_ylabel('TMRCA')
+
+        trees = roots = leaves = dist = heights = []
 
         # iterate over each mapping in list
         for i in range(len(sites_to_newick_mappings)):
@@ -307,21 +311,12 @@ class Plotter(QtCore.QThread):
                 ind = i
 
             # plot line graph
-            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=COLORS[i], linestyle=PATTERNS[ind])
+            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
 
             # clear lists
-            trees = []
-            roots = []
-            leaves = []
-            dist = []
-            heights = []
+            trees = roots = leaves = dist = heights = []
 
-        # label x and y-axes
-        plt.xlabel('SNP Site Number')
-        plt.ylabel('TMRCA')
-
-
-
+        return ax
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
