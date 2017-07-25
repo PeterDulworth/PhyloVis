@@ -3,9 +3,9 @@ matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be be
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 from PyQt4 import QtCore
-import math
-import numpy as np
+import math, re, numpy as np
 from Bio import Phylo
+from ete3 import Tree
 from cStringIO import StringIO
 
 class Plotter(QtCore.QThread):
@@ -129,19 +129,37 @@ class Plotter(QtCore.QThread):
 
         return ax
 
-    def figureBarPlot(self, data, title, subplotPosition=111):
+    def barPlot(self, title, data, xLabel='', yLabel='', groupLabels=(), subplotPosition=111):
         """
             generates bar chart
         """
 
         ax = plt.subplot(subplotPosition)
-        ax.set_title(title)
-        numberOfBars = len(data)
-        ind = np.arange(numberOfBars)  # the x locations for the groups
-        width = .667  # the width of the bars
-        colors = [(43.0 / 255.0, 130.0 / 255.0, 188.0 / 255.0), (141.0 / 255.0, 186.0 / 255.0, 87.0 / 255.0), (26.0 / 255.0, 168.0 / 255.0, 192.0 / 255.0), (83.5 / 255.0, 116.5 / 255.0, 44.5 / 255.0)]
 
-        ax.bar(ind, data, width, color=colors)
+        ax.set_title(title, fontsize=15)
+        ax.set_xlabel(xLabel, fontsize=10)
+        ax.set_ylabel(yLabel, fontsize=10)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+        numberOfBars = len(data)
+        indices = range(numberOfBars)  # the x locations for the groups
+        width = .667  # the width of the bars
+        bars = []
+
+        for i in indices:
+            bars.append(ax.bar(i, data[i], width, label=groupLabels[i]))
+            for bar in bars[i]:
+                h = bar.get_height()
+                ax.text(bar.get_x() + bar.get_width() / 2.0, h, '%d' % int(h), ha='center', va='bottom')
+
+        ax.set_xmargin(0.1)
+        ax.legend()
+        plt.tight_layout()
+
+        # if len(groupLabels) > 0:
+        #     ax.set_xticks(indices)
+        #     ax.set_xticklabels(groupLabels)
 
         return ax
 
@@ -243,6 +261,67 @@ class Plotter(QtCore.QThread):
         ax.set_xlabel(xLabel)
         ax.set_ylabel(yLabel)
 
+    def tmrca_graph(self, sites_to_newick_mappings, topology_only):
+        """
+            Plots a line graph comparing tree heights from different MS files.
+
+            Inputs:
+                i. sites_to_newick_mappings -- a list of the mappings outputted by sites_to_newick_ms()
+                ii. topology_only
+
+            Returns:
+                i. A line graph with the tree height as the y-axis and the site number as the x-axis.
+        """
+
+        trees = []
+        roots = []
+        leaves = []
+        dist = []
+        heights = []
+
+        # iterate over each mapping in list
+        for i in range(len(sites_to_newick_mappings)):
+            mapping = sites_to_newick_mappings[i]
+            for tree in mapping:
+                # iterate over mapping to get trees
+                trees.append(mapping[tree])
+
+            for j in range(len(trees)):
+                # get tree roots
+                roots.append(Tree.get_tree_root(Tree(trees[j])))
+
+                # get distance from roots to farthest leaves
+                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only, is_leaf_fn=None))
+
+            for k in range(len(leaves)):
+                # regular expression to get height values from list of farthest leaves
+                dist.append(re.findall(', \d{1,}.\d{1,}', str(leaves[k])))
+
+                # format with regular expression to remove unnecessary tokens
+                heights.append(re.sub("\[', |']", '', str(dist[k])))
+
+            # resets ind to prevent index error in linestyle pattern
+            if i > 3:
+                ind = 0
+            else:
+                ind = i
+
+            # plot line graph
+            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=COLORS[i], linestyle=PATTERNS[ind])
+
+            # clear lists
+            trees = []
+            roots = []
+            leaves = []
+            dist = []
+            heights = []
+
+        # label x and y-axes
+        plt.xlabel('SNP Site Number')
+        plt.ylabel('TMRCA')
+
+
+
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
@@ -250,5 +329,7 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     a = {0: '(C,(G,O),H);', 1: '((C,G),O,H);', 2: '(C,(G,O),H);', 3: '(C,(G,O),H);', 4: '(C,(G,O),H);', 5: '(C,(G,O),H);', 6: '(C,(G,O),H);', 7: '(C,(G,O),H);', 8: '((C,G),O,H);', 9: '(C,(G,O),H);'}
     b = ['#ff0000', '#0000ff', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#ff0000', '#0000ff', '#ff0000']
     c = [1, 0, 1, 1, 1, 1, 1, 1, 0, 1]
-    p.heatMap('title', )
+    # p.heatMap('title', )
+
+    p.barPlot('', [1,2,3,4,5 ], '', '', groupLabels=('one', 'two', '3', 4, '5'))
     plt.show()

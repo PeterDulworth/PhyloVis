@@ -260,8 +260,6 @@ class MsComparison(QtCore.QThread):
                     matchingSites += 1.0
             percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
 
-
-
         # sites_to_difference_w, sites_to_difference_uw = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMaps[0])
 
         self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted,  graphLabels)
@@ -286,12 +284,3 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
 
     ms.connect(ms, QtCore.SIGNAL('MS_COMPLETE'), plot)
     ms.run()
-
-
-
-    # for sitesToNewickMsMap in sitesToNewickMsMaps:
-    #     weightedData, unweightedData = ms.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
-
-        # ms.statisticsCalculations.barPlot(weightedData.values(), 'name', 'title', 'x', '% Accuracy')
-        # ms.statisticsCalculations.stat_scatter(weightedData, "../plots/WRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Weighted Robinson-Foulds Distance")
-        # ms.statisticsCalculations.stat_scatter(unweightedData, "../plots/UWRFdifference.png", "Difference Between MS-1 and MS-2", "Sites Indices", "Unweighted Robinson-Foulds Distance")

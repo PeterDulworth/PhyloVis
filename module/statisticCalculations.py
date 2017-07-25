@@ -417,18 +417,20 @@ class StatisticsCalculations(QtCore.QThread):
 
     def calculate_d(self, alignment, window_size, window_offset, taxon1, taxon2, taxon3, taxon4):
         """
-        Calculates the D statistic for the given alignment
-        Input:
-        alignment --- a sequence alignment in phylip format
-        window_size --- the size of the desired windows
-        window_offset --- the offset that was used to create the windows
-        taxon1 --- first taxon for ABBA-BABA test
-        taxon2 --- second taxon for ABBA-BABA test
-        taxon3 --- third taxon for ABBA-BABA test
-        taxon4 --- outgroup for ABBA-BABA test
-        Output:
-        d_stat --- the D statistic value
-        windows_to_d --- a mapping of window indices to D values
+            Calculates the D statistic for the given alignment
+
+            Input:
+                i. alignment --- a sequence alignment in phylip format
+                ii. window_size --- the size of the desired windows
+                iii. window_offset --- the offset that was used to create the windows
+                iv. taxon1 --- first taxon for ABBA-BABA test
+                v. taxon2 --- second taxon for ABBA-BABA test
+                vi. taxon3 --- third taxon for ABBA-BABA test
+                vii. taxon4 --- outgroup for ABBA-BABA test
+
+            Output:
+                i. d_stat --- the D statistic value
+                ii. windows_to_d --- a mapping of window indices to D values
         """
 
         # Initialize the site index to 0
