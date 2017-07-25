@@ -33,7 +33,7 @@ File Converter mode allows the user to select a file containing DNA alignments i
 
 For more information regarding file types see: http://biopython.org/wiki/AlignIO
 
-# RAxML Mode
+### RAxML Mode
 In RAxML mode, there are three analysis sections containing preferences for adjusting the statistics. After selecting a file in phylip-sequential format, standard or advanced RAxML options, types of graphs to be generated, and statistical plots can be modified to fit the user’s preferences.
 
 In standard mode, the window size, window offset, and the number of top topologies to be analyzed can be inputted manually as integers greater than one. The model type can be selected from six popular types. Bootstrapping can also be selected; if it is, the user can input the confidence level and the number of bootstraps to be performed. The user can also choose to root the tree at a specific outgroup in the input file.
@@ -52,14 +52,14 @@ The Informative Sites Heat Map depicts the informativeness of each site in the d
 
 Statistics Options allows the user to select an existing species tree file and generate plots depicting the weighted and/or unweighted Robinson Foulds statistic and p(GT|ST).
 
-# MS Comparison
+### MS Comparison
 In MS Comparison mode, the user can specify a MS truth file and whether to compare against the RAxML directory and/or other MS files. This mode computes and plots the Robinson-Foulds distance between trees in the truth file compared to the other files the user inputs.
 
 When comparing against the RAxML directory, the user has the option to input the directory or folder containing the RAxML files and choose the window size and offset.
 
 When comparing the truth file to other MS files, the user can input multiple MS files for comparison.
 
-# D-statistic
+### D-statistic
 D-statistic mode allows the user to input an alignment file in phylip-sequential format, choose the window size and offset, and select the location of each outgroup in the tree visual. This mode then generates a scatter plot in which the x-axis is the window number, and the y-axis is the D-statistic value computed for that window.
 
 For further reading on the usage of the D-statistic see:
