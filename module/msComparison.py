@@ -202,13 +202,14 @@ class MsComparison(QtCore.QThread):
                 heights.append(re.sub("\[', |']", '', str(dist[k])))
 
             # resets ind to prevent index error in linestyle pattern
+            ind = 0
             if i > 3:
-                ind = 0
+                ind += 1
             else:
                 ind = i
 
             # plot line graph
-            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=COLORS[i], linestyle=PATTERNS[ind])
+            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
 
             # clear lists
             trees = []

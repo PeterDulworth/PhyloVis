@@ -11,15 +11,71 @@
 		- [D Statistic](#d-statistic)
 
 ## Introduction
-PhyloVis is a python-based application that provides an intuitive user interface for phylogenetic analyses and data visualization. It has four distinct modes that are useful for different types of phylogenetic analysis: RAxML, File Converter, MS Comparison and D-Statistic.
 
-RAxML mode gives users a front-end to interact with RAxML (STAMATAKIS 2014a) for Maximum Likelihood based inference of large phylogenetic trees. PhyloVis’s RAxML mode allows one to use RAxML to automatically perform sliding window analysis over an inputted alignment. Users are able to select from a plethora of options in performing their analysis, including: window size, window offset, and number of bootstraps. In this mode, users are able to produce a variety of graphs to help understand their genomic alignment and interpret the trees outputted by RAxML. These graph options include: visualization of the top topologies, scatter plot of windows to their topologies, frequency of top topologies, genome atlas, and a heat map of the informative sites. RAxML mode also provides support for calculating two statistics based on the trees produced within each window as compared to an overall species tree; Robinson-Foulds distance and probability of gene tree given species tree, p(gt\|st).
+PhyloVis is a python-based application that provides an intuitive user interface for phylogenetic analyses and data visualization. It has four distinct modes that are useful for different types of phylogenetic analysis: RAxML, File Converter, MS Comparison, and D-Statistic.
 
-The file converter in PhyloVis provides a user interface for a Biopython AlignIO file converter function. It allows users to convert between 12 different popular genome alignment file types. RAxML mode only accepts phylip-sequential format.
+RAxML mode gives users a front-end to interact with RAxML (STAMATAKIS 2014a) for Maximum Likelihood based inference of large phylogenetic trees. PhyloVis’s RAxML mode allows one to use RAxML to automatically perform sliding window analysis over an inputted alignment. Users are able to select from a plethora of options in performing their analysis, including: window size, window offset, and number of bootstraps. In this mode, users are able to produce a variety of graphs to help understand their genomic alignment and interpret the trees outputted by RAxML. These graph options include: a tree visualization of the top topologies, scatter plot of windows to their topologies, frequency of top topologies, genome atlas, and a heat map of the informative sites. RAxML mode also provides support for calculating two statistics based on the trees produced within each window as compared to an overall species tree; Robinson-Foulds distance and probability of a gene tree given a species tree.
 
+The file converter in PhyloVis provides a user interface for a Biopython AlignIO file converter function. It allows users to convert between twelve popular genome alignment file types. RAxML mode only accepts phylip-sequential format.
 MS Comparison mode allows users to perform an accuracy comparison between a “truth file” and one or more files in MS format or the results of RAxML mode.
+With D-Statistic mode, users can compute Patterson’s D-Statistic for determining introgression in a four taxa alignment. D-Statistic mode can produce graphs for the value of the D-Statistic across sliding windows as well as the value of the D-Statistic across the entire alignment.
 
-With D-Statistic mode users can compute Patterson’s D-Statistic for determining introgression in a four taxa alignment. D-Statistic mode can produce graphs for the value of the D-Statistic across sliding windows as well as the value of the D-Statistic across the entire alignment.
+## Requirements
+
+PhyloVis currently runs on Mac and Windows operating systems, and it selects the proper operating system automatically. Python 2.7 is required for this GUI, along with the additional libraries: BioPython, DendroPy, ETE, Matplotlib, and PyQt4.
+
+Avoid special characters, such as diacritics, spaces, and punctuation other than dots (“.”) and underscores (“_”)  in the names of the PhyloVis folder and all input files.
+
+## Analysis
+
+### File Converter
+File Converter mode allows the user to select a file containing DNA alignments in one of eleven popular formats and convert them to a different file format. After selecting the input file and its format, the user must specify the output file’s name and location along with the desired format.
+
+For more information regarding file types see: http://biopython.org/wiki/AlignIO
+
+### RAxML Mode
+In RAxML mode, there are three analysis sections containing preferences for adjusting the statistics. After selecting a file in phylip-sequential format, standard or advanced RAxML options, types of graphs to be generated, and statistical plots can be modified to fit the user’s preferences.
+
+In standard mode, the window size, window offset, and the number of top topologies to be analyzed can be inputted manually as integers greater than one. The model type can be selected from six popular types. Bootstrapping can also be selected; if it is, the user can input the confidence level and the number of bootstraps to be performed. The user can also choose to root the tree at a specific outgroup in the input file.
+
+In advanced mode, the user can input a custom RAxML command in which the -s and -n flags are handled internally. A species tree can also be generated using a custom RAxML command,. Rooting is available for this as well.
+
+For more information regarding RAxML and its commands see the RAxML manual: https://sco.h-its.org/exelixis/resource/download/NewManual.pdf
+
+The user can select up to five graphs to be generated, including: Top Topologies, Windows to Top Topologies, Top Topology Frequency, Genome Atlas, and Informative Sites Heat Map.
+The Top Topologies option generates an image containing tree visualizations of the most frequently occurring topologies generated by running RAxML on windows of the previously specified size.
+Windows to Top Topologies is a scatter plot in which the x-axis is the window number, and the y-axis is the topology.
+Top Topology Frequency is a circle graph showing the number of times each topology occurs; topologies differing from the top topologies are lumped together and categorized as “Other.”
+The Genome Atlas is
+Top Topologies, Windows to Top Topologies, Top Topology Frequency, and the Genome Atlas are all generated in such a way that the colors of the topologies correspond with the colors used within the plots.
+The Informative Sites Heat Map depicts the informativeness of each site in the data. The more informative the site, the darker the line in the heat map.
+
+Statistics Options allows the user to select an existing species tree file and generate plots depicting the weighted and/or unweighted Robinson Foulds statistic and p(GT|ST).
+
+### MS Comparison
+In MS Comparison mode, the user can specify a MS truth file and whether to compare against the RAxML directory and/or other MS files. This mode computes and plots the Robinson-Foulds distance between trees in the truth file compared to the other files the user inputs.
+
+When comparing against the RAxML directory, the user has the option to input the directory or folder containing the RAxML files and choose the window size and offset.
+
+When comparing the truth file to other MS files, the user can input multiple MS files for comparison.
+
+### D-statistic
+D-statistic mode allows the user to input an alignment file in phylip-sequential format, choose the window size and offset, and select the location of each outgroup in the tree visual. This mode then generates a scatter plot in which the x-axis is the window number, and the y-axis is the D-statistic value computed for that window.
+
+For further reading on the usage of the D-statistic see:
+Green et al. (2010): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5100745/#SD1
+Durand et al. (2011): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144383/
+Martin et al. (2014): https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4271521/
+
+## Output Files
+
+All output files are automatically saved in various folders in PhyloVis. Windows that are created by RAxML are outputted into the “windows” folder, and are saved as “window0.phylip”, “window1.phylip”, etc. Files outputted by running RAxML are found in the “RAxML_Files” directory. When bootstrap analysis is chosen these files are saved under “RAxML_bestTree”, “RAxML_bipartitions”, “RAxML_bipartitionsBranchLabels”, “RAxML_bootstrap”, and “RAxML_info”. When bootstrapping is not chosen these files are named “RAxML_bestTree”, “RAxML_randomTree”, “RAxML_result”, “RAxML_log”, and “RAxML_info”. Each of these files has “.0”, “.1”, “.2”, etc. extensension corresponding to the index of the window that RAxML was run on. All graphs and images are automatically saved into the plots folder under the name of the image.
+
+For more information regarding the RAxML output files see the RAxML manual: https://sco.h-its.org/exelixis/resource/download/NewManual.pdf
+
+## Exporting Files
+All images can be exported to a desired save location, renamed and saved as one of the following file types: pdf, png, jpeg, tiff, svg, eps, rgba, pgf, and ps.
+
 ### Contributors
 - [Chabrielle Allen](https://github.com/chaballen)
 - [Travis Benedict](https://github.com/travisbenedict)
