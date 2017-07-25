@@ -40,4 +40,3 @@ if __name__ == '__main__': # only runs if not imported
 
     # execute the app
     sys.exit(app.exec_())
-

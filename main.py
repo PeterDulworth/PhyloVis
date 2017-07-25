@@ -448,32 +448,31 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                     topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
 
                 # generate donut plot
-                if self.checkboxDonutPlot.isChecked():
+                if (btnClicked == None and self.checkboxDonutPlot.isChecked()) or btnClicked == self.checkboxDonutPlot:
                     donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
                     self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('Frequency of Top Topologies', labels, sizes, donut_colors)
 
                 # generate scatter plot
-                if self.checkboxScatterPlot.isChecked():
+                if (btnClicked == None and self.checkboxScatterPlot.isChecked()) or btnClicked == self.checkboxScatterPlot:
                     self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow('Windows to Top Topologies', windows_to_top_topologies, scatter_colors, ylist)
 
                 # generate circle graph
-                if self.checkboxCircleGraph.isChecked():
+                if (btnClicked == None and self.checkboxCircleGraph.isChecked()) or btnClicked == self.checkboxCircleGraph:
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
                     self.topologyPlotter.generateCircleGraph(self.raxmlOperations.inputFilename, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
 
                 # generate heatmap graph
-                if self.checkboxHeatMap.isChecked():
+                if (btnClicked == None and self.checkboxHeatMap.isChecked()) or btnClicked == self.checkboxHeatMap:
                     sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
                     self.heatMapWindow = heatMapWindow.HeatMapWindow('Heat Map', sites_to_informative)
 
                 # generate bootstrap graph
-                if self.checkboxBootstrap.isChecked():
+                if (btnClicked == None and self.checkboxBootstrap.isChecked()) or btnClicked == self.checkboxBootstrap:
                     internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
                     self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow(internal_nodes_i, internal_nodes_f, self.confidenceLevel, xLabel="Window Indices", yLabel="Number of Internal Nodes")
-                    # self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, "Window Indices", "Number of Internal Nodes", "plots/ContractedGraph.png", self.confidenceLevel)
 
                 # generate all trees graph
-                if self.checkboxAllTrees.isChecked():
+                if (btnClicked == None and self.checkboxAllTrees.isChecked()) or btnClicked == self.checkboxAllTrees:
                     self.allTreesWindow = allTreesWindow.AllTreesWindow('', topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outGroup=self.outgroupComboBox.currentText())
 
     def raxmlInputErrorHandling(self):
