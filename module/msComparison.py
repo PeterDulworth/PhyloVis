@@ -6,6 +6,7 @@ from ete3 import TreeNode
 from ete3 import Tree
 import matplotlib.pyplot as plt
 import re
+import random
 
 """
 Functions:
@@ -201,9 +202,8 @@ class MsComparison(QtCore.QThread):
                 heights.append(re.sub("\[', |']", '', str(dist[k])))
 
             # resets ind to prevent index error in linestyle pattern
-            ind = 0
             if i > 3:
-                ind += 1
+                ind = random.randint(0, 3)
             else:
                 ind = i
 
