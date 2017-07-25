@@ -160,18 +160,17 @@ class MsComparison(QtCore.QThread):
 
         return sites_to_difference_w, sites_to_difference_uw
 
-    def tmrca_graph(self, sites_to_newick_mappings, topology_only):
+    def tmrca_graph(self, sites_to_newick_mappings, topology_only=False):
         """
-        Plots a line graph comparing tree heights from different MS
-        files.
+        Plots a line graph comparing tree heights from different MS files.
 
         Inputs:
-        sites_to_newick_mappings -- a list of the mappings outputted by
-                                    sites_to_newick_ms()
+            i. sites_to_newick_mappings -- a list of the mappings outputted by sites_to_newick_ms()
+            ii. topology_only: If set to True, distance between nodes will be referred to the number of nodes between them.
+                In other words, topological distance will be used instead of branch length distances.
 
         Returns:
-        A line graph with the tree height as the y-axis and the site
-        number as the x-axis.
+            i. A line graph with the tree height as the y-axis and the site number as the x-axis.
         """
         # initialize lists
         trees = []
@@ -192,7 +191,7 @@ class MsComparison(QtCore.QThread):
                 roots.append(Tree.get_tree_root(Tree(trees[j])))
 
                 # get distance from roots to farthest leaves
-                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only, is_leaf_fn=None))
+                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only))
 
             for k in range(len(leaves)):
                 # regular expression to get height values from list of farthest leaves
@@ -222,9 +221,6 @@ class MsComparison(QtCore.QThread):
         plt.xlabel('SNP Site Number')
         plt.ylabel('TMRCA')
 
-        # save plot
-        plt.savefig("plots/TMRCA.png")
-        plt.clf()
 
     def run(self):
         graphLabels = []
@@ -243,25 +239,29 @@ class MsComparison(QtCore.QThread):
             graphLabels.append(os.path.basename(msFile))
 
         for sitesToNewickMsMap in sitesToNewickMsMaps:
-            sitesToRFDWeighted, sitesToRFDUnweighted = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
 
-            # total robinson foulds distances
-            weightedRobinsonFouldsSums.append(sum(sitesToRFDWeighted.values()))
-            unweightedRobinsonFouldsSums.append(sum(sitesToRFDUnweighted.values()))
+            if self.robinsonFouldsBarPlot:
+                sitesToRFDWeighted, sitesToRFDUnweighted = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
 
-            matchingSites = 0
-            for site in sitesToRFDWeighted:
-                if sitesToRFDWeighted[site] == 0:
-                    matchingSites += 1.0
-            percentMatchingSitesWeighted.append(100.0 * matchingSites / len(sitesToRFDWeighted))
+                # total robinson foulds distances
+                weightedRobinsonFouldsSums.append(sum(sitesToRFDWeighted.values()))
+                unweightedRobinsonFouldsSums.append(sum(sitesToRFDUnweighted.values()))
 
-            matchingSites = 0
-            for site in sitesToRFDUnweighted:
-                if sitesToRFDUnweighted[site] == 0:
-                    matchingSites += 1.0
-            percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
+            if self.percentMatchingSitesBarPlot:
+                matchingSites = 0
+                for site in sitesToRFDWeighted:
+                    if sitesToRFDWeighted[site] == 0:
+                        matchingSites += 1.0
+                percentMatchingSitesWeighted.append(100.0 * matchingSites / len(sitesToRFDWeighted))
 
-        # sites_to_difference_w, sites_to_difference_uw = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMaps[0])
+                matchingSites = 0
+                for site in sitesToRFDUnweighted:
+                    if sitesToRFDUnweighted[site] == 0:
+                        matchingSites += 1.0
+                percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
+
+            if self.tmrcaLineGraph:
+                self.tmrca_graph(sitesToNewickMsMaps)
 
         self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted,  graphLabels)
 
@@ -276,12 +276,18 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     ms.msFiles.append('../testFiles/fakeMS5.txt')
     ms.msFiles.append('../testFiles/fakeMS6.txt')
 
+    ms.robinsonFouldsBarPlot = False
+    ms.percentMatchingSitesBarPlot = False
+    ms.tmrcaLineGraph = True
+
+
     def plot(weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, msFiles):
-        ms.statisticsCalculations.barPlot(weightedData, '../plots/WRFdifference.png', 'Weighted', '', 'IDK', groupLabels=msFiles, xTicks=True)
-        ms.statisticsCalculations.barPlot(unweightedData, '../plots/UWRFdifference.png', 'Unweighted', '', 'IDK', groupLabels=msFiles)
-        ms.statisticsCalculations.barPlot(percentMatchingSitesWeighted, '../plots/percentMatchingSitesWeighted', 'Percent Matching Sites Weighted', '', '% Matching Sites Weighted')
-        ms.statisticsCalculations.barPlot(percentMatchingSitesUnweighted, '../plots/percentMatchingSitesUnweighted', 'Percent Matching Sites Unweighted', '', '% Matching Sites Unweighted')
-        plt.show()
+        pass
+        # ms.statisticsCalculations.barPlot(weightedData, '../plots/WRFdifference.png', 'Weighted', '', 'IDK', groupLabels=msFiles, xTicks=True)
+        # ms.statisticsCalculations.barPlot(unweightedData, '../plots/UWRFdifference.png', 'Unweighted', '', 'IDK', groupLabels=msFiles)
+        # ms.statisticsCalculations.barPlot(percentMatchingSitesWeighted, '../plots/percentMatchingSitesWeighted', 'Percent Matching Sites Weighted', '', '% Matching Sites Weighted')
+        # ms.statisticsCalculations.barPlot(percentMatchingSitesUnweighted, '../plots/percentMatchingSitesUnweighted', 'Percent Matching Sites Unweighted', '', '% Matching Sites Unweighted')
+        # plt.show()
 
     ms.connect(ms, QtCore.SIGNAL('MS_COMPLETE'), plot)
     ms.run()

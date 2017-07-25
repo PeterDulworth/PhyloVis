@@ -2638,6 +2638,9 @@
              </item>
              <item>
               <layout class="QHBoxLayout" name="horizontalLayout_33">
+               <property name="leftMargin">
+                <number>5</number>
+               </property>
                <item>
                 <widget class="QLabel" name="label_24">
                  <property name="font">
@@ -2653,25 +2656,52 @@
                  </property>
                 </widget>
                </item>
+               <item>
+                <spacer name="horizontalSpacer_21">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </item>
              <item>
-              <widget class="QGroupBox" name="groupBox">
+              <widget class="QGroupBox" name="msGraphsGroupBox">
                <property name="font">
                 <font>
-                 <pointsize>15</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <pointsize>13</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
                 </font>
                </property>
                <property name="title">
-                <string>Graphs</string>
+                <string/>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_13">
                 <item>
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QCheckBox" name="checkboxRobinsonFouldsBarPlot">
                   <property name="text">
-                   <string>PushButton</string>
+                   <string>Robinson Foulds Distance from MS Truth - Bar Plot</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkboxPercentMatchingSitesGraph">
+                  <property name="text">
+                   <string>Percent Matching Sites Bar Plot</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkboxTMRCAGraph">
+                  <property name="text">
+                   <string>TMRCA Line Graph</string>
                   </property>
                  </widget>
                 </item>
@@ -3150,7 +3180,14 @@
     <addaction name="actionMS"/>
     <addaction name="actionDStatistic"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+   </widget>
    <addaction name="menuMode"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionRax">
    <property name="checkable">
@@ -3185,6 +3222,11 @@
    </property>
    <property name="text">
     <string>D Statistic</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text">
+    <string>Documentation</string>
    </property>
   </action>
  </widget>

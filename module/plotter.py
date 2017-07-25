@@ -264,13 +264,14 @@ class Plotter(QtCore.QThread):
         ax.set_xlabel(xLabel)
         ax.set_ylabel(yLabel)
 
-    def tmrca_graph(self, title, sites_to_newick_mappings, topology_only):
+    def tmrca_graph(self, title, sites_to_newick_mappings, topology_only=False):
         """
             Plots a line graph comparing tree heights from different MS files.
 
             Inputs:
                 i. sites_to_newick_mappings -- a list of the mappings outputted by sites_to_newick_ms()
-                ii. topology_only
+                ii. topology_only: If set to True, distance between nodes will be referred to the number of nodes between them.
+                    In other words, topological distance will be used instead of branch length distances.
 
             Returns:
                 i. A line graph with the tree height as the y-axis and the site number as the x-axis.
@@ -295,7 +296,7 @@ class Plotter(QtCore.QThread):
                 roots.append(Tree.get_tree_root(Tree(trees[j])))
 
                 # get distance from roots to farthest leaves
-                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only, is_leaf_fn=None))
+                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only))
 
             for k in range(len(leaves)):
                 # regular expression to get height values from list of farthest leaves
@@ -311,7 +312,7 @@ class Plotter(QtCore.QThread):
                 ind = i
 
             # plot line graph
-            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
+            ax.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
 
             # clear lists
             trees = roots = leaves = dist = heights = []

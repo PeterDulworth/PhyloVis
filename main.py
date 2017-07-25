@@ -7,6 +7,7 @@ from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from functools import partial
 import re
+import webbrowser
 
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow, msRobinsonFouldsWindow
@@ -83,9 +84,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 585}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 720}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 180}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
+        self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 100}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
@@ -125,6 +126,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
+
+        self.actionDocumentation.triggered.connect(self.openDocumentation)
 
         # **************************** RAXML PAGE ****************************#
 
@@ -273,6 +276,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     # **************************** MS PAGE ****************************#
 
+    def openDocumentation(self):
+        webbrowser.open('https://peterdulworth.github.io/PhyloVis', new=0, autoraise=True)
+
     additionalFileCounter = 0
     additionalFileEntryNames = []
 
@@ -295,6 +301,10 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.msComparison.raxmlDir = self.checkEntryPopulated(self.msRaxmlDirectoryEntry)
                 self.msComparison.windowSize = self.checkEntryPopulated(self.msWindowSizeEntry)
                 self.msComparison.windowOffset = self.checkEntryPopulated(self.msWindowOffsetEntry)
+
+            self.msComparison.robinsonFouldsBarPlot = self.checkboxRobinsonFouldsBarPlot.isChecked()
+            self.msComparison.percentMatchingSitesBarPlot = self.checkboxPercentMatchingSitesGraph.isChecked()
+            self.msComparison.tmrcaLineGraph = self.checkboxTMRCAGraph.isChecked()
 
             if self.checkboxCompareAgainstRaxml.isChecked() or self.checkboxCompareAgainstMS.isChecked():
                 self.msComparison.start()
@@ -359,6 +369,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         btn.deleteLater()
         btn2.deleteLater()
         self.additionalFileEntryNames.remove(entry.objectName())
+        self.resize(self.width(), self.height() - 30)
 
     # **************************** CONVERTER PAGE ****************************#
 
@@ -665,8 +676,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         elif type == 'tabs':
             window.displayImages()
 
-    # def resizeEvent(self, event):
-    #     print self.size()
+    def resizeEvent(self, event):
+        print self.size()
 
     # def moveEvent(self, QMoveEvent):
     #     print self.pos()

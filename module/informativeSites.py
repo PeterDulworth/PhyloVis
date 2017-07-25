@@ -143,22 +143,22 @@ class InformativeSites(QtCore.QThread):
         return sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative
 
 
-    def line_graph_generator(self, dictionary, xlabel, ylabel, name):
+    def line_graph_generator(self, dictionary, xLabel, yLabel, name):
         """
-        Create a line graph based on the inputted dictionary
-        Input:
-        dictionary --- a dictionary mapping integers to floats or integers
-        xlabel --- a string for the labeling the x-axis
-        ylabel --- a string for the labeling the y-axis
-        name --- a string for the image name
-        Output:
+            Create a line graph based on the inputted dictionary
+
+            Input:
+                i. dictionary --- a dictionary mapping integers to floats or integers
+                ii. xLabel --- a string for the labeling the x-axis
+                iii. yLabel --- a string for the labeling the y-axis
+                iv. name --- a string for the image name
         """
 
         x = dictionary.keys()
         y = dictionary.values()
         plt.plot(x, y, "-", )
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.xlabel(xLabel)
+        plt.ylabel(yLabel)
         plt.tight_layout()
         plt.savefig(name, dpi=250)
         plt.clf()
