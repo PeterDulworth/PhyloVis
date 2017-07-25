@@ -183,6 +183,8 @@ class Plotter(QtCore.QThread):
                 iii. outgroup --- a string of the desired taxon to root at
         """
 
+        plt.title(title, fontsize=15)
+
         # count number of top topologies
         numTopTopologies = 0
         for newick in newicksToColors:
@@ -200,7 +202,7 @@ class Plotter(QtCore.QThread):
                 elif numTopTopologies == 5:
                     order = [None, 1,3,5,7,9]
                     ax = plt.subplot(3, 3, order[count])
-                elif numTopTopologies >= 4:
+                else:
                     ax = plt.subplot(int(round(numTopTopologies / 2.0)), 2, count)
 
                 # Create the tree object and assign it to the appropriate color
@@ -216,6 +218,30 @@ class Plotter(QtCore.QThread):
                 Phylo.draw(tree, axes=ax, do_show=False)
 
                 count += 1
+
+    def doubleLineGraph(self, list1, list2, confidenceThreshold, xLabel='', yLabel=''):
+        """
+            Create a line graph based on the inputted dictionary
+
+            Input:
+                i. list1 --- a list of integers
+                ii. list2 --- a list of integers of equal length to list1
+                iii. xLabel --- a string for the labeling the x-axis
+                iv. yLabel --- a string for the labeling the y-axis
+                v. name --- a string for the image name
+
+        """
+
+        ax = plt.subplot(111)
+        ax.set_title('Number of Internal Nodes After Contraction Confidence Threshold: ' + str(confidenceThreshold))
+
+        rangeX = range(len(list1))
+
+        ax.plot(rangeX, list1, "-", label='Before Contraction')
+        ax.plot(rangeX, list2, "-", label='After Contraction')
+
+        ax.set_xlabel(xLabel)
+        ax.set_ylabel(yLabel)
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it

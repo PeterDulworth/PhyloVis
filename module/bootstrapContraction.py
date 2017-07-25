@@ -100,14 +100,15 @@ class BootstrapContraction(QtCore.QThread):
 
     def double_line_graph_generator(self, list1, list2, xlabel, ylabel, name, confidence_threshold):
         """
-        Create a line graph based on the inputted dictionary
-        Input:
-        list1 --- a list of integers
-        list2 --- a list of integers of equal length to list1
-        xlabel --- a string for the labeling the x-axis
-        ylabel --- a string for the labeling the y-axis
-        name --- a string for the image name
-        Output:
+            Create a line graph based on the inputted dictionary
+
+            Input:
+                i. list1 --- a list of integers
+                ii. list2 --- a list of integers of equal length to list1
+                iii. xlabel --- a string for the labeling the x-axis
+                iv. ylabel --- a string for the labeling the y-axis
+                v. name --- a string for the image name
+
         """
 
         x = range(len(list1))
@@ -122,7 +123,6 @@ class BootstrapContraction(QtCore.QThread):
         # plt.show()
         plt.savefig(name, dpi=250)
         plt.clf()
-        self.emit(QtCore.SIGNAL("BOOTSTRAP_COMPLETE"))
 
 
 if __name__ == '__main__':  # if we're running file directly and not importing it

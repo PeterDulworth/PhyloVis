@@ -98,7 +98,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # initialize window
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
-        self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
         self.dStatisticWindow = dStatisticWindow.DStatisticWindow()
 
@@ -169,7 +168,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
 
         self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), lambda: self.openWindow(self.circleGraphWindow))
-        self.connect(self.bootstrapContraction, QtCore.SIGNAL('BOOTSTRAP_COMPLETE'), lambda: self.openWindow(self.bootstrapContractionWindow))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.runRAxML)
@@ -471,11 +469,11 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 # generate bootstrap graph
                 if self.checkboxBootstrap.isChecked():
                     internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
-                    self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, "Window Indices", "Number of Internal Nodes", "plots/ContractedGraph.png", self.confidenceLevel)
+                    self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow(internal_nodes_i, internal_nodes_f, self.confidenceLevel, xLabel="Window Indices", yLabel="Number of Internal Nodes")
+                    # self.bootstrapContraction.double_line_graph_generator(internal_nodes_i, internal_nodes_f, "Window Indices", "Number of Internal Nodes", "plots/ContractedGraph.png", self.confidenceLevel)
 
                 # generate all trees graph
                 if self.checkboxAllTrees.isChecked():
-                    # self.topologyPlotter.topology_colorizer(topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outgroup=self.outgroupComboBox.currentText())
                     self.allTreesWindow = allTreesWindow.AllTreesWindow('', topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outGroup=self.outgroupComboBox.currentText())
 
     def raxmlInputErrorHandling(self):
