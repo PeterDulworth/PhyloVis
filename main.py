@@ -1,13 +1,9 @@
 # utilities
-import sip
-
+import sip, sys, os, re, webbrowser
 sip.setapi('QString', 2)
-import sys, os
 from PyQt4 import QtGui, QtCore
 from shutil import copyfile, copytree
 from functools import partial
-import re
-import webbrowser
 
 # GUI
 from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow, msRobinsonFouldsWindow
@@ -264,9 +260,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.dStatisticValueLabel.setEnabled(False)
 
     # **************************** MS PAGE ****************************#
-
-    def openDocumentation(self):
-        webbrowser.open('https://peterdulworth.github.io/PhyloVis', new=0, autoraise=True)
 
     additionalFileCounter = 0
     additionalFileEntryNames = []
@@ -631,18 +624,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setWindow(window)
 
     def saveFileAs(self, textEntry):
-        # extension = os.path.splitext(fileName)[1]
         textEntry.setText(QtGui.QFileDialog.getSaveFileName(self, 'Export'))
-        # copyfile(fileName, name)
-
-    def exportFile(self, fileName):
-        extension = os.path.splitext(fileName)[1]
-        name = QtGui.QFileDialog.getSaveFileName(self, 'Export ' + extension[1:]) + extension
-        copyfile(fileName, name)
-
-    def exportDirectory(self, dirName):
-        name = QtGui.QFileDialog.getExistingDirectory(self, 'Export ' + dirName + ' Directory') + '/' + dirName
-        copytree(dirName, name)
 
     def getFileName(self, textEntry):
         # get name of file
@@ -664,6 +646,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             window.plot()
         elif type == 'tabs':
             window.displayImages()
+
+    def openDocumentation(self):
+        webbrowser.open('https://peterdulworth.github.io/PhyloVis', new=0, autoraise=True)
 
     def resizeEvent(self, event):
         print self.size()
