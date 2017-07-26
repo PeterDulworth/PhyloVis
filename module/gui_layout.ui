@@ -1343,6 +1343,21 @@
                          <bold>false</bold>
                         </font>
                        </property>
+                       <property name="toolTip">
+                        <string>1</string>
+                       </property>
+                       <property name="statusTip">
+                        <string>2</string>
+                       </property>
+                       <property name="whatsThis">
+                        <string>3</string>
+                       </property>
+                       <property name="accessibleName">
+                        <string>4</string>
+                       </property>
+                       <property name="accessibleDescription">
+                        <string>5</string>
+                       </property>
                        <property name="text">
                         <string>Top Topolgies</string>
                        </property>

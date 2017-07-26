@@ -22,12 +22,6 @@ class AllTreesWindow(Window):
         self.plotter.topologyColorizer(title, colorScheme, rooted=rooted, outgroup=outGroup)
         self.show()
 
-    def initCanvas(self):
-        plt.axis('off')
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
-        self.verticalLayout.addWidget(self.canvas)
-
 
 if __name__ == '__main__': # only runs if not imported
 

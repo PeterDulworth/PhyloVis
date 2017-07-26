@@ -269,8 +269,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
                 self.msComparison.msToRax = True
 
                 self.msComparison.raxmlDir = self.checkEntryPopulated(self.msRaxmlDirectoryEntry)
-                self.msComparison.windowSize = self.checkEntryPopulated(self.msWindowSizeEntry)
-                self.msComparison.windowOffset = self.checkEntryPopulated(self.msWindowOffsetEntry)
+                self.msComparison.windowSize = int(self.checkEntryPopulated(self.msWindowSizeEntry))
+                self.msComparison.windowOffset = int(self.checkEntryPopulated(self.msWindowOffsetEntry))
 
             self.msComparison.robinsonFouldsBarPlot = self.checkboxRobinsonFouldsBarPlot.isChecked()
             self.msComparison.percentMatchingSitesBarPlot = self.checkboxPercentMatchingSitesGraph.isChecked()
