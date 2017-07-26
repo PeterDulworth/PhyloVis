@@ -233,16 +233,10 @@ class MsComparison(QtCore.QThread):
         # create sites to newick map for MS truth file
         sitesToNewickMsTruth = self.sites_to_newick_ms(self.msTruth)
 
-        print len(sitesToNewickMsMaps)
-        print sitesToNewickMsMaps
-
         # create sites to newick map for each MS file
         for msFile in self.msFiles:
             sitesToNewickMsMaps.append(self.sites_to_newick_ms(msFile))
             graphLabels.append(os.path.basename(msFile))
-
-        print len(sitesToNewickMsMaps)
-        print sitesToNewickMsMaps
 
         for sitesToNewickMsMap in sitesToNewickMsMaps:
 

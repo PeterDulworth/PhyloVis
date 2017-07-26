@@ -132,7 +132,7 @@ class Plotter(QtCore.QThread):
 
         return ax
 
-    def barPlot(self, title, data, xLabel='', yLabel='', groupLabels=(), subplotPosition=111):
+    def barPlot(self, title, data, xLabel='', yLabel='', groupLabels=(), heightLabels=False, subplotPosition=111):
         """
             generates bar chart
         """
@@ -143,26 +143,30 @@ class Plotter(QtCore.QThread):
         ax.set_xlabel(xLabel, fontsize=10)
         ax.set_ylabel(yLabel, fontsize=10)
         ax.set_xticks([])
-        ax.set_yticks([])
 
         numberOfBars = len(data)
         indices = range(numberOfBars)  # the x locations for the groups
         width = .667  # the width of the bars
         bars = []
 
-        for i in indices:
-            bars.append(ax.bar(i, data[i], width, label=groupLabels[i]))
-            for bar in bars[i]:
-                h = bar.get_height()
-                ax.text(bar.get_x() + bar.get_width() / 2.0, h, '%d' % int(h), ha='center', va='bottom')
+        if heightLabels:
+            ax.set_yticks([])
+            for i in indices:
+                bars.append(ax.bar(i, data[i], width, label=groupLabels[i]))
+                for bar in bars[i]:
+                    h = bar.get_height()
+                    ax.text(bar.get_x() + bar.get_width() / 2.0, h, '%d' % int(h), ha='center', va='bottom')
+        else:
+            for i in indices:
+                ax.bar(i, data[i], width, label=groupLabels[i])
 
         ax.set_xmargin(0.1)
         ax.legend()
         plt.tight_layout()
 
-        # if len(groupLabels) > 0:
-        #     ax.set_xticks(indices)
-        #     ax.set_xticklabels(groupLabels)
+        if len(groupLabels) > 0:
+            ax.set_xticks(indices)
+            ax.set_xticklabels(groupLabels)
 
         return ax
 
