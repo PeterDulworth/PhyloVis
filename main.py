@@ -6,7 +6,7 @@ from shutil import copyfile, copytree
 from functools import partial
 
 # GUI
-from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow, msRobinsonFouldsWindow
+from raxmlOutputWindows import allTreesWindow, donutPlotWindow, scatterPlotWindow, circleGraphWindow, pgtstWindow, robinsonFouldsWindow, heatMapWindow, bootstrapContractionWindow, dStatisticWindow, msRobinsonFouldsWindow, msPercentMatchingWindow, msTMRCAWindow
 from module import gui_layout as gui
 
 # logic
@@ -289,28 +289,14 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             return
 
     def plotMSCompare(self, weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, msFiles):
-        # generate graphs
-        if self.msComparison.msToRax:
-            self.statisticsCalculations.barPlot(weightedData, 'Weighted', 'Weighted', '', 'IDK')
-            self.statisticsCalculations.barPlot(unweightedData, 'Unweighted', 'Unweighted', '', 'IDK')
-        else:
-            if self.msComparison.robinsonFouldsBarPlot:
-                self.msRobinsonFouldsWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow('Weighted', weightedData, 'Unweighted', unweightedData, groupLabels1=msFiles, groupLabels2=msFiles)
+        if self.msComparison.robinsonFouldsBarPlot:
+            self.msRobinsonFouldsWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow('Weighted', weightedData, 'Unweighted', unweightedData, groupLabels1=msFiles, groupLabels2=msFiles)
 
-            if self.msComparison.percentMatchingSitesBarPlot:
-                pass
+        if self.msComparison.percentMatchingSitesBarPlot:
+            self.msPercentMatchingWindow = msPercentMatchingWindow.MSPercentMatchingWindow('Weighted', percentMatchingSitesWeighted, 'Unweighted', percentMatchingSitesUnweighted)
 
-            if self.msComparison.tmrcaLineGraph:
-                pass
-
-            # self.statisticsCalculations.barPlot(weightedData, 'plots/WRFdifference.png', 'Weighted', '', 'IDK', groupLabels=msFiles, xTicks=True)
-            # self.statisticsCalculations.barPlot(unweightedData, 'plots/UWRFdifference.png', 'Unweighted', '', 'IDK', groupLabels=msFiles)
-            # self.statisticsCalculations.barPlot(percentMatchingSitesWeighted, 'asdf', 'asdf', 'asdf', '')
-            # self.statisticsCalculations.barPlot(percentMatchingSitesUnweighted, 'asdf', 'asdf', 'asdf', '')
-
-
-        # display window
-        # self.openWindow(self.msComparisonWindow, type='tabs')
+        # if self.msComparison.tmrcaLineGraph:
+        #     self.msTMRCAWindow = msTMRCAWindow.MSTMRCAWindow()
 
     def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
         self.additionalFileCounter += 1
