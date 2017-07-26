@@ -53,7 +53,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.menubar.setNativeMenuBar(False)
 
         # set GUI icon
-        self.setWindowIcon(QtGui.QIcon('imgs/Luay.jpg'))
+        self.setWindowIcon(QtGui.QIcon('imgs/phylovisLogo.png'))
 
         # self.welcomeLogoImage.setScaledContents(True)
         self.welcomeLogoImage.setPixmap(QtGui.QPixmap('imgs/phylovisLogo.png'))
