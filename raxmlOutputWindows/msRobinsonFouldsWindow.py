@@ -1,33 +1,34 @@
-from tabWindow import TabWindow
+from standardWindow import Window
 from PyQt4 import QtGui
 import sys
 
 """
-Functions:
-    __init__(self)
+MS Robinson Foulds Window
 ~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    unweightedFileName = '../plots/UWRFdifference.png'
-    weightedFileName = '../plots/WRFdifference.png'
-else:
-    unweightedFileName = 'plots/UWRFdifference.png'
-    weightedFileName = 'plots/WRFdifference.png'
+class MSRobinsonFouldsWindow(Window):
+    def __init__(self, title1, data1, title2, data2, xLabel1='', yLabel1='', xLabel2='', yLabel2='', groupLabels1=(), groupLabels2=()):
+        Window.__init__(self)
+
+        self.plotter.barPlot(title1, data1, xLabel=xLabel1, yLabel=yLabel1, groupLabels=groupLabels1, subplotPosition=211)
+        self.plotter.barPlot(title2, data2, xLabel=xLabel2, yLabel=yLabel2, groupLabels=groupLabels2, subplotPosition=212)
+
+        self.show()
 
 
-class MSRobinsonFouldsWindow(TabWindow):
-    def __init__(self):
-        TabWindow.__init__(self, unweightedFileName, weightedFileName, x=200, y=222, scale=1) #!!! add ../ before file name to test locally
+if __name__ == '__main__': # only runs if not imported
 
-
-if __name__ == '__main__':
-    # test window if running locally
+    # create a new instance of QApplication
     app = QtGui.QApplication(sys.argv)
-    form = MSRobinsonFouldsWindow()
-    form.show()
-    form.displayImages()
+
+    a = {0:0, 2:2, 4:3}
+
+    # create window and plot
+    form = MSRobinsonFouldsWindow(a)
+
+    # execute the app
     sys.exit(app.exec_())
