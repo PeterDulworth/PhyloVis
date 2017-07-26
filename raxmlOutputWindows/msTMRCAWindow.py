@@ -11,9 +11,10 @@ Peter Dulworth
 """
 
 class MSTMRCAWindow(Window):
-    def __init__(self, title1, data1, title2, data2, xLabel1='', yLabel1='', xLabel2='', yLabel2='', groupLabels1=(), groupLabels2=()):
-        Window.__init__(self)
+    def __init__(self, data):
+        Window.__init__(self, windowTitle='TMRCA Graph')
 
+        self.plotter.tmrca_graph(data)
         self.show()
 
 

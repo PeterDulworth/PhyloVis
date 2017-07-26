@@ -76,7 +76,6 @@ class Window(QtGui.QMainWindow):
         """
             positions the window relative to the top left corner of the screen (px)
         """
-
         self.move(x, y)
 
     def setWindowSize(self, x, y):

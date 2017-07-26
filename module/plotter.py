@@ -149,6 +149,8 @@ class Plotter(QtCore.QThread):
         width = .667  # the width of the bars
         bars = []
 
+        print title, data, groupLabels
+
         if heightLabels:
             ax.set_yticks([])
             for i in indices:
@@ -268,7 +270,7 @@ class Plotter(QtCore.QThread):
         ax.set_xlabel(xLabel)
         ax.set_ylabel(yLabel)
 
-    def tmrca_graph(self, title, sites_to_newick_mappings, topology_only=False):
+    def tmrca_graph(self, sites_to_newick_mappings, topology_only=False):
         """
             Plots a line graph comparing tree heights from different MS files.
 
@@ -282,11 +284,14 @@ class Plotter(QtCore.QThread):
         """
 
         ax = plt.subplot(111)
-        ax.set_title(title, fontsize=15)
         ax.set_xlabel('SNP Site Number')
         ax.set_ylabel('TMRCA')
 
-        trees = roots = leaves = dist = heights = []
+        trees = []
+        roots = []
+        leaves = []
+        dist = []
+        heights = []
 
         # iterate over each mapping in list
         for i in range(len(sites_to_newick_mappings)):
@@ -319,7 +324,11 @@ class Plotter(QtCore.QThread):
             ax.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
 
             # clear lists
-            trees = roots = leaves = dist = heights = []
+            trees = []
+            roots = []
+            leaves = []
+            dist = []
+            heights = []
 
         return ax
 

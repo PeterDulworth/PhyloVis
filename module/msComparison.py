@@ -161,67 +161,6 @@ class MsComparison(QtCore.QThread):
 
         return sites_to_difference_w, sites_to_difference_uw
 
-    def tmrca_graph(self, sites_to_newick_mappings, topology_only=False):
-        """
-        Plots a line graph comparing tree heights from different MS files.
-
-        Inputs:
-            i. sites_to_newick_mappings -- a list of the mappings outputted by sites_to_newick_ms()
-            ii. topology_only: If set to True, distance between nodes will be referred to the number of nodes between them.
-                In other words, topological distance will be used instead of branch length distances.
-
-        Returns:
-            i. A line graph with the tree height as the y-axis and the site number as the x-axis.
-        """
-        # initialize lists
-        trees = []
-        roots = []
-        leaves = []
-        dist = []
-        heights = []
-
-        # iterate over each mapping in list
-        for i in range(len(sites_to_newick_mappings)):
-            mapping = sites_to_newick_mappings[i]
-            for tree in mapping:
-                # iterate over mapping to get trees
-                trees.append(mapping[tree])
-
-            for j in range(len(trees)):
-                # get tree roots
-                roots.append(Tree.get_tree_root(Tree(trees[j])))
-
-                # get distance from roots to farthest leaves
-                leaves.append(TreeNode.get_farthest_leaf(roots[j], topology_only))
-
-            for k in range(len(leaves)):
-                # regular expression to get height values from list of farthest leaves
-                dist.append(re.findall(', \d{1,}.\d{1,}', str(leaves[k])))
-
-                # format with regular expression to remove unnecessary tokens
-                heights.append(re.sub("\[', |']", '', str(dist[k])))
-
-            # resets ind to prevent index error in linestyle pattern
-            if i > 3:
-                ind = random.randint(0, 3)
-            else:
-                ind = i
-
-            # plot line graph
-            plt.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
-
-            # clear lists
-            trees = []
-            roots = []
-            leaves = []
-            dist = []
-            heights = []
-
-        # label x and y-axes
-        plt.xlabel('SNP Site Number')
-        plt.ylabel('TMRCA')
-
-
     def run(self):
         graphLabels = []
         sitesToNewickMsMaps = []
@@ -240,9 +179,9 @@ class MsComparison(QtCore.QThread):
 
         for sitesToNewickMsMap in sitesToNewickMsMaps:
 
-            if self.robinsonFouldsBarPlot:
-                sitesToRFDWeighted, sitesToRFDUnweighted = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
+            sitesToRFDWeighted, sitesToRFDUnweighted = self.sitesToRobinsonFouldsDistance(sitesToNewickMsTruth, sitesToNewickMsMap)
 
+            if self.robinsonFouldsBarPlot:
                 # total robinson foulds distances
                 weightedRobinsonFouldsSums.append(sum(sitesToRFDWeighted.values()))
                 unweightedRobinsonFouldsSums.append(sum(sitesToRFDUnweighted.values()))
@@ -260,7 +199,7 @@ class MsComparison(QtCore.QThread):
                         matchingSites += 1.0
                 percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
 
-        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted,  graphLabels)
+        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, graphLabels)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
 
@@ -270,8 +209,8 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     ms.msTruth = '../testFiles/fakeMS.txt'
     ms.msFiles = []
     ms.msFiles.append('../testFiles/fakeMS2.txt')
-    ms.msFiles.append('../testFiles/fakeMS5.txt')
-    ms.msFiles.append('../testFiles/fakeMS6.txt')
+    # ms.msFiles.append('../testFiles/fakeMS5.txt')
+    # ms.msFiles.append('../testFiles/fakeMS6.txt')
 
     ms.robinsonFouldsBarPlot = False
     ms.percentMatchingSitesBarPlot = False
@@ -279,12 +218,12 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
 
 
     def plot(weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, msFiles):
-        pass
         # ms.statisticsCalculations.barPlot(weightedData, '../plots/WRFdifference.png', 'Weighted', '', 'IDK', groupLabels=msFiles, xTicks=True)
         # ms.statisticsCalculations.barPlot(unweightedData, '../plots/UWRFdifference.png', 'Unweighted', '', 'IDK', groupLabels=msFiles)
         # ms.statisticsCalculations.barPlot(percentMatchingSitesWeighted, '../plots/percentMatchingSitesWeighted', 'Percent Matching Sites Weighted', '', '% Matching Sites Weighted')
         # ms.statisticsCalculations.barPlot(percentMatchingSitesUnweighted, '../plots/percentMatchingSitesUnweighted', 'Percent Matching Sites Unweighted', '', '% Matching Sites Unweighted')
         # plt.show()
+        pass
 
     ms.connect(ms, QtCore.SIGNAL('MS_COMPLETE'), plot)
     ms.run()
