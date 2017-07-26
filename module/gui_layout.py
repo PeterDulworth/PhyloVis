@@ -73,7 +73,8 @@ class Ui_PhylogeneticVisualization(object):
         self.horizontalLayout_8.addItem(spacerItem2)
         self.welcomeLabel = QtGui.QLabel(self.welcomePage)
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setFamily(_fromUtf8("Arial"))
+        font.setPointSize(30)
         font.setBold(True)
         font.setWeight(75)
         self.welcomeLabel.setFont(font)
@@ -1393,7 +1394,7 @@ class Ui_PhylogeneticVisualization(object):
 
     def retranslateUi(self, PhylogeneticVisualization):
         PhylogeneticVisualization.setWindowTitle(_translate("PhylogeneticVisualization", "Phylogenetic Visualization", None))
-        self.welcomeLabel.setText(_translate("PhylogeneticVisualization", "Welcome", None))
+        self.welcomeLabel.setText(_translate("PhylogeneticVisualization", "PhyloVis", None))
         self.modeComboBox.setItemText(0, _translate("PhylogeneticVisualization", "RAx_ML", None))
         self.modeComboBox.setItemText(1, _translate("PhylogeneticVisualization", "File Converter", None))
         self.modeComboBox.setItemText(2, _translate("PhylogeneticVisualization", "MS Comparison", None))
@@ -1523,7 +1524,7 @@ class Ui_PhylogeneticVisualization(object):
         self.menuHelp.setTitle(_translate("PhylogeneticVisualization", "Help", None))
         self.actionRax.setText(_translate("PhylogeneticVisualization", "RAx_ML", None))
         self.actionConverter.setText(_translate("PhylogeneticVisualization", "Converter", None))
-        self.actionMS.setText(_translate("PhylogeneticVisualization", "MS", None))
+        self.actionMS.setText(_translate("PhylogeneticVisualization", "MS Comparison", None))
         self.actionDStatistic.setText(_translate("PhylogeneticVisualization", "D Statistic", None))
         self.actionDocumentation.setText(_translate("PhylogeneticVisualization", "Documentation", None))
 

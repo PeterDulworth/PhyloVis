@@ -48,7 +48,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
         # set UI style -- options: u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)'
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Macintosh (aqua)'))
-        # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Motif'))
 
         self.dStatisticTaxonComboBoxes = [self.dTaxonComboBox1, self.dTaxonComboBox2, self.dTaxonComboBox3, self.dTaxonComboBox4]
         self.raxmlTaxonComboBoxes = [self.outgroupComboBox]
