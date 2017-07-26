@@ -312,6 +312,8 @@ class Plotter(QtCore.QThread):
         """
 
         ax = plt.subplot(111)
+        ax.set_label('TMRCA Line Graph')
+
         ax.set_xlabel('SNP Site Number')
         ax.set_ylabel('TMRCA')
 
