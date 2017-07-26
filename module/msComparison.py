@@ -199,7 +199,7 @@ class MsComparison(QtCore.QThread):
                         matchingSites += 1.0
                 percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
 
-        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, graphLabels)
+        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, [sitesToNewickMsTruth] + sitesToNewickMsMaps, graphLabels)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
 
