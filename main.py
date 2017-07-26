@@ -64,7 +64,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setWindowIcon(QtGui.QIcon('imgs/Luay.jpg'))
 
         # self.welcomeLogoImage.setScaledContents(True)
-        self.welcomeLogoImage.setPixmap(QtGui.QPixmap('imgs/Luay.jpg'))
+        self.welcomeLogoImage.setPixmap(QtGui.QPixmap('imgs/phylovisLogo.png'))
 
         # create new instance of RaxmlOperations class
         self.raxmlOperations = ro.RAxMLOperations()
@@ -128,6 +128,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
 
         self.actionDocumentation.triggered.connect(self.openDocumentation)
+        self.actionDocumentation.setIcon(QtGui.QIcon('imgs/Luay.jpg'))
 
         # **************************** RAXML PAGE ****************************#
 
