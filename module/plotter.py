@@ -7,6 +7,7 @@ import math, re, numpy as np
 from Bio import Phylo
 from ete3 import Tree, TreeNode
 from cStringIO import StringIO
+import random
 
 class Plotter(QtCore.QThread):
     def __init__(self, parent=None):
@@ -314,7 +315,7 @@ class Plotter(QtCore.QThread):
 
             # resets ind to prevent index error in linestyle pattern
             if i > 3:
-                ind = 0
+                ind = random.randint(0, 3)
             else:
                 ind = i
 
