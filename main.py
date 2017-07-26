@@ -360,19 +360,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     # **************************** RAXML PAGE ****************************#
 
-    def displayResults(self):
-        if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
-            if self.checkboxRobinsonFoulds.isChecked():
-                if self.checkboxWeighted.isChecked():
-                    self.robinsonFouldsWindow.show()
-                    self.robinsonFouldsWindow.displayImages()
-                else:
-                    self.robinsonFouldsWindow.show()
-                    self.robinsonFouldsWindow.displayUnweightedImage()
-            if self.checkboxPGTST.isChecked():
-                self.pgtstWindow.show()
-                self.pgtstWindow.displayImage()
-
     def generateSpeciesTree(self):
         try:
             # get values from gui -- ensure that no fields are blank
