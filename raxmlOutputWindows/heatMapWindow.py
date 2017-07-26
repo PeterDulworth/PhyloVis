@@ -36,7 +36,6 @@ if __name__ == '__main__': # only runs if not imported
 
     # create window and plot
     form = HeatMapWindow('Heat Map', a)
-    form.show()
 
     # execute the app
     sys.exit(app.exec_())

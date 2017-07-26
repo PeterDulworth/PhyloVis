@@ -92,7 +92,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
         self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
         self.msComparisonWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow()
-        self.dStatisticWindow = dStatisticWindow.DStatisticWindow()
 
         # default values
         self.runComplete = False
@@ -246,9 +245,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def displayDStatistic(self, dVal, dWindows):
         self.dVal = dVal
         self.dWindows = dWindows
-        self.statisticsCalculations.stat_scatter(self.dWindows, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
-        self.dStatisticWindow.show()
-        self.dStatisticWindow.displayImage()
+        self.dStatisticWindow = dStatisticWindow.DStatisticWindow(self.dWindows, "plots/WindowsToD.png", "Window Indices to D statistic", "Window Indices", "D statistic values")
 
         self.dStatisticValueLabel.setText(str(self.dVal))
         self.dStatisticLabel.setEnabled(True)
