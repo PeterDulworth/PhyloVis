@@ -160,16 +160,6 @@
                 <string>D Statistic</string>
                </property>
               </item>
-              <item>
-               <property name="text">
-                <string>Tetris</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Snake</string>
-               </property>
-              </item>
              </widget>
             </item>
             <item>

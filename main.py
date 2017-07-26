@@ -22,9 +22,6 @@ from module import informativeSites as infSites
 from module import bootstrapContraction as bc
 from module import msComparison as ms
 
-# more important logic
-from games import tetris, snake
-
 
 class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def __init__(self, parent=None):
@@ -127,8 +124,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
         self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
 
+        # open documentation
         self.actionDocumentation.triggered.connect(self.openDocumentation)
-        self.actionDocumentation.setIcon(QtGui.QIcon('imgs/Luay.jpg'))
 
         # **************************** RAXML PAGE ****************************#
 
@@ -234,15 +231,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     # **************************** WELCOME PAGE ****************************#
 
     def initializeMode(self):
-        if self.modeComboBox.currentText() != "Tetris" and self.modeComboBox.currentText() != "Snake":
-            self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()], self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
-        else:
-            if self.modeComboBox.currentText() == "Tetris":
-                self.tetrisWindow = tetris.Tetris()
-                self.tetrisWindow.show()
-            if self.modeComboBox.currentText() == "Snake":
-                self.snakeWindow = snake.Snake()
-                self.snakeWindow.show()
+        self.ensureSingleModeSelected(self.comboboxModes_to_actionModes[self.modeComboBox.currentText()], self.comboboxModes_to_windowNames[self.modeComboBox.currentText()])
 
     # **************************** D STATISTIC PAGE ****************************#
 
