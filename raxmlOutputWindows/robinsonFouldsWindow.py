@@ -1,33 +1,37 @@
-from tabWindow import TabWindow
+from standardWindow import Window
 from PyQt4 import QtGui
 import sys
 
 """
-Functions:
-    __init__(self)
+Robinson Foulds Window
 ~
 Chabrielle Allen
 Travis Benedict
 Peter Dulworth
 """
 
-if __name__ == '__main__':
-    unweightedFileName = '../plots/UnweightedFouldsPlot.png'
-    weightedFileName = '../plots/WeightedFouldsPlot.png'
-else:
-    unweightedFileName = 'plots/UnweightedFouldsPlot.png'
-    weightedFileName = 'plots/WeightedFouldsPlot.png'
+class RobinsonFouldsWindow(Window):
+    def __init__(self, title1, data1, title2=None, data2=None, xLabel='Windows', yLabel='RF Distance'):
+        Window.__init__(self, windowTitle='Robinson Foulds Distance From MS Truth')
+
+        if title2 == None:
+            self.plotter.stat_scatter(data1, title1, xLabel, yLabel, subplotPosition=111)
+        else:
+            self.plotter.stat_scatter(data1, title1, xLabel, yLabel, subplotPosition=211)
+            self.plotter.stat_scatter(data2, title2, xLabel, yLabel, subplotPosition=212)
+
+        self.show()
 
 
-class RobinsonFouldsWindow(TabWindow):
-    def __init__(self):
-        TabWindow.__init__(self, unweightedFileName, weightedFileName, x=200, y=222, scale=1) #!!! add ../ before file name to test locally
+if __name__ == '__main__': # only runs if not imported
 
-
-if __name__ == '__main__':
-    # test window if running locally
+    # create a new instance of QApplication
     app = QtGui.QApplication(sys.argv)
-    form = RobinsonFouldsWindow()
-    form.show()
-    form.displayImages()
+
+    a = {0:0, 2:2, 4:3}
+
+    # create window and plot
+    form = RobinsonFouldsWindow(a)
+
+    # execute the app
     sys.exit(app.exec_())

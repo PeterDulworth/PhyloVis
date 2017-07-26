@@ -83,14 +83,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.comboboxModes_to_windowNames = {'RAx_ML': 'inputPageRax', 'File Converter': 'inputPageFileConverter', 'MS Comparison': 'inputPageMS', 'D Statistic': 'inputPageDStatistic'}
         # mapping from: mode --> menu action
         self.comboboxModes_to_actionModes = {'RAx_ML': self.actionRax, 'File Converter': self.actionConverter, 'MS Comparison': self.actionMS, 'D Statistic': self.actionDStatistic}
-        # if windows
+        # if running windows os
         if sys.platform == 'win32':
             # mapping from: windows --> dictionary of page dimensions
             self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
         # initialize window
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
-        self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow()
 
         # default values
         self.runComplete = False
@@ -140,6 +139,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkboxDonutPlot.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxDonutPlot))
         self.checkboxHeatMap.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxHeatMap))
         self.checkboxPGTST.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxPGTST))
+        self.checkboxRobinsonFoulds.stateChanged.connect(lambda: self.updatedDisplayWindows(btnClicked=self.checkboxRobinsonFoulds))
 
         # toggle what inputs are actionable based on checkboxes
         self.checkboxRobinsonFoulds.clicked.connect(lambda: self.toggleEnabled(self.checkboxWeighted))
@@ -398,61 +398,58 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
     def updatedDisplayWindows(self, btnClicked=None):
         if btnClicked == None or btnClicked.isChecked():
             if self.runComplete == True:
-                # generate robinson foulds and pgtst graphs
-                if self.checkboxRobinsonFoulds.isChecked() or self.checkboxPGTST.isChecked():
-                    if self.checkboxRobinsonFoulds.isChecked():
+                if self.raxmlInputErrorHandling():
+                    # generate robinson foulds and pgtst graphs
+                    if (btnClicked == None and self.checkboxRobinsonFoulds.isChecked()) or btnClicked == self.checkboxRobinsonFoulds:
                         if self.checkboxWeighted.isChecked():
                             windows_to_w_rf, windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-
-                            self.statisticsCalculations.stat_scatter(windows_to_w_rf, "plots/WeightedFouldsPlot.png", "Weighted Robinson-Foulds Distance", "Windows", "RF Distance")
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "plots/UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
-
+                            self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow('Weighted Robinson Foulds Distance', windows_to_w_rf, 'Unweighted Robinson Foulds Distance', windows_to_uw_rf)
                         else:
                             windows_to_uw_rf = self.statisticsCalculations.calculate_windows_to_rf(self.speciesTree, self.checkboxWeighted.isChecked())
-                            self.statisticsCalculations.stat_scatter(windows_to_uw_rf, "plots/UnweightedFouldsPlot.png", "Unweighted Robinson-Foulds Distance", "Windows", "RF Distance")
+                            self.robinsonFouldsWindow = robinsonFouldsWindow.RobinsonFouldsWindow('Weighted Robinson Foulds Distance', windows_to_uw_rf)
 
                     if (btnClicked == None and self.checkboxPGTST.isChecked()) or btnClicked == self.checkboxPGTST:
                         windowsToPGTST = self.statisticsCalculations.calculate_windows_to_p_gtst(self.speciesTree)
                         self.pgtstWindow = pgtstWindow.PGTSTWindow(windowsToPGTST, "p(gt|st)", xLabel="Windows", yLabel="Probability")
 
-                # run commands that are shared by all functions
-                if self.getNumberChecked() > 0:
-                    num = self.topTopologies
-                    topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())
-                    if num > len(topologies_to_counts):
-                        num = len(topologies_to_counts)
-                    list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
-                    top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
-                    windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
-                    topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
+                    # run commands that are shared by all functions
+                    if self.getNumberChecked() > 0:
+                        num = self.topTopologies
+                        topologies_to_counts, unique_topologies_to_newicks = self.topologyPlotter.topology_counter(rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())
+                        if num > len(topologies_to_counts):
+                            num = len(topologies_to_counts)
+                        list_of_top_counts, labels, sizes = self.topologyPlotter.top_freqs(num, topologies_to_counts)
+                        top_topologies_to_counts = self.topologyPlotter.top_topologies(num, topologies_to_counts)
+                        windows_to_top_topologies, top_topologies_list = self.topologyPlotter.windows_to_newick(top_topologies_to_counts, unique_topologies_to_newicks, rooted=self.rooted, outgroup=self.outgroupComboBox.currentText())  # all trees, scatter, circle, donut
+                        topologies_to_colors, scatter_colors, ylist = self.topologyPlotter.topology_colors(windows_to_top_topologies, top_topologies_list)  # scatter, circle, (donut?)
 
-                # generate donut plot
-                if (btnClicked == None and self.checkboxDonutPlot.isChecked()) or btnClicked == self.checkboxDonutPlot:
-                    donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
-                    self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('Frequency of Top Topologies', labels, sizes, donut_colors)
+                    # generate donut plot
+                    if (btnClicked == None and self.checkboxDonutPlot.isChecked()) or btnClicked == self.checkboxDonutPlot:
+                        donut_colors = self.topologyPlotter.donut_colors(top_topologies_to_counts, topologies_to_colors)  # donut
+                        self.donutPlotWindow = donutPlotWindow.DonutPlotWindow('Frequency of Top Topologies', labels, sizes, donut_colors)
 
-                # generate scatter plot
-                if (btnClicked == None and self.checkboxScatterPlot.isChecked()) or btnClicked == self.checkboxScatterPlot:
-                    self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow('Windows to Top Topologies', windows_to_top_topologies, scatter_colors, ylist)
+                    # generate scatter plot
+                    if (btnClicked == None and self.checkboxScatterPlot.isChecked()) or btnClicked == self.checkboxScatterPlot:
+                        self.scatterPlotWindow = scatterPlotWindow.ScatterPlotWindow('Windows to Top Topologies', windows_to_top_topologies, scatter_colors, ylist)
 
-                # generate circle graph
-                if (btnClicked == None and self.checkboxCircleGraph.isChecked()) or btnClicked == self.checkboxCircleGraph:
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
-                    self.topologyPlotter.generateCircleGraph(self.raxmlOperations.inputFilename, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
+                    # generate circle graph
+                    if (btnClicked == None and self.checkboxCircleGraph.isChecked()) or btnClicked == self.checkboxCircleGraph:
+                        sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.window_offset)
+                        self.topologyPlotter.generateCircleGraph(self.raxmlOperations.inputFilename, windows_to_top_topologies, topologies_to_colors, self.raxmlOperations.windowSize, self.raxmlOperations.windowOffset, sites_to_informative)
 
-                # generate heatmap graph
-                if (btnClicked == None and self.checkboxHeatMap.isChecked()) or btnClicked == self.checkboxHeatMap:
-                    sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
-                    self.heatMapWindow = heatMapWindow.HeatMapWindow('Heat Map', sites_to_informative)
+                    # generate heatmap graph
+                    if (btnClicked == None and self.checkboxHeatMap.isChecked()) or btnClicked == self.checkboxHeatMap:
+                        sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative = self.informativeSites.calculate_informativeness('windows', self.raxmlOperations.windowOffset)
+                        self.heatMapWindow = heatMapWindow.HeatMapWindow('Heat Map', sites_to_informative)
 
-                # generate bootstrap graph
-                if (btnClicked == None and self.checkboxBootstrap.isChecked()) or btnClicked == self.checkboxBootstrap:
-                    internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
-                    self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow(internal_nodes_i, internal_nodes_f, self.confidenceLevel, xLabel="Window Indices", yLabel="Number of Internal Nodes")
+                    # generate bootstrap graph
+                    if (btnClicked == None and self.checkboxBootstrap.isChecked()) or btnClicked == self.checkboxBootstrap:
+                        internal_nodes_i, internal_nodes_f = self.bootstrapContraction.internal_nodes_after_contraction(self.confidenceLevel)
+                        self.bootstrapContractionWindow = bootstrapContractionWindow.BootstrapContractionWindow(internal_nodes_i, internal_nodes_f, self.confidenceLevel, xLabel="Window Indices", yLabel="Number of Internal Nodes")
 
-                # generate all trees graph
-                if (btnClicked == None and self.checkboxAllTrees.isChecked()) or btnClicked == self.checkboxAllTrees:
-                    self.allTreesWindow = allTreesWindow.AllTreesWindow('', topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outGroup=self.outgroupComboBox.currentText())
+                    # generate all trees graph
+                    if (btnClicked == None and self.checkboxAllTrees.isChecked()) or btnClicked == self.checkboxAllTrees:
+                        self.allTreesWindow = allTreesWindow.AllTreesWindow('', topologies_to_colors, rooted=self.checkboxRooted.isChecked(), outGroup=self.outgroupComboBox.currentText())
 
     def raxmlInputErrorHandling(self):
         """
