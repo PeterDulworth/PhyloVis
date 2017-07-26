@@ -2,7 +2,6 @@
 import sip, sys, os, re, webbrowser
 sip.setapi('QString', 2)
 from PyQt4 import QtGui, QtCore
-from shutil import copyfile, copytree
 from functools import partial
 
 # GUI
@@ -595,20 +594,26 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.setWindow(window)
 
     def saveFileAs(self, textEntry):
+        """
+            i. open a dialog to get in which user enters a file name to save
+            ii. sets the text of given text entry to match file user selected
+        """
         textEntry.setText(QtGui.QFileDialog.getSaveFileName(self, 'Export'))
 
     def getFileName(self, textEntry):
-        # get name of file
-        name = QtGui.QFileDialog.getOpenFileName()
-        # set name of file to text entry
-        textEntry.setText(name)
+        """
+            i. open a dialog to get in which user selects a file
+            ii. sets the text of given text entry to match file user selected
+        """
+        textEntry.setText(QtGui.QFileDialog.getOpenFileName())
         textEntry.emit(QtCore.SIGNAL('FILE_SELECTED'))
 
     def openDirectory(self, textEntry):
-        # get name of file
-        name = QtGui.QFileDialog.getExistingDirectory()
-        # set name of file to text entry
-        textEntry.setText(name)
+        """
+            i. open a dialog to get in which user selects a directory
+            ii. sets the text of given text entry to match the directory the user selected
+        """
+        textEntry.setText(QtGui.QFileDialog.getExistingDirectory())
         textEntry.emit(QtCore.SIGNAL("DIRECTORY_SELECTED"))
 
     def openWindow(self, window, type='std'):
