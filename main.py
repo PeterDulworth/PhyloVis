@@ -86,7 +86,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # if windows
         if sys.platform == 'win32':
             # mapping from: windows --> dictionary of page dimensions
-            self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 375}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
+            self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 871, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 600, 'y': 815}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
         # initialize window
         self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
