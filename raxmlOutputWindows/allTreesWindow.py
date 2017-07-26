@@ -1,10 +1,13 @@
 from standardWindow import Window
 from PyQt4 import QtGui
 import sys
+import matplotlib
+matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 """
-Functions:
-    __init__(self)
+All Trees Window
 ~
 Chabrielle Allen
 Travis Benedict
@@ -18,6 +21,12 @@ class AllTreesWindow(Window):
 
         self.plotter.topologyColorizer(title, colorScheme, rooted=rooted, outgroup=outGroup)
         self.show()
+
+    def initCanvas(self):
+        plt.axis('off')
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.verticalLayout.addWidget(self.canvas)
 
 
 if __name__ == '__main__': # only runs if not imported

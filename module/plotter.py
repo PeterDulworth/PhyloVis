@@ -210,6 +210,7 @@ class Plotter(QtCore.QThread):
         """
 
         plt.title(title, fontsize=15)
+        plt.axis('off')
 
         # count number of top topologies
         numTopTopologies = 0
@@ -230,6 +231,9 @@ class Plotter(QtCore.QThread):
                     ax = plt.subplot(3, 3, order[count])
                 else:
                     ax = plt.subplot(int(round(numTopTopologies / 2.0)), 2, count)
+
+                # disable axis
+                ax.axis('off')
 
                 # Create the tree object and assign it to the appropriate color
                 tree = Phylo.read(StringIO(newick), "newick")
@@ -268,6 +272,31 @@ class Plotter(QtCore.QThread):
 
         ax.set_xlabel(xLabel)
         ax.set_ylabel(yLabel)
+
+    def lineGraph(self, data, title, xLabel='', yLabel='', subplotPosition=111):
+        """
+            Create a line graph based on the inputted dictionary
+
+            Input:
+                i. data --- a dictionary mapping integers to floats or integers
+                ii. xLabel --- a string for the labeling the x-axis
+                iii. yLabel --- a string for the labeling the y-axis
+                iv. title --- title of plot
+                v. subplotPosition - matplotlib position specifying dimensions of subplot grid and position of subplot
+        """
+
+        ax = plt.subplot(subplotPosition)
+
+        ax.set_title(title, fontsize=15)
+        ax.set_xlabel(xLabel)
+        ax.set_ylabel(yLabel)
+
+        x = data.keys()
+        y = data.values()
+
+        ax.plot(x, y, "-")
+
+        return ax
 
     def tmrca_graph(self, sites_to_newick_mappings, topology_only=False):
         """

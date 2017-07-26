@@ -24,7 +24,6 @@ class InformativeSites(QtCore.QThread):
     def __init__(self, parent=None):
         super(InformativeSites, self).__init__(parent)
 
-
     def is_site_informative(self, site):
         """
         Determines if a site is informative or not
@@ -55,7 +54,6 @@ class InformativeSites(QtCore.QThread):
                 return 0
         else:
             return 0
-
 
     def calculate_informativeness(self, window_directory, window_offset):
         """
@@ -143,59 +141,6 @@ class InformativeSites(QtCore.QThread):
         return sites_to_informative, windows_to_informative_count, windows_to_informative_pct, pct_informative
 
 
-    def line_graph_generator(self, dictionary, xLabel, yLabel, name):
-        """
-            Create a line graph based on the inputted dictionary
-
-            Input:
-                i. dictionary --- a dictionary mapping integers to floats or integers
-                ii. xLabel --- a string for the labeling the x-axis
-                iii. yLabel --- a string for the labeling the y-axis
-                iv. name --- a string for the image name
-        """
-
-        x = dictionary.keys()
-        y = dictionary.values()
-        plt.plot(x, y, "-", )
-        plt.xlabel(xLabel)
-        plt.ylabel(yLabel)
-        plt.tight_layout()
-        plt.savefig(name, dpi=250)
-        plt.clf()
-
-
-    def heat_map_generator(self, dictionary, name):
-        """
-        Create a heat map based on the inputted dictionary
-        Input:
-        dictionary --- a dictionary mapping integers to floats or integers
-        name --- a string for the image name
-        """
-
-        # Create custom color map
-        colors = [(1.0, 1.0, 1.0), (1.0, 1.0, 1.0),(0.0, 1.0, 0.0), (0.0, 0.0, 1.0), (0.0, 0.0, 0.0)]
-        color_name = "Chab's Colors"
-
-        blue_green = LinearSegmentedColormap.from_list(color_name, colors)
-        plt.register_cmap(cmap=blue_green)
-
-        plt.figure(figsize=(15, 2))
-
-        array = np.array(dictionary.values())
-
-        x_vals = np.empty([5, array.shape[0]])
-
-        x_vals[:, :] = array
-
-        plt.contourf(x_vals, cmap=blue_green)
-        plt.colorbar()
-        plt.yticks([])
-
-        plt.savefig(name, dpi=250)
-        plt.clf()
-        self.emit(QtCore.SIGNAL("HEATMAP_COMPLETE"))
-
-
 if __name__ == '__main__':  # if we're running file directly and not importing it
     # travys window dir
     # window_dir = "C:\\Users\\travi\\Documents\\Evolutionary-Diversity-Visualization-Python\\windows"
@@ -212,6 +157,6 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
 
     # print str(pct_informative) + "%"
 
-    # infs.line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
+    infs.line_graph_generator(windows_to_informative_pct, "Windows", "Percentage of Informative Sites", "pctInformative.png")
 
     infs.heat_map_generator(sites_to_informative, "HeatMapInfSites.png")

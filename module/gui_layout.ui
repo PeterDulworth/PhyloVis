@@ -59,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -361,7 +361,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -371,8 +371,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>531</width>
-               <height>294</height>
+               <width>854</width>
+               <height>643</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1306,8 +1306,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>451</width>
-               <height>157</height>
+               <width>854</width>
+               <height>643</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1484,6 +1484,30 @@
                      </item>
                      <item>
                       <spacer name="circleGraphSpacer">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_13">
+                     <item>
+                      <widget class="QCheckBox" name="checkboxWindowsToInfSites">
+                       <property name="text">
+                        <string>Windows to Informative Sites - Line Graph</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_26">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
