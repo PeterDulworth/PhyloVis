@@ -76,7 +76,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 720}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 680}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
         self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 100}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
@@ -307,7 +307,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         HL.setObjectName(horizontalLayoutName + str(self.additionalFileCounter))
 
         # create btn and add to horizontal layout
-        btn2 = QtGui.QToolButton(self.groupBox_3)
+        btn2 = QtGui.QToolButton(self.msMSCompareGroupBox)
         btn2.setObjectName(btn2Name + str(self.additionalFileCounter))
         btn2.setText('-')
         btn2.setFixedHeight(21)
@@ -315,13 +315,13 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         HL.addWidget(btn2)
 
         # create text entry and add to horizontal layout
-        entry = QtGui.QLineEdit(self.groupBox_3)
+        entry = QtGui.QLineEdit(self.msMSCompareGroupBox)
         entry.setReadOnly(True)
         entry.setObjectName(entryName + str(self.additionalFileCounter))
         HL.addWidget(entry)
 
         # create btn and add to horizontal layout
-        btn = QtGui.QToolButton(self.groupBox_3)
+        btn = QtGui.QToolButton(self.msMSCompareGroupBox)
         btn.setObjectName(btnName + str(self.additionalFileCounter))
         btn.setText('...')
         HL.addWidget(btn)

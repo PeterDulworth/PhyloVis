@@ -149,8 +149,6 @@ class Plotter(QtCore.QThread):
         width = .667  # the width of the bars
         bars = []
 
-        print title, data, groupLabels
-
         if heightLabels:
             ax.set_yticks([])
             for i in indices:
