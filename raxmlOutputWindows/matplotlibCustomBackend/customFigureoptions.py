@@ -11,20 +11,12 @@ from __future__ import (division, print_function, unicode_literals)
 
 import customFormlayout
 
-import six
-
 import os.path as osp
-import re, sys
+import re
 
 import matplotlib
 from matplotlib import cm, markers, colors as mcolors
-import matplotlib.backends.qt_editor.formlayout as formlayout
 from matplotlib.backends.qt_compat import QtGui
-
-# sys.path.append(osp.dirname(osp.abspath(__file__)))
-
-
-
 
 
 def get_icon(name):

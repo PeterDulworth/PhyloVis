@@ -237,6 +237,7 @@ class FormWidget(QtWidgets.QWidget):
         return dialog
 
     def setup(self):
+        # self.formlayout.setFieldGrowthPolicy(1)
         for label, value in self.data:
             if DEBUG:
                 print("value:", value)
@@ -257,6 +258,7 @@ class FormWidget(QtWidgets.QWidget):
                 field = ColorLayout(to_qcolor(value), self)
             elif isinstance(value, six.string_types):
                 field = QtWidgets.QLineEdit(value, self)
+                field.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Maximum))
             elif isinstance(value, (list, tuple)):
                 if isinstance(value, tuple):
                     value = list(value)
@@ -305,6 +307,7 @@ class FormWidget(QtWidgets.QWidget):
             else:
                 field = QtWidgets.QLineEdit(repr(value), self)
             self.formlayout.addRow(label, field)
+            print(self.formlayout.fieldGrowthPolicy())
             self.widgets.append(field)
 
     def get(self):
@@ -399,22 +402,18 @@ class FormTabWidget(QtWidgets.QWidget):
 
 class FormDialog(QtWidgets.QDialog):
     """Form Dialog"""
-    def __init__(self, data, title="", comment="",
-                 icon=None, parent=None, apply=None):
+    def __init__(self, data, title="", comment="", icon=None, parent=None, apply=None):
         QtWidgets.QDialog.__init__(self, parent)
 
         self.apply_callback = apply
 
         # Form
         if isinstance(data[0][0], (list, tuple)):
-            self.formwidget = FormTabWidget(data, comment=comment,
-                                            parent=self)
+            self.formwidget = FormTabWidget(data, comment=comment, parent=self)
         elif len(data[0]) == 3:
-            self.formwidget = FormComboWidget(data, comment=comment,
-                                              parent=self)
+            self.formwidget = FormComboWidget(data, comment=comment, parent=self)
         else:
-            self.formwidget = FormWidget(data, comment=comment,
-                                         parent=self)
+            self.formwidget = FormWidget(data, comment=comment, parent=self)
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.formwidget)
 
@@ -510,45 +509,71 @@ def fedit(data, title="", comment="", icon=None, parent=None, apply=None):
 
 if __name__ == "__main__":
 
-    def create_datalist_example():
-        return [('str', 'this is a string'),
-                ('list', [0, '1', '3', '4']),
-                ('list2', ['--', ('none', 'None'), ('--', 'Dashed'),
-                           ('-.', 'DashDot'), ('-', 'Solid'),
-                           ('steps', 'Steps'), (':', 'Dotted')]),
-                ('float', 1.2),
-                (None, 'Other:'),
-                ('int', 12),
-                ('font', ('Arial', 10, False, True)),
-                ('color', '#123409'),
-                ('bool', True),
-                ('date', datetime.date(2010, 10, 10)),
-                ('datetime', datetime.datetime(2010, 10, 10)),
-                ]
+    # def create_datalist_example():
+    #     return [('str', 'this is a string'),
+    #             ('list', [0, '1', '3', '4']),
+    #             ('list2', ['--', ('none', 'None'), ('--', 'Dashed'),
+    #                        ('-.', 'DashDot'), ('-', 'Solid'),
+    #                        ('steps', 'Steps'), (':', 'Dotted')]),
+    #             ('float', 1.2),
+    #             (None, 'Other:'),
+    #             ('int', 12),
+    #             ('font', ('Arial', 10, False, True)),
+    #             ('color', '#123409'),
+    #             ('bool', True),
+    #             ('date', datetime.date(2010, 10, 10)),
+    #             ('datetime', datetime.datetime(2010, 10, 10)),
+    #             ]
+    #
+    # def create_datagroup_example():
+    #     datalist = create_datalist_example()
+    #     return ((datalist, "Category 1", "Category 1 comment"),
+    #             (datalist, "Category 2", "Category 2 comment"),
+    #             (datalist, "Category 3", "Category 3 comment"))
+    #
+    # #--------- datalist example
+    # datalist = create_datalist_example()
+    #
+    # def apply_test(data):
+    #     print("data:", data)
+    # print("result:", fedit(datalist, title="Example",
+    #                        comment="This is just an <b>example</b>.",
+    #                        apply=apply_test))
 
-    def create_datagroup_example():
-        datalist = create_datalist_example()
-        return ((datalist, "Category 1", "Category 1 comment"),
-                (datalist, "Category 2", "Category 2 comment"),
-                (datalist, "Category 3", "Category 3 comment"))
-
-    #--------- datalist example
-    datalist = create_datalist_example()
-
-    def apply_test(data):
-        print("data:", data)
-    print("result:", fedit(datalist, title="Example",
-                           comment="This is just an <b>example</b>.",
-                           apply=apply_test))
-
-    #--------- datagroup example
-    datagroup = create_datagroup_example()
-    print("result:", fedit(datagroup, "Global title"))
+    # --------- datagroup example
+    # datagroup = create_datagroup_example()
+    # print("result:", fedit(datagroup, "Global title"))
 
     #--------- datagroup inside a datagroup example
-    datalist = create_datalist_example()
-    datagroup = create_datagroup_example()
-    print("result:", fedit(((datagroup, "Title 1", "Tab 1 comment"),
-                            (datalist, "Title 2", "Tab 2 comment"),
-                            (datalist, "Title 3", "Tab 3 comment")),
-                            "Global title"))
+    # datalist = create_datalist_example()
+    # datagroup = create_datagroup_example()
+    # print("result:", fedit(((datagroup, "Title 1", "Tab 1 comment"),
+    #                         (datalist, "Title 2", "Tab 2 comment"),
+    #                         (datalist, "Title 3", "Tab 3 comment")),
+    #                         "Global title"))
+
+
+# MY TEST
+
+    data = [('str', 'this is a string'),
+            ('str', 'this is a string'),
+            ('str', 'this is a string'),
+            ('list', [0, '1', '3', '4']),
+            ('list', [2, '1', '3', '4']),
+            ('list2', ['--', ('none', 'None'), ('--', 'Dashed'),
+                       ('-.', 'DashDot'), ('-', 'Solid'),
+                       ('steps', 'Steps'), (':', 'Dotted')]),
+            ('float', 1.2),
+            (None, 'Other:'),
+            ('int', 12),
+            ('font', ('Arial', 10, False, True)),
+            ('color', '#123409'),
+            ('bool', True),
+            ('date', datetime.date(2010, 10, 10)),
+            ('datetime', datetime.datetime(2010, 10, 10)),
+            ]
+
+    def apply_test(a):
+        print(a)
+
+    fedit(data, title='henlo', comment='haahha', apply=apply_test)
