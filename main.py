@@ -118,7 +118,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # open documentation
         self.actionDocumentation.triggered.connect(self.openDocumentation)
 
-        # validators
+        # only allow integers in the following fields
         self.setValidator(self.windowSizeEntry, 'Int')
         self.setValidator(self.windowOffsetEntry, 'Int')
         self.setValidator(self.numberOfTopTopologiesEntry, 'Int')

@@ -12,6 +12,9 @@ class Window(QtGui.QMainWindow):
     def __init__(self, windowTitle='Window', x=0, y=0, parent=None):
         super(Window, self).__init__(parent)
 
+        # set UI style -- options: u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)'
+        # QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(u'Plastique'))
+
         # layout
         self.setAutoFillBackground(True)
         self.centralwidget = QtGui.QWidget(self)
@@ -29,6 +32,8 @@ class Window(QtGui.QMainWindow):
         self.menuFile.setTitle("File")
         self.menuConfigurePlot = QtGui.QMenu(self.menubar)
         self.menuConfigurePlot.setTitle("Configure Plot")
+        self.menuLegend = QtGui.QMenu(self.menubar)
+        self.menuLegend.setTitle('Legend')
 
         # create actions
         self.actionSaveAs = QtGui.QAction(self)
@@ -37,6 +42,8 @@ class Window(QtGui.QMainWindow):
         self.actionConfigureSubplots.setText('Configure Subplots')
         self.actionConfigureAxis = QtGui.QAction(self)
         self.actionConfigureAxis.setText('Configure Axis and Curve')
+        self.actionGenerateLegend = QtGui.QAction(self)
+        self.actionGenerateLegend.setText('Generate Legend')
 
         # add actions to menu
         self.menuFile.addAction(self.actionSaveAs)
@@ -44,6 +51,8 @@ class Window(QtGui.QMainWindow):
         self.menuConfigurePlot.addAction(self.actionConfigureSubplots)
         self.menuConfigurePlot.addAction(self.actionConfigureAxis)
         self.menubar.addAction(self.menuConfigurePlot.menuAction())
+        self.menuLegend.addAction(self.actionGenerateLegend)
+        self.menubar.addAction(self.menuLegend.menuAction())
 
         # enable menu bar
         self.setMenuBar(self.menubar)
@@ -72,6 +81,7 @@ class Window(QtGui.QMainWindow):
         # bind configure menu actions
         self.connect(self.actionConfigureSubplots, QtCore.SIGNAL('triggered()'), self.toolbar.configure_subplots)
         self.connect(self.actionConfigureAxis, QtCore.SIGNAL('triggered()'), self.toolbar.edit_parameters)
+        self.connect(self.actionGenerateLegend, QtCore.SIGNAL('triggered()'), self.toolbar.generate_legend)
 
         # create instance of Plotter class
         self.plotter = plotter.Plotter()
@@ -120,6 +130,9 @@ if __name__ == '__main__':
     # initialize main input window
     form = Window(windowTitle='Standard Window')
     form.show()
+
+    form.plotter.barPlot('bar', [1,2,3,4], groupLabels=[1,2,3,4])
+
     form.setWindowSize(600, 600)
 
     # and execute the app

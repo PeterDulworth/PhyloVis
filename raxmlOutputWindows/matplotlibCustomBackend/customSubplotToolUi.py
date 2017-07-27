@@ -1,5 +1,5 @@
 from matplotlib.backends.backend_qt5 import SubplotToolQt, UiSubplotTool
-from matplotlib.backends.qt_compat import QtCore, QtGui, QtWidgets
+from matplotlib.backends.qt_compat import QtCore, QtWidgets
 
 class CustomUiSubplotTool(UiSubplotTool):
     def __init__(self, *args, **kwargs):
