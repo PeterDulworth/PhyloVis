@@ -77,13 +77,7 @@ class Window(QtGui.QMainWindow):
         self.connect(self.actionConfigureAxis, QtCore.SIGNAL('triggered()'), self.toolbar.edit_parameters)
 
         if legend:
-            self.menuLegend = QtGui.QMenu(self.menubar)
-            self.menuLegend.setTitle('Legend')
-            self.actionGenerateLegend = QtGui.QAction(self)
-            self.actionGenerateLegend.setText('Generate Draggable Legend')
-            self.menuLegend.addAction(self.actionGenerateLegend)
-            self.menubar.addAction(self.menuLegend.menuAction())
-            self.connect(self.actionGenerateLegend, QtCore.SIGNAL('triggered()'), self.toolbar.generate_legend)
+            self.generateLegendMenu()
 
         # create instance of Plotter class
         self.plotter = plotter.Plotter()
@@ -92,6 +86,18 @@ class Window(QtGui.QMainWindow):
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         self.verticalLayout.addWidget(self.canvas)
+
+    def generateLegendMenu(self):
+        self.menuLegend = QtGui.QMenu(self.menubar)
+        self.menuLegend.setTitle('Legend')
+        self.actionGenerateLegend = QtGui.QAction(self)
+        self.actionGenerateLegend.setText('Generate Draggable Legend')
+        self.menuLegend.addAction(self.actionGenerateLegend)
+        self.menubar.addAction(self.menuLegend.menuAction())
+        self.connect(self.actionGenerateLegend, QtCore.SIGNAL('triggered()'), self.generateLegend)
+
+    def generateLegend(self):
+        self.toolbar.generate_legend()
 
     def setBackgroundColor(self, color):
         """
@@ -135,7 +141,7 @@ if __name__ == '__main__':
     form = Window(windowTitle='Standard Window')
     form.show()
 
-    form.plotter.barPlot('bar', [1,2,3,4], groupLabels=[1,2,3,4])
+    # form.plotter.barPlot('bar', [1,2,3,4], groupLabels=[1,2,3,4])
 
     form.setWindowSize(600, 600)
 

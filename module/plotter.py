@@ -9,8 +9,8 @@ from ete3 import Tree, TreeNode
 from cStringIO import StringIO
 from Bio.Graphics.GenomeDiagram import GraphSet
 from Bio.Graphics import GenomeDiagram
-from collections import defaultdict
 from reportlab.lib import colors
+import sys, os
 
 
 class Plotter(QtCore.QThread):
@@ -373,15 +373,16 @@ class Plotter(QtCore.QThread):
 
     def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
         """
-        Creates genetic circle graph showing the windows and the areas where each topology appears
-        Inputs:
-        file --- phylip file inputted in GUI
-        windows_to_top_topologies --- mapping outputted by windows_to_newick()[0]
-        topologies_to_colors --- mapping outputted by topology_colors()[0]
-        window_size --- size inputted in GUI
-        window_offset --- size inputted in GUI
-        Returns:
-        A genetic circle graph GenomeAtlas.
+            Creates genetic circle graph showing the windows and the areas where each topology appears
+
+            Inputs:
+                i. file --- phylip file inputted in GUI
+                ii. windows_to_top_topologies --- mapping outputted by windows_to_newick()[0]
+                iii. topologies_to_colors --- mapping outputted by topology_colors()[0]
+                iv. window_size --- size inputted in GUI
+                v. window_offset --- size inputted in GUI
+            Returns:
+                A genetic circle graph GenomeAtlas.
         """
 
         ############################# Format Data #############################
@@ -437,7 +438,7 @@ class Plotter(QtCore.QThread):
             del topologies_to_data['Other']
         data = topologies_to_data.values()
 
-        # separates data into windowed and unwindowed
+        # separates data into windowed and un-windowed
         windowed_data = []
         nonwindowed_data = []
         for i in range(length_of_sequences):
@@ -452,7 +453,7 @@ class Plotter(QtCore.QThread):
         ############################# Build Graph #############################
 
         # name of the figure
-        name = "plots/GenomeAtlas"
+        name = "../plots/GenomeAtlas"
         graphStyle = 'bar'
 
         # create the diagram -- highest level container for everything
@@ -535,13 +536,18 @@ class Plotter(QtCore.QThread):
                      tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
         # save the file
-        diagram.write(name + ".pdf", "PDF")
-        # diagram.write(name + ".eps", "EPS")
-        # diagram.write(name + ".svg", "SVG")
-        diagram.write(name + ".png", "PNG")
+        diagram.write("plots/GenomeAtlas.pdf", "PDF")
+        # diagram.write("../plots/GenomeAtlas.eps", "EPS")
+        # diagram.write("../plots/GenomeAtlas.svg", "SVG")
+        print 'henlo'
+        print os.path.abspath(__file__)
+
+        diagram.write("plots/GenomeAtlas.png", "PNG")
 
         self.emit(QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'))
 
+    def run(self):
+        self.generateCircleGraph(self.alignment, self.windowsToTopTopologies, self.topologiesToColors, self.windowSize, self.windowOffset, self.sitesToInformative)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
     p = Plotter()
