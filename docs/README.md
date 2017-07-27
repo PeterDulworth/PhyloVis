@@ -48,7 +48,7 @@ The Genome Atlas is
 Top Topologies, Windows to Top Topologies, Top Topology Frequency, and the Genome Atlas are all generated in such a way that the colors of the topologies correspond with the colors used within the plots.
 The Informative Sites Heat Map depicts the informativeness of each site in the data. The more informative the site, the darker the line in the heat map.
 
-Statistics Options allows the user to select an existing species tree file and generate plots depicting the weighted and/or unweighted Robinson Foulds statistic and p(GT|ST).
+Statistics Options allows the user to select an existing species tree file and generate plots depicting the weighted and/or unweighted Robinson Foulds statistic and the probability of a gene tree given a species tree.
 
 ### File Converter
 File Converter mode allows the user to select a file containing DNA alignments in one of eleven popular formats and convert them to a different file format. After selecting the input file and its format, the user must specify the output file’s name and location along with the desired format. 
