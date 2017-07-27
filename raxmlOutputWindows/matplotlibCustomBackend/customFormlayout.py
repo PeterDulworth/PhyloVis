@@ -307,7 +307,7 @@ class FormWidget(QtWidgets.QWidget):
             else:
                 field = QtWidgets.QLineEdit(repr(value), self)
             self.formlayout.addRow(label, field)
-            print(self.formlayout.fieldGrowthPolicy())
+            # print(self.formlayout.fieldGrowthPolicy())
             self.widgets.append(field)
 
     def get(self):

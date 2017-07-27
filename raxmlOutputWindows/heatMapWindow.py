@@ -17,7 +17,7 @@ Peter Dulworth
 
 class HeatMapWindow(Window):
     def __init__(self, title, sitesToInformative):
-        Window.__init__(self, windowTitle='Informative Sites Heatmap')
+        Window.__init__(self, windowTitle='Informative Sites Heatmap', legend=False)
 
         self.plotter.heatMap(title, sitesToInformative)
         self.show()

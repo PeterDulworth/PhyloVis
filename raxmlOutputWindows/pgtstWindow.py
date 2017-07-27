@@ -14,7 +14,7 @@ Peter Dulworth
 
 class PGTSTWindow(Window):
     def __init__(self, windowsToPGTST, title, xLabel='', yLabel=''):
-        Window.__init__(self, windowTitle='P(gene tree | species tree)')
+        Window.__init__(self, windowTitle='P(gene tree | species tree)', legend=False)
 
         self.plotter.stat_scatter(windowsToPGTST, title, xLabel, yLabel)
         self.show()

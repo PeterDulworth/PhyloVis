@@ -12,7 +12,7 @@ Peter Dulworth
 
 class WindowsToInfSitesWindow(Window):
     def __init__(self, title, data, xLabel='Windows', yLabel='% Informative Sites'):
-        Window.__init__(self, windowTitle='Windows to Informative Sites')
+        Window.__init__(self, windowTitle='Windows to Informative Sites', legend=False)
 
         self.plotter.lineGraph(data, title, xLabel=xLabel, yLabel=yLabel)
         self.show()

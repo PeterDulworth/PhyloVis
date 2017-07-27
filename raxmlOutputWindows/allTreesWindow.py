@@ -13,7 +13,7 @@ Peter Dulworth
 
 class AllTreesWindow(Window):
     def __init__(self, title, colorScheme, rooted=False, outGroup=False):
-        Window.__init__(self, windowTitle='All Trees Window')
+        Window.__init__(self, windowTitle='All Trees Window', legend=False)
 
         self.plotter.topologyColorizer(title, colorScheme, rooted=rooted, outgroup=outGroup)
         self.show()

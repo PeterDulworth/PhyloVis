@@ -87,9 +87,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             # mapping from: windows --> dictionary of page dimensions
             self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 925, 'y': 688}, 'inputPageFileConverter': {'x': 630, 'y': 375}, 'inputPageMS': {'x': 675, 'y': 815}, 'inputPageDStatistic': {'x': 600, 'y': 570}}
 
-        # initialize window
-        self.circleGraphWindow = circleGraphWindow.CircleGraphWindow()
-
         # default values
         self.runComplete = False
         self.checkboxWeighted.setEnabled(False)
@@ -161,7 +158,6 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkBoxCustomRaxml.stateChanged.connect(lambda: self.toggleEnabled(self.customRaxmlCommandEntry))
         self.checkboxSpeciesTreeRooted.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeOutGroupGroupBox))
         self.checkboxSpeciesTreeUseCustomRax.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeRaxmlCommandEntry))
-        self.checkboxAllTrees.stateChanged.connect(lambda: self.toggleEnabled(self.numberOfTopTopologiesGroupBox))
 
         # RAxML Events
         self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
@@ -172,7 +168,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_PER'), self.generateSpeciesTreeProgressBar.setValue)
         self.connect(self.raxmlOperations, QtCore.SIGNAL('SPECIES_TREE_COMPLETE'), partial(self.message, type='Err'))
         self.connect(self.raxmlOperations, QtCore.SIGNAL('INVALID_ALIGNMENT_FILE'), lambda: self.message('Invalid File', 'Invalid alignment file. Please choose another.', 'Make sure your file has 4 sequences and is in the phylip-relaxed format.', type='Err'))
-        self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), lambda: self.openWindow(self.circleGraphWindow))
+
+        # self.connect(self.topologyPlotter, QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'), lambda: self.openWindow(self.circleGraphWindow))
 
         # run RAX_ML and generate graphs
         self.runBtn.clicked.connect(self.runRAxML)
@@ -655,8 +652,8 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         elif validator == 'Int':
             entry.setValidator(QtGui.QIntValidator(entry))
 
-    def resizeEvent(self, event):
-        print self.size()
+    # def resizeEvent(self, event):
+    #     print self.size()
 
     # def moveEvent(self, QMoveEvent):
     #     print self.pos()

@@ -511,15 +511,15 @@ class TopologyPlotter(QtCore.QThread):
 
     def generateCircleGraph(self, file, windows_to_top_topologies, topologies_to_colors, window_size, window_offset, sites_to_informative):
         """
-        Creates genetic circle graph showing the windows and the areas where each topology appears
-        Inputs:
-        file --- phylip file inputted in GUI
-        windows_to_top_topologies --- mapping outputted by windows_to_newick()[0]
-        topologies_to_colors --- mapping outputted by topology_colors()[0]
-        window_size --- size inputted in GUI
-        window_offset --- size inputted in GUI
-        Returns:
-        A genetic circle graph GenomeAtlas.
+            Creates genetic circle graph showing the windows and the areas where each topology appears
+            Inputs:
+            file --- phylip file inputted in GUI
+            windows_to_top_topologies --- mapping outputted by windows_to_newick()[0]
+            topologies_to_colors --- mapping outputted by topology_colors()[0]
+            window_size --- size inputted in GUI
+            window_offset --- size inputted in GUI
+            Returns:
+            A genetic circle graph GenomeAtlas.
         """
 
         ############################# Format Data #############################

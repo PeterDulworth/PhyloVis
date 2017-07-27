@@ -1,4 +1,4 @@
-import sys, os
+import sys
 from module import plotter
 import matplotlib
 matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
@@ -9,7 +9,7 @@ from matplotlib.backends.qt_compat import QtCore, QtGui
 
 
 class Window(QtGui.QMainWindow):
-    def __init__(self, windowTitle='Window', x=0, y=0, parent=None):
+    def __init__(self, windowTitle='Window', x=0, y=0, legend=True, parent=None):
         super(Window, self).__init__(parent)
 
         # set UI style -- options: u'Windows', u'Motif', u'CDE', u'Plastique', u'Cleanlooks', u'Macintosh (aqua)'
@@ -32,8 +32,6 @@ class Window(QtGui.QMainWindow):
         self.menuFile.setTitle("File")
         self.menuConfigurePlot = QtGui.QMenu(self.menubar)
         self.menuConfigurePlot.setTitle("Configure Plot")
-        self.menuLegend = QtGui.QMenu(self.menubar)
-        self.menuLegend.setTitle('Legend')
 
         # create actions
         self.actionSaveAs = QtGui.QAction(self)
@@ -42,8 +40,6 @@ class Window(QtGui.QMainWindow):
         self.actionConfigureSubplots.setText('Configure Subplots')
         self.actionConfigureAxis = QtGui.QAction(self)
         self.actionConfigureAxis.setText('Configure Axis and Curve')
-        self.actionGenerateLegend = QtGui.QAction(self)
-        self.actionGenerateLegend.setText('Generate Legend')
 
         # add actions to menu
         self.menuFile.addAction(self.actionSaveAs)
@@ -51,8 +47,6 @@ class Window(QtGui.QMainWindow):
         self.menuConfigurePlot.addAction(self.actionConfigureSubplots)
         self.menuConfigurePlot.addAction(self.actionConfigureAxis)
         self.menubar.addAction(self.menuConfigurePlot.menuAction())
-        self.menuLegend.addAction(self.actionGenerateLegend)
-        self.menubar.addAction(self.menuLegend.menuAction())
 
         # enable menu bar
         self.setMenuBar(self.menubar)
@@ -81,7 +75,15 @@ class Window(QtGui.QMainWindow):
         # bind configure menu actions
         self.connect(self.actionConfigureSubplots, QtCore.SIGNAL('triggered()'), self.toolbar.configure_subplots)
         self.connect(self.actionConfigureAxis, QtCore.SIGNAL('triggered()'), self.toolbar.edit_parameters)
-        self.connect(self.actionGenerateLegend, QtCore.SIGNAL('triggered()'), self.toolbar.generate_legend)
+
+        if legend:
+            self.menuLegend = QtGui.QMenu(self.menubar)
+            self.menuLegend.setTitle('Legend')
+            self.actionGenerateLegend = QtGui.QAction(self)
+            self.actionGenerateLegend.setText('Generate Draggable Legend')
+            self.menuLegend.addAction(self.actionGenerateLegend)
+            self.menubar.addAction(self.menuLegend.menuAction())
+            self.connect(self.actionGenerateLegend, QtCore.SIGNAL('triggered()'), self.toolbar.generate_legend)
 
         # create instance of Plotter class
         self.plotter = plotter.Plotter()
@@ -113,7 +115,9 @@ class Window(QtGui.QMainWindow):
         self.resize(x, y)
 
     def closeEvent(self, QCloseEvent):
+        plt.clf()
         self.emit(QtCore.SIGNAL("WINDOW_CLOSED"))
+        print self.windowTitle + ' Closed'
 
     # def moveEvent(self, QMoveEvent):
     #     print self.fileName, self.pos()

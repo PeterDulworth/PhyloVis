@@ -1400,6 +1400,8 @@ class Ui_PhylogeneticVisualization(object):
         PhylogeneticVisualization.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(PhylogeneticVisualization)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 904, 22))
+        self.menubar.setStyleSheet(_fromUtf8(""))
+        self.menubar.setNativeMenuBar(True)
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuMode = QtGui.QMenu(self.menubar)
         self.menuMode.setObjectName(_fromUtf8("menuMode"))
