@@ -76,7 +76,7 @@ For further reading on the D-statistic and its usage see: \
 [Durand et al. (2011)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144383/),
 [Martin et al. (2014)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4271521/) 
 
-##Figures
+## Figures
 
 All figures generated in PhyloVis use a Matplotlib output interface, allowing users to customize figures to their liking. Hovering one’s cursor over the icons at the bottom of each figure’s output window provides a short description of each icon’s usage. The following describes each button from left to right.
  
@@ -134,7 +134,7 @@ All images can be exported to a desired save location, renamed and saved as one 
 
 5) Download PhyloVis from Github and run main.py
 
-##References
+## References
 
 Cock PJA, Antao T, Chang JT, et al. Biopython: freely available Python tools for computational molecular biology and bioinformatics. Bioinformatics. 2009;25(11):1422-1423. doi:10.1093/bioinformatics/btp163.
 
