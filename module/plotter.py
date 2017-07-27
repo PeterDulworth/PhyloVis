@@ -362,6 +362,10 @@ class Plotter(QtCore.QThread):
             dist = []
             heights = []
 
+        leg = ax.legend()
+        if leg:
+            leg.draggable()
+
         return ax
 
 if __name__ == '__main__':  # if we're running file directly and not importing it

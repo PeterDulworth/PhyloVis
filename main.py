@@ -75,7 +75,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # mapping from: windows --> page index
         self.windows = {'welcomePage': 0, 'inputPageRax': 1, 'inputPageFileConverter': 2, 'inputPageMS': 3, 'inputPageDStatistic': 4}
         # mapping from: windows --> dictionary of page dimensions
-        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 575}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 680}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
+        self.windowSizes = {'welcomePage': {'x': 459, 'y': 245}, 'inputPageRax': {'x': 600, 'y': 600}, 'inputPageFileConverter': {'x': 459, 'y': 350}, 'inputPageMS': {'x': 600, 'y': 680}, 'inputPageDStatistic': {'x': 600, 'y': 600}}
         # mapping from: windows --> dictionary of page dimensions
         self.windowLocations = {'welcomePage': {'x': 600, 'y': 300}, 'inputPageRax': {'x': 500, 'y': 175}, 'inputPageFileConverter': {'x': 600, 'y': 300}, 'inputPageMS': {'x': 520, 'y': 100}, 'inputPageDStatistic': {'x': 500, 'y': 175}}
         # mapping from: mode --> page
@@ -383,6 +383,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.raxmlOperations.speciesTreeUseCustomRax = self.checkboxSpeciesTreeUseCustomRax.isChecked()
 
             # if using custom rax -- make sure that the user doesn't use the -s or -n flags
+            self.raxmlOperations.speciesTreeCustomRaxmlCommand = ''
             if self.checkboxSpeciesTreeUseCustomRax.isChecked():
                 self.raxmlOperations.speciesTreeCustomRaxmlCommand = self.checkEntryPopulated(self.speciesTreeRaxmlCommandEntry, errorTitle='No RAxML Command', errorMessage='Please enter a custom raxml command or uncheck the box.')
                 if re.search('([\-][n])|([\-][s])', self.speciesTreeRaxmlCommandEntry.text()):
