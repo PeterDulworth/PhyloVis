@@ -1,14 +1,17 @@
 ## Table of Contents
 - [Introduction](#introduction)
-	- [Contributors](#contributors)
-	- [Dependencies](#dependencies)
+- [Requirements](#requirements)
+- [Analysis Modes](#analysis-modes)
+    - [RAxML](#raxml)
+    - [File Converter](#file-converter)
+    - [MS Comparison](#ms-comparison)
+    - [D Statistic](#d-statistic)
+- [Figures](#figures)
+- [Output Files](#output-files)
+- [Dependencies](#dependencies)
 - [Installation](#installation)
-- [Basic Usage](#basic-usage)
-	- [Modes](#modes)
-		- [RAxML](#raxml)
-		- [File Converter](#file-converter)
-		- [MS Comparison](#ms-comparison)
-		- [D Statistic](#d-statistic)
+- [Contributors](#contributors)
+- [References](#references)
 
 ## Introduction
 
