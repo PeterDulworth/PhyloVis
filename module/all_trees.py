@@ -1,7 +1,6 @@
 import re
 import os
 import itertools
-import math
 import ete3
 from ete3 import Tree
 import copy
