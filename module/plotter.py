@@ -14,7 +14,7 @@ class Plotter(QtCore.QThread):
         super(Plotter, self).__init__(parent)
 
         # list of colors for plots
-        self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
+        self.COLORS = ['#ff0000', '#0000ff', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
         # list of patterns for line styles
         self.PATTERNS = ['-', '--', ':', '-.']
@@ -298,7 +298,7 @@ class Plotter(QtCore.QThread):
 
         return ax
 
-    def tmrca_graph(self, sites_to_newick_mappings, topology_only=False):
+    def tmrca_graph(self, sites_to_newick_mappings, labels, topology_only=False, subplotPosition=111):
         """
             Plots a line graph comparing tree heights from different MS files.
 
@@ -311,9 +311,11 @@ class Plotter(QtCore.QThread):
                 i. A line graph with the tree height as the y-axis and the site number as the x-axis.
         """
 
-        ax = plt.subplot(111)
-        ax.set_label('TMRCA Line Graph')
+        print labels
 
+        ax = plt.subplot(subplotPosition)
+
+        ax.set_title('TMRCA Line Graph')
         ax.set_xlabel('SNP Site Number')
         ax.set_ylabel('TMRCA')
 
@@ -345,13 +347,13 @@ class Plotter(QtCore.QThread):
                 heights.append(re.sub("\[', |']", '', str(dist[k])))
 
             # resets ind to prevent index error in linestyle pattern
-            if i > 3:
-                ind = random.randint(0, 3)
-            else:
-                ind = i
+            # if i > 3:
+            #     ind = random.randint(0, 3)
+            # else:
+            #     ind = i
 
             # plot line graph
-            ax.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[ind])
+            ax.plot(sites_to_newick_mappings[0].keys(), heights, c=self.COLORS[i], linestyle=self.PATTERNS[i % len(self.PATTERNS)], label=labels[i])
 
             # clear lists
             trees = []
@@ -371,4 +373,5 @@ if __name__ == '__main__':  # if we're running file directly and not importing i
     # p.heatMap('title', )
 
     p.barPlot('', [1,2,3,4,5 ], '', '', groupLabels=('one', 'two', '3', 4, '5'))
+
     plt.show()

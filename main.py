@@ -288,7 +288,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
 
-    def plotMSCompare(self, weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, msFiles):
+    def plotMSCompare(self, weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, msFiles, msTruthLabel):
         if self.msComparison.robinsonFouldsBarPlot:
             self.msRobinsonFouldsWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow('Weighted', weightedData, 'Unweighted', unweightedData, groupLabels1=msFiles, groupLabels2=msFiles)
 
@@ -296,7 +296,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.msPercentMatchingWindow = msPercentMatchingWindow.MSPercentMatchingWindow('Weighted', percentMatchingSitesWeighted, 'Unweighted', percentMatchingSitesUnweighted, groupLabels1=msFiles, groupLabels2=msFiles)
 
         if self.msComparison.tmrcaLineGraph:
-            self.msTMRCAWindow = msTMRCAWindow.MSTMRCAWindow(sitesToNewickMsMaps)
+            self.msTMRCAWindow = msTMRCAWindow.MSTMRCAWindow(sitesToNewickMsMaps, [msTruthLabel] + msFiles)
 
     def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
         self.additionalFileCounter += 1

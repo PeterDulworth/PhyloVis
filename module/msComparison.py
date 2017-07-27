@@ -30,8 +30,7 @@ class MsComparison(QtCore.QThread):
         self.statisticsCalculations = sc.StatisticsCalculations(output_directory=output_directory)
 
         # list of colors for plots
-        self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0',
-                  '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
+        self.COLORS = ['#ff0000', '#0000ff', '#ffff00', '#32cd32', '#ba55d3', '#87cefa', '#ffa500', '#ff1493', '#a020f0', '#00ced1', '#adff2f', '#ffd700', '#1e90ff', '#ff7f50', '#008000', '#ffc0cb', '#8a2be2']
 
         # list of patterns for line styles
         self.PATTERNS = ['-', '--', ':', '-.']
@@ -171,11 +170,10 @@ class MsComparison(QtCore.QThread):
 
         # create sites to newick map for MS truth file
         sitesToNewickMsTruth = self.sites_to_newick_ms(self.msTruth)
+        msTruthLabel = os.path.basename(self.msTruth)
 
         if self.msToRax:
             sitesToNewickMsMaps.append(self.sites_to_newick_rax(self.raxmlDir, self.windowSize, self.windowOffset))
-            print 'asdfakjsdhfaskljdhf'
-            print os.path.basename(self.raxmlDir)
             graphLabels.append(os.path.basename(self.raxmlDir))
 
         # create sites to newick map for each MS file
@@ -205,7 +203,7 @@ class MsComparison(QtCore.QThread):
                         matchingSites += 1.0
                 percentMatchingSitesUnweighted.append(100.0 * matchingSites / len(sitesToRFDUnweighted))
 
-        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, [sitesToNewickMsTruth] + sitesToNewickMsMaps, graphLabels)
+        self.emit(QtCore.SIGNAL('MS_COMPLETE'), weightedRobinsonFouldsSums, unweightedRobinsonFouldsSums, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, [sitesToNewickMsTruth] + sitesToNewickMsMaps, graphLabels, msTruthLabel)
 
 if __name__ == '__main__':  # if we're running file directly and not importing it
 

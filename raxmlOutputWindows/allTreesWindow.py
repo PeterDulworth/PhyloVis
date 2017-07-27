@@ -1,10 +1,6 @@
 from standardWindow import Window
 from PyQt4 import QtGui
 import sys
-import matplotlib
-matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be before pyplot is imported but after matplotlib is imported
-from matplotlib import pyplot as plt
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 """
 All Trees Window
