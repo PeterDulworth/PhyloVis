@@ -121,8 +121,8 @@ All images can be exported to a desired save location, renamed and saved as one 
 3) Download and install [PIP](https://pip.pypa.io/en/stable/installing/)
 
 4) Use the following command line commands to install the remaining packages:
-
-    ```python
+    
+    ```
     pip install pillow
     pip install scipy
     pip install natsort
