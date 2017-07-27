@@ -494,8 +494,14 @@
                         <property name="focusPolicy">
                          <enum>Qt::WheelFocus</enum>
                         </property>
+                        <property name="inputMethodHints">
+                         <set>Qt::ImhNone</set>
+                        </property>
                         <property name="text">
                          <string>50000</string>
+                        </property>
+                        <property name="placeholderText">
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -566,68 +572,6 @@
                       </item>
                       <item>
                        <spacer name="windowOffsetSpacer">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                     </layout>
-                    </item>
-                    <item>
-                     <layout class="QHBoxLayout" name="numberOfTopTopologiesHL">
-                      <property name="leftMargin">
-                       <number>10</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>5</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>5</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="numberOfTopTopologiesLabel">
-                        <property name="text">
-                         <string>Number of Top Topologies:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="numberOfTopTopologiesEntry">
-                        <property name="minimumSize">
-                         <size>
-                          <width>40</width>
-                          <height>21</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>40</width>
-                          <height>16777215</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>13</pointsize>
-                          <weight>50</weight>
-                          <bold>false</bold>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>2</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="numberOfTopTopologiesSpacer">
                         <property name="orientation">
                          <enum>Qt::Horizontal</enum>
                         </property>
@@ -1327,57 +1271,109 @@
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_10">
                    <item>
-                    <layout class="QHBoxLayout" name="allTreesHL">
+                    <layout class="QVBoxLayout" name="verticalLayout_17">
                      <item>
-                      <widget class="QCheckBox" name="checkboxAllTrees">
-                       <property name="minimumSize">
-                        <size>
-                         <width>0</width>
-                         <height>21</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>13</pointsize>
-                         <weight>50</weight>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="toolTip">
-                        <string>1</string>
-                       </property>
-                       <property name="statusTip">
-                        <string>2</string>
-                       </property>
-                       <property name="whatsThis">
-                        <string>3</string>
-                       </property>
-                       <property name="accessibleName">
-                        <string>4</string>
-                       </property>
-                       <property name="accessibleDescription">
-                        <string>5</string>
-                       </property>
-                       <property name="text">
-                        <string>Top Topolgies</string>
-                       </property>
-                       <property name="checked">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
+                      <layout class="QHBoxLayout" name="allTreesHL">
+                       <item>
+                        <widget class="QCheckBox" name="checkboxAllTrees">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>21</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>13</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="toolTip">
+                          <string/>
+                         </property>
+                         <property name="statusTip">
+                          <string/>
+                         </property>
+                         <property name="whatsThis">
+                          <string/>
+                         </property>
+                         <property name="accessibleName">
+                          <string/>
+                         </property>
+                         <property name="accessibleDescription">
+                          <string/>
+                         </property>
+                         <property name="text">
+                          <string>Top Topologies Tree Visualization</string>
+                         </property>
+                         <property name="checked">
+                          <bool>false</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="allTreesSpacer">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
                      </item>
                      <item>
-                      <spacer name="allTreesSpacer">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
+                      <layout class="QHBoxLayout" name="horizontalLayout_43">
+                       <property name="leftMargin">
+                        <number>10</number>
                        </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
+                       <item>
+                        <widget class="QGroupBox" name="numberOfTopTopologiesGroupBox">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="title">
+                          <string/>
+                         </property>
+                         <layout class="QHBoxLayout" name="horizontalLayout_42">
+                          <item>
+                           <widget class="QLabel" name="label_25">
+                            <property name="text">
+                             <string>Number of Top Topologies:</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QLineEdit" name="numberOfTopTopologiesEntry"/>
+                          </item>
+                          <item>
+                           <spacer name="horizontalSpacer_27">
+                            <property name="orientation">
+                             <enum>Qt::Horizontal</enum>
+                            </property>
+                            <property name="sizeHint" stdset="0">
+                             <size>
+                              <width>55</width>
+                              <height>20</height>
+                             </size>
+                            </property>
+                           </spacer>
+                          </item>
+                         </layout>
+                        </widget>
+                       </item>
+                      </layout>
                      </item>
                     </layout>
                    </item>
@@ -1460,6 +1456,19 @@
                       </spacer>
                      </item>
                     </layout>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </item>

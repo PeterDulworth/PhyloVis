@@ -118,6 +118,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         # open documentation
         self.actionDocumentation.triggered.connect(self.openDocumentation)
 
+        # validators
+        self.setValidator(self.windowSizeEntry, 'Int')
+        self.setValidator(self.windowOffsetEntry, 'Int')
+        self.setValidator(self.numberOfTopTopologiesEntry, 'Int')
+        self.setValidator(self.confidenceLevelEntry, 'Int')
+        self.setValidator(self.numberOfBootstrapsEntry, 'Int')
+        self.setValidator(self.msWindowSizeEntry, 'Int')
+        self.setValidator(self.msWindowOffsetEntry, 'Int')
+        self.setValidator(self.dWindowSizeEntry, 'Int')
+        self.setValidator(self.dWindowOffsetEntry, 'Int')
+
         # **************************** RAXML PAGE ****************************#
 
         # selecting a mode in the menu bar -> deselects all other modes first
@@ -150,6 +161,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.checkBoxCustomRaxml.stateChanged.connect(lambda: self.toggleEnabled(self.customRaxmlCommandEntry))
         self.checkboxSpeciesTreeRooted.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeOutGroupGroupBox))
         self.checkboxSpeciesTreeUseCustomRax.stateChanged.connect(lambda: self.toggleEnabled(self.speciesTreeRaxmlCommandEntry))
+        self.checkboxAllTrees.stateChanged.connect(lambda: self.toggleEnabled(self.numberOfTopTopologiesGroupBox))
 
         # RAxML Events
         self.connect(self.inputFileEntry, QtCore.SIGNAL('FILE_SELECTED'), lambda: self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry))
@@ -288,7 +300,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.message(ErrorTitle, ErrorMessage, ErrorDescription)
             return
 
-    def plotMSCompare(self, weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, msFiles):
+    def plotMSCompare(self, weightedData, unweightedData, percentMatchingSitesWeighted, percentMatchingSitesUnweighted, sitesToNewickMsMaps, msFiles, msTruthLabel):
         if self.msComparison.robinsonFouldsBarPlot:
             self.msRobinsonFouldsWindow = msRobinsonFouldsWindow.MSRobinsonFouldsWindow('Weighted', weightedData, 'Unweighted', unweightedData, groupLabels1=msFiles, groupLabels2=msFiles)
 
@@ -296,7 +308,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.msPercentMatchingWindow = msPercentMatchingWindow.MSPercentMatchingWindow('Weighted', percentMatchingSitesWeighted, 'Unweighted', percentMatchingSitesUnweighted, groupLabels1=msFiles, groupLabels2=msFiles)
 
         if self.msComparison.tmrcaLineGraph:
-            self.msTMRCAWindow = msTMRCAWindow.MSTMRCAWindow(sitesToNewickMsMaps)
+            self.msTMRCAWindow = msTMRCAWindow.MSTMRCAWindow(sitesToNewickMsMaps, [msTruthLabel] + msFiles)
 
     def addFileEntry(self, horizontalLayoutName, entryName, btnName, btn2Name):
         self.additionalFileCounter += 1
@@ -452,13 +464,17 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             self.raxmlOperations.inputFilename = self.checkEntryPopulated(self.inputFileEntry, errorTitle='', errorMessage='')
             self.raxmlOperations.windowSize = self.checkEntryInRange(self.windowSizeEntry, min=0, inclusive=False, errorTitle='Invalid Window Size', errorMessage='Window size needs to be a positive integer.')
             self.raxmlOperations.windowOffset = self.checkEntryInRange(self.windowOffsetEntry, min=0, inclusive=False, errorTitle='Invalid Window Offset', errorMessage='Window offset needs to be a positive integer.')
-            self.topTopologies = self.checkEntryInRange(self.numberOfTopTopologiesEntry, min=0, max=16, inclusive=False, errorTitle='Invalid Number of Top Topologies', errorMessage='Please enter an integer between 0 and 15.')
             self.raxmlOperations.outGroup = self.outgroupComboBox.currentText()
             self.raxmlOperations.model = self.modelComboBox.currentText()
             self.raxmlOperations.isCustomRaxmlCommand = self.checkBoxCustomRaxml.isChecked()
             self.raxmlOperations.bootstrap = self.checkboxBootstrap.isChecked()
             self.raxmlOperations.rooted = self.checkboxRooted.isChecked()
             self.rooted = self.checkboxRooted.isChecked()
+
+            # if user is generating Top Topologies or scatter plot or donut plor or circle graph run error handling on top topologies entry
+            if self.checkboxAllTrees.isChecked() or self.checkboxScatterPlot.isChecked() or self.checkboxDonutPlot.isChecked() or self.checkboxCircleGraph.isChecked():
+                self.checkEntryPopulated(self.numberOfTopTopologiesEntry, errorTitle='Number of Top Topologies Field is Blank', errorMessage='Please enter a number of top topologies.')
+                self.topTopologies = self.checkEntryInRange(self.numberOfTopTopologiesEntry, min=0, max=16, inclusive=False, errorTitle='Invalid Number of Top Topologies', errorMessage='Please enter an integer between 0 and 15.')
 
             # bootstrap error handling
             self.raxmlOperations.numBootstraps = 0
@@ -631,6 +647,12 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
 
     def openDocumentation(self):
         webbrowser.open('https://peterdulworth.github.io/PhyloVis', new=0, autoraise=True)
+
+    def setValidator(self, entry, validator):
+        if validator == 'Double':
+            entry.setValidator(QtGui.QDoubleValidator(entry))
+        elif validator == 'Int':
+            entry.setValidator(QtGui.QIntValidator(entry))
 
     def resizeEvent(self, event):
         print self.size()

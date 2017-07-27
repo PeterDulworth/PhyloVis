@@ -20,19 +20,33 @@ class Window(QtGui.QMainWindow):
         self.setCentralWidget(self.centralwidget)
         self.setBackgroundColor(QtCore.Qt.white)
 
-        # menubar
+        # create menu bar
         self.menubar = QtGui.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 340, 22))
+
+        # create menus
         self.menuFile = QtGui.QMenu(self.menubar)
-        self.setMenuBar(self.menubar)
-        self.actionPNG = QtGui.QAction(self)
-        self.actionPDF = QtGui.QAction(self)
+        self.menuFile.setTitle("File")
+        self.menuConfigurePlot = QtGui.QMenu(self.menubar)
+        self.menuConfigurePlot.setTitle("Configure Plot")
+
+        # create actions
         self.actionSaveAs = QtGui.QAction(self)
+        self.actionSaveAs.setText("Save As...")
+        self.actionConfigureSubplots = QtGui.QAction(self)
+        self.actionConfigureSubplots.setText('Configure Subplots')
+        self.actionConfigureAxis = QtGui.QAction(self)
+        self.actionConfigureAxis.setText('Configure Axis and Curve')
+
+        # add actions to menu
         self.menuFile.addAction(self.actionSaveAs)
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menuConfigurePlot.addAction(self.actionConfigureSubplots)
+        self.menuConfigurePlot.addAction(self.actionConfigureAxis)
+        self.menubar.addAction(self.menuConfigurePlot.menuAction())
 
-        self.menuFile.setTitle("File")
-        self.actionSaveAs.setText("Save As...")
+        # enable menu bar
+        self.setMenuBar(self.menubar)
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
@@ -52,8 +66,12 @@ class Window(QtGui.QMainWindow):
 
         self.setWindowPosition(x, y)
 
-        # bind export actions
-        self.actionSaveAs.triggered.connect(self.toolbar.save_figure)
+        # bind file menu actions
+        self.connect(self.actionSaveAs, QtCore.SIGNAL('triggered()'), self.toolbar.save_figure)
+
+        # bind configure menu actions
+        self.connect(self.actionConfigureSubplots, QtCore.SIGNAL('triggered()'), self.toolbar.configure_subplots)
+        self.connect(self.actionConfigureAxis, QtCore.SIGNAL('triggered()'), self.toolbar.edit_parameters)
 
         # create instance of Plotter class
         self.plotter = plotter.Plotter()
