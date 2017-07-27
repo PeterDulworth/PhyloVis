@@ -116,12 +116,15 @@ All images can be exported to a desired save location, renamed and saved as one 
 ## Installation
 1) Download and install [RAxML](https://sco.h-its.org/exelixis/web/software/raxml/)
     - Tutorial for installing RAxML on Mac: http://www.sfu.ca/biology2/staff/dc/raxml/
-2) Download and install [SIP and PyQt4](https://www.riverbankcomputing.com/software/pyqt/download)
-
-3) Download and install [PIP](https://pip.pypa.io/en/stable/installing/)
-
-4) Use the following command line commands to install the remaining packages:
     
+2) Download and Install [Python2.7.13](https://www.python.org/downloads/)
+
+3) Download and install [SIP and PyQt4](https://www.riverbankcomputing.com/software/pyqt/download)
+
+4) Download and install [PIP](https://pip.pypa.io/en/stable/installing/)
+
+5) Use the following command line commands to install the remaining packages:
+
     ```
     pip install pillow
     pip install scipy
@@ -132,7 +135,7 @@ All images can be exported to a desired save location, renamed and saved as one 
     pip install biopython
     ```
 
-5) Download PhyloVis from Github and run main.py
+6) Download PhyloVis from Github and run main.py
 
 ## References
 
