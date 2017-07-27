@@ -34,6 +34,15 @@ class CustomToolbar(NavigationToolbar):
         dia.setWindowIcon(QtGui.QIcon(image))
         dia.exec_()
 
+    def generate_legend(self):
+        allaxes = self.canvas.figure.get_axes()
+        for ax in allaxes:
+            leg = ax.legend()
+            if leg:
+                leg.draggable()
+        self.canvas.draw()
+
+
     def edit_parameters(self):
         allaxes = self.canvas.figure.get_axes()
         if not allaxes:

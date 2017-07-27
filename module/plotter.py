@@ -162,8 +162,7 @@ class Plotter(QtCore.QThread):
                 ax.bar(i, data[i], width, label=groupLabels[i])
 
         ax.set_xmargin(0.1)
-        ax.legend()
-        plt.tight_layout()
+        # ax.legend()
 
         if len(groupLabels) > 0:
             ax.set_xticks(indices)
