@@ -71,7 +71,7 @@ The TMRCA Line Graph shows the tree height over each site when comparing the tru
 ### D-statistic
 D-statistic mode allows the user to input an alignment file in phylip-sequential format, choose the window size and offset, and select the location of each outgroup in the tree visual. This mode then generates a scatter plot in which the x-axis is the window number, and the y-axis is the D-statistic value computed for that window.
 
-For further reading on the D-statistic and its usage see: \
+For further reading on the D-statistic and its usage see: 
 [Green et al. (2010)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5100745/#SD1), 
 [Durand et al. (2011)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3144383/),
 [Martin et al. (2014)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4271521/) 
