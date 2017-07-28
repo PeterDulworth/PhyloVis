@@ -108,9 +108,9 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
         self.outputFileConverterEntry.setText(os.getcwd() + '/convertedFile')
 
         # delete this eventually
-        self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
-        self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
-        self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
+        # self.updateTaxonComboBoxes(self.raxmlTaxonComboBoxes, self.inputFileEntry)
+        # self.updateTaxonComboBoxes(self.speciesTreeComboBoxes, self.inputFileEntry)
+        # self.updateTaxonComboBoxes(self.dStatisticTaxonComboBoxes, self.dAlignmentEntry)
 
         # open documentation
         self.actionDocumentation.triggered.connect(self.openDocumentation)
@@ -644,7 +644,7 @@ class PhyloVisApp(QtGui.QMainWindow, gui.Ui_PhylogeneticVisualization):
             window.displayImages()
 
     def openDocumentation(self):
-        webbrowser.open('https://peterdulworth.github.io/PhyloVis', new=0, autoraise=True)
+        webbrowser.open('https://peterdulworth.github.io/PhyloVis-Working', new=0, autoraise=True)
 
     def setValidator(self, entry, validator):
         if validator == 'Double':

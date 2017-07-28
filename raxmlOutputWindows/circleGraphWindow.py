@@ -6,6 +6,8 @@ matplotlib.use('Qt4Agg')  # necessary for mac pls don't remove -- needs to be be
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.image as mpimg
+import svgutils.compose as sc
+
 
 """
 Functions:

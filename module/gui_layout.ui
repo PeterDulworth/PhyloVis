@@ -59,7 +59,7 @@
          </sizepolicy>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="welcomePage">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -320,7 +320,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/ChillLeo.phylip</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -361,7 +361,7 @@
              <bool>true</bool>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="raxmlOptionsPage">
              <property name="enabled">
@@ -498,7 +498,7 @@
                          <set>Qt::ImhNone</set>
                         </property>
                         <property name="text">
-                         <string>50000</string>
+                         <string/>
                         </property>
                         <property name="placeholderText">
                          <string/>
@@ -566,7 +566,7 @@
                          <enum>Qt::WheelFocus</enum>
                         </property>
                         <property name="text">
-                         <string>50000</string>
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -810,7 +810,7 @@
                             </font>
                            </property>
                            <property name="text">
-                            <string>70</string>
+                            <string/>
                            </property>
                           </widget>
                          </item>
@@ -843,7 +843,7 @@
                             </font>
                            </property>
                            <property name="text">
-                            <string>10</string>
+                            <string/>
                            </property>
                           </widget>
                          </item>
@@ -1746,7 +1746,7 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/RAxML_SpeciesTree/RAxML_ST_bestTree.txt</string>
+                      <string/>
                      </property>
                      <property name="readOnly">
                       <bool>true</bool>
@@ -1993,7 +1993,7 @@
                </font>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/chillTestFile.fasta</string>
+               <string/>
               </property>
               <property name="readOnly">
                <bool>true</bool>
@@ -2144,7 +2144,7 @@
                </font>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/henlo</string>
+               <string/>
               </property>
               <property name="readOnly">
                <bool>true</bool>
@@ -2337,7 +2337,7 @@
                <enum>Qt::WheelFocus</enum>
               </property>
               <property name="text">
-               <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/fakeMS.txt</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -2677,7 +2677,7 @@
                      <item>
                       <widget class="QLineEdit" name="msSecondFileEntry">
                        <property name="text">
-                        <string>/Users/Peter/PycharmProjects/Evolutionary-Diversity-Visualization-Python/testFiles/fakeMS2.txt</string>
+                        <string/>
                        </property>
                        <property name="readOnly">
                         <bool>true</bool>

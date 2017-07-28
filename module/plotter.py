@@ -515,10 +515,10 @@ class Plotter(QtCore.QThread):
         graph_set.new_graph(windowed_data, style=graphStyle, color=colors.HexColor('#2f377c'),
                             altcolour=colors.transparent)
 
-        diagram \
-            .new_track(i + 5, name="Track" + str(i + 2), height=2, hide=0, greytrack=0, greytrack_labels=2,
-                       greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
-            .add_set(graph_set)
+        # diagram \
+        #     .new_track(i + 5, name="Track" + str(i + 2), height=2, hide=0, greytrack=0, greytrack_labels=2,
+        #                greytrack_font_size=8, grey_track_font_color=colors.black, scale=0) \
+        #     .add_set(graph_set)
 
         ############################################
 
@@ -536,12 +536,9 @@ class Plotter(QtCore.QThread):
                      tracklines=0, circular=0, circle_core=0.3, start=0, end=length_of_sequences - 1)
 
         # save the file
-        diagram.write("plots/GenomeAtlas.pdf", "PDF")
         # diagram.write("../plots/GenomeAtlas.eps", "EPS")
-        # diagram.write("../plots/GenomeAtlas.svg", "SVG")
-        print 'henlo'
-        print os.path.abspath(__file__)
-
+        # diagram.write("plots/GenomeAtlas.svg", "SVG")
+        diagram.write("plots/GenomeAtlas.pdf", "PDF")
         diagram.write("plots/GenomeAtlas.png", "PNG")
 
         self.emit(QtCore.SIGNAL('CIRCLE_GRAPH_COMPLETE'))
